@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home"/>
+
+    <item
+        android:id="@+id/menu_shortcuts"
+        android:icon="@drawable/ic_shortcuts"
+        android:title="@string/shortcuts"/>
+
+    <item
+        android:id="@+id/menu_messages"
+        android:icon="@drawable/ic_message"
+        android:title="@string/messages"/>
+
+    <item
+        android:id="@+id/menu_notes"
+        android:visible="true"
+        android:icon="@drawable/ic_notes"
+        android:title="@string/notes"/>
+</menu>

@@ -1,0 +1,28 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.MaiaLearning" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/forgot_color</item>
+        <item name="colorPrimaryVariant">@color/color_acent</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/forgot_color</item>
+        <item name="colorSecondaryVariant">@color/forgot_color</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+
+    </style>
+
+    <style name="Login"  parent="Theme.MaiaLearning">
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="bottomSheetDialogTheme">@style/Theme.MyApp.BottomSheetDialog</item>
+    </style>
+    <style name="Theme.MyApp.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.MyApp.BottomSheet.Modal</item>
+    </style>
+    <style name="Theme.MalaLearning.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MalaLearning.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
