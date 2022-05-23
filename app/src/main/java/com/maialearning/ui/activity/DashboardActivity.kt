@@ -1,10 +1,15 @@
 package com.maialearning.ui.activity
 
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.maialearning.R
 import com.maialearning.databinding.ActivityDashboardBinding
+import com.maialearning.databinding.ToolbarBinding
 import com.maialearning.ui.fragments.HomeFragment
 import com.maialearning.ui.fragments.MessageFragment
 import com.maialearning.ui.fragments.NotesFragment
@@ -13,6 +18,7 @@ import com.maialearning.ui.fragments.ShortcutFragment
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
+    private lateinit var toolbarBinding: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +27,10 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+        toolbarBinding = binding.toolbar
+        binding.toolbar.title = ""
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.VISIBLE
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
         loadFragment(HomeFragment())
         setListeners()
     }
@@ -29,14 +39,26 @@ class DashboardActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.menu_home -> {
                     loadFragment(HomeFragment())
+                    binding.toolbar.title = ""
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.VISIBLE
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
                 }
                 R.id.menu_shortcuts -> {
+                    binding.toolbar.title =getString(R.string.shortcuts)
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
                     loadFragment(ShortcutFragment())
                 }
                 R.id.menu_notes -> {
+                    binding.toolbar.title =getString(R.string.notes)
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
                     loadFragment(NotesFragment())
                 }
                 R.id.menu_messages -> {
+                    binding.toolbar.title =getString(R.string.messanger)
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
+                    toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
                     loadFragment(MessageFragment())
 
                 }

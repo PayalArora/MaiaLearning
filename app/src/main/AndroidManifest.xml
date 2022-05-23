@@ -13,8 +13,21 @@
             android:name=".ui.activity.LoginActivity"
             android:theme="@style/Login"
             android:exported="false" />
+
         <activity
-            android:name=".ui.activity.DashboardActivity"
+            android:name=".ui.activity.MessageDetailActivity"
+            android:theme="@style/NewMessage"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.NewMessageActivity"
+            android:theme="@style/NewMessage"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.NotesDetailActivity"
+            android:theme="@style/NewMessage"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.MainActivity"
             android:noHistory="true"
             android:exported="true">
             <intent-filter>
@@ -24,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-        android:name=".ui.activity.MainActivity"
+        android:name=".ui.activity.DashboardActivity"
         android:exported="false" />
 
     </application>

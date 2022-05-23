@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/select_reciepents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/_15dp"
+
+        android:text="@string/select_reciepents"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_21sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/close"
+        android:layout_width="@dimen/_30dp"
+        android:layout_alignParentTop="true"
+        android:layout_height="@dimen/_30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/_15dp"
+        android:background="@drawable/circle_lay">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/cross" />
+    </RelativeLayout>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@+id/select_reciepents"
+
+        android:background="@color/divider_color" />
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/search"
+        android:layout_below="@+id/view1"
+        android:layout_height="@dimen/_55dp">
+
+        <ImageButton
+            android:layout_width="@dimen/_30dp"
+            android:src="@drawable/cross"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:layout_height="@dimen/_30dp"/>
+
+        <EditText
+            android:id="@+id/searchText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="start"
+            android:background="@android:color/transparent"
+            android:paddingRight="@dimen/_10dp"
+            android:drawableLeft="@drawable/ic_baseline_search_24"
+            android:drawablePadding="@dimen/_5dp"
+            android:hint="@string/search"
+            android:imeOptions="actionSearch"
+
+            android:inputType="textFilter"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/_15dp"
+            android:textColorHint="@color/grey" />
+
+    </RelativeLayout>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@+id/search"
+        android:background="@color/divider_color" />
+
+    <CheckBox
+        android:id="@+id/select_all"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_55dp"
+        android:layout_below="@+id/view2"
+        android:layout_marginStart="@dimen/_15dp"
+        android:layout_marginEnd="@dimen/_20dp"
+        android:backgroundTint="@color/forgot_color"
+        android:gravity="center_vertical"
+        android:text="@string/select_all"
+        android:textColor="@color/black_1"
+        android:textSize="@dimen/_16sp" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@+id/select_all"
+        android:background="@color/divider_color" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reciepent_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/view3"
+        android:orientation="vertical"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/reciepent_item" />
+</RelativeLayout>

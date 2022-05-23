@@ -22,6 +22,7 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         dashboardBinding = FragmentDashboardBinding.inflate(inflater, container, false)
+
         return dashboardBinding.root
     }
 

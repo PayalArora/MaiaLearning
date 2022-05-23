@@ -41,7 +41,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/ic_character"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -64,7 +64,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/career"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -93,7 +93,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/academic"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -115,7 +115,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/university"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -138,7 +138,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/event"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -166,7 +166,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/portfolio"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -188,7 +188,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/mala"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -211,7 +211,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/calender"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -239,7 +239,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/ic_res"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView
@@ -261,7 +261,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:layout_width="@dimen/_20dp"
-                android:src="@drawable/ic_dashboard"
+                android:src="@drawable/about"
                 android:layout_height="@dimen/_20dp"/>
 
             <TextView

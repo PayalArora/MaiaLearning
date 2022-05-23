@@ -47,4 +47,8 @@
     <dimen name="_7sp">7sp</dimen>
     <dimen name="_18dp">18dp</dimen>
     <dimen name="_80dp">80dp</dimen>
+    <dimen name="_180dp">180dp</dimen>
+    <dimen name="_190dp">190dp</dimen>
+    <dimen name="_55dp">55dp</dimen>
+    <dimen name="_21sp">21sp</dimen>
 </resources>

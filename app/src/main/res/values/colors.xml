@@ -6,6 +6,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray_2">#F5F5F5</color>
     <color name="gray">#707070</color>
     <color name="grey">#80000000</color>
     <color name="alpha_blue">#394168</color>
@@ -19,6 +20,7 @@
     <color name="black">#FF000000</color>
     <color name="white_1">#E5E5E5</color>
     <color name="color_acent">#19224F</color>
+    <color name="tab_color">#80FFFFFF</color>
     <color name="blue">#3743BE</color>
     <color name="yellow">#F89A1F</color>
     <color name="yellow1">#1AF89A1F</color>

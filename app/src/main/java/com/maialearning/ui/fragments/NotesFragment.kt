@@ -1,5 +1,6 @@
 package com.maialearning.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
+import com.maialearning.ui.activity.NotesDetailActivity
 import com.maialearning.ui.adapter.NotesAdapter
 
 class NotesFragment : Fragment(), OnItemClick {
@@ -39,7 +41,7 @@ class NotesFragment : Fragment(), OnItemClick {
     }
 
     override fun onClick(positiion: Int) {
-        loadFragment(NotesDetailFragment())
+       startActivity(Intent(requireActivity(), NotesDetailActivity::class.java))
     }
     private fun loadFragment(fragment: Fragment) {
         val transaction = activity?.supportFragmentManager?.beginTransaction()

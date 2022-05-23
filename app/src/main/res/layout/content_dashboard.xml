@@ -28,7 +28,6 @@
         android:background="?android:attr/windowBackground"
         app:itemBackground="@color/white"
         app:itemHorizontalTranslationEnabled="true"
-        app:itemIconSize="@dimen/_28dp"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu"
