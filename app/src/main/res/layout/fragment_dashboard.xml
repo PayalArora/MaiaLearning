@@ -109,6 +109,7 @@
             android:layout_width="0dp"
             android:orientation="vertical"
             android:layout_weight="1"
+            android:id="@+id/universities"
             android:padding="@dimen/_10dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:background="@drawable/rectangle"

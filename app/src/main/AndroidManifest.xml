@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaiaLearning">
         <activity
+            android:name=".ui.activity.UniversitiesActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activity.LoginActivity"
             android:theme="@style/Login"
             android:exported="false" />
