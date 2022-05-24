@@ -8,7 +8,10 @@ import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ReciepentItemBinding
 
 
-class RecipentAdapter(val onItemClick: OnItemClick) : RecyclerView.Adapter<RecipentAdapter.ViewHolder>() {
+class RecipentAdapter(val onItemClick: OnItemClick) :
+    RecyclerView.Adapter<RecipentAdapter.ViewHolder>() {
+    var isSelected = false
+
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -29,12 +32,23 @@ class RecipentAdapter(val onItemClick: OnItemClick) : RecyclerView.Adapter<Recip
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position) }
+        viewHolder.binding.root.setOnClickListener { onItemClick.onClick(position) }
+        if (isSelected) {
+            viewHolder.binding.checkName.isChecked = true
+        } else {
+            viewHolder.binding.checkName.isChecked = false
+        }
 
     }
 
     override fun getItemCount(): Int {
         return 4
+    }
+
+    fun selectAll(checked: Boolean) {
+        isSelected = checked
+        notifyDataSetChanged()
+
     }
 
 }

@@ -51,4 +51,5 @@
     <dimen name="_190dp">190dp</dimen>
     <dimen name="_55dp">55dp</dimen>
     <dimen name="_21sp">21sp</dimen>
+    <dimen name="_110dp">110dp</dimen>
 </resources>

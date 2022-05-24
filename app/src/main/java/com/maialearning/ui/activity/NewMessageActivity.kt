@@ -3,6 +3,7 @@ package com.maialearning.ui.activity
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +37,10 @@ class NewMessageActivity : AppCompatActivity(), OnItemClick {
         val recyclerView = view.findViewById<RecyclerView>(R.id.reciepent_list)
         recyclerView.adapter = RecipentAdapter(this)
 
+        val selectAll = view.findViewById<CheckBox>(R.id.select_all)
+        selectAll.setOnClickListener {
+            ( recyclerView.adapter as RecipentAdapter).selectAll(selectAll.isChecked)
+        }
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
 
         dialog.setContentView(view)

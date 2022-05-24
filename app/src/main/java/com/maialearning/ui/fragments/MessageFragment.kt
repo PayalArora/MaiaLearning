@@ -1,13 +1,17 @@
 package com.maialearning.ui.fragments
 
 import ViewPagerAdapter
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -43,12 +47,15 @@ class MessageFragment : Fragment(), OnItemClick {
         setAdapter()
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setAdapter() {
         val adapter = ViewPagerAdapter(requireContext(), this,
             3)
         mBinding.viewPager.adapter = adapter
+        mBinding.viewPager.isUserInputEnabled = false
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
+
         mBinding.tabs.tabGravity = TabLayout.GRAVITY_FILL
 
         mBinding.addFab.setOnClickListener { startActivity(Intent(requireActivity(), NewMessageActivity::class.java)) }

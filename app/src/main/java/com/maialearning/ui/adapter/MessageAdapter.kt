@@ -1,18 +1,17 @@
 package com.maialearning.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.calbacks.OnItemClick
+import com.maialearning.calbacks.OnItemClickDelete
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.databinding.LayoutMessageBinding
 
-class MessageAdapter(val onItemClick: OnItemClick) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
+class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<String>) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
+
     class ViewHolder(val binding: LayoutMessageBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
@@ -34,8 +33,9 @@ class MessageAdapter(val onItemClick: OnItemClick) : RecyclerView.Adapter<Messag
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return array.size
     }
+
 
 }
 

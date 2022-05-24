@@ -54,4 +54,5 @@
         android:textColor="@color/black_1"
         android:textSize="@dimen/_14sp"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
