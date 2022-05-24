@@ -5,11 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.maialearning.databinding.ConsideringLayoutBinding
 import com.maialearning.databinding.MessageLayoutBinding
 
 class ConsideringFragment : Fragment() {
-    private lateinit var mBinding: ConsideringLayoutBinding
+    private lateinit var mBinding: MessageLayoutBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -20,7 +19,7 @@ class ConsideringFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        mBinding = ConsideringLayoutBinding.inflate(inflater, container, false)
+        mBinding = MessageLayoutBinding.inflate(inflater, container, false)
         return mBinding.root
     }
 

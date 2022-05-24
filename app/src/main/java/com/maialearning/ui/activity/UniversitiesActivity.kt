@@ -1,14 +1,21 @@
 package com.maialearning.ui.activity
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.databinding.ActivityUniversitiesBinding
 import com.maialearning.ui.adapter.ViewStateAdapter
+import com.maialearning.ui.fragments.MilestonesFragment
+
 
 class UniversitiesActivity : FragmentActivity() {
     private lateinit var binding: ActivityUniversitiesBinding
@@ -28,20 +35,30 @@ class UniversitiesActivity : FragmentActivity() {
     }
 
     private fun initView() {
-        var tabArray = arrayOf(getString(R.string.search),getString(R.string.considering),getString(R.string.applying)
-            ,getString(R.string.milestone),getString(R.string.recommendations),getString(R.string.decisions),getString(R.string.essays),getString(R.string.scholarships))
+        var tabArray = arrayOf(getString(R.string.search),
+            getString(R.string.considering),
+            getString(R.string.applying),
+            getString(R.string.milestone),
+            getString(R.string.recommendations),
+            getString(R.string.decisions),
+            getString(R.string.essays),
+            getString(R.string.scholarships))
+        for (item in tabArray) {
+            binding.tabs.addTab(binding.tabs.newTab().setText(item))
 
+        }
         val fm: FragmentManager = supportFragmentManager
-        val adapter = ViewStateAdapter(fm, lifecycle,tabArray.size)
+        val adapter = ViewStateAdapter(fm, lifecycle, tabArray.size)
 
         binding.viewPager.adapter = adapter
 
-        for (item in tabArray) {
-            binding.tabs.addTab(binding.tabs.newTab().setText(item))
-        }
-
+        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+            tab.setText(tabArray[position])
+        }.attach()
 
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
+
+
 }

@@ -15,15 +15,20 @@
     <color name="circle_color">#1A54575F</color>
     <color name="black_1">#54575F</color>
     <color name="red">#E94235</color>
+    <color name="red_1">#B55B51</color>
+    <color name="green_1">#55AC68</color>
     <color name="black_2">#000103</color>
     <color name="black_3">#7B8292</color>
     <color name="grey_1">#1A54575F</color>
     <color name="black">#FF000000</color>
     <color name="white_1">#E5E5E5</color>
+
     <color name="color_acent">#19224F</color>
     <color name="tab_color">#80FFFFFF</color>
     <color name="blue">#3743BE</color>
     <color name="yellow">#F89A1F</color>
     <color name="yellow1">#1AF89A1F</color>
     <color name="green_2">#1A55AC68</color>
+    <color name="grey_2">#54575F</color>
+    <color name="grey_3">#54575F80</color>
 </resources>

@@ -7,6 +7,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.maialearning.ui.fragments.ConsideringFragment;
+import com.maialearning.ui.fragments.MilestonesFragment;
+import com.maialearning.ui.fragments.ShortcutFragment;
 
 public class ViewStateAdapter extends FragmentStateAdapter {
 int size=0;
@@ -21,8 +23,11 @@ int size=0;
             // Hardcoded in this order, you'll want to use lists and make sure the titles match
             if (position == 0) {
                 return new ConsideringFragment();
+            }else if (position ==3) {
+                return new MilestonesFragment();
             }
-            return new ConsideringFragment();
+
+            return new ShortcutFragment();
         }
 
         @Override
