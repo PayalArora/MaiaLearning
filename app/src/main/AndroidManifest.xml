@@ -10,26 +10,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaiaLearning">
         <activity
-            android:name=".ui.activity.LoginActivity"
-            android:theme="@style/Login"
+            android:name=".ui.activity.UniversitiesActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Login" />
         <activity
             android:name=".ui.activity.MessageDetailActivity"
-            android:theme="@style/NewMessage"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/NewMessage" />
         <activity
             android:name=".ui.activity.NewMessageActivity"
-            android:theme="@style/NewMessage"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/NewMessage" />
         <activity
             android:name=".ui.activity.NotesDetailActivity"
-            android:theme="@style/NewMessage"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/NewMessage" />
         <activity
             android:name=".ui.activity.MainActivity"
-            android:noHistory="true"
-            android:exported="true">
+            android:exported="true"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,9 +39,8 @@
             </intent-filter>
         </activity>
         <activity
-        android:name=".ui.activity.DashboardActivity"
-        android:exported="false" />
-
+            android:name=".ui.activity.DashboardActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

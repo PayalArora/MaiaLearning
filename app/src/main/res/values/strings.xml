@@ -61,4 +61,13 @@
     <string name="select_reciepents_to">To: Select Recepients</string>
     <string name="cc">CC: Parent</string>
     <string name="messanger">Messanger</string>
+    <string name="considering">Considering</string>
+    <string name="applying">Applying</string>
+    <string name="application_form">Application Form</string>
+    <string name="application_plan">Application Plan</string>
+    <string name="milestone">Milestone</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="decisions">Decisions</string>
+    <string name="essays">Essays</string>
+    <string name="scholarships">Scholarships</string>
 </resources>

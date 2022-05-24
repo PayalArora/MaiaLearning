@@ -65,6 +65,7 @@ class DashboardActivity : AppCompatActivity() {
             }
             true
         }
+
     }
 
     private fun loadFragment(fragment: Fragment) {
