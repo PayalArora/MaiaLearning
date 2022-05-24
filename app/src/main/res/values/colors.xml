@@ -25,4 +25,7 @@
     <color name="yellow">#F89A1F</color>
     <color name="yellow1">#1AF89A1F</color>
     <color name="green_2">#1A55AC68</color>
+    <color name="greytext">#A6000000</color>
+    <color name="rounded_blue">#2636779C</color>
+    <color name="univ_name">#54575F</color>
 </resources>
