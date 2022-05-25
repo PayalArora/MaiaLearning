@@ -90,6 +90,7 @@
         android:paddingVertical="@dimen/_20dp"
         android:paddingHorizontal="@dimen/_15dp"
         android:text="@string/add_file"
+        android:background="@drawable/ic_rect"
         android:textColor="@color/black_1"
         android:textSize="@dimen/_16sp"
         app:layout_constraintLeft_toLeftOf="parent"

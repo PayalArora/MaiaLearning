@@ -8,7 +8,8 @@
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/background_top_curve_white_filled_with_border
         </item>
-        <item name="behavior_peekHeight">700dp</item>
+        <item name="behavior_peekHeight">750dp</item>
+
     </style>
 
     <style name="Widget.MyApp.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">

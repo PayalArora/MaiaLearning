@@ -38,111 +38,122 @@
         android:layout_below="@+id/filters"
 
         android:background="@color/divider_color" />
-<RadioGroup
-    android:layout_width="match_parent"
-    android:layout_below="@+id/view1"
-    android:id="@+id/radio_application"
-    android:layout_height="wrap_content">
-    <RadioButton
-        android:id="@+id/rb_all_assignments"
+
+    <RadioGroup
+        android:id="@+id/radio_application"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/_16sp"
-        android:paddingStart="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_10dp"
-        android:button="@drawable/radiobutton"
-        android:checked="false"
-        android:text="@string/all_assignments"/>
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:layout_below="@+id/applictaion"
+        android:layout_below="@+id/view1">
 
-        android:background="@color/divider_color" />
-    <RadioButton
-        android:id="@+id/rb_app"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/_16sp"
-        android:paddingStart="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_10dp"
-        android:button="@drawable/radiobutton"
-        android:checked="true"
-        android:text="@string/Applications"/>
-    <View
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:layout_below="@+id/applictaion"
+        <RadioButton
+            android:id="@+id/rb_all_assignments"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:button="@drawable/radiobutton"
+            android:checked="false"
+            android:paddingStart="@dimen/_10dp"
+            android:text="@string/all_assignments"
+            android:textSize="@dimen/_16sp" />
 
-        android:background="@color/divider_color" />
-    <RadioButton
-        android:id="@+id/rb_assignments"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/_16sp"
-        android:button="@drawable/radiobutton"
-        android:paddingStart="@dimen/_10dp"
-        android:checked="true"
-        android:layout_marginLeft="@dimen/_10dp"
-        android:text="@string/assignment"/>
-    <View
-        android:id="@+id/view4"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:layout_marginLeft="@dimen/_10dp"
-        android:layout_below="@+id/applictaion"
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/applictaion"
 
-        android:background="@color/divider_color" />
-    <RadioButton
-        android:id="@+id/rb_fairs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/_16sp"
-        android:button="@drawable/radiobutton"
-        android:paddingStart="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_10dp"
-        android:checked="true"
-        android:text="@string/fairs"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:layout_below="@+id/applictaion"
+            android:background="@color/divider_color" />
 
-        android:background="@color/divider_color" />
-    <RadioButton
-        android:id="@+id/rb_meetings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/_16sp"
-        android:button="@drawable/radiobutton"
-        android:paddingStart="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_10dp"
+        <RadioButton
+            android:id="@+id/rb_app"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:button="@drawable/radiobutton"
+            android:checked="true"
+            android:paddingStart="@dimen/_10dp"
+            android:text="@string/Applications"
+            android:textSize="@dimen/_16sp" />
 
-        android:checked="true"
-        android:text="@string/meetings"/>
-    <View
-        android:id="@+id/view7"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:layout_below="@+id/radio_application"
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/applictaion"
 
-        android:background="@color/divider_color" />
+            android:background="@color/divider_color" />
 
-    <RadioButton
-        android:id="@+id/rb_surveys"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/_16sp"
-        android:button="@drawable/radiobutton"
-        android:paddingStart="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_10dp"
+        <RadioButton
+            android:id="@+id/rb_assignments"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:button="@drawable/radiobutton"
+            android:checked="true"
+            android:paddingStart="@dimen/_10dp"
+            android:text="@string/assignment"
+            android:textSize="@dimen/_16sp" />
 
-        android:checked="true"
-        android:text="@string/survey"/>
+        <View
+            android:id="@+id/view4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/applictaion"
+            android:layout_marginLeft="@dimen/_10dp"
 
-</RadioGroup>
+            android:background="@color/divider_color" />
+
+        <RadioButton
+            android:id="@+id/rb_fairs"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:button="@drawable/radiobutton"
+            android:checked="true"
+            android:paddingStart="@dimen/_10dp"
+            android:text="@string/fairs"
+            android:textSize="@dimen/_16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/applictaion"
+
+            android:background="@color/divider_color" />
+
+        <RadioButton
+            android:id="@+id/rb_meetings"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:button="@drawable/radiobutton"
+            android:checked="true"
+            android:paddingStart="@dimen/_10dp"
+
+            android:text="@string/meetings"
+            android:textSize="@dimen/_16sp" />
+
+        <View
+            android:id="@+id/view7"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/radio_application"
+
+            android:background="@color/divider_color" />
+
+        <RadioButton
+            android:id="@+id/rb_surveys"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:button="@drawable/radiobutton"
+            android:checked="true"
+            android:paddingStart="@dimen/_10dp"
+
+            android:text="@string/survey"
+            android:textSize="@dimen/_16sp" />
+
+    </RadioGroup>
     <View
         android:id="@+id/view6"
         android:layout_width="match_parent"

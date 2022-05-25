@@ -99,4 +99,23 @@
     <string name="deadline">Deadline</string>
     <string name="done">Done</string>
 
+    <string name="universities_5650">5650 Universities</string>
+    <string name="united_states">United States</string>
+    <string name="three">3</string>
+    <string name="university_of_calefornia">University of\nCalifornia, Berkeley</string>
+    <string name="first">1st</string>
+    <string name="date_by">25 May 2021, 01:20 AM   by: Nitin</string>
+    <string name="internal">Internal</string>
+    <string name="cr_required">CR: Required</string>
+    <string name="to_applying">To Applying</string>
+    <string name="likely">Likely</string>
+    <string name="program">Program</string>
+    <string name="system_engineering">All Systems Engineering</string>
+    <string name="term">Term</string>
+    <string name="plan">Plan</string>
+    <string name="spring_2022">Spring 2022</string>
+    <string name="select_term">Select Term</string>
+    <string name="winter">Winter 2022</string>
+    <string name="fall">Fall 2022</string>
+    <string name="summer">Summer 2022</string>
 </resources>

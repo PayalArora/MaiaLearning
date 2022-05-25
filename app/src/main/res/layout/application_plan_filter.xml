@@ -47,7 +47,7 @@
     <RadioButton
         android:id="@+id/rb_early_action"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_50dp"
         android:textSize="@dimen/_16sp"
         android:paddingStart="@dimen/_10dp"
         android:layout_marginLeft="@dimen/_10dp"
@@ -63,8 +63,8 @@
         android:background="@color/divider_color" />
     <RadioButton
         android:id="@+id/rb_early_action2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
         android:textSize="@dimen/_16sp"
         android:paddingStart="@dimen/_10dp"
         android:layout_marginLeft="@dimen/_10dp"
@@ -80,8 +80,8 @@
         android:background="@color/divider_color" />
     <RadioButton
         android:id="@+id/rb_decision"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
         android:textSize="@dimen/_16sp"
         android:button="@drawable/radiobutton"
         android:paddingStart="@dimen/_10dp"
@@ -98,8 +98,8 @@
         android:background="@color/divider_color" />
     <RadioButton
         android:id="@+id/rb_decision2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
         android:textSize="@dimen/_16sp"
         android:button="@drawable/radiobutton"
         android:paddingStart="@dimen/_10dp"
@@ -114,8 +114,8 @@
         android:background="@color/divider_color" />
     <RadioButton
         android:id="@+id/rb_priority"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
         android:textSize="@dimen/_16sp"
         android:button="@drawable/radiobutton"
         android:paddingStart="@dimen/_10dp"
@@ -131,8 +131,8 @@
         android:background="@color/divider_color" />
     <RadioButton
         android:id="@+id/rb_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
         android:textSize="@dimen/_16sp"
         android:button="@drawable/radiobutton"
         android:paddingStart="@dimen/_10dp"
