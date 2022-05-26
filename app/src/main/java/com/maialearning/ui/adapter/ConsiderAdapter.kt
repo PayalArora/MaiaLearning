@@ -51,6 +51,9 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption) :
             appPlan.setOnClickListener {
                 onItemClickOption.onPlanClick()
             }
+            commentImg.setOnClickListener {
+                onItemClickOption.onCommentClick()
+            }
         }
 
     }

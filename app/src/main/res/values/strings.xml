@@ -122,4 +122,6 @@
     <string name="select_decision">Select Decision</string>
     <string name="transcript_request">Transcript Request</string>
     <string name="ia_have_applied">I have applied</string>
+    <string name="comments">Comments</string>
+    <string name="leave_comment">Leave Comment</string>
 </resources>

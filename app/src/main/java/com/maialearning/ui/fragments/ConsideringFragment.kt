@@ -11,13 +11,16 @@ import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
+import com.maialearning.calbacks.OnItemClick
+import com.maialearning.databinding.CommentsSheetBinding
 import com.maialearning.databinding.ConsideringLayoutBinding
+import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
 const val plan = "Early Action"
-class ConsideringFragment : Fragment(), OnItemClickOption {
+class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     var selectedValue = ""
     private lateinit var mBinding: ConsideringLayoutBinding
 
@@ -83,6 +86,24 @@ class ConsideringFragment : Fragment(), OnItemClickOption {
         bottomSheetType(R.layout.application_plan_filter, R.id.radio_action, 2)
     }
 
+    override fun onCommentClick() {
+        bottomSheetComment()
+    }
+    private fun bottomSheetComment() {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: CommentsSheetBinding = CommentsSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.close.setOnClickListener {
+            dialog.dismiss()
+        }
+        sheetBinding.commentList.adapter = CommentAdapter(this)
+    }
+
+    override fun onClick(positiion: Int) {
+
+    }
 }
 
 
@@ -90,4 +111,5 @@ interface OnItemClickOption {
     fun onTypeClick()
     fun onTermClick()
     fun onPlanClick()
+    fun onCommentClick()
 }

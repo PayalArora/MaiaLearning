@@ -17,6 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_10dp"
             android:orientation="vertical"
             android:paddingVertical="@dimen/_7dp">
 
@@ -137,6 +138,7 @@
                 <ImageView
                     android:layout_width="@dimen/_18dp"
                     android:layout_height="@dimen/_15dp"
+                    android:id="@+id/commentImg"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/_10dp"
