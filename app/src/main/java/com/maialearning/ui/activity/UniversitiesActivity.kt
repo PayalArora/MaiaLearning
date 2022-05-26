@@ -27,9 +27,15 @@ class UniversitiesActivity : FragmentActivity() {
         binding = ActivityUniversitiesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         toolbarBinding = binding.toolbar
-        binding.toolbar.title = ""
-        toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.VISIBLE
-        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
+        binding.toolbar.contentInsetStartWithNavigation = 0
+        binding.toolbar.setNavigationIcon(getDrawable(R.drawable.ic_baseline_keyboard_arrow_left_24))
+        binding.toolbar.title = getString(R.string.universities)
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).visibility = View.VISIBLE
+        toolbarBinding.setNavigationOnClickListener {
+            finish()
+        }
         initView()
 
     }

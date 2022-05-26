@@ -118,4 +118,6 @@
     <string name="winter">Winter 2022</string>
     <string name="fall">Fall 2022</string>
     <string name="summer">Summer 2022</string>
+    <string name="accepted">Accepted?</string>
+    <string name="select_decision">Select Decision</string>
 </resources>

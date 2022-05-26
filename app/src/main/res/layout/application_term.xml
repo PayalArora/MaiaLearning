@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/filters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/_15dp"
+
+        android:text="@string/select_term"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_21sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/close"
+        android:layout_width="@dimen/_30dp"
+        android:layout_alignParentTop="true"
+        android:layout_height="@dimen/_30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/_15dp"
+        android:background="@drawable/circle_lay">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/cross" />
+    </RelativeLayout>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@+id/filters"
+
+        android:background="@color/divider_color" />
+<RadioGroup
+    android:layout_width="match_parent"
+    android:layout_below="@+id/view1"
+    android:id="@+id/radio_app_term"
+    android:layout_height="wrap_content">
+    <RadioButton
+        android:id="@+id/rb_spring"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:textSize="@dimen/_16sp"
+        android:paddingStart="@dimen/_10dp"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:button="@drawable/radiobutton"
+        android:checked="false"
+        android:text="@string/spring_2022"/>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+
+        android:background="@color/divider_color" />
+    <RadioButton
+        android:id="@+id/rb_summer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:textSize="@dimen/_16sp"
+        android:paddingStart="@dimen/_10dp"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:button="@drawable/radiobutton"
+        android:checked="true"
+        android:text="@string/summer"/>
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:background="@color/divider_color" />
+    <RadioButton
+        android:id="@+id/rb_fall"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:textSize="@dimen/_16sp"
+        android:button="@drawable/radiobutton"
+        android:paddingStart="@dimen/_10dp"
+        android:checked="true"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:text="@string/fall"/>
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:layout_below="@+id/radio_app_type"
+
+        android:background="@color/divider_color" />
+    <RadioButton
+        android:id="@+id/rb_winter"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:textSize="@dimen/_16sp"
+        android:button="@drawable/radiobutton"
+        android:paddingStart="@dimen/_10dp"
+        android:checked="true"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:text="@string/winter"/>
+    <View
+        android:id="@+id/view5"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:layout_below="@+id/radio_app_type"
+
+        android:background="@color/divider_color" />
+
+</RadioGroup>
+</RelativeLayout>
