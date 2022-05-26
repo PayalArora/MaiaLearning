@@ -120,4 +120,6 @@
     <string name="summer">Summer 2022</string>
     <string name="accepted">Accepted?</string>
     <string name="select_decision">Select Decision</string>
+    <string name="transcript_request">Transcript Request</string>
+    <string name="ia_have_applied">I have applied</string>
 </resources>

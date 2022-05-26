@@ -39,7 +39,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption {
 
     private fun setAdapter() {
         mBinding.consideringList.adapter = ConsiderAdapter(this)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
