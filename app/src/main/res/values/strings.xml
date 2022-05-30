@@ -124,4 +124,9 @@
     <string name="ia_have_applied">I have applied</string>
     <string name="comments">Comments</string>
     <string name="leave_comment">Leave Comment</string>
+    <string name="add_more">+ Add More</string>
+    <string name="add_program">Add Program</string>
+    <string name="program_name">Program Name</string>
+    <string name="remove">Remove</string>
+    <string name="save">Save</string>
 </resources>

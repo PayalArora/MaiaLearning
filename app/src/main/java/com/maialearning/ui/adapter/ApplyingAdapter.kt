@@ -53,6 +53,9 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             commentImg.setOnClickListener {
                 onItemClickOption.onCommentClick()
             }
+            addButton.setOnClickListener {
+
+            }
         }
 
     }
