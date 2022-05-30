@@ -1,5 +1,7 @@
 package com.maialearning.ui.activity
 
+import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -8,16 +10,22 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
+import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ActivityUniversitiesBinding
+import com.maialearning.databinding.LayoutProgramsBinding
+import com.maialearning.databinding.LayoutUniversityBinding
+import com.maialearning.ui.adapter.AddUniversiityAdapter
+import com.maialearning.ui.adapter.ProgramAdapter
 import com.maialearning.ui.adapter.ViewStateAdapter
 import com.maialearning.ui.fragments.MilestonesFragment
 
 
-class UniversitiesActivity : FragmentActivity() {
+class UniversitiesActivity : FragmentActivity(), OnItemClick {
     private lateinit var binding: ActivityUniversitiesBinding
     private lateinit var toolbarBinding: Toolbar
 
@@ -61,10 +69,28 @@ class UniversitiesActivity : FragmentActivity() {
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.setText(tabArray[position])
         }.attach()
+        binding.addFab.setOnClickListener {
+            bottomSheet()
+
+        }
 
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
 
+    private fun bottomSheet() {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: LayoutUniversityBinding = LayoutUniversityBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.close.setOnClickListener { dialog.dismiss()}
 
+        sheetBinding.reciepentList.adapter = AddUniversiityAdapter(this)
+        sheetBinding.save.setOnClickListener { dialog.dismiss() }
+    }
+
+    override fun onClick(positiion: Int) {
+
+    }
 }

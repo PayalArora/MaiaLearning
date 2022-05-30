@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/_10dp"
+    android:paddingHorizontal="@dimen/_10dp">
+
+
+    <RelativeLayout
+        android:id="@+id/icon_lay"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
+        android:background="@drawable/univ_rounded_icon">
+
+        <ImageView
+            android:id="@+id/univ_icon"
+            android:layout_width="@dimen/_20dp"
+            android:layout_height="@dimen/_20dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/univ_icon" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/univ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5dp"
+        android:layout_toStartOf="@+id/add_check"
+        android:layout_toEndOf="@+id/icon_lay"
+        android:fontFamily="@font/inter_bold"
+        android:text="University of California, San Diego"
+        android:textColor="@color/univ_name"
+        android:textSize="@dimen/_12sp"
+        android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/univ"
+            android:layout_marginStart="@dimen/_5dp"
+            android:layout_toStartOf="@+id/add_check"
+            android:layout_toEndOf="@+id/icon_lay"
+            android:fontFamily="@font/inter"
+            android:text="TE: 2-2, Couns Rec. – Required"
+            android:textColor="@color/black_1"
+            android:textFontWeight="500"
+            android:textSize="@dimen/_11sp" />
+
+    <CheckBox
+        android:id="@+id/add_check"
+        android:layout_width="@dimen/_70dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:button="@null"
+        android:layout_centerVertical="true"
+        android:background="@drawable/add_checkbox"
+        android:gravity="center"
+        android:padding="@dimen/_10dp"
+        android:text="@string/add" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_below="@+id/icon_lay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_marginTop="@dimen/_15dp"
+        android:background="@color/divider_color" />
+
+</RelativeLayout>
