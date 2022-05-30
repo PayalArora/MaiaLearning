@@ -124,4 +124,15 @@
     <string name="ia_have_applied">I have applied</string>
     <string name="comments">Comments</string>
     <string name="leave_comment">Leave Comment</string>
+    <string name="like">Like</string>
+    <string name="close">close</string>
+    <string name="overview">Overview</string>
+    <string name="community">Community</string>
+    <string name="admission">Admission</string>
+    <string name="cost_">Cost &amp; Aid</string>
+    <string name="campus_service">Campus Services</string>
+    <string name="about_uni">The University of California, Berkeley is a public land-grant research university in Berkeley, California. Established in 1868 as the University of California, it is the state\'s first land-grant university and the first campus of the University of California system.</string>
+    <string name="web">Web :</string>
+    <string name="phone">Phone :</string>
+
 </resources>

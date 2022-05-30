@@ -1,19 +1,25 @@
 package com.maialearning.ui.activity
 
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.databinding.ActivityUniversitiesBinding
 import com.maialearning.ui.adapter.ViewStateAdapter
+import com.maialearning.ui.adapter.ViewStateFactAdapter
 import com.maialearning.ui.fragments.MilestonesFragment
 
 
@@ -61,10 +67,44 @@ class UniversitiesActivity : FragmentActivity() {
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.setText(tabArray[position])
         }.attach()
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).apply {
+            setOnClickListener {
+                bottomSheetWork()
+            }
+        }
 
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
+    private fun bottomSheetWork() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
+        val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
+        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
+        // val bottomSheetBehavior = BottomSheetBehavior.from(layout)
 
+        //  bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED;
+        //view.minimumHeight = ViewGroup.LayoutParams.MATCH_PARENT
+
+        val tabArray = arrayOf(getString(R.string.overview),
+            getString(R.string.community),
+            getString(R.string.admission),
+            getString(R.string.cost_),
+            getString(R.string.notes),
+            getString(R.string.campus_service))
+        for (item in tabArray) {
+            factTabs.addTab(factTabs.newTab().setText(item))
+        }
+
+        val fm: FragmentManager = supportFragmentManager
+        val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size)
+        viewPager.adapter = adapter
+        TabLayoutMediator(factTabs, viewPager) { tab, position ->
+            tab.text = tabArray[position]
+        }.attach()
+        view.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(view)
+        dialog.show()
+    }
 
 }
