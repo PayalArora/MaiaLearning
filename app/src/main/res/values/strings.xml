@@ -89,7 +89,7 @@
     <string name="early_action2">Early Action II</string>
     <string name="decision">Early Decision</string>
     <string name="decision2">Early Decision II</string>
-    <string name="priority">Priority Application Priority Application Priority Application</string>
+    <string name="priority">Priority Application</string>
     <string name="reg">Regular</string>
     <string name="select_type">Select Application Type</string>
     <string name="other_app">Other Application</string>
@@ -124,6 +124,19 @@
     <string name="ia_have_applied">I have applied</string>
     <string name="comments">Comments</string>
     <string name="leave_comment">Leave Comment</string>
+
+    <string name="like">Like</string>
+    <string name="close">close</string>
+    <string name="overview">Overview</string>
+    <string name="community">Community</string>
+    <string name="admission">Admission</string>
+    <string name="cost_">Cost &amp; Aid</string>
+    <string name="campus_service">Campus Services</string>
+    <string name="about_uni">The University of California, Berkeley is a public land-grant research university in Berkeley, California. Established in 1868 as the University of California, it is the state\'s first land-grant university and the first campus of the University of California system.</string>
+    <string name="web">Web :</string>
+    <string name="phone">Phone :</string>
+
+
     <string name="add_more">+ Add More</string>
     <string name="add_program">Add Program</string>
     <string name="program_name">Program Name</string>
@@ -185,4 +198,13 @@
         <item>Program 3</item>
 
     </string-array>
+    <string name="more">More</string>
+    <string name="sat_ebrw">Sat-Erbw</string>
+    <string name="twohundred">200</string>
+    <string name="eight_hundred">800</string>
+    <string name="diversity">Diversity</string>
+    <string name="history_black">Historically Black College or University</string>
+    <string name="tribal_college">Tribal College</string>
+    <string name="campus_activities">Campus Activities</string>
+
 </resources>

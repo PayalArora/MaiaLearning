@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_1"
+    android:padding="@dimen/_10dp">
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listComunity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintTop_toTopOf="parent"
+            app:spanCount="2"
+            tools:itemCount="6"
+            tools:listitem="@layout/comunity_adapter" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/breakdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20dp"
+        android:background="@drawable/background_curve_rectangle_white_filled"
+        android:padding="@dimen/_10dp"
+        app:layout_constraintStart_toStartOf="@id/listComunity"
+        app:layout_constraintTop_toBottomOf="@id/listComunity">
+
+
+        <TextView
+            android:id="@+id/ethc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Breakdown by Ethcity"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="@color/grey"
+            app:layout_constraintTop_toBottomOf="@id/ethc" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressView"
+            app:layout_constraintTop_toBottomOf="@id/view"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ethnicity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:background="@drawable/background_curve_rectangle_white_filled"
+            android:padding="@dimen/_10dp"
+            app:layout_constraintStart_toStartOf="@id/listComunity"
+            app:layout_constraintTop_toBottomOf="@id/breakdown">
+
+
+            <TextView
+                android:id="@+id/campusEffort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Campus Snapshot"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:background="@color/grey"
+                app:layout_constraintTop_toBottomOf="@id/campusEffort" />
+
+            <TextView
+                android:id="@+id/web"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Housing Availability:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/campusEffort" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                android:lineSpacingExtra="2sp"
+                android:text=" N/A"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/web"
+                app:layout_constraintTop_toBottomOf="@id/campusEffort" />
+
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Religious Affiliation:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/web" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Not applicable"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/phone"
+                app:layout_constraintTop_toBottomOf="@id/web" />
+
+            <TextView
+                android:id="@+id/enviro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Student Government:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/phone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Yes"
+                android:textColor="@color/green_1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/enviro"
+                app:layout_constraintTop_toBottomOf="@id/phone" />
+
+            <TextView
+                android:id="@+id/public_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Student Newspaper:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/enviro" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Yes"
+                android:textColor="@color/green_1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/public_type"
+                app:layout_constraintTop_toBottomOf="@id/enviro" />
+
+            <TextView
+                android:id="@+id/types"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Literary Magazine:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/public_type" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Yes"
+                android:textColor="@color/green_1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/types"
+                app:layout_constraintTop_toBottomOf="@id/public_type" />
+
+            <TextView
+                android:id="@+id/year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Yearbook:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/types" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Yes"
+                android:textColor="@color/green_1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/year"
+                app:layout_constraintTop_toBottomOf="@id/types" />
+
+            <TextView
+                android:id="@+id/radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Radio Station:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/year" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Yes"
+                android:textColor="@color/green_1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/radio"
+                app:layout_constraintTop_toBottomOf="@id/year" />
+
+            <TextView
+                android:id="@+id/television"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Television Station:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/radio" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Yes"
+                android:textColor="@color/green_1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/television"
+                app:layout_constraintTop_toBottomOf="@id/radio" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:background="@drawable/background_curve_rectangle_white_filled"
+            android:padding="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/listComunity"
+            app:layout_constraintTop_toBottomOf="@id/ethnicity">
+
+
+            <TextView
+                android:id="@+id/campus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Campus Snapshot"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:background="@color/grey"
+                app:layout_constraintTop_toBottomOf="@id/campus" />
+
+            <TextView
+                android:id="@+id/minority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Minority Student Organizations:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/campus" />
+
+            <TextView
+                android:id="@+id/minority_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2dp"
+                android:lineSpacingExtra="2sp"
+                android:text="N/A"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf= "@id/minority"
+                app:layout_constraintTop_toBottomOf="@id/minority" />
+
+            <TextView
+                android:id="@+id/inter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text=" International Student Organizations:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/minority_txt" />
+
+            <TextView
+                android:id="@+id/inter_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" International Student Organization"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/inter"
+                app:layout_constraintTop_toBottomOf="@id/inter" />
+
+            <TextView
+                android:id="@+id/religous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text=" Campus-based Religious Organizations:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/inter_txt" />
+
+            <TextView
+                android:id="@+id/religous_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sp"
+                android:lineSpacingExtra="2sp"
+                android:text="Campus Ministries"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/religous"
+                app:layout_constraintTop_toBottomOf="@id/religous" />
+
+            <TextView
+                android:id="@+id/org_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Other Student Organizations, Musical Groups, Activities, and Committees:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/religous_txt" />
+
+            <TextView
+                android:id="@+id/org_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sp"
+                android:lineSpacingExtra="2sp"
+                android:text=" Concert, jazz, and marching bands; choral groups, dance, drama/theatre, music ensembles, musical theatre, symphony orchestra"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/org_type"
+                app:layout_constraintTop_toBottomOf="@id/org_type" />
+
+            <TextView
+                android:id="@+id/learning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Special Learning Opportunities:"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/org_txt" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sp"
+                android:lineSpacingExtra="2sp"
+                android:text="Yes"
+                android:textColor="@color/gray"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/learning"
+                app:layout_constraintTop_toBottomOf="@id/learning" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
