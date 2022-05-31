@@ -124,7 +124,7 @@
     <string name="ia_have_applied">I have applied</string>
     <string name="comments">Comments</string>
     <string name="leave_comment">Leave Comment</string>
-<<<<<<< HEAD
+
     <string name="like">Like</string>
     <string name="close">close</string>
     <string name="overview">Overview</string>
@@ -136,8 +136,7 @@
     <string name="web">Web :</string>
     <string name="phone">Phone :</string>
 
-||||||| 2b13a3b
-=======
+
     <string name="add_more">+ Add More</string>
     <string name="add_program">Add Program</string>
     <string name="program_name">Program Name</string>
@@ -155,5 +154,5 @@
     <string name="history_black">Historically Black College or University</string>
     <string name="tribal_college">Tribal College</string>
     <string name="campus_activities">Campus Activities</string>
->>>>>>> 2087b07bcee6870adaedebbbe638b072e03ec0a4
+
 </resources>
