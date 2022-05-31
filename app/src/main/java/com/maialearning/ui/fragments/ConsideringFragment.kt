@@ -14,14 +14,18 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.CommentsSheetBinding
 import com.maialearning.databinding.ConsideringLayoutBinding
+import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
+import com.maialearning.ui.adapter.ProgramAdapter
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
 const val plan = "Early Action"
 class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
-    var selectedValue = ""
+    var count:Int = 0
+    var dialog:BottomSheetDialog? = null
+
     private lateinit var mBinding: ConsideringLayoutBinding
 
 
@@ -54,18 +58,22 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
+    override fun onDestroyView() {
+        dialog?.dismiss()
+        super.onDestroyView()
+    }
 
 
     private fun bottomSheetType(layoutId:Int, rbId:Int, type:Int) {
-        val dialog = BottomSheetDialog(requireContext())
+        dialog = BottomSheetDialog(requireContext())
 
         val view = layoutInflater.inflate(layoutId, null)
-        view?.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        view.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
         val radioAppType = view.findViewById<RadioGroup>(rbId)
-        dialog.setContentView(view)
-        dialog.show()
+        dialog?.setContentView(view)
+        dialog?.show()
         view.findViewById<RelativeLayout>(R.id.close).setOnClickListener {
-            dialog.dismiss()
+            dialog?.dismiss()
         }
         radioAppType.setOnCheckedChangeListener(
             { group, checkedId ->
@@ -89,6 +97,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     override fun onCommentClick() {
         bottomSheetComment()
     }
+
+    override fun onAddClick() {
+        bottomSheetProgram()
+    }
+
     private fun bottomSheetComment() {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: CommentsSheetBinding = CommentsSheetBinding.inflate(layoutInflater)
@@ -101,6 +114,21 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         sheetBinding.commentList.adapter = CommentAdapter(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+    }
+    private fun bottomSheetProgram() {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding:LayoutProgramsBinding = LayoutProgramsBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+
+        sheetBinding.addMoreLayout.adapter = ProgramAdapter(this)
+        sheetBinding.addMore.setOnClickListener { (sheetBinding.addMoreLayout.adapter as ProgramAdapter).setCount(count++)  }
+        sheetBinding.save.setOnClickListener { dialog.dismiss() }
+    }
     override fun onClick(positiion: Int) {
 
     }
@@ -112,4 +140,5 @@ interface OnItemClickOption {
     fun onTermClick()
     fun onPlanClick()
     fun onCommentClick()
+    fun onAddClick()
 }

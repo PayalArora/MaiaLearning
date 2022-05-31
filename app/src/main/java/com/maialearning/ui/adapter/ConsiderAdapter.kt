@@ -54,6 +54,9 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption) :
             commentImg.setOnClickListener {
                 onItemClickOption.onCommentClick()
             }
+            addButton.setOnClickListener {
+                onItemClickOption.onAddClick()
+            }
         }
 
     }

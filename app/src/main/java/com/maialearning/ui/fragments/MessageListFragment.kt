@@ -97,7 +97,7 @@ class MessageListFragment : Fragment(), OnItemClickDelete {
     override fun onDelete(position: Int) {
         // this method is called when item is swiped.
         // below line is to remove item from our array list.
-        recyclerDataArrayList!!.removeAt(position)
+        recyclerDataArrayList.removeAt(position)
 
         // below line is to notify our item is removed from adapter.
         (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)

@@ -93,4 +93,8 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
+    override fun onAddClick() {
+
+    }
+
 }

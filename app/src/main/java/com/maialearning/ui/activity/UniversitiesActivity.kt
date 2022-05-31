@@ -1,6 +1,12 @@
 package com.maialearning.ui.activity
 
+<<<<<<< HEAD
 import android.content.res.Resources
+||||||| 2b13a3b
+=======
+import android.content.Intent
+import android.content.res.Resources
+>>>>>>> 2087b07bcee6870adaedebbbe638b072e03ec0a4
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -11,19 +17,29 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+<<<<<<< HEAD
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
+||||||| 2b13a3b
+=======
+import com.google.android.material.bottomsheet.BottomSheetDialog
+>>>>>>> 2087b07bcee6870adaedebbbe638b072e03ec0a4
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
+import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ActivityUniversitiesBinding
+import com.maialearning.databinding.LayoutProgramsBinding
+import com.maialearning.databinding.LayoutUniversityBinding
+import com.maialearning.ui.adapter.AddUniversiityAdapter
+import com.maialearning.ui.adapter.ProgramAdapter
 import com.maialearning.ui.adapter.ViewStateAdapter
 import com.maialearning.ui.adapter.ViewStateFactAdapter
 import com.maialearning.ui.fragments.MilestonesFragment
 
 
-class UniversitiesActivity : FragmentActivity() {
+class UniversitiesActivity : FragmentActivity(), OnItemClick {
     private lateinit var binding: ActivityUniversitiesBinding
     private lateinit var toolbarBinding: Toolbar
 
@@ -67,11 +83,19 @@ class UniversitiesActivity : FragmentActivity() {
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.setText(tabArray[position])
         }.attach()
+<<<<<<< HEAD
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).apply {
             setOnClickListener {
                 bottomSheetWork()
             }
         }
+||||||| 2b13a3b
+=======
+        binding.addFab.setOnClickListener {
+            bottomSheet()
+
+        }
+>>>>>>> 2087b07bcee6870adaedebbbe638b072e03ec0a4
 
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
@@ -96,6 +120,7 @@ class UniversitiesActivity : FragmentActivity() {
             factTabs.addTab(factTabs.newTab().setText(item))
         }
 
+<<<<<<< HEAD
         val fm: FragmentManager = supportFragmentManager
         val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size)
         viewPager.adapter = adapter
@@ -106,5 +131,22 @@ class UniversitiesActivity : FragmentActivity() {
         dialog.setContentView(view)
         dialog.show()
     }
+||||||| 2b13a3b
+=======
+    private fun bottomSheet() {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: LayoutUniversityBinding = LayoutUniversityBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.close.setOnClickListener { dialog.dismiss()}
 
+        sheetBinding.reciepentList.adapter = AddUniversiityAdapter(this)
+        sheetBinding.save.setOnClickListener { dialog.dismiss() }
+    }
+
+    override fun onClick(positiion: Int) {
+>>>>>>> 2087b07bcee6870adaedebbbe638b072e03ec0a4
+
+    }
 }
