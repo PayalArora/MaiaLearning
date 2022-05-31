@@ -22,7 +22,42 @@
             app:spanCount="2"
             tools:itemCount="6"
             tools:listitem="@layout/comunity_adapter" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/breakdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20dp"
+        android:background="@drawable/background_curve_rectangle_white_filled"
+        android:padding="@dimen/_10dp"
+        app:layout_constraintStart_toStartOf="@id/listComunity"
+        app:layout_constraintTop_toBottomOf="@id/listComunity">
 
+
+        <TextView
+            android:id="@+id/ethc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Breakdown by Ethcity"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="@color/grey"
+            app:layout_constraintTop_toBottomOf="@id/ethc" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressView"
+            app:layout_constraintTop_toBottomOf="@id/view"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ethnicity"
             android:layout_width="match_parent"
@@ -31,7 +66,7 @@
             android:background="@drawable/background_curve_rectangle_white_filled"
             android:padding="@dimen/_10dp"
             app:layout_constraintStart_toStartOf="@id/listComunity"
-            app:layout_constraintTop_toBottomOf="@id/listComunity">
+            app:layout_constraintTop_toBottomOf="@id/breakdown">
 
 
             <TextView
@@ -252,6 +287,8 @@
             android:layout_marginTop="@dimen/_20dp"
             android:background="@drawable/background_curve_rectangle_white_filled"
             android:padding="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/listComunity"
             app:layout_constraintTop_toBottomOf="@id/ethnicity">
 

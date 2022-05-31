@@ -9,11 +9,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maialearning.databinding.CommunityLayoutBinding
 import com.maialearning.ui.adapter.CommunityAdapter
+import com.maialearning.ui.adapter.ProgramAdapter
+import com.maialearning.ui.adapter.ProgressAdapter
 import com.maialearning.ui.model.CommunityModel
 
 class CommunityFragmet : Fragment() {
     private lateinit var mBinding: CommunityLayoutBinding
     var listData=ArrayList<CommunityModel>()
+    var listDataProgress=ArrayList<CommunityModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -33,6 +36,8 @@ class CommunityFragmet : Fragment() {
        initData()
         mBinding.listComunity.layoutManager=
             GridLayoutManager(requireContext(),2, LinearLayoutManager.VERTICAL,false)
+        mBinding.progressView.layoutManager=
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
 
 
     }
@@ -58,5 +63,24 @@ class CommunityFragmet : Fragment() {
         val communityModel9= CommunityModel("International","14%","")
         listData.add(communityModel9)
         mBinding.listComunity.adapter = CommunityAdapter(listData)
+        val communityModela= CommunityModel("International Students","73%","#C17034")
+        listDataProgress.add(communityModela)
+        val communityModela1= CommunityModel("India Alaska Native","27%","#348FC1")
+        listDataProgress.add(communityModela1)
+        val communityModela2= CommunityModel("Hispanic Latino","93%","#804053")
+        listDataProgress.add(communityModela2)
+        val communityModela3= CommunityModel("Race Ethnicity Unkown","7%","#BF3E8C")
+        listDataProgress.add(communityModela3)
+        val communityModela4= CommunityModel("Native Hawaiian","51%","#349460")
+        listDataProgress.add(communityModela4)
+        val communityModela5= CommunityModel("Black African American","49%","#270018")
+        listDataProgress.add(communityModela5)
+        val communityModela6= CommunityModel("Asian","42%","#24418E")
+        listDataProgress.add(communityModela6)
+        val communityModela7= CommunityModel("White","72%","#54575F")
+        listDataProgress.add(communityModela7)
+        val communityModela8= CommunityModel("Two or more Races","51%","#918C92")
+        listDataProgress.add(communityModela8)
+        mBinding.progressView.adapter = ProgressAdapter(requireContext(),listDataProgress)
     }
 }
