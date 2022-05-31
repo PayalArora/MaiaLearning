@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -19,17 +20,15 @@ import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ActivityUniversitiesBinding
 import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.databinding.LayoutUniversityBinding
-import com.maialearning.ui.adapter.AddUniversiityAdapter
-import com.maialearning.ui.adapter.ProgramAdapter
-import com.maialearning.ui.adapter.ViewStateAdapter
+import com.maialearning.databinding.UniversityFilterBinding
+import com.maialearning.ui.adapter.*
+import com.maialearning.ui.bottomsheets.SheetUniversityFilter
 import com.maialearning.ui.fragments.MilestonesFragment
 
 
-class UniversitiesActivity : FragmentActivity(), OnItemClick {
+class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private lateinit var binding: ActivityUniversitiesBinding
     private lateinit var toolbarBinding: Toolbar
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUniversitiesBinding.inflate(layoutInflater)
@@ -70,27 +69,85 @@ class UniversitiesActivity : FragmentActivity(), OnItemClick {
             tab.setText(tabArray[position])
         }.attach()
         binding.addFab.setOnClickListener {
-            bottomSheet()
+            bottomSheetAddUniv()
 
+        }
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).setOnClickListener {
+            univFilter()
         }
 
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
 
-    private fun bottomSheet() {
+    private fun bottomSheetAddUniv() {
         val dialog = BottomSheetDialog(this)
         val sheetBinding: LayoutUniversityBinding = LayoutUniversityBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
-        sheetBinding.close.setOnClickListener { dialog.dismiss()}
+        sheetBinding.close.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.reciepentList.adapter = AddUniversiityAdapter(this)
         sheetBinding.save.setOnClickListener { dialog.dismiss() }
+        sheetBinding.country.setOnClickListener {
+            SheetUniversityFilter(this, layoutInflater).showDialog()
+        }
     }
 
-    override fun onClick(positiion: Int) {
+    private fun univFilter() {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.search.visibility = View.GONE
+        sheetBinding.filters.setText(resources.getString(R.string.filters))
+        dialog.show()
+        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        sheetBinding.reciepentList.adapter =
+            UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
 
     }
+
+    private fun countryFilter() {
+        SheetUniversityFilter(this, layoutInflater).showDialog()
+    }
+
+    override fun onClick(positiion: Int, type: Int) {
+        if (positiion == 0 && type == 2) {
+            countryFilter()
+        } else if(positiion == 1 && type == 2)
+        {
+            //regionFilter(View.VISIBLE, resources.getString(R.string.reigon) ,positiion)
+        }
+        else if(positiion == 2 && type == 2)
+        {
+           // regionFilter(View.VISIBLE, resources.getString(R.string.list) ,positiion)
+        }
+    }
+
+    private fun regionFilter(visibility: Int, title:String, positiion: Int) {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.search.visibility = visibility
+        sheetBinding.filters.setText(title)
+        dialog.show()
+        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        if (positiion == 1)
+        sheetBinding.reciepentList.adapter = ReigonAdapter(resources.getStringArray(R.array.Region), this)
+        else if (positiion == 2)
+            sheetBinding.reciepentList.adapter = ItemListAdapter(resources.getStringArray(R.array.list), this)
+        sheetBinding.close.setOnClickListener {
+            sheetBinding.searchText.setText("")
+        }
+
+
+
+    }
+}
+
+interface ClickFilters {
+    fun onClick(positiion: Int, type: Int)
 }

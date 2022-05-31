@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <CheckBox
+        android:id="@+id/check"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:textSize="@dimen/_16sp"
+        android:paddingStart="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_5dp"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:checked="false"
+        android:fontFamily="@font/inter_bold"
+        android:buttonTint="@color/checkbutton"
+        android:text="@string/early_action"/>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_marginTop="@dimen/_5dp"
+        android:layout_below="@+id/check"
+
+        android:background="@color/divider_color" />
+</RelativeLayout>

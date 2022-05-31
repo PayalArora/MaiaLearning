@@ -66,15 +66,15 @@
             android:layout_centerVertical="true"
             android:layout_gravity="start"
             android:background="@android:color/transparent"
-            android:paddingRight="@dimen/_10dp"
             android:drawableLeft="@drawable/ic_baseline_search_24"
             android:drawablePadding="@dimen/_5dp"
             android:hint="@string/search"
             android:imeOptions="actionSearch"
-
             android:inputType="textFilter"
+
             android:maxLines="1"
             android:paddingLeft="@dimen/_15dp"
+            android:paddingRight="@dimen/_10dp"
             android:textColorHint="@color/grey" />
 
     </RelativeLayout>

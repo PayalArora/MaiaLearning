@@ -8,9 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.maialearning.ui.fragments.ApplyingFragment;
 import com.maialearning.ui.fragments.ConsideringFragment;
-import com.maialearning.ui.fragments.DecisionsFragment;
 import com.maialearning.ui.fragments.MilestonesFragment;
-import com.maialearning.ui.fragments.ShortcutFragment;
 import com.maialearning.ui.fragments.UpcomingFragment;
 
 public class ViewStateAdapter extends FragmentStateAdapter {

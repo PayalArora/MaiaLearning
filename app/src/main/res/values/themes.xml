@@ -31,4 +31,7 @@
     <style name="Theme.MalaLearning.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MalaLearning.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="MatchSpinnerTheme" parent="Theme.MaiaLearning">
+        <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
+    </style>
 </resources>

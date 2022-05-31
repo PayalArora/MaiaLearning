@@ -2,7 +2,9 @@ package com.maialearning.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.R
 import com.maialearning.databinding.ApplyingItemLayBinding
 import com.maialearning.databinding.ConsideringItemLayBinding
 import com.maialearning.ui.fragments.OnItemClickOption
@@ -53,9 +55,12 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             commentImg.setOnClickListener {
                 onItemClickOption.onCommentClick()
             }
-            addButton.setOnClickListener {
-
-            }
+            val others = root.context.resources.getStringArray(R.array.spinner_programs)
+            val adapter = ArrayAdapter(
+                root.context,
+                R.layout.spinner_text, others
+            )
+            allSystem.adapter = adapter
         }
 
     }

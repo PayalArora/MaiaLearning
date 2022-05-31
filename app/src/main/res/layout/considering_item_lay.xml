@@ -303,11 +303,13 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/_5dp"
+                android:weightSum="1"
+
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
+                    android:layout_weight="0.3"
+                    android:layout_width="0dp"
                     android:id="@+id/app_type"
                     android:paddingVertical="@dimen/_5dp"
                     android:layout_height="wrap_content"
@@ -331,17 +333,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_15dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:fontFamily="@font/inter_regular"
-                        android:gravity="center_horizontal|top"
                         android:text="@string/ucas"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sp" />
+                        android:textSize="@dimen/_11sp" />
 
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:id="@+id/app_term"
-                    android:layout_weight="1"
+                    android:layout_weight="0.3"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/app_type"
                     android:layout_marginLeft="@dimen/_10dp"
@@ -363,21 +366,23 @@
                     <TextView
                         android:id="@+id/term_value"
                         android:paddingVertical="@dimen/_5dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_15dp"
                         android:fontFamily="@font/inter_regular"
-                        android:gravity="center_horizontal|top"
                         android:text="@string/spring_2022"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sp" />
+                        android:textSize="@dimen/_11sp" />
 
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:id="@+id/app_plan"
-                    android:layout_weight="1"
+                    android:layout_weight="0.4"
                     android:paddingVertical="@dimen/_5dp"
+
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/app_term"
                     android:layout_marginLeft="@dimen/_10dp"
@@ -401,11 +406,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_15dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:fontFamily="@font/inter_regular"
-                        android:gravity="center_horizontal|top"
-                        android:text="Regular Admission"
+                        android:text="Regular"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sp" />
+                        android:textSize="@dimen/_11sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -440,17 +446,30 @@
                         android:text="@string/program"
                         android:textColor="@color/black_1"
                         android:textSize="@dimen/_12sp" />
-
-                    <TextView
+                    <Spinner
                         android:id="@+id/all_system"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_30dp"
+                        android:layout_marginStart="@dimen/_5dp"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
-                        android:text="@string/system_engineering"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sp" />
+                        android:background="@drawable/white_rect_24"
+                        android:dropDownVerticalOffset="20dp"
+                        android:overlapAnchor="false"
+                        android:theme="@style/MatchSpinnerTheme"
+                        android:spinnerMode="dropdown"
+                        />
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/all_system"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginStart="@dimen/_15dp"-->
+<!--                        android:fontFamily="@font/inter_regular"-->
+<!--                        android:gravity="center_horizontal|top"-->
+<!--                        android:text="@string/system_engineering"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:textSize="@dimen/_12sp" />-->
 
                 </LinearLayout>
                 <ImageButton

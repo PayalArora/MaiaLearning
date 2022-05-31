@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:id="@+id/item"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp">
 
         <ImageView
             android:id="@+id/flag_img"
             android:layout_width="@dimen/_20dp"
             android:layout_height="@dimen/_25dp"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_15dp"
 
-            android:layout_marginStart="@dimen/_10dp"
-            android:layout_toLeftOf="@+id/right_arrow"
             android:src="@drawable/us_flag" />
 
-        <TextView
-            android:id="@+id/flag_text"
-            android:layout_width="@dimen/_20dp"
-            android:layout_height="@dimen/_25dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/_10dp"
-            android:layout_toLeftOf="@+id/right_arrow"
-            android:gravity="right|center"
-            android:text="2"
-            android:visibility="gone" />
 
         <TextView
             android:id="@+id/filters"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/img_check"
+            android:layout_toRightOf="@+id/flag_img"
             android:fontFamily="@font/inter"
             android:padding="@dimen/_15dp"
             android:text="@string/country"
@@ -42,22 +35,25 @@
             android:textFontWeight="500"
             android:textSize="@dimen/_16sp" />
         <ImageView
-            android:id="@+id/right_arrow"
-            android:layout_width="@dimen/_20dp"
-            android:layout_height="@dimen/_15dp"
-            android:layout_marginEnd="@dimen/_15dp"
+            android:id="@+id/img_check"
             android:layout_alignParentRight="true"
+            android:layout_width="@dimen/_30dp"
+            android:layout_height="@dimen/_30dp"
             android:layout_centerVertical="true"
+            app:tint="@color/forgot_color"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/_15dp"
+            android:tintMode="multiply"
+            android:src="@drawable/check_select" />
 
-            android:layout_marginStart="@dimen/_5dp"
-            android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
     </RelativeLayout>
+
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1dp"
-        android:layout_marginTop="@dimen/_5dp"
         android:layout_below="@+id/item"
+        android:layout_marginTop="@dimen/_5dp"
         android:background="@color/divider_color" />
 
 </RelativeLayout>

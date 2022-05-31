@@ -1,8 +1,13 @@
 package com.maialearning.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.R
 import com.maialearning.databinding.ConsideringItemLayBinding
 import com.maialearning.databinding.ItemMilestonesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
@@ -57,7 +62,15 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption) :
             addButton.setOnClickListener {
                 onItemClickOption.onAddClick()
             }
-        }
+            val others = root.context.resources.getStringArray(R.array.spinner_programs)
+            val adapter = ArrayAdapter(
+                root.context,
+                R.layout.spinner_text, others
+            )
+            allSystem.adapter = adapter
+
+
+    }
 
     }
 

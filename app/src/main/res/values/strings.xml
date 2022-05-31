@@ -89,7 +89,7 @@
     <string name="early_action2">Early Action II</string>
     <string name="decision">Early Decision</string>
     <string name="decision2">Early Decision II</string>
-    <string name="priority">Priority Application</string>
+    <string name="priority">Priority Application Priority Application Priority Application</string>
     <string name="reg">Regular</string>
     <string name="select_type">Select Application Type</string>
     <string name="other_app">Other Application</string>
@@ -104,7 +104,7 @@
     <string name="three">3</string>
     <string name="university_of_calefornia">University of\nCalifornia, Berkeley</string>
     <string name="first">1st</string>
-    <string name="date_by">25 May 2021, 01:20 AM   by: Nitin</string>
+    <string name="date_by">25 May 2021, 01:20 AM \u0020 \u0020 by: Choudhary, Paul</string>
     <string name="internal">Internal</string>
     <string name="cr_required">CR: Required</string>
     <string name="to_applying">To Applying</string>
@@ -133,4 +133,56 @@
     <string name="add">Add</string>
     <string name="added">Added</string>
     <string name="clear">Clear</string>
+    <string name="country">Country</string>
+    <string name="reigon">Reigon</string>
+    <string name="list">List</string>
+
+    <string-array name="UnivFilters">
+        <item>Country</item>
+        <item>Region</item>
+        <item>List</item>
+        <item>Type</item>
+        <item>Selectivity</item>
+        <item>Programs</item>
+        <item>Sports</item>
+        <item>More</item>
+    </string-array>
+    <string-array name="Country">
+        <item>United States</item>
+        <item>United Kingdom</item>
+        <item>Germany</item>
+        <item>Italy</item>
+        <item>France</item>
+        <item>Switzerland</item>
+        <item>Sweden</item>
+        <item>Finland</item>
+    </string-array>
+
+    <string-array name="Region">
+        <item>Alaska</item>
+        <item>Arizona</item>
+        <item>Arkansas</item>
+        <item>Alaska</item>
+        <item>Arkansas</item>
+        <item>Arkansas</item>
+        <item>Arkansas</item>
+    </string-array>
+
+
+    <string-array name="list">
+        <item>ApplyTexas</item>
+        <item>Coalition Application</item>
+        <item>Common Application</item>
+        <item>CSU</item>
+        <item>UC</item>
+        <item>ApplyTexas</item>
+    </string-array>
+
+    <string-array name="spinner_programs">
+        <item>AI Systems Engineering</item>
+        <item>Program 1</item>
+        <item>Program 2</item>
+        <item>Program 3</item>
+
+    </string-array>
 </resources>

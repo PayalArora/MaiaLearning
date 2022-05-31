@@ -6,3 +6,8 @@ interface OnItemClick {
 interface OnItemClickDelete: OnItemClick {
     fun onDelete(positiion:Int)
 }
+
+interface OnItemClickType: OnItemClick {
+    fun onClickOpt(positiion:Int, type:String)
+}
+

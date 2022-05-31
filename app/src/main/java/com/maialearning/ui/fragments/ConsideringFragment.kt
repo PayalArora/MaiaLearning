@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.RelativeLayout
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
@@ -128,11 +126,15 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         sheetBinding.addMoreLayout.adapter = ProgramAdapter(this)
         sheetBinding.addMore.setOnClickListener { (sheetBinding.addMoreLayout.adapter as ProgramAdapter).setCount(count++)  }
         sheetBinding.save.setOnClickListener { dialog.dismiss() }
+
     }
     override fun onClick(positiion: Int) {
 
     }
+
 }
+
+
 
 
 interface OnItemClickOption {
