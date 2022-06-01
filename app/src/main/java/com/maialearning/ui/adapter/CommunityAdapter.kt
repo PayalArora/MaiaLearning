@@ -1,5 +1,6 @@
 package com.maialearning.ui.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +30,7 @@ class CommunityAdapter(var listData:ArrayList<CommunityModel>) : RecyclerView.Ad
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
             viewHolder.binding.name.text=listData[position].name
             viewHolder.binding.percent.text=listData[position].percent
+            viewHolder.binding.percent.setTextColor(Color.parseColor(listData[position].color))
             viewHolder.binding.count.text=listData[position].text
     }
 

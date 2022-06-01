@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
+        android:layout_marginTop="@dimen/_5dp"
         android:layout_marginStart="@dimen/_5dp"
         android:fontFamily="@font/inter_bold"
         app:layout_constraintTop_toBottomOf="@id/layout" />
