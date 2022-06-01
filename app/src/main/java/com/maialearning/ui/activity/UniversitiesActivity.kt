@@ -67,7 +67,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }.attach()
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).apply {
             setOnClickListener {
-             bottomSheetWork()
+                bottomSheetWork()
             }
         }
 
@@ -149,11 +149,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         if (positiion == 0 && type == 2) {
             countryFilter()
         } else if (positiion == 1 && type == 2) {
-            //regionFilter(View.VISIBLE, resources.getString(R.string.reigon) ,positiion)
+            regionFilter(View.VISIBLE, resources.getString(R.string.reigon) ,positiion)
         } else if (positiion == 2 && type == 2) {
-            // regionFilter(View.VISIBLE, resources.getString(R.string.list) ,positiion)
-        }
-        else if (positiion == 7 && type == 2) {
+            regionFilter(View.VISIBLE, resources.getString(R.string.list) ,positiion)
+        } else if (positiion == 4 && type == 2) {
+            regionFilter(View.GONE, resources.getString(R.string.selectivity), positiion)
+        } else if (positiion == 7 && type == 2) {
             moreFilter()
         }
     }
@@ -173,6 +174,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         else if (positiion == 2) {
             sheetBinding.reciepentList.adapter =
                 ItemListAdapter(resources.getStringArray(R.array.list), this)
+            sheetBinding.close.setOnClickListener {
+                sheetBinding.searchText.setText("")
+            }
+
+        } else if (positiion == 4) {
+            sheetBinding.reciepentList.adapter =
+                ItemListAdapter(resources.getStringArray(R.array.selectivity), this)
             sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
             }
