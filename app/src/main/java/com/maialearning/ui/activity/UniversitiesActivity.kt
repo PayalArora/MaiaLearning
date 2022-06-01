@@ -67,7 +67,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }.attach()
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).apply {
             setOnClickListener {
-               // bottomSheetWork()
+             bottomSheetWork()
             }
         }
 
