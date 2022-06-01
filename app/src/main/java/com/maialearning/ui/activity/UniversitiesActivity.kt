@@ -88,11 +88,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
-        // val bottomSheetBehavior = BottomSheetBehavior.from(layout)
-
-        //  bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED;
-        //view.minimumHeight = ViewGroup.LayoutParams.MATCH_PARENT
-
+        val close = view.findViewById<ImageView>(R.id.close)
         val tabArray = arrayOf(getString(R.string.overview),
             getString(R.string.community),
             getString(R.string.admission),
@@ -102,8 +98,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         for (item in tabArray) {
             factTabs.addTab(factTabs.newTab().setText(item))
         }
-
-
+        close.setOnClickListener {
+            dialog.dismiss()
+        }
         val fm: FragmentManager = supportFragmentManager
         val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size)
         viewPager.adapter = adapter

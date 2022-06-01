@@ -44,7 +44,7 @@
                     android:fontFamily="@font/inter_regular"
                     android:lineSpacingExtra="2sp"
                     android:text="@string/about_uni"
-                    android:textColor="@color/grey"
+                    android:textColor="@color/black_1"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,7 @@
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
                     android:text="@string/web"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/about_" />
@@ -69,7 +69,7 @@
                     android:layout_marginTop="@dimen/_20dp"
                     android:lineSpacingExtra="2sp"
                     android:text="http://www.usyd.edu.au"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@id/web"
                     app:layout_constraintTop_toBottomOf="@id/about_" />
@@ -81,7 +81,8 @@
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
                     android:text="@string/phone"
-                    android:textColor="@color/gray"
+                    android:layout_marginTop="@dimen/_5sp"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/web" />
@@ -91,8 +92,9 @@
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="2sp"
                     android:text="+61(2) 9351-2222"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
+                    android:layout_marginTop="@dimen/_5sp"
                     app:layout_constraintStart_toEndOf="@id/phone"
                     app:layout_constraintTop_toBottomOf="@id/web" />
 
@@ -102,8 +104,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
+                    android:layout_marginTop="@dimen/_5sp"
                     android:text="Type of Environment:"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/phone" />
@@ -113,7 +116,8 @@
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="2sp"
                     android:text="N/A"
-                    android:textColor="@color/gray"
+                    android:layout_marginTop="@dimen/_5sp"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@id/enviro"
                     app:layout_constraintTop_toBottomOf="@id/phone" />
@@ -124,8 +128,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
+                    android:layout_marginTop="@dimen/_5sp"
                     android:text="Public Term Type:"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/enviro" />
@@ -135,7 +140,8 @@
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="2sp"
                     android:text=" N/A"
-                    android:textColor="@color/gray"
+                    android:layout_marginTop="@dimen/_5sp"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@id/public_type"
                     app:layout_constraintTop_toBottomOf="@id/enviro" />
@@ -146,8 +152,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
+                    android:layout_marginTop="@dimen/_5sp"
                     android:text="Type of Degrees Offered:"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/public_type" />
@@ -157,7 +164,8 @@
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="2sp"
                     android:text="N/A"
-                    android:textColor="@color/gray"
+                    android:layout_marginTop="@dimen/_5sp"
+                    android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@id/types"
                     app:layout_constraintTop_toBottomOf="@id/public_type" />
@@ -176,7 +184,7 @@
                     android:id="@+id/map"
                     android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="200dp"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
