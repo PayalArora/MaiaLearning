@@ -191,6 +191,14 @@
         <item>ApplyTexas</item>
     </string-array>
 
+    <string-array name="selectivity">
+        <item>Open admission (all or most admitted)</item>
+        <item>Less selective (&gt;75% admitted)</item>
+        <item>Somewhat selective(50-75% admitted)</item>
+        <item>Very selective (25-50% admitted)</item>
+        <item>Most selective (&lt; 25% admitted)</item>
+    </string-array>
+
     <string-array name="spinner_programs">
         <item>AI Systems Engineering</item>
         <item>Program 1</item>
@@ -211,5 +219,7 @@
     <string name="history_black">Historically Black College or University</string>
     <string name="tribal_college">Tribal College</string>
     <string name="campus_activities">Campus Activities</string>
+    <string name="programs">Programs</string>
+    <string name="agriculture_text">Agriculture, Agriculture Operations and Related Sciences</string>
 
 </resources>
