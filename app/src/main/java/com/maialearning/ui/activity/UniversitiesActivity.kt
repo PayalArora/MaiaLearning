@@ -1,13 +1,10 @@
 package com.maialearning.ui.activity
 
-import android.content.Context
 import android.content.res.Resources
-import android.database.DataSetObserver
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -129,6 +126,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     private fun univFilter() {
         val dialog = BottomSheetDialog(this)
+
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
@@ -154,7 +152,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             regionFilter(View.VISIBLE, resources.getString(R.string.list) ,positiion)
         } else if (positiion == 4 && type == 2) {
             regionFilter(View.GONE, resources.getString(R.string.selectivity), positiion)
-        } else if (positiion == 7 && type == 2) {
+        }  else if (positiion == 3 && type == 2) {
+            typeFilter()
+        } else if (positiion == 5 && type == 2) {
+            regionFilter(View.GONE, resources.getString(R.string.programs), positiion)
+        }
+
+        else if (positiion == 7 && type == 2) {
             moreFilter()
         }
     }
@@ -178,7 +182,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 sheetBinding.searchText.setText("")
             }
 
-        } else if (positiion == 4) {
+        }
+        else if (positiion == 5) {
+            sheetBinding.reciepentList.adapter =
+                CustomRadioAdapter()
+            sheetBinding.close.setOnClickListener {
+                sheetBinding.searchText.setText("")
+            }
+        }
+
+        else if (positiion == 4) {
             sheetBinding.reciepentList.adapter =
                 ItemListAdapter(resources.getStringArray(R.array.selectivity), this)
             sheetBinding.close.setOnClickListener {
@@ -195,14 +208,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         sheetBinding.filters.setText(title)
+        sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
         val adapter = ArrayAdapter.createFromResource(this,
             R.array.capmpus_activity,
             android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sheetBinding.spinner.dropDownVerticalOffset = -25
-        sheetBinding.spinner.setPrompt("Select your favorite Planet!")
+        //sheetBinding.spinner.setPrompt("Campus Activities")
 
         sheetBinding.spinner.setAdapter(
             NothingSelectedSpinnerAdapter(
@@ -213,7 +226,31 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
 
     }
+    private fun typeFilter() {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: TypeSheetBinding = TypeSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.filters.setText(title)
+        dialog.show()
+        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
+        val adapter = ArrayAdapter.createFromResource(this,
+            R.array.capmpus_activity,
+            android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+       // sheetBinding.spinner.dropDownVerticalOffset = -25
+       // sheetBinding.spinner.setPrompt("")
 
+        sheetBinding.spinner.setAdapter(
+            NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.nothing_adapter,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                this))
+        sheetBinding.religous.setOnClickListener { sheetBinding.spinner.performClick() }
+
+
+    }
 
 }
 

@@ -211,6 +211,11 @@
         <item>Campus Activity 2</item>
         <item>Campus Activity 3</item>
     </string-array>
+    <string-array name="religious_affilation">
+        <item>Religious Affiliation 1</item>
+        <item>Religious Affiliation 2</item>
+        <item>Religious Affiliation 3</item>
+    </string-array>
     <string name="more">More</string>
     <string name="sat_ebrw">Sat-Erbw</string>
     <string name="twohundred">200</string>
@@ -219,6 +224,7 @@
     <string name="history_black">Historically Black College or University</string>
     <string name="tribal_college">Tribal College</string>
     <string name="campus_activities">Campus Activities</string>
+    <string name="religious">Religious Affiliation</string>
     <string name="programs">Programs</string>
     <string name="agriculture_text">Agriculture, Agriculture Operations and Related Sciences</string>
     <string name="two_years_of">2 years of 4 years</string>

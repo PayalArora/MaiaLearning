@@ -29,7 +29,7 @@
             android:padding="@dimen/_15dp"
             android:text="@string/type"
             android:fontFamily="@font/inter_bold"
-            android:textColor="@color/black"
+            android:textColor="@color/black_1"
             android:textSize="@dimen/_21sp"
             android:textStyle="bold" />
 
@@ -112,7 +112,7 @@
         android:padding="@dimen/_15dp"
         android:text="@string/two_years_of"
         android:fontFamily="@font/inter_bold"
-        android:textColor="@color/black"
+        android:textColor="@color/black_1"
         android:textSize="@dimen/_16sp"
         android:textStyle="bold" />
     <View
@@ -151,7 +151,7 @@
         android:padding="@dimen/_15dp"
         android:text="@string/public_or_private"
         android:fontFamily="@font/inter_bold"
-        android:textColor="@color/black"
+        android:textColor="@color/black_1"
         android:textSize="@dimen/_16sp"
         android:textStyle="bold" />
     <View
@@ -193,7 +193,7 @@
         android:background="@drawable/white_rounded_withboundary">
 
         <LinearLayout
-            android:id="@+id/campus_activity"
+            android:id="@+id/religous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

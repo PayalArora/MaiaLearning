@@ -4,25 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:id="@+id/rg_program"
+        android:layout_height="wrap_content">
     <CheckBox
+        android:id="@+id/header_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10dp"
         android:fontFamily="@font/inter_bold"
         android:textStyle="bold"
+        android:paddingStart="@dimen/_10dp"
         android:buttonTint="@color/checkbutton"
         android:layout_marginHorizontal="@dimen/_15dp"
         android:layout_marginTop="@dimen/_5dp"
         android:text="@string/agriculture_text" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/sub_child"
-        android:layout_marginHorizontal="@dimen/_15dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/checkbox_row"
-        >
-    </androidx.recyclerview.widget.RecyclerView>
+    </RadioGroup>
 </LinearLayout>
