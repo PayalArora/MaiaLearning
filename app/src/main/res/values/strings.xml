@@ -196,7 +196,12 @@
         <item>Program 1</item>
         <item>Program 2</item>
         <item>Program 3</item>
+    </string-array>
 
+    <string-array name="capmpus_activity">
+        <item>Campus Activity 1</item>
+        <item>Campus Activity 2</item>
+        <item>Campus Activity 3</item>
     </string-array>
     <string name="more">More</string>
     <string name="sat_ebrw">Sat-Erbw</string>

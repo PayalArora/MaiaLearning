@@ -49,12 +49,20 @@ class MessageFragment : Fragment(), OnItemClick {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setAdapter() {
+        var tabArray = arrayOf(getString(R.string.inbox),
+            getString(R.string.sent),
+            getString(R.string.trash))
+        for (item in tabArray) {
+            mBinding.tabs.addTab(mBinding.tabs.newTab().setText(item))
+
+        }
         val adapter = ViewPagerAdapter(requireContext(), this,
-            3)
+            tabArray.size)
         mBinding.viewPager.adapter = adapter
         mBinding.viewPager.isUserInputEnabled = false
-//        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
-//        }.attach()
+        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
+            tab.setText(tabArray[position])
+        }.attach()
 
         mBinding.tabs.tabGravity = TabLayout.GRAVITY_FILL
 

@@ -1,37 +1,24 @@
 package com.maialearning.ui.activity
 
-import android.content.Intent
+import android.content.Context
 import android.content.res.Resources
-import android.graphics.Color
+import android.database.DataSetObserver
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-
 import androidx.viewpager2.widget.ViewPager2
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
-import com.maialearning.calbacks.OnItemClick
-import com.maialearning.databinding.ActivityUniversitiesBinding
-import com.maialearning.databinding.LayoutProgramsBinding
-import com.maialearning.databinding.LayoutUniversityBinding
-import com.maialearning.ui.adapter.AddUniversiityAdapter
-import com.maialearning.ui.adapter.ProgramAdapter
-import com.maialearning.ui.adapter.ViewStateAdapter
-import com.maialearning.ui.adapter.ViewStateFactAdapter
-import com.maialearning.databinding.UniversityFilterBinding
+import com.maialearning.databinding.*
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
-import com.maialearning.ui.fragments.MilestonesFragment
 
 
 class UniversitiesActivity : FragmentActivity(), ClickFilters {
@@ -78,9 +65,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.setText(tabArray[position])
         }.attach()
-        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).apply {
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).apply {
             setOnClickListener {
-                bottomSheetWork()
+               // bottomSheetWork()
             }
         }
 
@@ -95,6 +82,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
+
     private fun bottomSheetWork() {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
@@ -122,7 +110,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         TabLayoutMediator(factTabs, viewPager) { tab, position ->
             tab.text = tabArray[position]
         }.attach()
-        view.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(view)
         dialog.show()
     }
@@ -163,17 +151,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     override fun onClick(positiion: Int, type: Int) {
         if (positiion == 0 && type == 2) {
             countryFilter()
-        } else if(positiion == 1 && type == 2)
-        {
+        } else if (positiion == 1 && type == 2) {
             //regionFilter(View.VISIBLE, resources.getString(R.string.reigon) ,positiion)
+        } else if (positiion == 2 && type == 2) {
+            // regionFilter(View.VISIBLE, resources.getString(R.string.list) ,positiion)
         }
-        else if(positiion == 2 && type == 2)
-        {
-           // regionFilter(View.VISIBLE, resources.getString(R.string.list) ,positiion)
+        else if (positiion == 7 && type == 2) {
+            moreFilter()
         }
     }
 
-    private fun regionFilter(visibility: Int, title:String, positiion: Int) {
+    private fun regionFilter(visibility: Int, title: String, positiion: Int) {
         val dialog = BottomSheetDialog(this)
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -183,18 +171,48 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
         if (positiion == 1)
-        sheetBinding.reciepentList.adapter = ReigonAdapter(resources.getStringArray(R.array.Region), this)
-        else if (positiion == 2)
-            sheetBinding.reciepentList.adapter = ItemListAdapter(resources.getStringArray(R.array.list), this)
-        sheetBinding.close.setOnClickListener {
-            sheetBinding.searchText.setText("")
+            sheetBinding.reciepentList.adapter =
+                ReigonAdapter(resources.getStringArray(R.array.Region), this)
+        else if (positiion == 2) {
+            sheetBinding.reciepentList.adapter =
+                ItemListAdapter(resources.getStringArray(R.array.list), this)
+            sheetBinding.close.setOnClickListener {
+                sheetBinding.searchText.setText("")
+            }
         }
 
 
+    }
+
+    private fun moreFilter() {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: MoreSheetBinding = MoreSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.filters.setText(title)
+        dialog.show()
+        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        val adapter = ArrayAdapter.createFromResource(this,
+            R.array.capmpus_activity,
+            android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        sheetBinding.spinner.dropDownVerticalOffset = -25
+        sheetBinding.spinner.setPrompt("Select your favorite Planet!")
+
+        sheetBinding.spinner.setAdapter(
+            NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.nothing_adapter,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                this))
+        sheetBinding.campusActivity.setOnClickListener { sheetBinding.spinner.performClick() }
+
 
     }
+
+
 }
 
 interface ClickFilters {
     fun onClick(positiion: Int, type: Int)
 }
+

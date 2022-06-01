@@ -121,6 +121,7 @@
                     android:id="@+id/add"
                     android:layout_width="@dimen/_20dp"
                     android:layout_height="@dimen/_20dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_5dp"
                     android:src="@drawable/add_icon" />
@@ -130,13 +131,17 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/_5dp"
-                    android:layout_toEndOf="@+id/add"
+                    android:layout_toLeftOf="@+id/commentImg"
+                    android:layout_toRightOf="@+id/add"
+                    android:ellipsize="end"
                     android:fontFamily="@font/inter_regular"
+                    android:maxLines="2"
                     android:text="@string/date_by"
                     android:textSize="@dimen/_12sp" />
 
 
                 <ImageView
+
                     android:layout_width="@dimen/_18dp"
                     android:layout_height="@dimen/_15dp"
                     android:layout_alignParentRight="true"
