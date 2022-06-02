@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white_1"
+    android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/_10dp">
+    <TextView
+        android:id="@+id/ethc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_bold"
+        android:lineSpacingExtra="2sp"
+        android:layout_marginStart="@dimen/_10dp"
+        android:text="Transfer Applicants"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/ethc"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+        android:id="@+id/ethc1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10dp"
+        android:layout_marginStart="@dimen/_10dp"
+        android:fontFamily="@font/inter_bold"
+        android:lineSpacingExtra="2sp"
+        android:text="Transfer Credits"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_list" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/credictList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ethc1"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ethnicity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20dp"
+        android:background="@drawable/background_curve_rectangle_white_filled"
+        android:padding="@dimen/_20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/credictList">
+
+
+        <TextView
+            android:id="@+id/campusEffort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Transferring →← from 2-year to 4-year"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="@color/tint"
+            app:layout_constraintTop_toBottomOf="@id/campusEffort" />
+
+        <TextView
+            android:id="@+id/web"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Already enrolled in another institution?\n No problem!"
+            android:textColor="#3743BE"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/campusEffort" />
+
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/inter_medium"
+            android:lineSpacingExtra="2sp"
+            android:text="You can transfer here so long as you meet the special requirements and deadlines detailed on this page."
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/web" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ethnicity1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20dp"
+        android:background="@drawable/background_curve_rectangle_white_filled"
+        android:padding="@dimen/_20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ethnicity">
+
+
+        <TextView
+            android:id="@+id/deadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Application Deadlines"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="@color/tint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/deadline" />
+
+        <TextView
+            android:id="@+id/textdead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Application Deadline: January 24, 2016"
+            android:textColor="#B55B51"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view" />
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="@color/tint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textdead" />
+
+
+        <TextView
+            android:id="@+id/web1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Fall: "
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:lineSpacingExtra="2sp"
+            android:text=" November 30"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/web1"
+            app:layout_constraintTop_toBottomOf="@id/view1" />
+
+        <TextView
+            android:id="@+id/phone1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:text="Spring: "
+            android:layout_marginTop="@dimen/_5sp"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/web1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="2sp"
+            android:text=" N/A"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            android:layout_marginTop="@dimen/_5sp"
+            app:layout_constraintStart_toEndOf="@id/phone1"
+            app:layout_constraintTop_toBottomOf="@id/web1" />
+
+        <TextView
+            android:id="@+id/enviro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:layout_marginTop="@dimen/_5sp"
+            android:text="Summer:"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phone1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="2sp"
+            android:text=" N/A"
+            android:layout_marginTop="@dimen/_5sp"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/enviro"
+            app:layout_constraintTop_toBottomOf="@id/phone1" />
+
+        <TextView
+            android:id="@+id/public_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:layout_marginTop="@dimen/_5sp"
+            android:text="Winter:"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/enviro" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="2sp"
+            android:text=" N/A"
+            android:layout_marginTop="@dimen/_5sp"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/public_type"
+            app:layout_constraintTop_toBottomOf="@id/enviro" />
+
+        <TextView
+            android:id="@+id/types"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:lineSpacingExtra="2sp"
+            android:layout_marginTop="@dimen/_5sp"
+            android:text="Type of Degrees Offered:"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/public_type" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="2sp"
+            android:text="N/A"
+            android:layout_marginTop="@dimen/_5sp"
+            android:textColor="@color/black_1"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/types"
+            app:layout_constraintTop_toBottomOf="@id/public_type" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

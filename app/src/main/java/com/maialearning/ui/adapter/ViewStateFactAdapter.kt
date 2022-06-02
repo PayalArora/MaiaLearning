@@ -15,6 +15,10 @@ class ViewStateFactAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycl
             return OverViewFragment()
         } else if (position == 1) {
             return CommunityFragmet()
+        } else if (position == 2) {
+            return AdmissionFragment()
+        } else if (position == 3) {
+            return CostFragment()
         }
         return OverViewFragment()
     }
