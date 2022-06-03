@@ -9,6 +9,7 @@
         android:layout_marginVertical="@dimen/_10dp"
         android:fontFamily="@font/inter_regular"
         android:buttonTint="@color/checkbutton"
+        android:button="@drawable/check_radio"
         android:layout_marginLeft="@dimen/_35dp"
         android:paddingStart="@dimen/_10dp"
         android:layout_marginTop="@dimen/_5dp"

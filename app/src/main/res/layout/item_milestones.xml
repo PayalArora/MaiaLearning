@@ -1,104 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_10dp"
     android:layout_marginVertical="@dimen/_7dp"
-    android:paddingVertical="@dimen/_15dp"
     android:background="@drawable/white_rect"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:paddingBottom="@dimen/_10dp">
+
     <TextView
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
-        android:lineSpacingExtra="@dimen/_2sp"
-        android:layout_marginHorizontal="@dimen/_15dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:layout_marginHorizontal="@dimen/_15dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:lineSpacingExtra="@dimen/_2sp"
         android:text="@string/resume"
         android:textColor="@color/black_1"
         android:textSize="@dimen/_14sp"
-        />
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:layout_width="@dimen/_10dp"
-        android:layout_marginTop="@dimen/_15dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/_2dp"
         android:layout_marginRight="@dimen/_15dp"
-        app:layout_constraintTop_toTopOf="parent"
         android:background="@android:color/transparent"
         android:src="@drawable/menu_dots"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_description"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15dp"
         android:layout_marginTop="@dimen/_5dp"
         android:lineSpacingExtra="@dimen/_2sp"
-        android:layout_marginHorizontal="@dimen/_15dp"
-        app:layout_constraintTop_toBottomOf="@+id/text_title"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_height="wrap_content"
         android:text="Please complete your resume and make sure it is in your Google folder for me to review."
         android:textColor="@color/black_1"
         android:textSize="@dimen/_14sp"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_title" />
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:background="@color/grey_1"
+        android:layout_height="@dimen/_05dp"
         android:layout_marginTop="@dimen/_10dp"
-        app:layout_constraintTop_toBottomOf="@+id/text_description"
-        android:layout_height="@dimen/_05dp" />
+        android:background="@color/grey_1"
+        app:layout_constraintTop_toBottomOf="@+id/text_description" />
+
     <TextView
         android:id="@+id/text_deadline"
         android:layout_width="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        android:textColor="@color/red_1"
-        android:layout_marginVertical="@dimen/_10dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginHorizontal="@dimen/_15dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginVertical="@dimen/_10dp"
         android:drawablePadding="@dimen/_15dp"
-        android:textSize="@dimen/_12sp"
         android:fontFamily="@font/inter_bold"
         android:text="@string/deadline"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/red_1"
+        android:textSize="@dimen/_12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
     <TextView
         android:id="@+id/text_date"
         android:layout_width="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintLeft_toRightOf="@+id/text_deadline"
-        android:textColor="@color/red_1"
-        android:layout_marginVertical="@dimen/_10dp"
-        android:drawablePadding="@dimen/_5dp"
-        android:textSize="@dimen/_12sp"
-        android:paddingStart="@dimen/_10dp"
-        android:drawableRight="@drawable/ic_flag"
-
-        android:fontFamily="@font/inter_bold"
-        android:text="14 May 2021"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_height="wrap_content"/>
+        android:layout_marginVertical="@dimen/_10dp"
+        android:drawableRight="@drawable/ic_flag"
+        android:drawablePadding="@dimen/_5dp"
+        android:fontFamily="@font/inter_bold"
+        android:paddingStart="@dimen/_10dp"
+        android:text="14 May 2021"
+
+        android:textColor="@color/red_1"
+        android:textSize="@dimen/_12sp"
+        app:layout_constraintLeft_toRightOf="@+id/text_deadline"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
 
     <CheckBox
         android:id="@+id/rb_other_app"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_30dp"
+        android:layout_gravity="start"
         android:layout_marginVertical="@dimen/_10dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="12dp"
-        android:button="@drawable/radiobutton_done"
-        android:checked="false"
-        android:buttonTint="@color/green_1"
-        android:layoutDirection="rtl"
         android:background="@android:color/transparent"
+        android:button="@drawable/radiobutton_done"
+        android:buttonTint="@color/green_1"
+        android:checked="false"
+        android:layoutDirection="rtl"
         android:paddingStart="@dimen/_10dp"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
         android:text="@string/done"
+        android:textAlignment="textStart"
         android:textColor="@color/green_1"
         android:textSize="@dimen/_12sp"
         android:textStyle="bold"

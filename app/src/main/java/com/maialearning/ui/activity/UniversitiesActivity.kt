@@ -62,9 +62,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.setText(tabArray[position])
         }.attach()
+
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).apply {
             setOnClickListener {
-                bottomSheetWork()
+                //  bottomSheetWork()
             }
         }
 
@@ -134,6 +135,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.filters.setText(resources.getString(R.string.filters))
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
         sheetBinding.reciepentList.adapter =
             UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
 
@@ -147,60 +149,28 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         if (positiion == 0 && type == 2) {
             countryFilter()
         } else if (positiion == 1 && type == 2) {
-            regionFilter(View.VISIBLE, resources.getString(R.string.reigon) ,positiion)
+            SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
+                resources.getString(R.string.reigon),
+                positiion)
         } else if (positiion == 2 && type == 2) {
-            regionFilter(View.VISIBLE, resources.getString(R.string.list) ,positiion)
+            SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
+                resources.getString(R.string.list),
+                positiion)
         } else if (positiion == 4 && type == 2) {
-            regionFilter(View.GONE, resources.getString(R.string.selectivity), positiion)
-        }  else if (positiion == 3 && type == 2) {
+            SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                resources.getString(R.string.selectivity),
+                positiion)
+        } else if (positiion == 3 && type == 2) {
             typeFilter()
         } else if (positiion == 5 && type == 2) {
-            regionFilter(View.GONE, resources.getString(R.string.programs), positiion)
-        }
-
-        else if (positiion == 7 && type == 2) {
+            SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                resources.getString(R.string.programs),
+                positiion)
+        } else if (positiion == 7 && type == 2) {
             moreFilter()
         }
     }
 
-    private fun regionFilter(visibility: Int, title: String, positiion: Int) {
-        val dialog = BottomSheetDialog(this)
-        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
-        sheetBinding.search.visibility = visibility
-        sheetBinding.filters.setText(title)
-        dialog.show()
-        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
-        if (positiion == 1)
-            sheetBinding.reciepentList.adapter =
-                ReigonAdapter(resources.getStringArray(R.array.Region), this)
-        else if (positiion == 2) {
-            sheetBinding.reciepentList.adapter =
-                ItemListAdapter(resources.getStringArray(R.array.list), this)
-            sheetBinding.close.setOnClickListener {
-                sheetBinding.searchText.setText("")
-            }
-
-        }
-        else if (positiion == 5) {
-            sheetBinding.reciepentList.adapter =
-                CustomRadioAdapter()
-            sheetBinding.close.setOnClickListener {
-                sheetBinding.searchText.setText("")
-            }
-        }
-
-        else if (positiion == 4) {
-            sheetBinding.reciepentList.adapter =
-                ItemListAdapter(resources.getStringArray(R.array.selectivity), this)
-            sheetBinding.close.setOnClickListener {
-                sheetBinding.searchText.setText("")
-            }
-        }
-
-
-    }
 
     private fun moreFilter() {
         val dialog = BottomSheetDialog(this)
@@ -226,6 +196,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
 
     }
+
     private fun typeFilter() {
         val dialog = BottomSheetDialog(this)
         val sheetBinding: TypeSheetBinding = TypeSheetBinding.inflate(layoutInflater)
@@ -239,9 +210,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             R.array.capmpus_activity,
             android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-       // sheetBinding.spinner.dropDownVerticalOffset = -25
-       // sheetBinding.spinner.setPrompt("")
-
         sheetBinding.spinner.setAdapter(
             NothingSelectedSpinnerAdapter(
                 adapter,

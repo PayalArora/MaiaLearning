@@ -120,6 +120,7 @@
     <string name="summer">Summer 2022</string>
     <string name="accepted">Accepted?</string>
     <string name="select_decision">Select Decision</string>
+    <string name="select_decision1">Select decision</string>
     <string name="transcript_request">Transcript Request</string>
     <string name="ia_have_applied">I have applied</string>
     <string name="comments">Comments</string>
@@ -211,11 +212,13 @@
         <item>Campus Activity 2</item>
         <item>Campus Activity 3</item>
     </string-array>
+
     <string-array name="religious_affilation">
         <item>Religious Affiliation 1</item>
         <item>Religious Affiliation 2</item>
         <item>Religious Affiliation 3</item>
     </string-array>
+
     <string name="more">More</string>
     <string name="sat_ebrw">Sat-Erbw</string>
     <string name="twohundred">200</string>
@@ -236,4 +239,11 @@
 
     <string name="selectivity">Selectivity</string>
 
+    <string-array name="decision_filter">
+        <item>Accepted</item>
+        <item>Attend</item>
+        <item>Deferred</item>
+        <item>Waitlisted</item>
+        <item>Declined</item>
+    </string-array>
 </resources>

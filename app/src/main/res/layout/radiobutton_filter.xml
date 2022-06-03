@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/filters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/_15dp"
+
+        android:text="@string/select_decision1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_21sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/close"
+        android:layout_width="@dimen/_30dp"
+        android:layout_alignParentTop="true"
+        android:layout_height="@dimen/_30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/_15dp"
+        android:background="@drawable/circle_lay">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/cross" />
+    </RelativeLayout>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@+id/filters"
+
+        android:background="@color/divider_color" />
+<!--<RadioGroup-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_below="@+id/view1"-->
+<!--    android:id="@+id/radio_action"-->
+<!--    android:layout_height="wrap_content">-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/view1"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+<!--</RadioGroup>-->
+</RelativeLayout>

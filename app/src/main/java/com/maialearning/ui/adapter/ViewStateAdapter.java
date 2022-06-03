@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.maialearning.ui.fragments.ApplyingFragment;
 import com.maialearning.ui.fragments.ConsideringFragment;
+import com.maialearning.ui.fragments.DecisionsFragment;
 import com.maialearning.ui.fragments.MilestonesFragment;
 import com.maialearning.ui.fragments.UpcomingFragment;
 
@@ -29,7 +30,7 @@ int size=0;
             }else if (position ==3) {
                 return new MilestonesFragment();
             } else if (position ==5) {
-                //return new DecisionsFragment();
+              // return new DecisionsFragment();
             }
 
             return new UpcomingFragment();

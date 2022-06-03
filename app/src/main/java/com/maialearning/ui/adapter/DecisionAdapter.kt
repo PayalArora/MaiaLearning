@@ -1,16 +1,22 @@
 package com.maialearning.ui.adapter
 
+import android.content.Context
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.maialearning.R
 import com.maialearning.databinding.ItemMilestonesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.databinding.LayoutDecisionsBinding
+import com.maialearning.databinding.UniversityFilterBinding
+import com.maialearning.ui.activity.ClickFilters
 
-class DecisionAdapter() : RecyclerView.Adapter<DecisionAdapter.ViewHolder>() {
+class DecisionAdapter(val  decisionClick:DecisionClick) : RecyclerView.Adapter<DecisionAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -40,7 +46,12 @@ class DecisionAdapter() : RecyclerView.Adapter<DecisionAdapter.ViewHolder>() {
         else{
            rbAccepted.visibility = VISIBLE
            rbDecision.visibility = GONE
-        }}
+        }
+            rbDecision.setOnClickListener {
+             decisionClick.onDecisionClick()
+            }
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -48,4 +59,6 @@ class DecisionAdapter() : RecyclerView.Adapter<DecisionAdapter.ViewHolder>() {
     }
 
 }
-
+interface DecisionClick{
+    fun onDecisionClick()
+}
