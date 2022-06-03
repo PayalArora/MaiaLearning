@@ -32,7 +32,7 @@
                     android:lineSpacingExtra="2sp"
                     android:text="@string/about"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +45,7 @@
                     android:lineSpacingExtra="2sp"
                     android:text="@string/about_uni"
                     android:textColor="@color/black_1"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/about" />
@@ -180,7 +180,7 @@
                 android:padding="@dimen/_5dp"
                 app:layout_constraintTop_toBottomOf="@id/layout">
 
-                <fragment
+                <FrameLayout
                     android:id="@+id/map"
                     android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
@@ -227,8 +227,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_View"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginBottom="@dimen/_20dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textVideo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
