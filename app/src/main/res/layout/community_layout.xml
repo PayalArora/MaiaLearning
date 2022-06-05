@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/_10dp"
-            android:background="@color/grey"
+            android:background="@color/tint"
             app:layout_constraintTop_toBottomOf="@id/ethc" />
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/_10dp"
-                android:background="@color/grey"
+                android:background="@color/tint"
                 app:layout_constraintTop_toBottomOf="@id/campusEffort" />
 
             <TextView

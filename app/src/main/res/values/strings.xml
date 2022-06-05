@@ -235,5 +235,6 @@
     <string name="private_">Private</string>
 
     <string name="selectivity">Selectivity</string>
+    <string name="dummy_text">My grandfather attended, do you think my legacy status will help? Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</string>
 
 </resources>

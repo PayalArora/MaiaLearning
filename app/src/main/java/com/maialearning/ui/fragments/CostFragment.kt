@@ -13,7 +13,7 @@ import com.maialearning.ui.adapter.CommunityAdapter
 import com.maialearning.ui.adapter.CostAdapter
 import com.maialearning.ui.model.CommunityModel
 
-class CostFragment: Fragment() {
+class   CostFragment: Fragment() {
     private lateinit var mBinding: CostFragmentBinding
     var listData=ArrayList<CommunityModel>()
     var listDataProgress=ArrayList<CommunityModel>()
