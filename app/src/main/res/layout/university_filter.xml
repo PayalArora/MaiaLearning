@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal= "true"
         android:fontFamily="@font/inter_bold"
         android:padding="@dimen/_15dp"
         android:text="@string/filters"
@@ -113,11 +113,53 @@
         android:id="@+id/reciepent_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_below="@+id/search"
+        android:layout_above="@+id/spinner_lay"
         android:orientation="vertical"
-
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_univ_filter" />
 
+    <RelativeLayout
+        android:id="@+id/spinner_lay"
+        android:layout_marginBottom="@dimen/_50dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="@dimen/_25dp"
+        android:layout_marginTop="@dimen/_25dp"
+        android:background="@drawable/white_rounded_withboundary">
+
+        <LinearLayout
+            android:id="@+id/religous"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/_5dp">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30dp"
+                android:background="@android:color/transparent"
+                android:dropDownVerticalOffset="20dp"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center_horizontal|top"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown"
+                android:theme="@style/MatchSpinnerTheme" />
+
+            <ImageView
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:padding="@dimen/_5dp"
+                android:rotation="270"
+                android:src="@drawable/back_arrow" />
+
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

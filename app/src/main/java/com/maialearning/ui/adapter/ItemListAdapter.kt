@@ -13,7 +13,6 @@ class ItemListAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : Re
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    var checked:Array<Boolean> = arrayOf(false, false, false,false,false,false,false,false)
     class ViewHolder(val binding: ItemListFilterBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.

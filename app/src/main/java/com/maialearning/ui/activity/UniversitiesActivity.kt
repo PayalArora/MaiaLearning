@@ -65,7 +65,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).apply {
             setOnClickListener {
-                //  bottomSheetWork()
+                bottomSheetWork()
             }
         }
 
@@ -146,29 +146,38 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     override fun onClick(positiion: Int, type: Int) {
-        if (positiion == 0 && type == 2) {
-            countryFilter()
-        } else if (positiion == 1 && type == 2) {
-            SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
-                resources.getString(R.string.reigon),
-                positiion)
-        } else if (positiion == 2 && type == 2) {
-            SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
-                resources.getString(R.string.list),
-                positiion)
-        } else if (positiion == 4 && type == 2) {
-            SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
-                resources.getString(R.string.selectivity),
-                positiion)
-        } else if (positiion == 3 && type == 2) {
-            typeFilter()
-        } else if (positiion == 5 && type == 2) {
-            SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
-                resources.getString(R.string.programs),
-                positiion)
-        } else if (positiion == 7 && type == 2) {
-            moreFilter()
+        if(type==2) {
+            if (positiion == 0) {
+                countryFilter()
+            } else if (positiion == 1) {
+                SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
+                    resources.getString(R.string.reigon),
+                    positiion)
+            } else if (positiion == 2) {
+                SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
+                    resources.getString(R.string.list),
+                    positiion)
+            } else if (positiion == 3 ) {
+                typeFilter()
+            }
+            else if (positiion == 4 ) {
+                SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                    resources.getString(R.string.selectivity),
+                    positiion)
+            } else if (positiion == 5 ) {
+                SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                    resources.getString(R.string.programs),
+                    positiion)
+            }else if (positiion == 6 ) {
+                SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                    resources.getString(R.string.sports),
+                    positiion, View.GONE)
+            }
+            else if (positiion == 7 ) {
+                moreFilter()
+            }
         }
+
     }
 
 

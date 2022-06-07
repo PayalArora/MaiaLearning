@@ -45,7 +45,7 @@ class CustomRadioAdapter() : RecyclerView.Adapter<CustomRadioAdapter.ViewHolder>
            }
            headerTitle.setOnClickListener {
                for (i in 1..5) {
-               val radioButton = rgProgram.getChildAt(i).findViewById<RadioButton>(R.id.rb_inner)
+               val radioButton = rgProgram.getChildAt(i).findViewById<RadioButton>(R.id.rb_inenr)
                    if (headerTitle.isChecked){
                        radioButton.isChecked = true
                    } else {
