@@ -12,6 +12,7 @@ class SportsInnerAdapter(val arr:Array<String>) : RecyclerView.Adapter<SportsInn
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
+    var checked: Boolean = false
     class ViewHolder(val binding: SportsInnerBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
@@ -30,8 +31,21 @@ class SportsInnerAdapter(val arr:Array<String>) : RecyclerView.Adapter<SportsInn
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             rbInenr.setText(arr.get(position))
+            if(checked){
+                    rbInenr.isChecked= true
+
+            }else{
+                    rbInenr.isChecked= false
+
+            }
         }
 
+
+
+    }
+    fun check(check:Boolean){
+    checked = check
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
