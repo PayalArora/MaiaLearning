@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_50dp">
+    <CheckBox
+        android:id="@+id/rb_inenr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_10dp"
+        android:fontFamily="@font/inter_regular"
+        android:buttonTint="@color/checkbutton"
+        android:button="@drawable/check_radio"
+        android:layout_marginLeft="@dimen/_55dp"
+        android:paddingStart="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_5dp"
+        android:text="Open admission (all or most admitted)" />
+    <View
+        android:layout_below="@+id/rb_inenr"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_marginTop="@dimen/_5dp"
+        android:background="@color/divider_color" />
+
+</RelativeLayout>
