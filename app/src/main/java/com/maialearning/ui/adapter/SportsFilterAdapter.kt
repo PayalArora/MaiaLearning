@@ -36,19 +36,31 @@ class SportsFilterAdapter(val arr: Array<String>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             rbInenr.setText(arr.get(position))
-
+            if(position<2)
                 arrow.visibility = visibility[position]
 
-
-            arrow.setOnClickListener {
-                if (rvCheckbox.isVisible) {
-                    rvCheckbox.visibility = View.GONE
-                } else {
-                    rvCheckbox.visibility = View.VISIBLE
-                }
-                notifyDataSetChanged()
+           arrow.setOnClickListener {
+              if(position<2) {
+                  if (rvCheckbox.isVisible) {
+                      rvCheckbox.visibility = View.GONE
+                  } else {
+                      rvCheckbox.visibility = View.VISIBLE
+                  }
+                  (rvCheckbox.adapter as SportsInnerAdapter).check(rbInenr.isChecked)
+                 // notifyDataSetChanged()
+              }
             }
+
             rvCheckbox.adapter = SportsInnerAdapter(array)
+
+            rbInenr.setOnCheckedChangeListener { compoundButton, b ->
+                if(b){
+                    (rvCheckbox.adapter as SportsInnerAdapter).check(true)
+                }else{
+                    (rvCheckbox.adapter as SportsInnerAdapter).check(false)
+                }
+
+            }
 
         }
 
