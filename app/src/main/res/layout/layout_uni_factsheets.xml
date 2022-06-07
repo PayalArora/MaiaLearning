@@ -6,17 +6,9 @@
     app:layout_anchor="@+id/bottomSheet"
     app:layout_anchorGravity="top"
     android:orientation="vertical"
-    android:background="@color/green_2"
+    android:background="@color/white"
     android:layout_gravity="top"
-    android:layout_marginTop="20dp">
-    <LinearLayout
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/layout"
-        app:behavior_hideable="true"
-        app:layout_behavior="@string/bottom_sheet_behavior"/>
+    android:paddingTop="20dp">
     <include layout="@layout/layout_factsheet" />
 
 

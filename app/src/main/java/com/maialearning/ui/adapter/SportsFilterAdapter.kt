@@ -10,7 +10,7 @@ import com.maialearning.ui.activity.ClickFilters
 
 
 class SportsFilterAdapter(val arr: Array<String>) :
-    RecyclerView.Adapter<SportsFilterAdapter.ViewHolder>(),ClickFilters {
+    RecyclerView.Adapter<SportsFilterAdapter.ViewHolder>(), ClickFilters {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -37,8 +37,8 @@ class SportsFilterAdapter(val arr: Array<String>) :
         viewHolder.binding.apply {
             rbInenr.setText(arr.get(position))
 
-                arrow.visibility = visibility[position]
-
+            arrow.visibility = visibility[position]
+            rvCheckbox.setHasFixedSize(true);
 
             arrow.setOnClickListener {
                 if (rvCheckbox.isVisible) {
@@ -46,7 +46,7 @@ class SportsFilterAdapter(val arr: Array<String>) :
                 } else {
                     rvCheckbox.visibility = View.VISIBLE
                 }
-                notifyDataSetChanged()
+               // notifyDataSetChanged()
             }
             rvCheckbox.adapter = SportsInnerAdapter(array)
 

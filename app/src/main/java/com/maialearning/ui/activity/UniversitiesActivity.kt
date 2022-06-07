@@ -84,6 +84,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private fun bottomSheetWork() {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
+        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+
         val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val close = view.findViewById<ImageView>(R.id.close)
@@ -105,8 +107,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         TabLayoutMediator(factTabs, viewPager) { tab, position ->
             tab.text = tabArray[position]
         }.attach()
-        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(view)
+         dialog.setContentView(view)
         dialog.show()
     }
 
