@@ -238,6 +238,10 @@
     <string name="selectivity">Selectivity</string>
     <string name="dummy_text">My grandfather attended, do you think my legacy status will help? Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</string>
     <string name="sports">Sports</string>
+    <string name="uc_pq">UC PIQ Choice 3</string>
+    <string name="words_700">700 Words</string>
+    <string name="headline_essay">Headline of the Essay</string>
+    <string name="review_by">Reviewed by Philip Roybal</string>
 
     <string-array name="decision_filter">
         <item>Accepted</item>
@@ -253,5 +257,13 @@
         <item>NAIA</item>
         <item>NCAA</item>
         <item>NCCAA e</item>
+    </string-array>
+
+    <string-array name="spinner_sports">
+        <item>All Track Combined</item>
+        <item>Archery</item>
+        <item>Vollyball</item>
+        <item>Basketball</item>
+        <item>Cricket</item>
     </string-array>
 </resources>

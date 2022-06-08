@@ -157,7 +157,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             } else if (positiion == 2) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
                     resources.getString(R.string.list),
-                    positiion)
+                    positiion, View.GONE)
             } else if (positiion == 3 ) {
                 typeFilter()
             }
@@ -172,7 +172,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }else if (positiion == 6 ) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
                     resources.getString(R.string.sports),
-                    positiion, View.GONE)
+                    positiion, View.VISIBLE)
             }
             else if (positiion == 7 ) {
                 moreFilter()

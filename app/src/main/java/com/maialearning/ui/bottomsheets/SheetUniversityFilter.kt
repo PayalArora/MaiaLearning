@@ -3,6 +3,7 @@ package com.maialearning.ui.bottomsheets
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ArrayAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.databinding.UniversityFilterBinding
@@ -58,6 +59,12 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
             sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
             }
+            val others = sheetBinding.root.context.resources.getStringArray(R.array.spinner_sports)
+            val adapter = ArrayAdapter(
+                sheetBinding.root.context,
+                R.layout.spinner_text, others
+            )
+            sheetBinding.spinner.adapter = adapter
         }
         else if (positiion == 5) {
             sheetBinding.reciepentList.adapter =
