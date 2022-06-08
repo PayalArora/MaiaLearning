@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.databinding.*
@@ -76,6 +77,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).setOnClickListener {
             univFilter()
         }
+        binding.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+              if (binding.tabs.selectedTabPosition == 5){
+                  binding.addFab.visibility = View.GONE
+              } else
+                  binding.addFab.visibility = View.VISIBLE
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
 
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
