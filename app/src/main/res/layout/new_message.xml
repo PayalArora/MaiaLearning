@@ -5,92 +5,96 @@
     android:layout_width="match_parent"
 
     android:layout_height="match_parent">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/topLayout"
-    android:layout_width="match_parent"
-    android:paddingHorizontal="@dimen/_20dp"
-    app:layout_constraintTop_toTopOf="parent"
-    android:layout_height="wrap_content">
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/recipent"
-    android:layout_marginTop="@dimen/_10dp"
-    android:layout_width="match_parent"
-    android:background="@drawable/round_rect"
-    app:layout_constraintTop_toBottomOf="@+id/toolbar"
-    android:paddingHorizontal="@dimen/_15dp"
-    android:layout_height="@dimen/_40dp">
-    <TextView
-        android:id="@+id/text_reciepent"
-        android:layout_width="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center_vertical"
-        android:text="@string/select_reciepents_to"
-        android:lineSpacingExtra="@dimen/_2sp"
-        android:textColor="@color/black_1"
-        android:textSize="@dimen/_12sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-         />
-    <TextView
-        android:id="@+id/cc_reciepent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-      app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:drawablePadding="@dimen/_5dp"
-        android:drawableRight="@drawable/rect"
-        android:gravity="center_vertical"
-        android:text="@string/cc"
-        android:lineSpacingExtra="@dimen/_2sp"
-        android:textColor="@color/black_1"
-        android:textSize="@dimen/_12sp"
-       app:layout_constraintRight_toRightOf="parent"
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
-    <TextView
-        android:id="@+id/text_title"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15dp"
-        android:lineSpacingExtra="@dimen/_2sp"
+        android:paddingHorizontal="@dimen/_20dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        android:text="Message Headline"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_16sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipent" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
 
-    <EditText
-        android:id="@+id/text_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15dp"
-        android:background="@android:color/transparent"
-        android:lineSpacingExtra="@dimen/_2sp"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-        android:textColor="@color/black_1"
-        android:textSize="@dimen/_16sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_title" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recipent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="@drawable/round_rect"
+            android:paddingHorizontal="@dimen/_15dp"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <TextView
+                android:id="@+id/text_reciepent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+
+                android:lineSpacingExtra="@dimen/_2sp"
+                android:text="@string/select_reciepents_to"
+                android:textColor="@color/black_1"
+                android:textSize="@dimen/_12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/cc_reciepent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/rect"
+                android:drawablePadding="@dimen/_5dp"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="@dimen/_2sp"
+                android:text="@string/cc"
+                android:textColor="@color/black_1"
+                android:textSize="@dimen/_12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15dp"
+            android:lineSpacingExtra="@dimen/_2sp"
+
+            android:text="Message Headline"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recipent" />
+
+        <EditText
+            android:id="@+id/text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15dp"
+            android:background="@android:color/transparent"
+            android:lineSpacingExtra="@dimen/_2sp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            android:textColor="@color/black_1"
+            android:textSize="@dimen/_16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/text_add_file"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20dp"
+        android:background="@drawable/ic_rect"
         android:gravity="center"
         android:lineSpacingExtra="@dimen/_2sp"
-        android:paddingVertical="@dimen/_20dp"
         android:paddingHorizontal="@dimen/_15dp"
+        android:paddingVertical="@dimen/_20dp"
         android:text="@string/add_file"
-        android:background="@drawable/ic_rect"
         android:textColor="@color/black_1"
         android:textSize="@dimen/_16sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -108,6 +112,7 @@
         app:layout_constraintLeft_toRightOf="@+id/text_add_file"
         app:layout_constraintTop_toBottomOf="@+id/topLayout"
         tools:listitem="@layout/item_files" />
+
     <Button
         android:id="@+id/send_message_btn"
         android:layout_width="match_parent"
@@ -116,9 +121,9 @@
         android:background="@drawable/bg_white_rect"
         android:backgroundTint="@color/forgot_color"
         android:text="@string/send_message"
-        android:textSize="@dimen/_18sp"
         android:textAllCaps="false"
         android:textColor="@color/white"
+        android:textSize="@dimen/_18sp"
         app:layout_constraintTop_toBottomOf="@id/files_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,8 +45,9 @@
     <color name="rounded_blue">#2636779C</color>
     <color name="univ_name">#54575F</color>
     <color name="grey_2">#54575F</color>
-    <color name="grey_3">#54575F80</color>
+    <color name="grey_3">#54575F80</color>f
     <color name="grey_t3">#80918C92</color>
     <color name="grey_t4">#A654575F</color>
     <color name="tint">#EEEEEF</color>
+    <color name="dashed_color">#403743BE</color>
 </resources>

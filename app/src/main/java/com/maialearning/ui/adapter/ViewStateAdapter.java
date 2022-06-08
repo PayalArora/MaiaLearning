@@ -11,6 +11,7 @@ import com.maialearning.ui.fragments.ConsideringFragment;
 import com.maialearning.ui.fragments.DecisionsFragment;
 import com.maialearning.ui.fragments.EssaysFragment;
 import com.maialearning.ui.fragments.MilestonesFragment;
+import com.maialearning.ui.fragments.RecommendationFragment;
 import com.maialearning.ui.fragments.UpcomingFragment;
 
 public class ViewStateAdapter extends FragmentStateAdapter {
@@ -30,6 +31,8 @@ int size=0;
                 return new ApplyingFragment();
             }else if (position ==3) {
                 return new MilestonesFragment();
+            }else if (position ==4) {
+//                return new RecommendationFragment();
             } else if (position ==5) {
               // return new DecisionsFragment();
             } else if (position ==6) {

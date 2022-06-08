@@ -242,6 +242,15 @@
     <string name="words_700">700 Words</string>
     <string name="headline_essay">Headline of the Essay</string>
     <string name="review_by">Reviewed by Philip Roybal</string>
+    <string name="select_teachers">Select Teachers</string>
+    <string name="selected_teacher">Abeda Sultana, John Doe...</string>
+    <string name="request_rec">Request Recs</string>
+    <string name="enter_note">Enter a note for the recommender</string>
+    <string name="from_teachers">from 2 teachers</string>
+    <string name="select_deadline">Select Deadline</string>
+    <string name="june">June 2022</string>
+    <string name="attached_brag">Attach Brag Sheet</string>
+    <string name="send_request">Send Request</string>
 
     <string-array name="decision_filter">
         <item>Accepted</item>
