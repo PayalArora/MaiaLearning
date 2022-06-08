@@ -4,89 +4,91 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_top_curve_white_filled_with_border">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/labeled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/_50dp"
-        android:layout_height="@dimen/_50dp"
-        android:layout_marginTop="@dimen/_20dp"
-        android:layout_marginStart="@dimen/_10dp"
-        android:contentDescription="@string/about"
-        android:src="@drawable/college_pic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/university"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="University of California,\n Berkely"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_19sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/image"
-        app:layout_constraintEnd_toStartOf="@id/like"
-        app:layout_constraintStart_toEndOf="@id/image"
-        app:layout_constraintTop_toTopOf="@id/image" />
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/_50dp"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_20dp"
+            android:contentDescription="@string/about"
+            android:src="@drawable/college_pic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/like"
-        android:layout_width="@dimen/_30dp"
-        android:layout_height="@dimen/_30dp"
-        android:layout_marginTop="@dimen/_20dp"
-        android:padding="@dimen/_7dp"
-        android:layout_marginEnd="@dimen/_10dp"
-        android:contentDescription="@string/like"
-        android:src="@drawable/like"
-        android:background="@drawable/circle"
-        app:layout_constraintEnd_toStartOf="@id/close"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/university"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="University of California,\n Berkely"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_19sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/image"
+            app:layout_constraintEnd_toStartOf="@id/like"
+            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintTop_toTopOf="@id/image" />
 
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="@dimen/_25dp"
-        android:layout_height="@dimen/_25dp"
-        android:layout_marginTop="@dimen/_20dp"
-        android:layout_marginEnd="@dimen/_10dp"
-        android:contentDescription="@string/like"
-        android:src="@drawable/cross"
-        android:padding="8dp"
-        android:background="@drawable/circle_lay"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="@dimen/_30dp"
+            android:layout_height="@dimen/_30dp"
+            android:layout_marginTop="@dimen/_20dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:background="@drawable/circle"
+            android:contentDescription="@string/like"
+            android:padding="@dimen/_7dp"
+            android:src="@drawable/like"
+            app:layout_constraintEnd_toStartOf="@id/close"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:backgroundTint="@color/white"
-        android:elevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image">
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="@dimen/_25dp"
+            android:layout_height="@dimen/_25dp"
+            android:layout_marginTop="@dimen/_20dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:background="@drawable/circle_lay"
+            android:contentDescription="@string/like"
+            android:padding="8dp"
+            android:src="@drawable/cross"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/fact_tabs"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:backgroundTint="@color/white"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tabBackground="@color/white"
-            android:paddingTop="@dimen/_10dp"
+            android:elevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image">
 
-            app:tabIndicatorColor="@color/forgot_color"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/forgot_color"
-            app:tabTextAppearance="@style/MyCustomAppearance"
-            app:tabTextColor="@color/black_1"/>
-    </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/fact_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:backgroundTint="@color/white"
+                android:paddingTop="@dimen/_10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabBackground="@color/white"
+
+                app:tabIndicatorColor="@color/forgot_color"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/forgot_color"
+                app:tabTextAppearance="@style/MyCustomAppearance"
+                app:tabTextColor="@color/black_1" />
+        </com.google.android.material.appbar.AppBarLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 <LinearLayout
     android:layout_width="match_parent"

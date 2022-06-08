@@ -1,13 +1,18 @@
 package com.maialearning.ui.activity
 
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
@@ -66,7 +71,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).apply {
             setOnClickListener {
-                bottomSheetWork()
+                bottomSheetList()
+//                bottomSheetWork()
             }
         }
 
@@ -92,8 +98,26 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
+    private fun bottomSheetList() {
+        val dialog = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.uni_list_bottom, null)
+        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
 
-    private fun bottomSheetWork() {
+        val listing = view.findViewById<RecyclerView>(R.id.listing)
+        val layout = view.findViewById<ConstraintLayout>(R.id.layout)
+        DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
+
+        listing.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        listing.adapter=UniFactAdapter(this,::bottomSheetWork)
+//        close.setOnClickListener {
+//            dialog.dismiss()
+//        }
+
+        dialog.setContentView(view)
+        dialog.show()
+    }
+
+    public fun bottomSheetWork() {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
