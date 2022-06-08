@@ -31,9 +31,9 @@ int size=0;
             }else if (position ==3) {
                 return new MilestonesFragment();
             } else if (position ==5) {
-              // return new DecisionsFragment();
+              return new DecisionsFragment();
             } else if (position ==6) {
-//                 return new EssaysFragment();
+                 return new EssaysFragment();
             }
 
             return new UpcomingFragment();
