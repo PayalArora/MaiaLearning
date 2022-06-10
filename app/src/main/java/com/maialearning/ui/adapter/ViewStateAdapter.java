@@ -12,6 +12,7 @@ import com.maialearning.ui.fragments.DecisionsFragment;
 import com.maialearning.ui.fragments.EssaysFragment;
 import com.maialearning.ui.fragments.MilestonesFragment;
 import com.maialearning.ui.fragments.RecommendationFragment;
+import com.maialearning.ui.fragments.SearchFragment;
 import com.maialearning.ui.fragments.UpcomingFragment;
 
 public class ViewStateAdapter extends FragmentStateAdapter {
@@ -25,7 +26,9 @@ int size=0;
         @Override
         public Fragment createFragment(int position) {
             // Hardcoded in this order, you'll want to use lists and make sure the titles match
-            if (position == 1) {
+            if (position == 0) {
+                return new SearchFragment();
+            } if (position == 1) {
                 return new ConsideringFragment();
             }else if (position ==2) {
                 return new ApplyingFragment();

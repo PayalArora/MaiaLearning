@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/_10dp"
+    android:layout_marginTop="@dimen/_10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/_10dp">
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+       android:paddingBottom="@dimen/_10dp"
+        android:gravity="center|start"
+        android:paddingTop="@dimen/_10dp"
+        android:fontFamily="@font/inter_bold"
+        android:lineSpacingExtra="2sp"
+        android:text="Acturial Science"
+       app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/black_1"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/aa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/aa"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:src="@drawable/check_select"
+
+      app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ba"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/ba"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/check_select"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="@dimen/_10dp"
+        app:layout_constraintEnd_toStartOf="@id/ma"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/ma"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:src="@drawable/check_select"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/da"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/da"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/check_select"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="@dimen/_10dp"
+        app:layout_constraintEnd_toStartOf="@id/menu"
+        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="@dimen/_10dp"
+            android:layout_height="20dp"
+            android:src="@drawable/menu_dots"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/_10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
