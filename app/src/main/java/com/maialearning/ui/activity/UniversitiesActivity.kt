@@ -130,7 +130,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             getString(R.string.admission),
             getString(R.string.cost_),
             getString(R.string.notes),
-            getString(R.string.campus_service))
+            getString(R.string.campus_service),"Degrees & Majo...")
         for (item in tabArray) {
             factTabs.addTab(factTabs.newTab().setText(item))
         }
