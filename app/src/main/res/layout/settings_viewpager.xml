@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_1">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15dp"
+        android:layout_marginTop="@dimen/_15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/_10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginLeft="@dimen/_5dp"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/_15dp"
+                android:text="@string/notifications"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/school_add_icon"
+                    android:layout_width="@dimen/_16dp"
+                    android:layout_height="@dimen/_16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginLeft="@dimen/_5dp"
+                    android:src="@drawable/ic_sms" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_toLeftOf="@+id/sms_btn"
+                    android:layout_toEndOf="@+id/school_add_icon"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/school_add_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5dp"
+                        android:fontFamily="@font/inter"
+                        android:gravity="center_vertical"
+                        android:text="@string/sms_messaging"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5dp"
+                        android:fontFamily="@font/inter"
+                        android:gravity="center_vertical"
+                        android:text="@string/receive_text"
+                        android:textColor="@color/dashed_color"
+                        android:textSize="@dimen/_14sp" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sms_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:checked="true"
+                    android:thumb="@drawable/thum_selector"
+                    app:switchPadding="@dimen/_10dp"
+                    app:track="@drawable/track_selector" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp">
+
+                <ImageView
+                    android:id="@+id/school_name_icon"
+                    android:layout_width="@dimen/_16dp"
+                    android:layout_height="@dimen/_16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginLeft="@dimen/_5dp"
+                    android:src="@drawable/ic_sms_tick" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_toLeftOf="@+id/_receive_sms_btn"
+                    android:layout_toEndOf="@+id/school_name_icon"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/school_name_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5dp"
+                        android:fontFamily="@font/inter"
+                        android:gravity="center_vertical"
+                        android:text="@string/message_From_other"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5dp"
+                        android:fontFamily="@font/inter"
+                        android:gravity="center_vertical"
+                        android:text="@string/receive_message_other"
+                        android:textColor="@color/dashed_color"
+                        android:textSize="@dimen/_14sp" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/_receive_sms_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:checked="true"
+                    android:thumb="@drawable/thum_selector"
+                    app:switchPadding="@dimen/_10dp"
+                    app:track="@drawable/track_selector" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_15dp"
+                android:layout_marginTop="@dimen/_10dp">
+
+                <ImageView
+                    android:id="@+id/email_icon"
+                    android:layout_width="@dimen/_16dp"
+                    android:layout_height="@dimen/_16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginLeft="@dimen/_5dp"
+                    android:src="@drawable/ic_sms_tick" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_toLeftOf="@+id/receive_email_btn"
+                    android:layout_toEndOf="@+id/email_icon"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5dp"
+                        android:fontFamily="@font/inter"
+                        android:gravity="center_vertical"
+                        android:text="@string/email_messages"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/_14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5dp"
+                        android:fontFamily="@font/inter"
+                        android:gravity="center_vertical"
+                        android:text="@string/receive_email"
+                        android:textColor="@color/dashed_color"
+                        android:textSize="@dimen/_14sp" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/receive_email_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:checked="true"
+                    android:thumb="@drawable/thum_selector"
+                    app:switchPadding="@dimen/_10dp"
+                    app:track="@drawable/track_selector" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.databinding.*
 import com.maialearning.ui.adapter.*
+import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
 
 
@@ -44,6 +45,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             finish()
         }
         initView()
+        binding.toolbarProf.setOnClickListener {
+            ProfileFilter(this, layoutInflater).showDialog()
+        }
 
     }
 
