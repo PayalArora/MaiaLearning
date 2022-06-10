@@ -52,4 +52,7 @@
     <color name="grey_t4">#A654575F</color>
     <color name="tint">#EEEEEF</color>
     <color name="dashed_color">#403743BE</color>
+    <color name="purple">#633593</color>
+    <color name="purple_alpha">#1A633593</color>
+    <color name="purple_light">#c9bada</color>
 </resources>
