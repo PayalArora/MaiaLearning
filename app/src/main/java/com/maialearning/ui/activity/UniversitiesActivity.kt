@@ -46,7 +46,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         initView()
         binding.toolbarProf.setOnClickListener {
-            ProfileFilter(this, layoutInflater).showDialog()
+          //  ProfileFilter(this, layoutInflater).showDialog()
         }
 
     }
@@ -133,8 +133,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             getString(R.string.community),
             getString(R.string.admission),
             getString(R.string.cost_),
+            getString(R.string.degree),
+            getString(R.string.transfer),
             getString(R.string.notes),
-            getString(R.string.campus_service),"Degrees & Majo...")
+            getString(R.string.campus_service))
         for (item in tabArray) {
             factTabs.addTab(factTabs.newTab().setText(item))
         }

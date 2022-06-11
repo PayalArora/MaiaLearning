@@ -8,7 +8,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/labeled"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/image"
@@ -23,7 +24,7 @@
 
         <TextView
             android:id="@+id/university"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="University of California,\n Berkely"
@@ -31,7 +32,7 @@
             android:textSize="@dimen/_19sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintEnd_toStartOf="@id/like"
+
             app:layout_constraintStart_toEndOf="@id/image"
             app:layout_constraintTop_toTopOf="@id/image" />
 
@@ -78,11 +79,11 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:backgroundTint="@color/white"
+                android:elevation="@dimen/_0dp"
                 android:paddingTop="@dimen/_10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tabBackground="@color/white"
-
                 app:tabIndicatorColor="@color/forgot_color"
                 app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/forgot_color"

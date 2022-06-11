@@ -27,7 +27,7 @@ int size=0;
         public Fragment createFragment(int position) {
             // Hardcoded in this order, you'll want to use lists and make sure the titles match
             if (position == 0) {
-                return new SearchFragment();
+             return new SearchFragment();
             } if (position == 1) {
                 return new ConsideringFragment();
             }else if (position ==2) {
@@ -35,7 +35,7 @@ int size=0;
             }else if (position ==3) {
                 return new MilestonesFragment();
             }else if (position ==4) {
-//                return new RecommendationFragment();
+                return new RecommendationFragment();
             } else if (position ==5) {
               return new DecisionsFragment();
             } else if (position ==6) {

@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/_10dp"
     app:cardCornerRadius="@dimen/_10dp"
-
     android:layout_marginTop="@dimen/_10dp"
     android:layout_marginStart="@dimen/_10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -32,7 +31,7 @@
 
         <TextView
             android:id="@+id/university"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="Abraham Lincoln \n University"
@@ -40,7 +39,7 @@
             android:textSize="@dimen/_14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/image"
-            app:layout_constraintEnd_toStartOf="@id/like"
+            app:layout_constraintRight_toLeftOf="@id/like"
             app:layout_constraintStart_toEndOf="@id/image"
             app:layout_constraintTop_toTopOf="@id/image" />
 

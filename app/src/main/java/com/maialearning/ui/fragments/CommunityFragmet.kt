@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.maialearning.R
 import com.maialearning.databinding.CommunityLayoutBinding
 import com.maialearning.ui.adapter.CommunityAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
@@ -77,9 +78,9 @@ class CommunityFragmet : Fragment() {
         listDataProgress.add(communityModela5)
         val communityModela6= CommunityModel("Asian","89%","#8024418E","","")
         listDataProgress.add(communityModela6)
-        val communityModela7= CommunityModel("White","72%","#8054575F","","")
+        val communityModela7= CommunityModel("White","72%","#54575F","","")
         listDataProgress.add(communityModela7)
-        val communityModela8= CommunityModel("Two or more Races","30%","#80918C92","","")
+        val communityModela8= CommunityModel("Two or more Races","30%","#54575F","","")
         listDataProgress.add(communityModela8)
         mBinding.progressView.adapter = ProgressAdapter(requireContext(),listDataProgress)
     }

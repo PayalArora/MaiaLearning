@@ -35,6 +35,7 @@ class SearchFragment : Fragment() {
     ): View? {
 
         mBinding= SearchLayoutBinding.inflate(inflater,container,false)
+
         return mBinding.root
 
     }
@@ -45,7 +46,8 @@ class SearchFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
             .commit()
-        bottomSheetList()
+        mBinding.rvUniv .adapter= UniFactAdapter(requireContext(),::click)
+       // bottomSheetList()
 
     }
     private fun bottomSheetList() {
