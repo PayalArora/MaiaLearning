@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.maialearning.R
 import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.ui.activity.UniversitiesActivity
@@ -39,6 +40,13 @@ class HomeFragment : Fragment() {
             startActivity(intent)
 
         }
+        dashboardBinding.dashboard.setOnClickListener {
+            loadFragment(DashboardFragment())
+        }
     }
-
+    private fun loadFragment(fragment: Fragment) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment_content_dashboard, fragment)
+        transaction.commit()
+    }
 }

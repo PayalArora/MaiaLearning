@@ -52,6 +52,9 @@
     <string name="inbox">Inbox</string>
     <string name="sent">Sent</string>
     <string name="trash">Trash</string>
+    <string name="upcomings">Upcoming</string>
+    <string name="overdue">Overdue</string>
+    <string name="complete">Complete</string>
     <string name="new_message">New Message</string>
     <string name="add_file">+ Add Files</string>
     <string name="send_message">Send Message</string>
