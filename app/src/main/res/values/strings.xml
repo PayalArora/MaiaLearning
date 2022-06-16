@@ -300,6 +300,35 @@
     <string name="profile">Profile</string>
     <string name="transfer">Transfer</string>
     <string name="degree"><![CDATA[Degrees & Majors]]></string>
+    <string name="today_date">Today, 14 Jun 2022</string>
+    <string name="what_new">What\'s new</string>
+    <string name="cal_institue">California Institute of the Arts Webinar on Admission Requirements</string>
+    <string name="happening_now">Happening Now</string>
+    <string name="fair_or_webinar">Fair or webinar</string>
+    <string name="ensure_your">Ensure your Applying List is accurate and up-to-date. Enter admissions decisions under \'Application Status\' as you receive them.</string>
+    <string name="academic_act">Academic Activity</string>
+    <string name="required">Required</string>
+    <string name="submission">Submission</string>
+    <string name="five_docs">5 docs attached</string>
+    <string name="career">Career</string>
+    <string name="submitted">Submitted</string>
+    <string name="san_franc">San Francisco State University Open Door Visit</string>
+    <string name="time" >10:30 AM</string>
+    <string name="cali_text">California Institute of the Arts Webinar on Admission Requirements</string>
+    <string name="virtual_meeting">Virtual Meeting</string>
+    <string name="google_meet">Google Meet</string>
+    <string name="joined">Joined</string>
+    <string name="approved">Approved</string>
+    <string name="worksheet">Worksheet</string>
+    <string name="surve">Survey</string>
+    <string name="answer_a">Answer a few questions</string>
+    <string name="task_headline">Task Headline</string>
+    <string name="review_your">Review your Interest Profiler assessment results and select three recommended careers that interest you.</string>
+    <string name="completed">Completed</string>
+    <string name="choose_file">Choose files to upload...</string>
+    <string name="assignment_making">Assignment Making Habits Stick</string>
+    <string name="write">Write</string>
+    <string name="reset_Comp">Reset Competetion</string>
 
     <string-array name="decision_filter">
         <item>Accepted</item>

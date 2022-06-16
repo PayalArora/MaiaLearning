@@ -59,5 +59,8 @@
     <color name="purple_alpha">#1A633593</color>
     <color name="purple_light">#c9bada</color>
     <color name="maar_light">#C1345F</color>
+    <color name="banner_blue">#2B3694</color>
+    <color name="banner_orange">#CE7038</color>
+    <color name="banner_light_orange">#EA8B52</color>
 
 </resources>
