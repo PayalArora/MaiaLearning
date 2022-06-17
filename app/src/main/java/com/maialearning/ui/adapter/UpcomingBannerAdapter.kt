@@ -12,13 +12,19 @@ class UpcomingBannerAdapter (fragmentManager: FragmentManager, lifecycle: Lifecy
     override fun createFragment(position: Int): Fragment {
         // Hardcoded in this order, you'll want to use lists and make sure the titles match
         if (position == 0) {
-            return BannerOneFragment()
+            return BannerOneFragment(position)
         } else if (position == 1) {
-            return BannerTwoFragment()
+            return BannerTwoFragment(position)
         } else if (position == 2) {
-            return BannerOneFragment()
+            return BannerOneFragment(position)
         }
-        return BannerOneFragment()
+        else if (position == 3) {
+            return BannerOneFragment(position)
+        }
+        else if (position == 4) {
+            return BannerTwoFragment(position)
+        }
+        return BannerOneFragment(position)
     }
 
     override fun getItemCount(): Int {

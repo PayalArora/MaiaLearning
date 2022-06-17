@@ -35,11 +35,20 @@ class UpcomingItemDetails(
             sheetBinding.tic.visibility = View.GONE
             sheetBinding.completeBtn.visibility = View.VISIBLE
             sheetBinding.completedText.visibility = View.GONE
-        } else {
+            sheetBinding.writeLay.visibility = View.GONE
+        } else if(pos ==2){
             sheetBinding.worksheet.visibility = View.VISIBLE
             sheetBinding.completeBtn.visibility = View.GONE
-            sheetBinding.tic.visibility = View.VISIBLE
+            sheetBinding.tic.visibility = View.GONE
             sheetBinding.completedText.visibility = View.VISIBLE
+            sheetBinding.writeLay.visibility = View.GONE
+
+        }else {
+            sheetBinding.worksheet.visibility = View.GONE
+            sheetBinding.tic.visibility = View.GONE
+            sheetBinding.completeBtn.visibility = View.GONE
+            sheetBinding.completedText.visibility = View.GONE
+            sheetBinding.writeLay.visibility = View.VISIBLE
 
         }
     }

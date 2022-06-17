@@ -46,7 +46,7 @@ class UpcomingFragment : Fragment(), OnItemClick {
     private fun initview() {
 
         val fm: FragmentManager = requireActivity().supportFragmentManager
-        val adapter = UpcomingBannerAdapter(fm, requireActivity().lifecycle,3)
+        val adapter = UpcomingBannerAdapter(fm, requireActivity().lifecycle,5)
         mBinding.bannerViewpager.adapter = adapter
         mBinding.bannerViewpager.isUserInputEnabled = false
         TabLayoutMediator(mBinding.tabLayout, mBinding.bannerViewpager) { tab, position ->
