@@ -28,6 +28,8 @@ import com.maialearning.ui.bottomsheets.SheetUniversityFilter
 class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private lateinit var binding: ActivityUniversitiesBinding
     private lateinit var toolbarBinding: Toolbar
+    var dialog: BottomSheetDialog? = null
+    var dialogFacts: BottomSheetDialog? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +48,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         initView()
         binding.toolbarProf.setOnClickListener {
-          //  ProfileFilter(this, layoutInflater).showDialog()
+            ProfileFilter(this, layoutInflater).showDialog()
         }
 
     }
@@ -89,10 +91,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         binding.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-              if (binding.tabs.selectedTabPosition == 5){
-                  binding.addFab.visibility = View.GONE
-              } else
-                  binding.addFab.visibility = View.VISIBLE
+                if (binding.tabs.selectedTabPosition == 5) {
+                    binding.addFab.visibility = View.GONE
+                } else
+                    binding.addFab.visibility = View.VISIBLE
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -102,8 +104,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
+
     private fun bottomSheetList() {
-        val dialog = BottomSheetDialog(this)
+        dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.uni_list_bottom, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
 
@@ -111,18 +114,18 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val layout = view.findViewById<ConstraintLayout>(R.id.layout)
         DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
 
-        listing.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        listing.adapter=UniFactAdapter(this,::bottomSheetWork)
+        listing.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        listing.adapter = UniFactAdapter(this, ::bottomSheetWork)
 //        close.setOnClickListener {
 //            dialog.dismiss()
 //        }
 
-        dialog.setContentView(view)
-        dialog.show()
+        dialog?.setContentView(view)
+        dialog?.show()
     }
 
     public fun bottomSheetWork() {
-        val dialog = BottomSheetDialog(this)
+        dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
 
@@ -141,7 +144,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             factTabs.addTab(factTabs.newTab().setText(item))
         }
         close.setOnClickListener {
-            dialog.dismiss()
+            dialogFacts?.dismiss()
         }
         val fm: FragmentManager = supportFragmentManager
         val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size)
@@ -149,8 +152,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         TabLayoutMediator(factTabs, viewPager) { tab, position ->
             tab.text = tabArray[position]
         }.attach()
-         dialog.setContentView(view)
-        dialog.show()
+        val like = view.findViewById<ImageView>(R.id.like)
+        like.setOnClickListener {
+            likeClick()
+        }
+        dialogFacts?.setContentView(view)
+        dialogFacts?.show()
     }
 
     private fun bottomSheetAddUniv() {
@@ -189,7 +196,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     override fun onClick(positiion: Int, type: Int) {
-        if(type==2) {
+        if (type == 2) {
             if (positiion == 0) {
                 countryFilter()
             } else if (positiion == 1) {
@@ -200,23 +207,21 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
                     resources.getString(R.string.list),
                     positiion, View.GONE)
-            } else if (positiion == 3 ) {
+            } else if (positiion == 3) {
                 typeFilter()
-            }
-            else if (positiion == 4 ) {
+            } else if (positiion == 4) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
                     resources.getString(R.string.selectivity),
                     positiion)
-            } else if (positiion == 5 ) {
+            } else if (positiion == 5) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
                     resources.getString(R.string.programs),
                     positiion)
-            }else if (positiion == 6 ) {
+            } else if (positiion == 6) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
                     resources.getString(R.string.sports),
                     positiion, View.VISIBLE)
-            }
-            else if (positiion == 7 ) {
+            } else if (positiion == 7) {
                 moreFilter()
             }
         }
@@ -270,6 +275,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.religous.setOnClickListener { sheetBinding.spinner.performClick() }
 
 
+    }
+
+    fun likeClick() {
+        binding.tabs.selectTab(binding.tabs.getTabAt(1))
+        dialogFacts?.let { it.dismiss() }
+        dialog?.let { it.dismiss() }
     }
 
 }

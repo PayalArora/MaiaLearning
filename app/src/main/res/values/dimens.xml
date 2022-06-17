@@ -59,4 +59,6 @@
     <dimen name="_11sp">11sp</dimen>
     <dimen name="_150dp">150dp</dimen>
     <dimen name="_400dp">400dp</dimen>
+    <dimen name="_90dp">90dp</dimen>
+    <dimen name="_22dp">22dp</dimen>
 </resources>

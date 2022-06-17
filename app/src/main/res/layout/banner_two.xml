@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_height="wrap_content">
 
         <RelativeLayout
+            android:id="@+id/topLayout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/_200dp"
             android:background="@drawable/banner_two_curve">
 
             <TextView
                 android:id="@+id/whats_new"
-                android:textColor="@color/banner_orange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_20dp"
                 android:layout_marginTop="@dimen/_20dp"
                 android:layout_marginEnd="@dimen/_20dp"
-                android:layout_marginBottom="@dimen/_20dp"
+                android:layout_marginBottom="@dimen/_10dp"
                 android:background="@drawable/white_rounded"
                 android:drawableStart="@drawable/ic_bell"
                 android:drawablePadding="@dimen/_10dp"
                 android:fontFamily="@font/inter_bold"
                 android:paddingHorizontal="@dimen/_10dp"
                 android:paddingVertical="@dimen/_5dp"
-                android:text="@string/happening_now" />
+                android:text="@string/happening_now"
+                android:textColor="@color/banner_orange" />
 
             <TextView
                 android:id="@+id/fair"
@@ -35,57 +38,145 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
                 android:layout_marginEnd="@dimen/_20dp"
-                android:layout_marginBottom="@dimen/_20dp"
+                android:layout_marginBottom="@dimen/_10dp"
                 android:layout_toRightOf="@+id/whats_new"
                 android:drawableStart="@drawable/ic_fair"
                 android:drawablePadding="@dimen/_10dp"
                 android:fontFamily="@font/inter_bold"
                 android:paddingHorizontal="@dimen/_10dp"
                 android:paddingVertical="@dimen/_5dp"
+                android:alpha="0.65"
                 android:text="@string/fair_or_webinar"
-                android:textColor="@color/banner_light_orange" />
+                android:textColor="@color/white" />
             <RelativeLayout
                 android:id="@+id/close"
                 android:layout_width="@dimen/_30dp"
                 android:layout_height="@dimen/_30dp"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/_20dp"
+                android:layout_margin="@dimen/_5dp"
+
+                android:backgroundTint="@color/white"
                 android:layout_marginEnd="@dimen/_20dp"
-                android:background="@drawable/circle_lay"
-                android:backgroundTint="@color/white">
+                android:background="@drawable/circle_lay">
 
                 <ImageView
                     android:layout_width="@dimen/_20dp"
                     android:layout_height="@dimen/_20dp"
                     android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
                     android:padding="@dimen/_2dp"
-                    android:src="@drawable/close" />
+                    android:src="@drawable/ic_baseline_close_24"
+                    app:tint="@color/white" />
             </RelativeLayout>
+<LinearLayout
+    android:id="@+id/dismiss_layout"
+    android:layout_width="match_parent"
+    android:layout_below="@+id/whats_new"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="@dimen/_10dp"
+    android:visibility="visible"
+    android:background="@drawable/white_rect_15"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/text_description"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_5dp"
+        android:lineSpacingExtra="@dimen/_2sp"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/text_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dismiss_all"
+        android:textColor="@color/black_1"
+        android:textSize="@dimen/_14sp"
+        />
 
+    <LinearLayout
+        android:id="@+id/dismiss_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="@dimen/_7dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/dismiss"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="@dimen/_15dp"
+            android:layout_marginTop="@dimen/_5dp"
+            android:layout_weight="1"
+            android:background="@drawable/white_rounded"
+            android:backgroundTint="@color/red_e"
+            android:drawablePadding="@dimen/_10dp"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_5dp"
+            android:lineSpacingExtra="@dimen/_2sp"
+            android:paddingHorizontal="@dimen/_5dp"
+            android:text="@string/dismiss"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14sp" />
+
+        <TextView
+            android:id="@+id/reset_comp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:paddingVertical="@dimen/_5dp"
+            android:layout_marginHorizontal="@dimen/_15dp"
+            android:layout_marginTop="@dimen/_5dp"
+            android:layout_weight="1"
+            android:background="@drawable/white_rounded"
+            android:backgroundTint="@color/forgot_color_1"
+            android:drawablePadding="@dimen/_10dp"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/_2sp"
+            android:paddingHorizontal="@dimen/_5dp"
+            android:text="@string/cancel"
+            android:textStyle="bold"
+            android:textColor="@color/forgot_color"
+            android:textSize="@dimen/_14sp" />
+
+    </LinearLayout>
+</LinearLayout>
             <TextView
+                android:id="@+id/banner_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/whats_new"
-                android:layout_marginStart="@dimen/_20dp"
-                android:layout_marginLeft="@dimen/_20dp"
+                android:layout_marginStart="@dimen/_25dp"
+                android:layout_marginTop="@dimen/_10dp"
+
                 android:layout_marginBottom="@dimen/_20dp"
+                android:visibility="gone"
                 android:fontFamily="@font/inter_bold"
                 android:text="@string/cal_institue"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_16sp" />
 
-            <Button
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="@dimen/_20dp"
-                android:layout_marginTop="@dimen/_20dp"
+                android:layout_marginTop="@dimen/_10dp"
                 android:layout_marginEnd="@dimen/_20dp"
                 android:layout_marginBottom="@dimen/_20dp"
                 android:background="@drawable/white_rounded"
+                android:backgroundTint="@color/white"
+                android:backgroundTintMode="multiply"
+                android:gravity="center"
+                android:fontFamily="@font/inter_bold"
+                android:paddingVertical="@dimen/_8dp"
                 android:text="Attend"
                 android:textAllCaps="false"
-                android:textColor="@color/banner_orange" />
+                android:textColor="@color/banner_orange"
+                android:textStyle="bold" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

@@ -319,7 +319,7 @@
     <string name="google_meet">Google Meet</string>
     <string name="joined">Joined</string>
     <string name="approved">Approved</string>
-    <string name="worksheet">Worksheet</string>
+    <string name="worksheet">Download Worksheet</string>
     <string name="surve">Survey</string>
     <string name="answer_a">Answer a few questions</string>
     <string name="task_headline">Task Headline</string>
@@ -329,6 +329,9 @@
     <string name="assignment_making">Assignment Making Habits Stick</string>
     <string name="write">Write</string>
     <string name="reset_Comp">Reset Competetion</string>
+    <string name="dismiss_all">Dismiss all Notifications?</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="decision_filter">
         <item>Accepted</item>

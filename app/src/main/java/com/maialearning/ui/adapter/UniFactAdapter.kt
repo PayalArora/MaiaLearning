@@ -36,6 +36,10 @@ class UniFactAdapter(var context:Context,var click: () -> Unit) : RecyclerView.A
             click
             ( context as UniversitiesActivity).bottomSheetWork()
         }
+        viewHolder.binding.like.setOnClickListener {
+            click
+            ( context as UniversitiesActivity).likeClick()
+        }
 
     }
 

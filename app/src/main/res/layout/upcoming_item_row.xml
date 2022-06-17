@@ -9,6 +9,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/carrier_lay"
         android:layout_width="match_parent"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5dp">
 
@@ -63,6 +64,8 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/academic_lay"
         android:layout_width="match_parent"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5dp">
 
@@ -123,8 +126,7 @@
                 android:lineSpacingExtra="@dimen/_2sp"
                 android:text="@string/ensure_your"
                 android:textColor="@color/univ_name"
-                android:textSize="@dimen/_14sp"
-              />
+                android:textSize="@dimen/_14sp" />
 
             <View
                 android:id="@+id/view"
@@ -184,8 +186,10 @@
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:id="@+id/submitted_lay"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_margin="@dimen/_5dp">
 
         <RelativeLayout
@@ -306,8 +310,10 @@
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:id="@+id/fair_lay"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_margin="@dimen/_5dp">
 
         <RelativeLayout
@@ -432,7 +438,9 @@
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:id="@+id/fair_join_lay"
+        android:visibility="gone"
         android:layout_width="match_parent"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5dp">
 
@@ -566,7 +574,8 @@
                     android:backgroundTint="@color/alpha_blue_t"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="@dimen/_2sp"
-                    android:padding="@dimen/_5dp"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_10dp"
                     android:text="@string/joined"
                     android:textColor="@color/alpha_blue1"
                     android:textSize="@dimen/_14sp" />
@@ -576,7 +585,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/approved_lay"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_margin="@dimen/_5dp">
 
         <RelativeLayout
@@ -708,7 +719,8 @@
                     android:backgroundTint="@color/alpha_blue_t"
                     android:fontFamily="@font/inter"
                     android:lineSpacingExtra="@dimen/_2sp"
-                    android:padding="@dimen/_5dp"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_10dp"
                     android:text="@string/worksheet"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14sp" />
@@ -734,6 +746,7 @@
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:id="@+id/deadline_lay"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5dp">
@@ -786,8 +799,10 @@
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:id="@+id/survey_lay"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/_18dp"
         android:layout_margin="@dimen/_5dp">
 
         <RelativeLayout
@@ -864,7 +879,8 @@
                     android:text="@string/complete"
                     android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
                     android:layout_centerVertical="true"
-                    android:padding="@dimen/_5dp"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_10dp"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14sp" />
             </RelativeLayout>

@@ -6,7 +6,7 @@
         </shape>
     </item>
     <item
-        android:bottom="@dimen/_100dp"
+        android:bottom="@dimen/_70dp"
         android:left="-70dp"
         android:right="-70dp"
         android:top="0dp">

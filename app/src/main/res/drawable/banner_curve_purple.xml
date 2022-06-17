@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/banner_light_orange" />
+            <solid android:color="@color/purple_2" />
         </shape>
     </item>
     <item
@@ -16,7 +16,7 @@
             android:shape="rectangle"
             android:useLevel="true">
 
-            <solid android:color="@color/banner_orange" />
+            <solid android:color="@color/purple_1" />
             <corners
                 android:bottomLeftRadius="160dp"
                 android:bottomRightRadius="160dp"
