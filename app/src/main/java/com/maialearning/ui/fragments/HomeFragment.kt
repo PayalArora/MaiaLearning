@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.maialearning.R
 import com.maialearning.databinding.FragmentDashboardBinding
+import com.maialearning.ui.activity.CareerActivity
 import com.maialearning.ui.activity.UniversitiesActivity
 
 class HomeFragment : Fragment() {
@@ -36,7 +37,12 @@ class HomeFragment : Fragment() {
 
     private fun setListeners() {
         dashboardBinding.universities.setOnClickListener {
-            var intent = Intent(requireContext(), UniversitiesActivity::class.java)
+            val intent = Intent(requireContext(), UniversitiesActivity::class.java)
+            startActivity(intent)
+
+        }
+        dashboardBinding.careers.setOnClickListener {
+            val intent = Intent(requireContext(), CareerActivity::class.java)
             startActivity(intent)
 
         }

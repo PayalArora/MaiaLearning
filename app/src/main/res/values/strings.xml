@@ -313,7 +313,7 @@
     <string name="career">Career</string>
     <string name="submitted">Submitted</string>
     <string name="san_franc">San Francisco State University Open Door Visit</string>
-    <string name="time" >10:30 AM</string>
+    <string name="time">10:30 AM</string>
     <string name="cali_text">California Institute of the Arts Webinar on Admission Requirements</string>
     <string name="virtual_meeting">Virtual Meeting</string>
     <string name="google_meet">Google Meet</string>
@@ -329,6 +329,7 @@
     <string name="assignment_making">Assignment Making Habits Stick</string>
     <string name="write">Write</string>
     <string name="reset_Comp">Reset Competetion</string>
+    <string name="nys_career">NYS Career Plan</string>
 
     <string-array name="decision_filter">
         <item>Accepted</item>

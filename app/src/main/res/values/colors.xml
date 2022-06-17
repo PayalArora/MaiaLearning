@@ -62,5 +62,8 @@
     <color name="banner_blue">#2B3694</color>
     <color name="banner_orange">#CE7038</color>
     <color name="banner_light_orange">#EA8B52</color>
+    <color name="grey_10">#1A54575F</color>
+    <color name="grey_line">#E6E6E7</color>
+
 
 </resources>
