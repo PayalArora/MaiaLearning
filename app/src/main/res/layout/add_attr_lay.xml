@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
+    android:background="@drawable/background_top_curve_white_filled_with_border"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5dp"
+        android:fontFamily="@font/inter_bold"
+        android:lineSpacingExtra="2sp"
+        android:paddingStart="@dimen/_10dp"
+        android:text="Add Attribute"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sp"
+        app:layout_constraintEnd_toEndOf="@id/clear"
+        android:layout_marginTop="@dimen/_10dp"
+        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintStart_toStartOf="@id/back"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5dp"
+        android:fontFamily="@font/inter"
+        android:lineSpacingExtra="2sp"
+        android:paddingStart="@dimen/_10dp"
+        android:text="@string/back"
+        android:drawablePadding="@dimen/_10dp"
+        android:drawableStart="@drawable/back_arrow"
+        android:textColor="@color/black_1"
+        android:textSize="@dimen/_14sp"
+        android:layout_marginTop="@dimen/_10dp"
+        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5dp"
+        android:fontFamily="@font/inter"
+        android:lineSpacingExtra="2sp"
+        android:paddingStart="@dimen/_10dp"
+        android:text="Clear"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:textColor="@color/black_1"
+        android:textSize="@dimen/_14sp"
+        android:layout_marginTop="@dimen/_10dp"
+        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:background="@color/tint"
+        app:layout_constraintTop_toBottomOf="@id/name" />
+
+    <TextView
+        android:id="@+id/attr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:fontFamily="@font/inter_bold"
+        android:lineSpacingExtra="2sp"
+        android:text="Attributes and Actions"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/add"
+        app:layout_constraintBottom_toBottomOf="@id/add" />
+
+
+    <TextView
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:background="@drawable/round_rect"
+        android:fontFamily="@font/inter_bold"
+        android:lineSpacingExtra="2sp"
+        android:padding="10dp"
+        android:text="+ Add"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/_16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view" />
+   <androidx.recyclerview.widget.RecyclerView
+       android:id="@+id/list"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       app:layout_constraintTop_toBottomOf="@id/add"
+       app:layout_constraintStart_toStartOf="@id/back"
+       app:layout_constraintEnd_toEndOf="@id/clear"/>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:background="@color/tint"
+        app:layout_constraintTop_toBottomOf="@id/list" />
+    <TextView
+        android:id="@+id/action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:fontFamily="@font/inter_bold"
+        android:lineSpacingExtra="2sp"
+        android:text="Describe Action"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view1" />
+
+    <EditText
+        android:id="@+id/edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:fontFamily="@font/inter"
+        android:gravity="top"
+        android:paddingTop="@dimen/_10dp"
+        android:paddingStart="@dimen/_10dp"
+        android:lineSpacingExtra="2sp"
+        android:hint="What will you do to improve on that?"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sp"
+        android:minHeight="@dimen/_150dp"
+        android:background="@drawable/bg_white_rect"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/action" />
+
+    <Button
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp"
+        android:layout_margin="@dimen/_20dp"
+        android:background="@drawable/bg_white_rect"
+        android:backgroundTint="@color/forgot_color"
+        android:text="@string/save"
+        android:textSize="@dimen/_18sp"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/edit" />
+</androidx.constraintlayout.widget.ConstraintLayout>

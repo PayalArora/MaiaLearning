@@ -28,18 +28,15 @@ class UniFactAdapter(var context:Context,var click: () -> Unit) : RecyclerView.A
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.binding.list.setOnClickListener {
+        viewHolder.binding.university.setOnClickListener {
             click
             ( context as UniversitiesActivity).bottomSheetWork()
         }
-        viewHolder.binding.list.setOnClickListener {
+        viewHolder.binding.image.setOnClickListener {
             click
             ( context as UniversitiesActivity).bottomSheetWork()
         }
-        viewHolder.binding.like.setOnClickListener {
-            click
-            ( context as UniversitiesActivity).likeClick()
-        }
+
 
     }
 

@@ -26,6 +26,7 @@
                 android:text="Approximate Costs Per \nAcademic Year"
                 android:textColor="@color/black"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/recycler_list"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

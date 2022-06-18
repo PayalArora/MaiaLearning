@@ -9,6 +9,7 @@ import com.maialearning.ui.fragments.*
 class CareerStateAdapter (fragmentManager: FragmentManager, lifecycle: Lifecycle, size: Int) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
     var size = 0
+
     override fun createFragment(position: Int): Fragment {
         // Hardcoded in this order, you'll want to use lists and make sure the titles match
         if (position == 0) {
@@ -20,7 +21,7 @@ class CareerStateAdapter (fragmentManager: FragmentManager, lifecycle: Lifecycle
         } else if (position == 3) {
             return NysCareerPlan()
         }
-        return NysCareerPlan()
+        return SearchCareerFragment("")
     }
 
     override fun getItemCount(): Int {

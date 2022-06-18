@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/_10dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_10dp"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:background="@color/white"
+        app:cardCornerRadius="@dimen/_20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_10dp"
+            android:padding="@dimen/_10dp">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:text="Anthropologists and Archeologists"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:background="@color/tint"
+                app:layout_constraintTop_toBottomOf="@id/name" />
+
+            <TextView
+                android:id="@+id/name1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_medium"
+                android:lineSpacingExtra="2sp"
+                android:text="Post-Doctoral Training, First Professional Degree,\nDoctoral Degree"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/view" />
+
+            <TextView
+                android:id="@+id/detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_medium"
+                android:lineSpacingExtra="2sp"
+                android:text="Perform limited clinical duties under the direction of a dentist. Clinical duties may include equipment preparation and sterilization, preparing patients for treatment, assisting the dentist during treatment, and providing patients with instructions for oral healthcare procedures."
+                android:textColor="@color/black_1"
+                android:textSize="@dimen/_12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/name"
+                app:layout_constraintTop_toBottomOf="@id/name1" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:layout_marginBottom="@dimen/_30dp"
+                android:background="@drawable/white_rounded_withboundary"
+                android:backgroundTint="@color/grey_10"
+                android:paddingEnd="@dimen/_10dp"
+                app:layout_constraintEnd_toStartOf="@id/lay3"
+                app:layout_constraintStart_toEndOf="@id/lay2"
+                app:layout_constraintTop_toBottomOf="@id/detail">
+
+                <ImageView
+                    android:id="@+id/graph"
+                    android:layout_width="@dimen/_15dp"
+                    android:layout_height="@dimen/_15dp"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:src="@drawable/graph"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:paddingStart="@dimen/_5sp"
+                    android:paddingTop="@dimen/_5dp"
+                    android:paddingEnd="@dimen/_5sp"
+                    android:paddingBottom="@dimen/_5dp"
+                    android:text="Grow Rapidly"
+                    android:textSize="@dimen/_12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/graph"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_5dp"
+                android:layout_marginBottom="@dimen/_30dp"
+                android:background="@drawable/white_rounded_withboundary"
+                android:backgroundTint="@color/green_tint"
+                app:layout_constraintEnd_toStartOf="@id/lay1"
+                app:layout_constraintStart_toStartOf="@id/detail"
+                app:layout_constraintTop_toBottomOf="@id/detail">
+
+                <TextView
+                    android:id="@+id/dollar"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_marginTop="@dimen/_2dp"
+                    android:layout_marginBottom="@dimen/_2dp"
+                    android:background="@drawable/arrow_circle"
+                    android:backgroundTint="@color/green_1"
+                    android:gravity="center"
+                    android:padding="@dimen/_2dp"
+                    android:text="$"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/text2"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_bold"
+                    android:paddingStart="@dimen/_5sp"
+                    android:paddingTop="@dimen/_5dp"
+                    android:paddingEnd="@dimen/_5sp"
+                    android:paddingBottom="@dimen/_5dp"
+                    android:text="49,860"
+                    android:textColor="@color/green_1"
+                    android:textSize="@dimen/_12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/dollar"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:layout_marginBottom="@dimen/_30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/lay1"
+                app:layout_constraintTop_toBottomOf="@id/detail">
+
+                <TextView
+                    android:id="@+id/text3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_rect"
+                    android:backgroundTint="#103743BE"
+                    android:fontFamily="@font/inter_bold"
+                    android:gravity="center|start"
+                    android:paddingStart="@dimen/_10dp"
+                    android:paddingTop="@dimen/_5dp"
+                    android:paddingEnd="@dimen/_10dp"
+                    android:paddingBottom="@dimen/_5dp"
+                    android:text="Add"
+
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

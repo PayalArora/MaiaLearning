@@ -11,7 +11,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.databinding.ActivityCareerBinding
 import com.maialearning.ui.adapter.CareerStateAdapter
-import com.maialearning.ui.adapter.ViewStateAdapter
 
 class CareerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCareerBinding
@@ -73,4 +72,5 @@ class CareerActivity : AppCompatActivity() {
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
 //        }.attach()
     }
+
 }
