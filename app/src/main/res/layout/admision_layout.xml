@@ -37,7 +37,7 @@
                     android:fontFamily="@font/inter_bold"
                     android:text="Admission Statistics"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_19sp"
+                    android:textSize="@dimen/_18sp"
                     android:textStyle="bold"
                     android:layout_marginTop="@dimen/_10dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -170,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:checked="true"
                         android:textSize="@dimen/_16sp"
-                        android:fontFamily="@font/inter_bold"
+                        android:fontFamily="@font/inter_medium"
                         android:buttonTint="@color/forgot_color"
                         android:textColor="@color/black_1"
                         android:text="WGPA vs SAT" />
@@ -180,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:text="WGPA vs ACT"
                         android:textSize="@dimen/_16sp"
-                        android:fontFamily="@font/inter_bold"
+                        android:fontFamily="@font/inter_medium"
                         android:buttonTint="@color/grey"
                         android:layout_marginStart="@dimen/_20dp"
                         android:textColor="@color/black_1"/>
@@ -330,7 +330,6 @@
                     android:id="@+id/view3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/add1" />
 
@@ -340,6 +339,7 @@
                     android:layout_height="wrap_content"
                     android:padding="15dp"
                     android:textSize="@dimen/_14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/view4"
                     android:text="Application Type"
                     android:textColor="@color/black_1"
                     android:fontFamily="@font/inter_medium"
@@ -365,7 +365,7 @@
                     android:id="@+id/view4"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
+
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/addm1" />
 
@@ -392,6 +392,7 @@
                     android:text="Fall First"
                     android:textColor="@color/forgot_color"
                     android:gravity="end"
+                    android:layout_marginEnd="@dimen/_10dp"
                     android:fontFamily="@font/inter_bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/addim1"
@@ -403,6 +404,7 @@
                     android:text=" Year Regular Admission – 11/30/21"
                     android:textColor="@color/forgot_color"
                     android:gravity="end"
+                    android:paddingBottom="10dp"
                     android:layout_marginEnd="@dimen/_10dp"
                     android:textSize="@dimen/_14sp"
                     android:fontFamily="@font/inter_bold"
@@ -414,7 +416,6 @@
                     android:id="@+id/view5"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/addim3" />
 
@@ -427,9 +428,10 @@
                     android:text="Admission Interview"
                     android:textColor="@color/black_1"
                     android:fontFamily="@font/inter_medium"
+                    app:layout_constraintBottom_toBottomOf="@id/addi2"
                     app:layout_constraintEnd_toStartOf="@id/addi2"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view5" />
+                    app:layout_constraintTop_toTopOf="@id/addi2" />
 
                 <TextView
                     android:id="@+id/addi2"
@@ -440,6 +442,7 @@
                     android:text="Not required \nor recommended"
                     android:textColor="@color/black_1"
                     android:gravity="end"
+                    app:layout_constraintBottom_toTopOf="@id/view6"
                     android:fontFamily="@font/inter_medium"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/addi1"
@@ -449,9 +452,8 @@
                     android:id="@+id/view6"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
-                    app:layout_constraintTop_toBottomOf="@id/addi1" />
+                    app:layout_constraintTop_toBottomOf="@id/addi2" />
 
 
                 <TextView
@@ -486,7 +488,6 @@
                     android:id="@+id/view_"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/sat1" />
 
@@ -586,7 +587,7 @@
                     android:fontFamily="@font/inter_bold"
                     app:layout_constraintEnd_toStartOf="@id/scrore3"
                     app:layout_constraintStart_toEndOf="@id/scrore"
-                    app:layout_constraintTop_toBottomOf="@id/head3" />
+                    app:layout_constraintTop_toBottomOf="@id/view_v" />
 
                 <TextView
                     android:id="@+id/scrore3"
@@ -599,7 +600,7 @@
                     android:fontFamily="@font/inter_bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/scrore1"
-                    app:layout_constraintTop_toBottomOf="@id/head3" />
+                    app:layout_constraintTop_toBottomOf="@id/view_v" />
 
                 <View
                     android:id="@+id/view7"

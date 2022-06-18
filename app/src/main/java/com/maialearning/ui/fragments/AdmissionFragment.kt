@@ -37,7 +37,7 @@ class AdmissionFragment : Fragment() {
 
     }
     private fun initData(){
-        mBinding.listView.adapter = AdmissionAdapter()
+        mBinding.listView.adapter = AdmissionAdapter(requireContext())
 
     }
 }

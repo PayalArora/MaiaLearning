@@ -7,11 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maialearning.databinding.AdmisionLayoutBinding
 import com.maialearning.databinding.CampusLayoutBinding
-import com.maialearning.ui.adapter.AdmissionAdapter
 import com.maialearning.ui.adapter.CampusAdapter
-import com.maialearning.ui.model.CommunityModel
 
 class CampusFragment : Fragment() {
     private lateinit var mBinding: CampusLayoutBinding
