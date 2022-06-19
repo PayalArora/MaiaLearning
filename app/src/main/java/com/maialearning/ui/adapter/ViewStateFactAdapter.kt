@@ -17,16 +17,16 @@ class ViewStateFactAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycl
             return CommunityFragmet()
         } else if (position == 2) {
             return AdmissionFragment()
-        } else if (position == 5) {
+        } else if (position == 3) {
+            return CostFragment()
+        }else if (position == 4) {
+            return DegreesFragment()
+        }else if (position == 5) {
             return TransferFragment()
         }else if (position == 6) {
             return FactsNotesFragment()
         }else if (position == 7) {
             return CampusFragment()
-        }else if (position == 4) {
-            return DegreesFragment()
-        }else if (position == 3) {
-            return CostFragment()
         }
         return OverViewFragment()
     }
