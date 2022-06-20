@@ -214,7 +214,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     resources.getString(R.string.selectivity),
                     positiion)
             } else if (positiion == 5) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
                     resources.getString(R.string.programs),
                     positiion)
             } else if (positiion == 6) {
@@ -234,7 +234,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val sheetBinding: MoreSheetBinding = MoreSheetBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
-        sheetBinding.filters.setText(title)
+        sheetBinding.filters.setText(getString(R.string.more))
         sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
@@ -259,12 +259,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val sheetBinding: TypeSheetBinding = TypeSheetBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
-        sheetBinding.filters.setText(title)
+        sheetBinding.filters.setText(getString(R.string.type))
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
         sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
         val adapter = ArrayAdapter.createFromResource(this,
-            R.array.capmpus_activity,
+            R.array.religious_affilation,
             android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sheetBinding.spinner.setAdapter(

@@ -1,6 +1,8 @@
 package com.maialearning.ui.adapter
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemReigonBinding
@@ -32,6 +34,22 @@ class ReigonAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : Recy
        // viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 1) }
         viewHolder.binding.apply {
             filters.setText(arr.get(position))
+
+            if (checked.get(position)){
+                imgCheck.visibility = View.VISIBLE
+                filters.setTypeface(filters.typeface, Typeface.BOLD)
+            } else {
+                imgCheck.visibility = View.GONE
+                filters.setTypeface(filters.typeface, Typeface.NORMAL)
+
+            }
+            root.setOnClickListener {
+                for (i in checked.indices) {
+                    checked[i] = false
+                }
+                checked[position] =true
+                notifyDataSetChanged()
+            }
         }
 
     }

@@ -7,12 +7,13 @@
     android:layout_width="match_parent"
     android:id="@+id/text_lay"
     android:layout_height="wrap_content">
+
     <CheckBox
         android:id="@+id/rb_inenr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10dp"
-        android:layout_marginLeft="@dimen/_35dp"
+        android:layout_marginLeft="@dimen/_20dp"
         android:layout_marginTop="@dimen/_5dp"
         android:button="@drawable/check_radio"
         android:buttonTint="@color/checkbutton"
