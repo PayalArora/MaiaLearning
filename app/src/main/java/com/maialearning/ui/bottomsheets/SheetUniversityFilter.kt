@@ -41,9 +41,12 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
-        if (positiion == 1)
+        if (positiion == 1){
             sheetBinding.reciepentList.adapter =
                 ReigonAdapter(con.resources.getStringArray(R.array.Region), con)
+            sheetBinding.spinnerLay.visibility = View.GONE
+
+        }
         else if (positiion == 2) {
             sheetBinding.reciepentList.adapter =
                 ItemListAdapter(con.resources.getStringArray(R.array.list), con)

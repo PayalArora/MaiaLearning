@@ -36,11 +36,11 @@ class SportsFilterAdapter(val arr: Array<String>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             rbInenr.setText(arr.get(position))
-            if(position<2)
+            if(position>=2)
                 arrow.visibility = visibility[position]
 
            arrow.setOnClickListener {
-              if(position<2) {
+              if(position>=2) {
                   if (rvCheckbox.isVisible) {
                       rvCheckbox.visibility = View.GONE
                   } else {

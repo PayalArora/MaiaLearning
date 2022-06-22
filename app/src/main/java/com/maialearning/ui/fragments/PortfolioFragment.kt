@@ -1,36 +1,28 @@
 package com.maialearning.ui.fragments
 
-import DashboardPagerAdapter
-import ViewPagerAdapter
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.res.Resources
-import android.graphics.Rect
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
-import com.maialearning.databinding.*
-import com.maialearning.ui.activity.NewMessageActivity
-import com.maialearning.ui.adapter.AddUniversiityAdapter
-import com.maialearning.ui.adapter.MessageAdapter
-import com.maialearning.ui.adapter.NotesAdapter
-import com.maialearning.ui.bottomsheets.SheetUniversityFilter
+import com.maialearning.databinding.ActivityPortfolioBinding
+import com.maialearning.databinding.ApplicationFilterBinding
+import com.maialearning.databinding.DashbordFragBinding
+import com.maialearning.databinding.DateFilterBinding
+import com.maialearning.ui.adapter.PortfolioAdapter
 
-class DashboardFragment : Fragment(), OnItemClick {
-    private lateinit var mBinding: DashbordFragBinding
+class PortfolioFragment : Fragment(), OnItemClick {
+    private lateinit var mBinding: ActivityPortfolioBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,10 +33,10 @@ class DashboardFragment : Fragment(), OnItemClick {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        mBinding = DashbordFragBinding.inflate(inflater, container, false)
+        mBinding = ActivityPortfolioBinding.inflate(inflater, container, false)
 
-        val toolbarBinding:Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-        toolbarBinding.title = getString(R.string.dashboard)
+        val toolbarBinding: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+        toolbarBinding.title = getString(R.string.portfolio)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).setOnClickListener {
@@ -58,7 +50,7 @@ class DashboardFragment : Fragment(), OnItemClick {
                 showApplicationFilter()
             }
         }
-       setAdapter()
+        setAdapter()
         return mBinding.root
     }
     fun showApplicationFilter(){
@@ -77,44 +69,41 @@ class DashboardFragment : Fragment(), OnItemClick {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setAdapter() {
-        var tabArray = arrayOf(getString(R.string.upcomings),
-            getString(R.string.overdue),
-            getString(R.string.complete))
+        val tabArray = arrayOf(
+            getString(R.string.profile),
+            getString(R.string.goal),
+            getString(R.string.journals),
+            getString(R.string.experiences),
+            getString(R.string.galler),
+        )
+
         for (item in tabArray) {
             mBinding.tabs.addTab(mBinding.tabs.newTab().setText(item))
+
         }
-        val adapter = DashboardPagerAdapter(requireContext(), this,
-            tabArray.size)
+//        val fm: FragmentManager = activity.supportFragmentManager
+        val adapter = PortfolioAdapter(this, tabArray.size)
+
         mBinding.viewPager.adapter = adapter
-        mBinding.viewPager.isUserInputEnabled = false
-//        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
-//            tab.setText(tabArray[position])
-//        }.attach()
 
         TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.setCustomView(R.layout.item_tab)
-                    tab.customView?.findViewById<TextView>(R.id.tab_title)?.setText(tabArray[position])
-                }
-                1 -> {
-                    tab.setCustomView(R.layout.item_tab)
-                    tab.customView?.findViewById<TextView>(R.id.tab_title)?.setText(tabArray[position])
-                }
-                2->{
-                    tab.setCustomView(R.layout.item_tab)
-                    tab.customView?.findViewById<TextView>(R.id.tab_title)?.setText(tabArray[position])
-                }
-            }
+            tab.setText(tabArray[position])
         }.attach()
 
-        mBinding.tabs.tabGravity = TabLayout.GRAVITY_FILL
 
+        mBinding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
 
     }
 
     override fun onClick(positiion: Int) {
-       // loadFragment(MessageDetailFragment())
+        // loadFragment(MessageDetailFragment())
     }
 
 }

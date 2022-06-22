@@ -164,6 +164,7 @@
             android:orientation="vertical"
             android:layout_weight="1"
             android:padding="@dimen/_10dp"
+            android:id="@+id/portfolios"
             android:background="@drawable/rectangle"
             android:layout_gravity="center_vertical"
             android:layout_height="match_parent">
