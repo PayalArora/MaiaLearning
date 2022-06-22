@@ -10,6 +10,7 @@ import android.widget.ImageView
 import com.maialearning.R
 import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.ui.activity.CareerActivity
+import com.maialearning.ui.activity.DashboardActivity
 import com.maialearning.ui.activity.PortfolioActivity
 import com.maialearning.ui.activity.UniversitiesActivity
 
@@ -43,9 +44,10 @@ class HomeFragment : Fragment() {
 
         }
         dashboardBinding.careers.setOnClickListener {
-            val intent = Intent(requireContext(), CareerActivity::class.java)
-            startActivity(intent)
-
+//            val intent = Intent(requireContext(), CareerActivity::class.java)
+//            startActivity(intent)
+            (context as DashboardActivity).toolbarBinding.visibility=View.GONE
+            loadFragment(CareerActivity())
         }
         dashboardBinding.portfolios.setOnClickListener {
             loadFragment(PortfolioFragment()) }
@@ -55,7 +57,8 @@ class HomeFragment : Fragment() {
     }
     private fun loadFragment(fragment: Fragment) {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment_content_dashboard, fragment)
+        transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
+        transaction.addToBackStack("name")
         transaction.commit()
     }
 }
