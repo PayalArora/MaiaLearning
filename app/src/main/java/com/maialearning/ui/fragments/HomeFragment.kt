@@ -10,6 +10,7 @@ import android.widget.ImageView
 import com.maialearning.R
 import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.ui.activity.CareerActivity
+import com.maialearning.ui.activity.PortfolioActivity
 import com.maialearning.ui.activity.UniversitiesActivity
 
 class HomeFragment : Fragment() {
@@ -46,6 +47,8 @@ class HomeFragment : Fragment() {
 //            startActivity(intent)
 
         }
+        dashboardBinding.portfolios.setOnClickListener {
+            loadFragment(PortfolioFragment()) }
         dashboardBinding.dashboard.setOnClickListener {
             loadFragment(DashboardFragment())
         }

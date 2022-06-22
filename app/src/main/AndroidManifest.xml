@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaiaLearning">
         <activity
+            android:name=".ui.activity.PortfolioActivity"
+            android:exported="false" />
+        <activity
             android:name=".CareerActivity"
             android:exported="false" />
         <activity

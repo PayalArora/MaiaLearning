@@ -42,6 +42,7 @@
     <dimen name="_25dp">25dp</dimen>
     <dimen name="_50dp">50dp</dimen>
     <dimen name="_230dp">230dp</dimen>
+    <dimen name="_250dp">250dp</dimen>
 
     <dimen name="_35dp">35dp</dimen>
     <dimen name="_7sp">7sp</dimen>
