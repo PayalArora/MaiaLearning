@@ -42,8 +42,8 @@ class HomeFragment : Fragment() {
 
         }
         dashboardBinding.careers.setOnClickListener {
-            val intent = Intent(requireContext(), CareerActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(requireContext(), CareerActivity::class.java)
+//            startActivity(intent)
 
         }
         dashboardBinding.dashboard.setOnClickListener {
