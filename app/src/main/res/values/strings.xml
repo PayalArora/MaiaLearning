@@ -338,6 +338,21 @@
     <string name="skills_app">Skills/Application : What do I need to know? What skills are important to me? What am I learning? Why am I learning it? How can I use it?</string>
     <string name="dir_app">Directions: The following skills are needed to succeed in life, work, and education beyond of high school. Using the scale provided, identify for each skill the level of achievement you believe you possess at the beginning of the commencement level and the level you believe you achieved by the end of your senior year. Briefly describe a classroom experience or an activity that helped you develop each skill and identify how each skill can be used in your life and future work experiences.</string>
     <string name="direc_app">Directions: Briefly describe the activity that you completed. Indicate the most important thing you learned about yourself through this activity. Describe how this self knowledge will influence your plans for the future.</string>
+    <string name="goal">Goals</string>
+    <string name="journals">Journals</string>
+    <string name="experiences">Experiences</string>
+    <string name="galler">Galler</string>
+    <string name="add_plus">+Add</string>
+    <string name="fill_your_profile">Fill Your \n Profile</string>
+    <string name="your_location">Your Location</string>
+    <string name="city">city</string>
+    <string name="your_emaol">Your Email</string>
+    <string name="your_phone">Your Phone</string>
+    <string name="add_experiences">+Add Experiences</string>
+    <string name="education">Education</string>
+    <string name="add_Education">+Add Education</string>
+    <string name="add_more_section">+Add More Sections</string>
+
 
     <string-array name="decision_filter">
         <item>Accepted</item>
