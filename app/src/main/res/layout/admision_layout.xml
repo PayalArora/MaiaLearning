@@ -49,7 +49,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:weightSum="2"
-                    android:layout_marginTop="@dimen/_10dp"
+                    app:layout_constraintBottom_toTopOf="@id/radio"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_marginStart="10dp"
                     app:layout_constraintStart_toStartOf="@id/head1"
                     app:layout_constraintTop_toBottomOf="@id/head1">
@@ -157,7 +158,7 @@
 
                 <RadioGroup
                     android:id="@+id/radio"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -188,7 +189,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/listView"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -243,7 +244,7 @@
                     android:id="@+id/head2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:padding="15dp"
                     android:fontFamily="@font/inter_bold"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_19sp"
@@ -257,7 +258,6 @@
                     android:id="@+id/view"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/head2" />
 
@@ -562,6 +562,8 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/tint"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/head3" />
 
                 <TextView
@@ -582,7 +584,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="25th %*"
-                    android:paddingEnd="@dimen/_15dp"
+                    android:paddingEnd="@dimen/_10dp"
                     android:textColor="@color/black_1"
                     android:fontFamily="@font/inter_bold"
                     app:layout_constraintEnd_toStartOf="@id/scrore3"
@@ -595,7 +597,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="75th %*"
-                    android:paddingEnd="@dimen/_15dp"
+                    android:paddingEnd="@dimen/_10dp"
                     android:textColor="@color/black_1"
                     android:fontFamily="@font/inter_bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -606,7 +608,8 @@
                     android:id="@+id/view7"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/scrore3" />
 
@@ -632,6 +635,7 @@
                     android:text="650"
                     android:textSize="@dimen/_14sp"
                     android:paddingEnd="@dimen/_25dp"
+                    app:layout_constraintBottom_toTopOf="@id/view8"
                     android:fontFamily="@font/inter_medium"
                     app:layout_constraintEnd_toStartOf="@id/statics2"
                     app:layout_constraintStart_toEndOf="@id/statics"
@@ -645,6 +649,7 @@
                     android:textSize="@dimen/_14sp"
                     android:textColor="@color/black_1"
                     android:text="740"
+                    app:layout_constraintBottom_toTopOf="@id/view8"
                     android:paddingEnd="@dimen/_25dp"
                     android:fontFamily="@font/inter_medium"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -655,7 +660,6 @@
                     android:id="@+id/view8"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/statics" />
 
@@ -704,7 +708,6 @@
                     android:id="@+id/view_9"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/math2" />
 
@@ -753,7 +756,6 @@
                     android:id="@+id/view9"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/act2" />
                 <androidx.cardview.widget.CardView
@@ -792,11 +794,11 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="10dp"
+                            android:layout_marginEnd="@dimen/_10dp"
                             android:fontFamily="@font/inter_medium"
                             android:text="N/A"
-                            android:textSize="@dimen/_14sp"
                             android:textColor="@color/black"
-                             />
+                            android:textSize="@dimen/_14sp" />
 
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>

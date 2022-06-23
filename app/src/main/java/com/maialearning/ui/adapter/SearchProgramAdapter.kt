@@ -3,12 +3,15 @@ package com.maialearning.ui.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.R
 import com.maialearning.databinding.SearchCareerAdapterBinding
 
 class SearchProgramAdapter (var context: Context,var click:  (position: Int) -> Unit) : RecyclerView.Adapter<SearchProgramAdapter.ViewHolder>() {
     var isSelected = false
 var count=0
+    var selectedPostion = -1
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -33,6 +36,14 @@ var count=0
             count=count+1
             if(count>1){
             click(position)
+
+            }
+            if(viewHolder.binding.button.isChecked){
+            viewHolder.binding.lay.background =
+                ContextCompat.getDrawable(context, R.drawable.back_stroke_selected)
+            }else{
+                viewHolder.binding.lay.background =
+                    ContextCompat.getDrawable(context, R.drawable.bg_white_rect)
             }
 
         }

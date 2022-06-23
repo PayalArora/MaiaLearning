@@ -52,14 +52,17 @@ class AdmissionAdapter(var context: Context) : RecyclerView.Adapter<AdmissionAda
             selectedPostion = position
             viewHolder.binding.lay.background =
                 ContextCompat.getDrawable(context, R.drawable.back_stroke_selected)
+            viewHolder.binding.name.setTextColor(ContextCompat.getColor(context,R.color.blue))
             notifyDataSetChanged()
         }
         if (position == selectedPostion) {
             viewHolder.binding.lay.background =
                 ContextCompat.getDrawable(context, R.drawable.back_stroke_selected)
+            viewHolder.binding.name.setTextColor(ContextCompat.getColor(context,R.color.blue))
         } else {
             viewHolder.binding.lay.background =
                 ContextCompat.getDrawable(context, R.drawable.bg_white_rect)
+            viewHolder.binding.name.setTextColor(ContextCompat.getColor(context,R.color.black_1))
 
         }
     }

@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     android:background="@color/white_1"
     android:paddingBottom="@dimen/_30dp"
-    android:padding="@dimen/_10dp">
+    android:paddingTop="@dimen/_10dp"
+    >
 <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toTopOf="parent">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,12 +24,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:spanCount="2"
             tools:itemCount="6"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/_10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:listitem="@layout/comunity_adapter" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/breakdown"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20dp"
+        android:layout_marginStart="@dimen/_10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/_10dp"
         android:background="@drawable/background_curve_rectangle_white_filled"
         android:padding="@dimen/_10dp"
         app:layout_constraintStart_toStartOf="@id/listComunity"
@@ -52,7 +58,7 @@
             android:id="@id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_20dp"
             android:background="@color/tint"
             app:layout_constraintTop_toBottomOf="@id/ethc" />
         <androidx.recyclerview.widget.RecyclerView
@@ -66,6 +72,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_20dp"
+            android:layout_marginStart="@dimen/_10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/_10dp"
             android:background="@drawable/background_curve_rectangle_white_filled"
             android:padding="@dimen/_10dp"
             app:layout_constraintStart_toStartOf="@id/listComunity"
@@ -86,9 +95,10 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
+                android:id="@+id/view_cam"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_20dp"
                 android:background="@color/divider_color"
                 app:layout_constraintTop_toBottomOf="@id/campusEffort" />
 
@@ -96,25 +106,25 @@
                 android:id="@+id/web"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20dp"
+                android:layout_marginTop="@dimen/_10dp"
                 android:fontFamily="@font/inter_bold"
                 android:lineSpacingExtra="2sp"
                 android:text="Housing Availability:"
                 android:textColor="@color/black_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/campusEffort" />
+                app:layout_constraintTop_toBottomOf="@id/view_cam" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20dp"
+                android:layout_marginTop="@dimen/_10dp"
                 android:lineSpacingExtra="2sp"
                 android:text=" N/A--"
                 android:textColor="@color/red_2"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/web"
-                app:layout_constraintTop_toBottomOf="@id/campusEffort" />
+                app:layout_constraintTop_toBottomOf="@id/view_cam" />
 
             <TextView
                 android:id="@+id/phone"
@@ -358,6 +368,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_20dp"
+            android:layout_marginStart="@dimen/_10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/_10dp"
             android:background="@drawable/background_curve_rectangle_white_filled"
             android:padding="@dimen/_10dp"
             android:layout_marginBottom="@dimen/_10dp"
@@ -382,7 +395,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_20dp"
                 android:background="@color/divider_color"
                 app:layout_constraintTop_toBottomOf="@id/campus" />
 

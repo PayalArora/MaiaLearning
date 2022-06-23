@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.maialearning.R
 import com.maialearning.databinding.ActivityDashboardBinding
-import com.maialearning.databinding.ToolbarBinding
 import com.maialearning.ui.fragments.HomeFragment
 import com.maialearning.ui.fragments.MessageFragment
 import com.maialearning.ui.fragments.NotesFragment
@@ -18,7 +17,7 @@ import com.maialearning.ui.fragments.ShortcutFragment
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
-    private lateinit var toolbarBinding: Toolbar
+    public lateinit var toolbarBinding: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +67,10 @@ class DashboardActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        toolbarBinding.visibility=View.VISIBLE
+    }
     private fun loadFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.nav_host_fragment_content_dashboard, fragment)

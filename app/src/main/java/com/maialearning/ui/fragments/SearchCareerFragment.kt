@@ -57,22 +57,23 @@ class SearchCareerFragment(var type:String) : Fragment() {
     }
 
     private fun bottomSheetList(position:Int) {
-        dialog = BottomSheetDialog(requireContext())
-        val view = layoutInflater.inflate(R.layout.compare_careers, null)
-//        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-
-        val listing = view.findViewById<RecyclerView>(R.id.listing)
-        val layout = view.findViewById<ConstraintLayout>(R.id.layout)
-        val close = view.findViewById<RelativeLayout>(R.id.close)
-        DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
-
-        listing.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        listing.adapter = CareerCompareAdapter(requireContext())
-        close.setOnClickListener {
-            dialog?.dismiss()
-        }
-
-        dialog?.setContentView(view)
-        dialog?.show()
+//        (requireContext() as CareerActivity).dialog
+//        dialog = BottomSheetDialog(requireContext())
+//        val view = layoutInflater.inflate(R.layout.compare_careers, null)
+////        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+//
+//        val listing = view.findViewById<RecyclerView>(R.id.listing)
+//        val layout = view.findViewById<ConstraintLayout>(R.id.layout)
+//        val close = view.findViewById<RelativeLayout>(R.id.close)
+//        DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
+//
+//        listing.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+//        listing.adapter = CareerCompareAdapter(requireContext())
+//        close.setOnClickListener {
+//            dialog?.dismiss()
+//        }
+//
+//        dialog?.setContentView(view)
+//        dialog?.show()
     }
 }

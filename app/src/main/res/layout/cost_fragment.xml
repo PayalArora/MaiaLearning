@@ -14,15 +14,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/_10dp">
+            android:paddingTop="@dimen/_10dp"
+            android:paddingBottom="@dimen/_10dp">
 
             <TextView
                 android:id="@+id/ethc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginStart="@dimen/_15dp"
                 android:fontFamily="@font/inter_bold"
                 android:gravity="center|start"
+                android:layout_marginTop="@dimen/_20dp"
                 android:text="Approximate Costs Per \nAcademic Year"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -33,26 +35,29 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_list"
                 android:layout_width="0dp"
+                android:layout_marginStart="@dimen/_10dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/view_"
                 app:layout_constraintTop_toBottomOf="@id/ethc" />
 
             <View
                 android:id="@id/view_"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:background="@color/tint"
+                app:layout_constraintBottom_toTopOf="@id/ethc1"
+                android:layout_marginTop="@dimen/_20dp"
+                android:background="#BFD7D7E4"
                 app:layout_constraintTop_toBottomOf="@id/recycler_list" />
 
             <TextView
                 android:id="@+id/ethc1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginStart="@dimen/_20dp"
+                android:layout_marginTop="@dimen/_20dp"
                 android:fontFamily="@font/inter_bold"
                 android:lineSpacingExtra="2sp"
                 android:text="Financial Aid"
@@ -65,6 +70,8 @@
                 android:id="@+id/credictList"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginStart="@dimen/_10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ethc1" />
@@ -74,7 +81,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                android:paddingBottom="@dimen/_10dp"
+                android:paddingBottom="@dimen/_20dp"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                app:layout_constraintBottom_toTopOf="@id/ethnicity1"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/credictList">
@@ -85,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
                     android:text="Financial Aid "
@@ -97,11 +108,11 @@
                     android:id="@+id/deadline1_"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
                     android:text="Deadlines"
-                    android:textColor="@color/maar_light"
+                    android:textColor="@color/red_1"
                     android:textSize="18sp"
                     app:layout_constraintStart_toEndOf="@id/campusEffort"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -112,14 +123,14 @@
                     android:layout_height="@dimen/_20dp"
                     app:layout_constraintStart_toEndOf="@id/deadline1_"
                     android:src="@drawable/ic_flag"
-                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginStart="@dimen/_5dp"
                     app:layout_constraintBottom_toBottomOf="@id/deadline1_"
                     app:layout_constraintTop_toTopOf="@id/deadline1_"/>
                 <View
                     android:id="@+id/vieew"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/campusEffort" />
 
@@ -128,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:fontFamily="@font/inter_medium"
                     android:lineSpacingExtra="2sp"
                     android:text="Priority Deadline"
@@ -140,7 +151,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_marginEnd="@dimen/_10dp"
                     android:fontFamily="@font/inter_medium"
                     android:lineSpacingExtra="2sp"
@@ -154,7 +165,7 @@
                     android:id="@id/view"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/perior" />
 
@@ -163,7 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:fontFamily="@font/inter_medium"
                     android:lineSpacingExtra="2sp"
                     android:text="Regular Deadline"
@@ -175,7 +186,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_marginEnd="@dimen/_10dp"
                     android:fontFamily="@font/inter_medium"
                     android:lineSpacingExtra="2sp"
@@ -189,7 +200,7 @@
                     android:id="@id/view1"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/regular" />
 
@@ -198,10 +209,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:fontFamily="@font/inter_medium"
                     android:lineSpacingExtra="2sp"
-                    android:text="Regular Deadline"
+                    android:text="Notification Date"
                     android:textColor="@color/black_1"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -210,11 +221,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_marginEnd="@dimen/_10dp"
                     android:fontFamily="@font/inter_medium"
                     android:lineSpacingExtra="2sp"
-                    android:text="N/A"
+                    android:text="March 31"
                     android:textColor="@color/black_1"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -227,7 +238,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                android:paddingBottom="@dimen/_10dp"
+                android:paddingBottom="@dimen/_20dp"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ethnicity">
@@ -242,7 +256,7 @@
                     android:text="Contact"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:layout_marginStart="@dimen/_10dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -255,7 +269,7 @@
                     android:text=" Financial Aid"
                     android:textColor="@color/green_1"
                     android:textSize="18sp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
 
                     app:layout_constraintStart_toEndOf="@id/deadline"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -267,14 +281,14 @@
                     android:text=" Office"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     app:layout_constraintStart_toEndOf="@id/deadline1"
                     app:layout_constraintTop_toTopOf="parent" />
                 <View
                     android:id="@+id/view"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
                     android:background="@color/tint"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -287,6 +301,7 @@
                     android:padding="@dimen/_5sp"
                   android:layout_marginStart="@dimen/_10dp"
                     android:src="@drawable/ic_mail"
+                    android:backgroundTint="@color/black_1"
                     app:layout_constraintBottom_toBottomOf="@id/textdead1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@id/textdead"
@@ -300,6 +315,7 @@
                     android:layout_marginTop="@dimen/_20dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
+
                     android:text="mskarishmacoul@gmail.com"
                     android:textColor="@color/black_1"
                     android:textSize="14sp"
@@ -324,6 +340,7 @@
                     android:layout_width="@dimen/_30dp"
                     android:layout_height="@dimen/_30dp"
                     android:padding="@dimen/_5sp"
+                    android:backgroundTint="@color/black_1"
                     android:src="@drawable/ic_phone"
                     android:layout_marginStart="@dimen/_10dp"
                     app:layout_constraintBottom_toBottomOf="@id/phone1"
