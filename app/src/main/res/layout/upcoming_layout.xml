@@ -15,12 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <CalendarView
                 android:id="@+id/simpleCalendarView"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:firstDayOfWeek="2"
-                android:layout_height="wrap_content" />
+                android:firstDayOfWeek="2" />
+
             <androidx.viewpager2.widget.ViewPager2
                android:layout_marginBottom="@dimen/_5dp"
                 android:orientation="horizontal"

@@ -43,12 +43,13 @@ class HomeFragment : Fragment() {
 
         }
         dashboardBinding.careers.setOnClickListener {
-//            val intent = Intent(requireContext(), CareerActivity::class.java)
-//            startActivity(intent)
+            val intent = Intent(requireContext(), CareerActivity::class.java)
+            startActivity(intent)
 
         }
         dashboardBinding.portfolios.setOnClickListener {
-            loadFragment(PortfolioFragment()) }
+           // loadFragment(PortfolioFragment())
+             }
         dashboardBinding.dashboard.setOnClickListener {
             loadFragment(DashboardFragment())
         }

@@ -17,14 +17,13 @@ class PortfolioAdapter (fragmentManager: Fragment, size: Int) :
         // Hardcoded in this order, you'll want to use lists and make sure the titles match
         if (position == 0) {
             return PortfolioProfileFragment()
-        } else if (position == 1) {
-            return SearchCareerFragment("list")
+
         } else if (position == 2) {
-            return PlanFragment()
+
         } else if (position == 3) {
-            return NysCareerPlan()
+
         }
-        return SearchCareerFragment("")
+        return PortfolioProfileFragment()
     }
 
     override fun getItemCount(): Int {

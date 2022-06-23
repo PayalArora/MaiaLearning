@@ -11,7 +11,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.databinding.ActivityPortfolioBinding
 import com.maialearning.ui.adapter.CareerStateAdapter
-import com.maialearning.ui.adapter.PortfolioAdapter
+
 
 class PortfolioActivity : AppCompatActivity() {
 
