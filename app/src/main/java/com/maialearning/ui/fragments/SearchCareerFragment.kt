@@ -41,6 +41,12 @@ class SearchCareerFragment(var type:String) : Fragment() {
             mBinding.searchLay.visibility=View.GONE
             mBinding.list.visibility=View.VISIBLE
 
+        }else if(type =="trafic"){
+            mBinding.searchLay.visibility=View.GONE
+            mBinding.text.visibility=View.GONE
+            mBinding.cardView.visibility=View.GONE
+            mBinding.list.visibility=View.VISIBLE
+
         }else{
             mBinding.searchLay.visibility=View.VISIBLE
             mBinding.list.visibility=View.GONE
@@ -51,12 +57,18 @@ class SearchCareerFragment(var type:String) : Fragment() {
         }
         mBinding.listProgram.layoutManager=
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
-        mBinding.listProgram.adapter = SearchProgramAdapter(requireContext(),::bottomSheetList)
+        mBinding.listProgram.adapter = SearchProgramAdapter(requireContext(),::loadFragment)
 
 
     }
 
-    private fun bottomSheetList(position:Int) {
+    private fun loadFragment(position: Int) {
+        if(type!="trafic"){
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.add(R.id.nav_host_fragment_content_dashboard, TraficFragment())
+            transaction.addToBackStack("name")
+            transaction.commit()
+        }
 //        (requireContext() as CareerActivity).dialog
 //        dialog = BottomSheetDialog(requireContext())
 //        val view = layoutInflater.inflate(R.layout.compare_careers, null)

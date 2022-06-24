@@ -352,6 +352,10 @@
     <string name="education">Education</string>
     <string name="add_Education">+Add Education</string>
     <string name="add_more_section">+Add More Sections</string>
+    <string name="summary">Summary</string>
+    <string name="rel_car">Related Careers</string>
+    <string name="salaries">Salaries by State</string>
+    <string name="air_trafic">Air Traffic Controllers</string>
 
 
     <string-array name="decision_filter">

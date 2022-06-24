@@ -32,12 +32,10 @@ var count=0
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.binding.button.setOnClickListener {
-            count=count+1
-            if(count>1){
+        viewHolder.binding.lay.setOnClickListener {
             click(position)
-
-            }
+        }
+        viewHolder.binding.button.setOnClickListener {
             if(viewHolder.binding.button.isChecked){
             viewHolder.binding.lay.background =
                 ContextCompat.getDrawable(context, R.drawable.back_stroke_selected)
