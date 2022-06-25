@@ -4,9 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/_20dp"
     android:backgroundTint="@color/white"
-    android:background="@drawable/background_top_curve_white_filled_with_border"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <TextView
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@id/view" />
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/list"
-       android:layout_width="0dp"
+       android:layout_width="match_parent"
        android:layout_height="wrap_content"
        app:layout_constraintTop_toBottomOf="@id/add"
        app:layout_constraintStart_toStartOf="@id/back"
@@ -154,7 +154,7 @@
         android:layout_margin="@dimen/_20dp"
         android:background="@drawable/bg_white_rect"
         android:backgroundTint="@color/forgot_color"
-        android:text="@string/save"
+        android:text="@string/save_action"
         android:textSize="@dimen/_18sp"
         android:textAllCaps="false"
         android:textColor="@color/white"

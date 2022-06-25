@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.maialearning.R
 import com.maialearning.databinding.ActivityDashboardBinding
+import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.fragments.HomeFragment
 import com.maialearning.ui.fragments.MessageFragment
 import com.maialearning.ui.fragments.NotesFragment
@@ -30,6 +31,10 @@ class DashboardActivity : AppCompatActivity() {
         binding.toolbar.title = ""
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.VISIBLE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_prof).setOnClickListener {
+            ProfileFilter(this, layoutInflater).showDialog()
+        }
+
         loadFragment(HomeFragment())
         setListeners()
     }

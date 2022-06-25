@@ -78,9 +78,9 @@ class CommunityFragmet : Fragment() {
         listDataProgress.add(communityModela5)
         val communityModela6= CommunityModel("Asian","89%","#8024418E","","")
         listDataProgress.add(communityModela6)
-        val communityModela7= CommunityModel("White","72%","#54575F","","")
+        val communityModela7= CommunityModel("White","72%","#54575F","#80918C92","")
         listDataProgress.add(communityModela7)
-        val communityModela8= CommunityModel("Two or more Races","30%","#54575F","","")
+        val communityModela8= CommunityModel("Two or more Races","30%","#54575F","#8054575F","")
         listDataProgress.add(communityModela8)
         mBinding.progressView.adapter = ProgressAdapter(requireContext(),listDataProgress)
     }

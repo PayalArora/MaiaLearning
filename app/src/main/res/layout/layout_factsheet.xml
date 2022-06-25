@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="University of California,\n Berkely"
+            android:text="University of California,\nBerkely"
             android:textColor="@color/black"
             android:textSize="@dimen/_19sp"
             android:textStyle="bold"
@@ -66,6 +66,7 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10dp"
             android:background="@color/white"
             android:backgroundTint="@color/white"
             android:elevation="0dp"
@@ -87,7 +88,7 @@
                 app:tabIndicatorColor="@color/forgot_color"
                 app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/forgot_color"
-                app:tabTextAppearance="@style/MyCustomAppearance"
+                app:tabTextAppearance="@style/AppearanceUniversityTabs"
                 app:tabTextColor="@color/black_1" />
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

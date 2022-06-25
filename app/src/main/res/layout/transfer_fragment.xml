@@ -214,11 +214,21 @@
                         android:fontFamily="@font/inter_bold"
                         android:lineSpacingExtra="2sp"
                         android:text="Deadlines"
+
                         android:textColor="@color/red_1"
                         android:textSize="18sp"
                         app:layout_constraintStart_toEndOf="@id/deadline"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <ImageView
+                        android:padding="@dimen/_3dp"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
+                        app:layout_constraintStart_toEndOf="@id/deadline_"
+                        android:src="@drawable/ic_flag"
+                        android:layout_marginStart="@dimen/_5dp"
+                        app:layout_constraintBottom_toBottomOf="@id/deadline_"
+                        app:layout_constraintTop_toTopOf="@id/deadline_"/>
 
                     <View
                         android:id="@+id/view"

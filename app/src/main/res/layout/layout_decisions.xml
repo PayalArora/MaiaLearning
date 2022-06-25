@@ -110,6 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:paddingTop="@dimen/_5dp"
                 android:paddingHorizontal="@dimen/_10dp">
 
                 <TextView
@@ -149,7 +150,8 @@
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1dp"
-                android:layout_marginVertical="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_5dp"
+                android:layout_marginBottom="@dimen/_10dp"
 
                 android:background="@color/divider_color" />
 

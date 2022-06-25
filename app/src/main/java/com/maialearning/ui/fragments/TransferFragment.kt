@@ -39,14 +39,14 @@ class   TransferFragment: Fragment() {
 
     }
     private fun initData(){
-        val communityModel= CommunityModel("Transfer applicants \n accepted","49%","","#F89A1F","")
+        val communityModel= CommunityModel("Transfer applicants\naccepted","49%","","#F89A1F","")
         listData.add(communityModel)
-        val communityModel1= CommunityModel("Transfer applicants \n accepted","$18,735","","#55AC68","")
+        val communityModel1= CommunityModel("Transfer applicants\naccepted","$18,735","","#55AC68","")
         listData.add(communityModel1)
         mBinding.recyclerList.adapter = CostAdapter(listData)
-        val communityModel2= CommunityModel("Maximum\n Transferred","150","semester\n hours","#5E4496","")
+        val communityModel2= CommunityModel("Maximum\nTransferred","150","semester\n hours","#5E4496","")
         listDataProgress.add(communityModel2)
-        val communityModela2= CommunityModel("Minimum Transferors \n Must Complete","60","semester\n hours","#BF3E8C","")
+        val communityModela2= CommunityModel("Minimum Transferors\n Must Complete","60","semester\n hours","#BF3E8C","")
         listDataProgress.add(communityModela2)
         mBinding.credictList.adapter = CostAdapter(listDataProgress)
     }

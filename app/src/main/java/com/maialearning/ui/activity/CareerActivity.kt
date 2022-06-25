@@ -43,9 +43,6 @@ class CareerActivity : Fragment(){
             requireActivity().finish()
         }
         initView()
-        binding.toolbarProf.setOnClickListener {
-            //  ProfileFilter(this, layoutInflater).showDialog()
-        }
 
 binding.addFab.setOnClickListener {
     bottomSheetList()

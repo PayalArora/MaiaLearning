@@ -27,6 +27,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         val sheetBinding: ProfileLayoutBinding = ProfileLayoutBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
+        sheetBinding.close.setOnClickListener { dialog.dismiss() }
         dialog.show()
         setAdapter(sheetBinding)
 

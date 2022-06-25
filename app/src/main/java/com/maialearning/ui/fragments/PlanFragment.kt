@@ -1,5 +1,6 @@
 package com.maialearning.ui.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -51,7 +52,7 @@ class PlanFragment() : Fragment() {
     private fun bottomSheetList() {
         dialog = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.add_attr_lay, null)
-//        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+       view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
 
         val listing = view.findViewById<RecyclerView>(R.id.list)
         val layout = view.findViewById<ConstraintLayout>(R.id.layout)
