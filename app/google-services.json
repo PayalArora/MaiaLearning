@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "922307933714",
+    "project_id": "maialearning-353311",
+    "storage_bucket": "maialearning-353311.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922307933714:android:cdb955f90d1d4c5378cacb",
+        "android_client_info": {
+          "package_name": "com.maialearning"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "922307933714-ahv308sqjd288iap1mc5snf7dr4ouct6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maialearning",
+            "certificate_hash": "6b5d64aae7e379ee49b2f11d533c715dc33f3931"
+          }
+        },
+        {
+          "client_id": "922307933714-s92gorkbv073nidrpflqgs5q4bk0l9u1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkLtJOVy4QEtG9NhIBMKVI_6sUBIl0iuY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "922307933714-s92gorkbv073nidrpflqgs5q4bk0l9u1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
