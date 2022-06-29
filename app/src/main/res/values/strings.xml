@@ -357,6 +357,19 @@
     <string name="rel_car">Related Careers</string>
     <string name="salaries">Salaries by State</string>
     <string name="air_trafic">Air Traffic Controllers</string>
+    <string name="top_interest">Top 5 Career Interests</string>
+    <string name="top_university">Top 5 Universities</string>
+    <string name="galleries">Galleries</string>
+    <string name="playing_football">Playing Football</string>
+    <string name="lead">Lead</string>
+    <string name="food_runner">Food Runner</string>
+    <string name="at_cup">at Cupertino</string>
+    <string name="community_center">Community Center</string>
+    <string name="grades">Grade: 9th, 10th, 11th, 12th | 20 weeks (24h)</string>
+    <string name="cupertino">Cupertino, California</string>
+    <string name="helping">Helping distribute food due to COVID some longer description and talking about some things I\'ve done</string>
+    <string name="edit">Edit</string>
+    <string name="waiting_for_verification">Waiting for Verification...</string>
 
 
     <string-array name="decision_filter">

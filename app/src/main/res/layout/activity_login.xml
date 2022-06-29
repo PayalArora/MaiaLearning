@@ -267,6 +267,7 @@
 
                 <EditText
                     android:id="@+id/email_edt"
+                    android:text="a@a.com"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40dp"
                     android:layout_marginStart="@dimen/_20dp"
@@ -300,6 +301,7 @@
                     android:layout_marginStart="@dimen/_20dp"
                     android:layout_marginTop="@dimen/_5dp"
                     android:layout_marginEnd="@dimen/_20dp"
+                    android:text="@string/pass_sent"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:background="@drawable/bg_white_rect"
