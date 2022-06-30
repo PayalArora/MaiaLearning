@@ -122,8 +122,6 @@ class LoginActivity : AppCompatActivity() {
         }
         viewModel.currentUser.observe(this, {
             it?.let {
-//                binding.textView.text = it.displayName
-                Toast.makeText(this, it.displayName, Toast.LENGTH_LONG).show()
                 viewModel.signOut()
                 startActivity(Intent(this, DashboardActivity::class.java))
             }
@@ -133,24 +131,7 @@ class LoginActivity : AppCompatActivity() {
     private fun bottomSheetWork() {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.bottom_sheet, null)
-        val layout = view.findViewById<LinearLayout>(R.id.layout)
-        // val bottomSheetBehavior = BottomSheetBehavior.from(layout)
-
-        //  bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED;
-        //view.minimumHeight = ViewGroup.LayoutParams.MATCH_PARENT
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-//setupFullHeight(layout)
-
-//        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-//            override fun onStateChanged(view: View, i: Int) {
-//                if (BottomSheetBehavior.STATE_HIDDEN == i) {
-//                    dialog.dismiss()
-//                }
-//            }
-
-//            override fun onSlide(view: View, v: Float) {
-//            }
-//        })
 
         val btnClose = view.findViewById<RelativeLayout>(R.id.close)
         val text = view.findViewById<RelativeLayout>(R.id.eng_lang)
@@ -215,36 +196,14 @@ class LoginActivity : AppCompatActivity() {
         return matcher.find()
     }
 
-
-    fun AppCompatActivity.showToast(msg: String?) {
-        msg?.let {
-            Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun loginWithUserIdPassword() {
-        showToast("Coming Soon")
-    }
-
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN && resultCode == Activity.RESULT_OK && data != null) {
-            // this task is responsible for getting ACCOUNT SELECTED
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
 
                 viewModel.firebaseAuthWithGoogle(account.idToken!!)
-
-//                Toast.makeText(this, "Signed In Successfully", Toast.LENGTH_SHORT)
-//                    .show()
-
             } catch (e: ApiException) {
                 Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
             }

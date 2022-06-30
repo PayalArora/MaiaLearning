@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "922307933714-2ie8ves1mfl078h5qoarhre3c6b53nim.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maialearning",
+            "certificate_hash": "1dcda3442762ffdbd5684ee4238871c04489d23a"
+          }
+        },
+        {
           "client_id": "922307933714-ahv308sqjd288iap1mc5snf7dr4ouct6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

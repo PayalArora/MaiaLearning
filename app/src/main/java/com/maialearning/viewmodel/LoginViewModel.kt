@@ -38,8 +38,6 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 _currentUser.value = auth.currentUser
-            } else {
-                _currentUser.value = null
             }
         }
     }
@@ -54,6 +52,37 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
     }
 
     fun signinToMicrosoft(activity: Activity) {
+        val provider = OAuthProvider.newBuilder("microsoft.com")
+        // Force re-consent.
+        provider.addCustomParameter("prompt", "consent");
+        val pendingResultTask: Task<AuthResult>? = auth.getPendingAuthResult()
+        if (pendingResultTask != null) {
+              pendingResultTask
+                .addOnSuccessListener(
+                    OnSuccessListener {
+                        println("cred"+ it.getCredential().toString())
+                    })
+                .addOnFailureListener(
+                    OnFailureListener {
+                        println( it.message)
+                    })
+        } else {
+            // There's no pending result so you need to start the sign-in flow.
+            // See below.
 
+
+            auth
+                .startActivityForSignInWithProvider( /* activity= */activity, provider.build())
+                .addOnSuccessListener(
+                    {
+                        _currentUser.value = it.user
+                     //   println(( "name "+it.user?.displayName))
+                    })
+                .addOnFailureListener(
+                    OnFailureListener {
+                        // Handle failure.
+                        println( it.message)
+                    })
+        }
     }
 }
