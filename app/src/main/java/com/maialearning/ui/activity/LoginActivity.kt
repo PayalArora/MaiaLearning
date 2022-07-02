@@ -1,6 +1,7 @@
 package com.maialearning.ui.activity
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
@@ -25,7 +26,10 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnSignInStartedListener
 import com.maialearning.databinding.ActivityLoginBinding
 import com.maialearning.factory.LoginViewModelFactory
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.LoginNewModel
 import com.maialearning.viewmodel.LoginViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.regex.Pattern
 
 
@@ -38,6 +42,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: LoginViewModel
+    private val loginModel: LoginNewModel by viewModel()
+    private lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +57,8 @@ class LoginActivity : AppCompatActivity() {
             }
         })
         viewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
-
+        dialog = showLoadingDialog(this)
+        initObserver()
         clicklisteners()
     }
 
@@ -69,7 +76,10 @@ class LoginActivity : AppCompatActivity() {
                 binding.passwordEdt.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
             }
         }
-        binding.loginBtn.setOnClickListener { loginWork() }
+        binding.loginBtn.setOnClickListener {
+            if (isInputValid())
+                loginModel.userLogin(this, "", "")
+        }
         binding.forgotPass.setOnClickListener {
             binding.loginLay.visibility = View.GONE
             binding.backBtn.visibility = View.VISIBLE
@@ -91,12 +101,8 @@ class LoginActivity : AppCompatActivity() {
                 ) {
                     binding.reqEmail.setError(getString(R.string.err_invalid_email_id))
                 } else {
-                    binding.reqEmail.visibility = View.GONE
-                    binding.tickLay.visibility = View.VISIBLE
-                    binding.reqEmail.setText("")
-                    binding.backBtn.visibility = View.GONE
-                    binding.reqPass.setText(getString(R.string.pass_sent))
-                    binding.reqBtn.setText(getString(R.string.back_to_login))
+                    dialog.show()
+                    loginModel.forgetPassword("")
                 }
 
             } else {
@@ -113,6 +119,7 @@ class LoginActivity : AppCompatActivity() {
                 binding.reqBtn.setText(getString(R.string.request_pass))
             }
         }
+
         binding.googleLogin.setOnClickListener {
             viewModel.signIn()
         }
@@ -120,12 +127,20 @@ class LoginActivity : AppCompatActivity() {
             // Microsoftt code refrance https://firebase.google.com/docs/auth/android/microsoft-oauth
             viewModel.signinToMicrosoft(this)
         }
-        viewModel.currentUser.observe(this, {
+        viewModel.currentUser.observe(this) {
             it?.let {
                 viewModel.signOut()
+                it.email?.let { it1 -> loginModel.googleLogin(it1,"it.i","") }
                 startActivity(Intent(this, DashboardActivity::class.java))
             }
-        })
+        }
+        viewModel.microUser.observe(this) {
+            it?.let {
+                viewModel.signOut()
+                loginModel.microLogin(it.tenantId?:"")
+                startActivity(Intent(this, DashboardActivity::class.java))
+            }
+        }
     }
 
     private fun bottomSheetWork() {
@@ -169,10 +184,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginWork() {
-        if (isInputValid()) {
+//        if (isInputValid()) {
             //  loginWithUserIdPassword()
             startActivity(Intent(this, DashboardActivity::class.java))
-        }
+//        }
     }
 
     private fun isInputValid(): Boolean {
@@ -210,5 +225,26 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun initObserver() {
+        loginModel.catsList.observe(this) {
+            it?.let {
+                loginWork()
+            }
+        }
+        loginModel.forgetObserver.observe(this) {
+            it?.let {
+                dialog.dismiss()
+                binding.reqEmail.visibility = View.GONE
+                binding.tickLay.visibility = View.VISIBLE
+                binding.reqEmail.setText("")
+                binding.backBtn.visibility = View.GONE
+                binding.reqPass.setText(getString(R.string.pass_sent))
+                binding.reqBtn.setText(getString(R.string.back_to_login))
+            }
+        }
+        loginModel.showError.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
+    }
 
 }
