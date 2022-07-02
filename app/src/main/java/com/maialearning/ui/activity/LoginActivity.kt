@@ -77,8 +77,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         binding.loginBtn.setOnClickListener {
-            if (isInputValid())
-                loginModel.userLogin(this, "", "")
+            if (isInputValid()){
+                dialog.show()
+                loginModel.userLogin(this, binding.emailEdt.text.toString().trim(), binding.passwordEdt.text.toString().trim())
+            }
         }
         binding.forgotPass.setOnClickListener {
             binding.loginLay.visibility = View.GONE
@@ -130,6 +132,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.currentUser.observe(this) {
             it?.let {
                 viewModel.signOut()
+                dialog.show()
                 it.email?.let { it1 -> loginModel.googleLogin(it1,"it.i","") }
                 startActivity(Intent(this, DashboardActivity::class.java))
             }
@@ -137,6 +140,7 @@ class LoginActivity : AppCompatActivity() {
         viewModel.microUser.observe(this) {
             it?.let {
                 viewModel.signOut()
+                dialog.show()
                 loginModel.microLogin(it.tenantId?:"")
                 startActivity(Intent(this, DashboardActivity::class.java))
             }
@@ -226,8 +230,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initObserver() {
-        loginModel.catsList.observe(this) {
+        loginModel.loginObserver.observe(this) {
             it?.let {
+                dialog.dismiss()
                 loginWork()
             }
         }
@@ -243,6 +248,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         loginModel.showError.observe(this) {
+            dialog.dismiss()
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
     }

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.maialearning.model.ForgetModel
-import com.maialearning.model.LoginModel
+import com.maialearning.model.LoginNewModel
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
@@ -19,7 +19,7 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
 
     val showLoading = MutableLiveData<Boolean>()
-    val catsList = MutableLiveData<LoginModel>()
+    val loginObserver = MutableLiveData<LoginNewModel>()
     val forgetObserver = MutableLiveData<ForgetModel>()
     val showError = SingleLiveEvent<String>()
 
@@ -30,13 +30,13 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
                 catRepository.getUserLogin(
-                    "st1003@mailinator.com",
-                    "NlrtXFV6JlZhDG1Z"
+                    email,
+                    password
                 )
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> catsList.value = result.data
+                is UseCaseResult.Success -> loginObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
@@ -52,7 +52,7 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> catsList.value = result.data
+                is UseCaseResult.Success -> loginObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
@@ -68,7 +68,7 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> catsList.value = result.data
+                is UseCaseResult.Success -> loginObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

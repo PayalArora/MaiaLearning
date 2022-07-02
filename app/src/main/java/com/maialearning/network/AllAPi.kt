@@ -1,7 +1,8 @@
 package com.maialearning.network
 
 import com.maialearning.model.ForgetModel
-import com.maialearning.model.LoginModel
+
+import com.maialearning.model.LoginNewModel
 import kotlinx.coroutines.Deferred
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -14,7 +15,8 @@ interface AllAPi {
     fun userLoginAsync(
         @Field("username") username: String,
         @Field("password") password: String
-    ):  Deferred<LoginModel>
+    ):  Deferred<LoginNewModel>
+
 
     @POST("google_login")
     @FormUrlEncoded
@@ -22,13 +24,13 @@ interface AllAPi {
         @Field("email") email: String,
         @Field("id") id: String,
         @Field("id_token") id_token: String
-    ):  Deferred<LoginModel>
+    ):  Deferred<LoginNewModel>
 
     @POST("azure_ad_oauth_login")
     @FormUrlEncoded
     fun microLoginAsync(
         @Field("token") id_token: String
-    ):  Deferred<LoginModel>
+    ):  Deferred<LoginNewModel>
 
     @POST("forgot_password")
     @FormUrlEncoded
