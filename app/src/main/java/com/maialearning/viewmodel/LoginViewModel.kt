@@ -23,8 +23,10 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
 
 
     private val _currentUser = MutableLiveData<FirebaseUser>()
+    private val _microUser = MutableLiveData<FirebaseUser>()
 
     val currentUser: LiveData<FirebaseUser> = _currentUser
+    val microUser: LiveData<FirebaseUser> = _microUser
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken(app.getString(R.string.default_web_client_id))
@@ -75,7 +77,7 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
                 .startActivityForSignInWithProvider( /* activity= */activity, provider.build())
                 .addOnSuccessListener(
                     {
-                        _currentUser.value = it.user
+                        _microUser.value = it.user
                      //   println(( "name "+it.user?.displayName))
                     })
                 .addOnFailureListener(
