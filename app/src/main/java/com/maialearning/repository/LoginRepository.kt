@@ -1,5 +1,6 @@
 package com.maialearning.repository
 
+import com.maialearning.model.Consider
 import com.maialearning.model.ForgetModel
 import com.maialearning.model.LoginNewModel
 import com.maialearning.network.AllAPi
@@ -16,6 +17,8 @@ interface LoginRepository {
 
     suspend fun getMicroLogin(token: String): UseCaseResult<LoginNewModel>
     suspend fun getForgetPassword(email: String): UseCaseResult<ForgetModel>
+    suspend fun getConsiderList(id: String): UseCaseResult<Consider>
+    suspend fun getApplyList(id: String): UseCaseResult<ForgetModel>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -58,6 +61,24 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getForgetPassword(email: String): UseCaseResult<ForgetModel> {
         return try {
             val result = catApi.forgetPassAsync(email,"email").await()
+            UseCaseResult.Success(result)
+        } catch (ex: Exception) {
+            UseCaseResult.Error(ex)
+        }
+    }
+
+    override suspend fun getConsiderList(id: String): UseCaseResult<Consider> {
+        return try {
+            val result = catApi.considerListAsync("9375","considering").await()
+            UseCaseResult.Success(result)
+        } catch (ex: Exception) {
+            UseCaseResult.Error(ex)
+        }
+    }
+
+    override suspend fun getApplyList(id: String): UseCaseResult<ForgetModel> {
+        return try {
+            val result = catApi.applyListAsync("9375","applying").await()
             UseCaseResult.Success(result)
         } catch (ex: Exception) {
             UseCaseResult.Error(ex)

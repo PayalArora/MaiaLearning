@@ -26,6 +26,7 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnSignInStartedListener
 import com.maialearning.databinding.ActivityLoginBinding
 import com.maialearning.factory.LoginViewModelFactory
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.LoginNewModel
 import com.maialearning.viewmodel.LoginViewModel
@@ -233,6 +234,7 @@ class LoginActivity : AppCompatActivity() {
         loginModel.loginObserver.observe(this) {
             it?.let {
                 dialog.dismiss()
+                SharedHelper(this).login = "1"
                 loginWork()
             }
         }

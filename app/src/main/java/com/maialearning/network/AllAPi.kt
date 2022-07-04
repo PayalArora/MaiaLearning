@@ -1,12 +1,11 @@
 package com.maialearning.network
 
+import com.maialearning.model.Consider
 import com.maialearning.model.ForgetModel
 
 import com.maialearning.model.LoginNewModel
 import kotlinx.coroutines.Deferred
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface AllAPi {
 
@@ -37,5 +36,17 @@ interface AllAPi {
     fun forgetPassAsync(
         @Field("email") email: String,
         @Field("type") type: String
+    ):  Deferred<ForgetModel>
+
+    @GET("counselor_college/{id}")
+    fun considerListAsync(
+        @Path("id")  id:String,
+        @Query("status") status: String
+    ):  Deferred<Consider>
+
+    @GET("counselor_college/{id}")
+    fun applyListAsync(
+        @Path("id")  id:String,
+        @Query("status") status: String
     ):  Deferred<ForgetModel>
 }
