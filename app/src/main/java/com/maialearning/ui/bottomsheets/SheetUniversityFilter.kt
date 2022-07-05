@@ -48,6 +48,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
 
         }
         else if (positiion == 2) {
+            sheetBinding.spinnerLay.visibility = View.GONE
             sheetBinding.reciepentList.adapter =
                 ItemListAdapter(con.resources.getStringArray(R.array.list), con)
             sheetBinding.close.setOnClickListener {
@@ -57,6 +58,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         }
 
         else if (positiion == 6) {
+            sheetBinding.spinnerLay.visibility = View.VISIBLE
             sheetBinding.reciepentList.adapter =
                 SportsFilterAdapter(con.resources.getStringArray(R.array.sports))
             sheetBinding.close.setOnClickListener {
@@ -72,12 +74,14 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         else if (positiion == 5) {
             sheetBinding.reciepentList.adapter =
                 CustomRadioAdapter()
+            sheetBinding.spinnerLay.visibility = View.GONE
             sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
             }
         } else if (positiion == 4) {
             sheetBinding.reciepentList.adapter =
                 ItemListAdapter(con.resources.getStringArray(R.array.selectivity), con)
+            sheetBinding.spinnerLay.visibility = View.GONE
             sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
             }
