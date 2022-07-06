@@ -1,5 +1,6 @@
 package com.maialearning.ui.fragments
 
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
@@ -12,14 +13,24 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickType
 import com.maialearning.databinding.CommentsSheetBinding
+import com.maialearning.databinding.ConsideringLayoutBinding
 import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
+import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.activity.NotesDetailActivity
 import com.maialearning.ui.adapter.CommentAdapter
+import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.NotesAdapter
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.HomeViewModel
+import org.json.JSONArray
+import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NotesFragment : Fragment(), OnItemClickType {
     private lateinit var mBinding: LayoutRecyclerviewBinding
+    private lateinit var dialogP: Dialog
+    private val homeModel: HomeViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +48,24 @@ class NotesFragment : Fragment(), OnItemClickType {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialogP = showLoadingDialog(requireContext())
+        homeModel.getNotes("")
         setAdapter()
+        initObserver()
     }
+    private fun initObserver() {
+        homeModel.notesObserver.observe(requireActivity()) {
+            it?.let {
+                dialogP?.dismiss()
 
+                mBinding.recyclerList.adapter =NotesAdapter(this,it)
+
+
+            }
+        }
+    }
     private fun setAdapter() {
-        mBinding.recyclerList.adapter =NotesAdapter(this)
+//        mBinding.recyclerList.adapter =NotesAdapter(this)
    
     }
 

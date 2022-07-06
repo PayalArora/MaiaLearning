@@ -1,14 +1,16 @@
 package com.maialearning.ui.adapter
 
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickType
+import com.maialearning.model.NotesModel
 
 
-class NotesAdapter(val onItemClick: OnItemClickType) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+class NotesAdapter(val onItemClick: OnItemClickType,var array: NotesModel) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -29,6 +31,9 @@ class NotesAdapter(val onItemClick: OnItemClickType) : RecyclerView.Adapter<Note
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        viewHolder.binding.textTitle.text= array[position].noteTitle
+        viewHolder.binding.textDescription.text= Html.fromHtml(array[position].noteDescription)
+        viewHolder.binding.textDate.text= array[position].noteCreationDate+" "+ array[position].authorName
         viewHolder. binding.textDescription.setOnClickListener { onItemClick.onClickOpt(position, "root") }
         viewHolder.binding.apply {
             commentList.setOnClickListener { onItemClick.onClickOpt(position, "comment") }
@@ -37,7 +42,7 @@ class NotesAdapter(val onItemClick: OnItemClickType) : RecyclerView.Adapter<Note
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return array.size
     }
 
 }

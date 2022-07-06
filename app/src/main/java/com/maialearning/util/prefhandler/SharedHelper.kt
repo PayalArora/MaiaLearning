@@ -19,5 +19,10 @@ class SharedHelper(var context: Context) {
         set(user_name) {
             sharedPreference!!.putKey("login", user_name)
         }
+    var authkey:String?
+        get() = sharedPreference!!.getKey("authkey")
+        set(authkey) {
+            sharedPreference!!.putKey("authkey", authkey)
+        }
 
 }

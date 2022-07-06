@@ -234,6 +234,7 @@ class LoginActivity : AppCompatActivity() {
         loginModel.loginObserver.observe(this) {
             it?.let {
                 dialog.dismiss()
+                SharedHelper(this).authkey=it.accessToken
                 SharedHelper(this).login = "1"
                 loginWork()
             }

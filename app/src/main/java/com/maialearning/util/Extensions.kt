@@ -6,8 +6,10 @@ import android.util.Log
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.maialearning.network.AllAPi
+import com.maialearning.network.BaseApplication
 import com.maialearning.repository.LoginRepository
 import com.maialearning.repository.LoginRepositoryImpl
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
 import com.maialearning.viewmodel.LoginNewModel
 import com.maialearning.viewmodel.LoginViewModel
@@ -52,8 +54,8 @@ val appModules = module {
     // Specific viewModel pattern to tell Koin how to build MainViewModel
     viewModel {
         LoginNewModel(catRepository = get())
-        HomeViewModel(catRepository = get())
     }
+    viewModel {   HomeViewModel(catRepository = get())}
 }
 
 fun createHttpClient(): OkHttpClient {
@@ -63,6 +65,7 @@ fun createHttpClient(): OkHttpClient {
         val original = it.request()
         val requestBuilder = original.newBuilder()
         requestBuilder.header("Content-Type", "application/json, text/plain, */")
+//        requestBuilder.addHeader("Authorization","Bearer  " +SharedHelper(BaseApplication.applicationContext()).authkey)
         val request = requestBuilder.method(original.method(), original.body()).build()
         return@addInterceptor it.proceed(request)
     }.build()
