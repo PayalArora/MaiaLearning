@@ -46,14 +46,16 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
         Coroutines.ioWorker {
             val result = withContext(Dispatchers.IO) {
                 catRepository.getGoogleLogin(
-                    "st1003@mailinator.com",
-                    "NlrtXFV6JlZhDG1Z",""
+                    email,
+                    id, id_token
                 )
             }
-            showLoading.value = false
-            when (result) {
-                is UseCaseResult.Success -> loginObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+            withContext(Dispatchers.Main) {
+                showLoading.postValue(false)
+                when (result) {
+                    is UseCaseResult.Success -> loginObserver.value = result.data
+                    is UseCaseResult.Error -> showError.value = result.exception.message
+                }
             }
         }
     }
@@ -79,7 +81,7 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
                 catRepository.getForgetPassword(
-                    "st1003@mailinator.com"
+                    email
                 )
             }
             showLoading.value = false

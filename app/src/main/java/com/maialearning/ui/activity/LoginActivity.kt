@@ -81,6 +81,7 @@ class LoginActivity : AppCompatActivity() {
             if (isInputValid()){
                 dialog.show()
                 loginModel.userLogin(this, binding.emailEdt.text.toString().trim(), binding.passwordEdt.text.toString().trim())
+               // loginWork()
             }
         }
         binding.forgotPass.setOnClickListener {
@@ -105,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
                     binding.reqEmail.setError(getString(R.string.err_invalid_email_id))
                 } else {
                     dialog.show()
-                    loginModel.forgetPassword("")
+                    loginModel.forgetPassword(binding.emailEdt.text.toString())
                 }
 
             } else {
@@ -124,7 +125,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.googleLogin.setOnClickListener {
-            viewModel.signIn()
+           viewModel.signIn()
         }
         binding.loginMicrosoft.setOnClickListener {
             // Microsoftt code refrance https://firebase.google.com/docs/auth/android/microsoft-oauth
@@ -134,18 +135,23 @@ class LoginActivity : AppCompatActivity() {
             it?.let {
                 viewModel.signOut()
                 dialog.show()
-                it.email?.let { it1 -> loginModel.googleLogin(it1,"it.i","") }
-                startActivity(Intent(this, DashboardActivity::class.java))
+                it.email?.let { it1 -> loginModel.googleLogin(it1,it.email.toString(),it.uid) }
+              //  startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
         viewModel.microUser.observe(this) {
             it?.let {
                 viewModel.signOut()
                 dialog.show()
-                loginModel.microLogin(it.tenantId?:"")
-                startActivity(Intent(this, DashboardActivity::class.java))
+                loginModel.microLogin(it.uid?:"")
+               // startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
+    loginModel.showLoading.observe(this){
+        if (!it){
+            dialog.dismiss()
+        }
+    }
     }
 
     private fun bottomSheetWork() {
