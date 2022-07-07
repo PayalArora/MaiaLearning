@@ -5,6 +5,7 @@ import com.maialearning.model.LoginNewModel
 import com.maialearning.model.ProfileResponse
 import com.maialearning.network.AllAPi
 import com.maialearning.network.UseCaseResult
+import com.maialearning.util.ORIGIN
 
 import retrofit2.HttpException
 
@@ -36,8 +37,10 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.userLoginAsync(username, password).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
+            println(ex.stackTrace)
             UseCaseResult.Error(ex)
         }catch (ex: Exception) {
+            println(ex.stackTraceToString())
             UseCaseResult.Exception(ex)
         }
     }
@@ -48,10 +51,13 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         id_token: String
     ): UseCaseResult<LoginNewModel> {
         return try {
-            val result = catApi.googleLoginAsync(email, id, id_token).await()
+            val result = catApi.googleLoginAsync(ORIGIN, email, id, id_token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            println(ex.stackTraceToString())
+            UseCaseResult.Exception(ex)
         }
     }
 
@@ -61,6 +67,8 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
+        }catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
         }
     }
 
@@ -70,6 +78,8 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
+        }catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
         }
     }
 
@@ -82,6 +92,8 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
+        }catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
         }
     }
 

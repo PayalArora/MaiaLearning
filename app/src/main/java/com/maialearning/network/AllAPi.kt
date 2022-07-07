@@ -21,6 +21,7 @@ interface AllAPi {
     @POST("google_login")
     @FormUrlEncoded
     fun googleLoginAsync(
+        @Header("origin") origin:String,
         @Field("email") email: String,
         @Field("id") id: String,
         @Field("id_token") id_token: String

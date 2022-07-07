@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit
 
 //const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
 const val CAT_API_BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
+const val ORIGIN = "https://maia2-staging.maialearning.com"
 
 fun Context.isNetworkConnected(): Boolean {
     val connectivityManager: ConnectivityManager? =

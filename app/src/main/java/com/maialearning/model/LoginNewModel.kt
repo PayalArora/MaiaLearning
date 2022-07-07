@@ -3,520 +3,1144 @@ package com.maialearning.model
 import com.google.gson.annotations.SerializedName
 
 data class LoginNewModel(
-    @SerializedName("access_token") var accessToken: String,
-    @SerializedName("refresh_token") var refreshToken: String,
-    @SerializedName("user") var user: User,
-    @SerializedName("essay") var essay: Essay,
-    @SerializedName("userName") var userName: UserName,
-    @SerializedName("enabled_2fa") var enabled2fa: Int,
-    @SerializedName("ccgi_apps_permission") var ccgiAppsPermission: CcgiAppsPermission,
-    @SerializedName("school_type") var schoolType: String,
-    @SerializedName("iec_school") var iecSchool: Int,
-    @SerializedName("school_level") var schoolLevel: String,
-    @SerializedName("student_upload_pic") var studentUploadPic: String,
-    @SerializedName("district_level_activities") var districtLevelActivities: String,
-    @SerializedName("school_starting_month") var schoolStartingMonth: String,
-    @SerializedName("student_default_page") var studentDefaultPage: String,
-    @SerializedName("school_timezone_offset") var schoolTimezoneOffset: String,
-    @SerializedName("school_uuid") var schoolUuid: String,
-    @SerializedName("ap_completed_courses") var apCompletedCourses: String,
-    @SerializedName("ib_completed_courses") var ibCompletedCourses: String,
-    @SerializedName("compare_me_default_year") var compareMeDefaultYear: List<String>,
-    @SerializedName("resume_flag") var resumeFlag: String,
-    @SerializedName("teacher_evaluation_rating_config") var teacherEvaluationRatingConfig: String,
-    @SerializedName("compare_me_class_of_range") var compareMeClassOfRange: CompareMeClassOfRange,
-//    @SerializedName("gauges_permission_config") var gaugesPermissionConfig: GaugesPermissionConfig,
-    @SerializedName("default_class_of") var defaultClassOf: String,
-    @SerializedName("default_caseload_id") var defaultCaseloadId: String,
-    @SerializedName("school_timezone_abbr") var schoolTimezoneAbbr: String,
-    @SerializedName("skills_assessment_config") var skillsAssessmentConfig: String,
-    @SerializedName("scattergram_gpa_value") var scattergramGpaValue: String,
-    @SerializedName("compare_me_config") var compareMeConfig: String,
-    @SerializedName("hide_stu_assign_from_edu") var hideStuAssignFromEdu: String,
-    @SerializedName("scattergram_x_y_values") var scattergramXYValues: ScattergramXYValues,
-    @SerializedName("recommendation_mail") var recommendationMail: String,
-    @SerializedName("ca_sync_cc") var caSyncCc: String,
-    @SerializedName("move_to_applying") var moveToApplying: String,
-    @SerializedName("field_hide_data_sent_report") var fieldHideDataSentReport: String,
-    @SerializedName("disabling_doc_download") var disablingDocDownload: String,
-    @SerializedName("parchment_send_ca") var parchmentSendCa: String,
-    @SerializedName("common_app_send") var commonAppSend: String,
-    @SerializedName("school_shortcut") var schoolShortcut: SchoolShortcut,
-    @SerializedName("assessment_permission") var assessmentPermission: AssessmentPermission,
-    @SerializedName("grade_based_college_plan") var gradeBasedCollegePlan: GradeBasedCollegePlan,
-    @SerializedName("grade_based_college_visit") var gradeBasedCollegeVisit: GradeBasedCollegeVisit,
-    @SerializedName("student_dob_show") var studentDobShow: String,
-    @SerializedName("show_reco_student_college_data") var showRecoStudentCollegeData: String,
-    @SerializedName("switch_role") var switchRole: String,
-    @SerializedName("maia_design_version") var maiaDesignVersion: String,
-    @SerializedName("field_classroom_enabled") var fieldClassroomEnabled: String,
-    @SerializedName("lesson_plan_publisher") var lessonPlanPublisher: Int,
-    @SerializedName("field_brag_sheet_config") var fieldBragSheetConfig: Int,
-    @SerializedName("wwa") var wwa: Wwa,
-    @SerializedName("ml_school_config_data") var mlSchoolConfigData: MlSchoolConfigData,
-    @SerializedName("ml_user_default_config_data") var mlUserDefaultConfigData: MlUserDefaultConfigData,
-    @SerializedName("is_sel_content_school") var isSelContentSchool: Int,
-    @SerializedName("current_common_app_application_year") var currentCommonAppApplicationYear: String,
-    @SerializedName("district_slug") var districtSlug: String,
-    @SerializedName("curriculum_permission") var curriculumPermission: CurriculumPermission,
-    @SerializedName("menu_permissions") var menuPermissions: MenuPermissions,
-    @SerializedName("preferred_langcode") var preferredLangcode: String
+    @field:SerializedName("wwa")
+    val wwa: Wwa? = null,
 
-){
-    data class User (
+    @field:SerializedName("school_uuid")
+    val schoolUuid: String? = null,
 
-        @SerializedName("uid") var uid : String,
-        @SerializedName("name") var name : String,
-        @SerializedName("theme") var theme : String,
-        @SerializedName("signature") var signature : String,
-        @SerializedName("signature_format") var signatureFormat : String,
-        @SerializedName("created") var created : String,
-        @SerializedName("access") var access : String,
-        @SerializedName("login") var login : Int,
-        @SerializedName("status") var status : String,
-        @SerializedName("timezone") var timezone : String,
-        @SerializedName("language") var language : String,
-        @SerializedName("picture") var picture : String,
-        @SerializedName("data") var data : Data,
-        @SerializedName("uuid") var uuid : String,
-        @SerializedName("roles") var roles : Roles,
-        @SerializedName("og_user_node") var ogUserNode : OgUserNode,
-        @SerializedName("field_sign_up") var fieldSignUp : FieldSignUp,
-        @SerializedName("field_login_count") var fieldLoginCount : List<String>,
-        @SerializedName("field_google_login_id") var fieldGoogleLoginId : List<String>,
-        @SerializedName("field_email_not_provide") var fieldEmailNotProvide : FieldEmailNotProvide,
-        @SerializedName("grade") var grade : String,
-        @SerializedName("message_id") var messageId : String
+    @field:SerializedName("school_shortcut")
+    val schoolShortcut: SchoolShortcut? = null,
 
-    ){
+    @field:SerializedName("school_type")
+    val schoolType: String? = null,
 
-        data class Data (
+    @field:SerializedName("school_timezone_abbr")
+    val schoolTimezoneAbbr: String? = null,
 
-            @SerializedName("mimemail_textonly") var mimemailTextonly : Int,
-            @SerializedName("ckeditor_default") var ckeditorDefault : String,
-            @SerializedName("ckeditor_show_toggle") var ckeditorShowToggle : String,
-            @SerializedName("ckeditor_width") var ckeditorWidth : String,
-            @SerializedName("ckeditor_lang") var ckeditorLang : String,
-            @SerializedName("ckeditor_auto_lang") var ckeditorAutoLang : String
+    @field:SerializedName("field_brag_sheet_config")
+    val fieldBragSheetConfig: Int? = null,
 
-        )
-        data class Roles (
+    @field:SerializedName("common_app_send")
+    val commonAppSend: String? = null,
 
-            @SerializedName("2") var two : String,
-            @SerializedName("5") var five : String
+    @field:SerializedName("default_class_of")
+    val defaultClassOf: Any? = null,
 
-        )
-        data class OgUserNode (
+    @field:SerializedName("teacher_evaluation_rating_config")
+    val teacherEvaluationRatingConfig: String? = null,
 
-            @SerializedName("und") var und : List<Und>
+    @field:SerializedName("parchment_send_ca")
+    val parchmentSendCa: String? = null,
 
-        )
-        data class FieldSignUp (
+    @field:SerializedName("field_hide_data_sent_report")
+    val fieldHideDataSentReport: String? = null,
 
-            @SerializedName("und") var und : List<Und>
+    @field:SerializedName("disabling_doc_download")
+    val disablingDocDownload: String? = null,
 
-        )
-        data class FieldEmailNotProvide (
+    @field:SerializedName("compare_me_config")
+    val compareMeConfig: String? = null,
 
-            @SerializedName("und") var und : List<Und>
+    @field:SerializedName("scattergram_gpa_value")
+    val scattergramGpaValue: String? = null,
 
-        )
-        data class Und (
+    @field:SerializedName("school_timezone_offset")
+    val schoolTimezoneOffset: String? = null,
 
-            @SerializedName("value") var value : String
+    @field:SerializedName("show_reco_student_college_data")
+    val showRecoStudentCollegeData: String? = null,
 
-        )
-    }
-    data class Essay (
+    @field:SerializedName("ca_sync_cc")
+    val caSyncCc: String? = null,
 
-        @SerializedName("list_type") var listType : String
+    @field:SerializedName("access_token")
+    val accessToken: String? = null,
 
+    @field:SerializedName("refresh_token")
+    val refreshToken: String? = null,
+
+    @field:SerializedName("success")
+    val success: Boolean? = null,
+
+    @field:SerializedName("essay")
+    val essay: Essay? = null,
+
+    @field:SerializedName("school_level")
+    val schoolLevel: String? = null,
+
+    @field:SerializedName("curriculum_permission")
+    val curriculumPermission: CurriculumPermission? = null,
+
+    @field:SerializedName("hide_stu_assign_from_edu")
+    val hideStuAssignFromEdu: String? = null,
+
+    @field:SerializedName("current_common_app_application_year")
+    val currentCommonAppApplicationYear: String? = null,
+
+    @field:SerializedName("assessment_permission")
+    val assessmentPermission: AssessmentPermission? = null,
+
+    @field:SerializedName("recommendation_mail")
+    val recommendationMail: String? = null,
+
+    @field:SerializedName("move_to_applying")
+    val moveToApplying: String? = null,
+
+    @field:SerializedName("student_upload_pic")
+    val studentUploadPic: String? = null,
+
+    @field:SerializedName("district_level_activities")
+    val districtLevelActivities: String? = null,
+
+    @field:SerializedName("is_sel_content_school")
+    val isSelContentSchool: Int? = null,
+
+    @field:SerializedName("switch_role")
+    val switchRole: Any? = null,
+
+    @field:SerializedName("student_default_page")
+    val studentDefaultPage: String? = null,
+
+    @field:SerializedName("lesson_plan_publisher")
+    val lessonPlanPublisher: Int? = null,
+
+    @field:SerializedName("preferred_langcode")
+    val preferredLangcode: Any? = null,
+
+    @field:SerializedName("maia_design_version")
+    val maiaDesignVersion: String? = null,
+
+    @field:SerializedName("ib_completed_courses")
+    val ibCompletedCourses: String? = null,
+
+    @field:SerializedName("scattergram_x_y_values")
+    val scattergramXYValues: ScattergramXYValues? = null,
+
+    @field:SerializedName("iec_school")
+    val iecSchool: Int? = null,
+
+    @field:SerializedName("userName")
+    val userName: UserName? = null,
+
+    @field:SerializedName("gauges_permission_config")
+    val gaugesPermissionConfig: GaugesPermissionConfig? = null,
+
+//    @field:SerializedName("ml_user_default_config_data")
+//    val mlUserDefaultConfigData: MlUserDefaultConfigData? = null,
+
+    @field:SerializedName("student_dob_show")
+    val studentDobShow: String? = null,
+
+    @field:SerializedName("district_slug")
+    val districtSlug: String? = null,
+
+    @field:SerializedName("ap_completed_courses")
+    val apCompletedCourses: String? = null,
+
+    @field:SerializedName("ccgi_apps_permission")
+    val ccgiAppsPermission: CcgiAppsPermission? = null,
+
+    @field:SerializedName("field_classroom_enabled")
+    val fieldClassroomEnabled: String? = null,
+
+    @field:SerializedName("compare_me_default_year")
+    val compareMeDefaultYear: List<String?>? = null,
+
+    @field:SerializedName("default_caseload_id")
+    val defaultCaseloadId: Any? = null,
+
+    @field:SerializedName("skills_assessment_config")
+    val skillsAssessmentConfig: String? = null,
+
+    @field:SerializedName("grade_based_college_plan")
+    val gradeBasedCollegePlan: GradeBasedCollegePlan? = null,
+
+    @field:SerializedName("school_starting_month")
+    val schoolStartingMonth: String? = null,
+
+    @field:SerializedName("resume_flag")
+    val resumeFlag: String? = null,
+
+    @field:SerializedName("compare_me_class_of_range")
+    val compareMeClassOfRange: CompareMeClassOfRange? = null,
+
+    @field:SerializedName("user")
+    val user: User? = null,
+
+    @field:SerializedName("grade_based_college_visit")
+    val gradeBasedCollegeVisit: GradeBasedCollegeVisit? = null,
+
+    @field:SerializedName("ml_school_config_data")
+    val mlSchoolConfigData: MlSchoolConfigData? = null,
+
+    @field:SerializedName("enabled_2fa")
+    val enabled2fa: Int? = null,
+
+    @field:SerializedName("menu_permissions")
+    val menuPermissions: MenuPermissions? = null
+) {
+
+    data class SchoolItem(
+
+        @field:SerializedName("name")
+        val name: String? = null,
+
+        @field:SerializedName("external_link")
+        val externalLink: String? = null
     )
-    data class UserName (
 
-        @SerializedName("first_name") var firstName : String,
-        @SerializedName("last_name") var lastName : String
+    data class FieldSignUp(
 
+        @field:SerializedName("und")
+        val und: List<UndItem?>? = null
     )
-    data class CcgiAppsPermission (
 
-        @SerializedName("csu") var csu : Int,
-        @SerializedName("uc") var uc : Int,
-        @SerializedName("mi") var mi : Int,
-        @SerializedName("lsi") var lsi : Int,
-        @SerializedName("dwya") var dwya : Int,
-        @SerializedName("sms") var sms : Int,
-        @SerializedName("survey_school") var surveySchool : Int,
-        @SerializedName("scheduler") var scheduler : Int,
-        @SerializedName("message_center") var messageCenter : Int,
-        @SerializedName("academic_planner") var academicPlanner : Int,
-        @SerializedName("career_plan") var careerPlan : Int,
-        @SerializedName("ny_state_career") var nyStateCareer : Int,
-        @SerializedName("recommendation") var recommendation : Int,
-        @SerializedName("college_ratings") var collegeRatings : Int,
-        @SerializedName("college_planner_lock") var collegePlannerLock : Int,
-        @SerializedName("test_score_edit_by_student") var testScoreEditByStudent : Int,
-        @SerializedName("college_visits_visibility") var collegeVisitsVisibility : Int,
-        @SerializedName("hide_university_contact_email") var hideUniversityContactEmail : Int,
-        @SerializedName("hide_university_contact_phone") var hideUniversityContactPhone : Int,
-        @SerializedName("parent_add_college_for_student") var parentAddCollegeForStudent : Int,
-        @SerializedName("college_application_status_lock") var collegeApplicationStatusLock : Int,
-        @SerializedName("course_catalog") var courseCatalog : Int,
-        @SerializedName("request_recs") var requestRecs : Int,
-        @SerializedName("send_summary") var sendSummary : Int,
-        @SerializedName("prepare_documents") var prepareDocuments : Int,
-        @SerializedName("send_documents") var sendDocuments : Int,
-        @SerializedName("university_contacts") var universityContacts : Int,
-        @SerializedName("recommendation_dashboard") var recommendationDashboard : Int,
-        @SerializedName("thriving_index") var thrivingIndex : Int
+    data class GradeBasedCollegeVisit(
 
+        @field:SerializedName("college_visit")
+        val collegeVisit: List<Int?>? = null
     )
-    data class CompareMeClassOfRange (
 
-        @SerializedName("max_class_of") var maxClassOf : String,
-        @SerializedName("min_class_of") var minClassOf : String
+    data class ConfigValues(
 
+        @field:SerializedName("relative_deadline_days")
+        val relativeDeadlineDays: Int? = null
     )
-    data class ScattergramXYValues (
 
-        @SerializedName("SAT") var SAT_ : SAT,
-        @SerializedName("ACT") var ACT_ : ACT,
-        @SerializedName("GPA") var GPA_ : GPA,
-        @SerializedName("WGPA") var WGPA_ : WGPA
+    data class GaugesPermissionConfig(
 
-    ){
-        data class SAT (
+        @field:SerializedName("ib_score")
+        val ibScore: IbScore? = null,
 
-            @SerializedName("min") var min : String,
-            @SerializedName("max") var max : Int
+        @field:SerializedName("psat")
+        val psat: Psat? = null,
 
-        )
-        data class ACT (
+        @field:SerializedName("fafsa")
+        val fafsa: Fafsa? = null,
 
-            @SerializedName("min") var min : String,
-            @SerializedName("max") var max : Int
+        @field:SerializedName("act")
+        val act: Act? = null,
 
-        )
-        data class GPA (
+        @field:SerializedName("ib_predicted")
+        val ibPredicted: IbPredicted? = null,
 
-            @SerializedName("min") var min : String,
-            @SerializedName("max") var max : Int
+        @field:SerializedName("wgpa")
+        val wgpa: Wgpa1? = null,
 
-        )
-        data class WGPA (
+        @field:SerializedName("sat")
+        val sat: Sat1? = null,
 
-            @SerializedName("min") var min : String,
-            @SerializedName("max") var max : Int
+        @field:SerializedName("gpa")
+        val gpa: Gpa1? = null,
 
-        )
-    }
-    data class SchoolShortcut (
+        @field:SerializedName("french_bac")
+        val frenchBac: FrenchBac? = null,
 
-        @SerializedName("school") var school : List<School>,
-        @SerializedName("student") var student : String
-
-    ){
-        data class School (
-
-            @SerializedName("name") var name : String,
-            @SerializedName("external_link") var externalLink : String
-
-        )
-    }
-
-    data class AssessmentPermission (
-
-        @SerializedName("lsi") var lsi : List<Int>,
-        @SerializedName("dwyr") var dwyr : List<Int>,
-        @SerializedName("mi") var mi : List<Int>,
-        @SerializedName("interest_profiler") var interestProfiler : List<Int>,
-        @SerializedName("work_values") var workValues : List<Int>,
-        @SerializedName("skills") var skills : List<Int>,
-        @SerializedName("tte_ti") var tteTi : List<Int>,
-        @SerializedName("tte_ac") var tteAc : List<Int>,
-        @SerializedName("tte_ex") var tteEx : List<Int>
-
+        @field:SerializedName("pre-act")
+        val preAct: PreAct? = null
     )
-    data class GradeBasedCollegePlan (
 
-        @SerializedName("college_plan") var collegePlan : List<Int>
+    data class OgUserNode(
 
+        @field:SerializedName("und")
+        val und: List<UndItem?>? = null
     )
-    data class GradeBasedCollegeVisit (
 
-        @SerializedName("college_visit") var collegeVisit : List<Int>
+    data class GPA(
 
+        @field:SerializedName("min")
+        val min: String? = null,
+
+        @field:SerializedName("max")
+        val max: Int? = null
     )
-    data class Wwa (
 
-        @SerializedName("license") var license : Int,
-        @SerializedName("token") var token : String
+    data class Recommendation(
 
+        @field:SerializedName("default_listing")
+        val defaultListing: DefaultListing? = null
     )
-    data class MlSchoolConfigData (
 
-        @SerializedName("ib_transcript_listing") var ibTranscriptListing : IbTranscriptListing,
-        @SerializedName("verify_activity_complete") var verifyActivityComplete : List<Int>,
-        @SerializedName("show_new_home_page") var showNewHomePage : List<Int>,
-        @SerializedName("days_before_visits_to_show") var daysBeforeVisitsToShow : String,
-        @SerializedName("mark_activity_complete_counselor") var markActivityCompleteCounselor : List<Int>,
-        @SerializedName("enable_dob_visit_download") var enableDobVisitDownload : List<Int>,
-        @SerializedName("bulk_upload_gpa_settings") var bulkUploadGpaSettings : BulkUploadGpaSettings,
-        @SerializedName("curriculum_permission") var curriculumPermission : CurriculumPermission,
-        @SerializedName("curriculum_permission_school") var curriculumPermissionSchool : CurriculumPermissionSchool,
-        @SerializedName("grade_convention") var gradeConvention : GradeConvention,
-        @SerializedName("student_can_set_preferred_recommender") var studentCanSetPreferredRecommender : List<Int>,
-        @SerializedName("internal_application_deadline") var internalApplicationDeadline : InternalApplicationDeadline,
-        @SerializedName("recommendation") var recommendation : Recommendation,
-        @SerializedName("old_student_dashboard") var oldStudentDashboard : List<Int>,
-        @SerializedName("time_tracking") var timeTracking : TimeTracking,
-        @SerializedName("invoicing") var invoicing : Invoicing,
-        @SerializedName("essay_outline_developer_view") var essayOutlineDeveloperView : List<Int>,
-        @SerializedName("district_wide_recommendation") var districtWideRecommendation : List<Int>
+    data class Wgpa1(
 
-    ){
-        data class IbTranscriptListing (
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
 
-            @SerializedName("9") var nine_ : Nine,
-            @SerializedName("10") var ten : Ten,
-            @SerializedName("11") var eleven : Eleven,
-            @SerializedName("12") var twelve_ : Twelve
-
-        ){
-            data class Nine (
-
-                @SerializedName("subject") var subject : Subject,
-                @SerializedName("level") var level : Level,
-                @SerializedName("midyear") var midyear : Midyear,
-                @SerializedName("yearend") var yearend : Yearend,
-                @SerializedName("predicted") var predicted : Predicted,
-                @SerializedName("results") var results : Results
-
-            )
-                data class Subject (
-
-                    @SerializedName("label") var label : String
-
-                )
-                data class Level (
-
-                    @SerializedName("label") var label : String,
-                    @SerializedName("visibility") var visibility : Int
-
-                )
-                data class Midyear (
-
-                    @SerializedName("label") var label : String,
-                    @SerializedName("visibility") var visibility : Int
-
-                )
-                data class Yearend (
-
-                    @SerializedName("label") var label : String,
-                    @SerializedName("visibility") var visibility : Int
-
-                )
-                data class Predicted (
-
-                    @SerializedName("label") var label : String,
-                    @SerializedName("visibility") var visibility : Int
-
-                )
-                data class Results (
-
-                    @SerializedName("label") var label : String,
-                    @SerializedName("visibility") var visibility : Int
-
-                )
-
-            data class Ten (
-
-                @SerializedName("subject") var subject : Subject,
-                @SerializedName("level") var level : Level,
-                @SerializedName("midyear") var midyear : Midyear,
-                @SerializedName("yearend") var yearend : Yearend,
-                @SerializedName("predicted") var predicted : Predicted,
-                @SerializedName("results") var results : Results
-
-            )
-            data class Eleven (
-
-                @SerializedName("subject") var subject : Subject,
-                @SerializedName("level") var level : Level,
-                @SerializedName("midyear") var midyear : Midyear,
-                @SerializedName("yearend") var yearend : Yearend,
-                @SerializedName("predicted") var predicted : Predicted,
-                @SerializedName("results") var results : Results
-
-            )
-            data class Twelve (
-
-                @SerializedName("subject") var subject : Subject,
-                @SerializedName("level") var level : Level,
-                @SerializedName("midyear") var midyear : Midyear,
-                @SerializedName("yearend") var yearend : Yearend,
-                @SerializedName("predicted") var predicted : Predicted,
-                @SerializedName("results") var results : Results
-
-            )
-        }
-        data class BulkUploadGpaSettings (
-
-            @SerializedName("update_gpa_field") var updateGpaField : Int,
-            @SerializedName("update_wgpa_field") var updateWgpaField : Int,
-            @SerializedName("gpa_search_string") var gpaSearchString : String,
-            @SerializedName("wgpa_search_string") var wgpaSearchString : String
-
-        )
-        data class CurriculumPermission (
-
-            @SerializedName("enable_curriculum_school") var enableCurriculumSchool : Int,
-            @SerializedName("add_curriculum_course") var addCurriculumCourse : Int
-
-        )
-
-        data class CurriculumPermissionSchool (
-
-            @SerializedName("allow_parents_to_view_sel_lessons") var allowParentsToViewSelLessons : Int,
-            @SerializedName("allow_parents_to_see_student_activities_in_the_lessons") var allowParentsToSeeStudentActivitiesInTheLessons : Int,
-            @SerializedName("allow_parents_to_see_submitted_activities_by_students") var allowParentsToSeeSubmittedActivitiesByStudents : Int
-
-        )
-        data class GradeConvention (
-
-            @SerializedName("uk_convention") var ukConvention : Int,
-            @SerializedName("us_convention") var usConvention : Int
-
-        )
-        data class ConfigChoices (
-
-            @SerializedName("internal_deadline_date") var internalDeadlineDate : Int,
-            @SerializedName("relative_deadline") var relativeDeadline : Int
-
-        )
-        data class ConfigValues (
-
-            @SerializedName("relative_deadline_days") var relativeDeadlineDays : Int
-
-        )
-        data class InternalApplicationDeadline (
-
-            @SerializedName("config_choices") var configChoices : ConfigChoices,
-            @SerializedName("config_values") var configValues : ConfigValues
-
-        )
-        data class DefaultListing (
-
-            @SerializedName("recommendation_letter_requests") var recommendationLetterRequests : Int,
-            @SerializedName("ucas_reference_letter") var ucasReferenceLetter : Int,
-            @SerializedName("both") var both : Int
-
-        )
-        data class Recommendation (
-
-            @SerializedName("default_listing") var defaultListing : DefaultListing
-
-        )
-        data class TimeTracking (
-
-            @SerializedName("allow_time_tracking") var allowTimeTracking : Int
-
-        )
-        data class Invoicing (
-
-            @SerializedName("allow_invoicing") var allowInvoicing : Int,
-            @SerializedName("company_logo") var companyLogo : String,
-            @SerializedName("default_currency") var defaultCurrency : String,
-            @SerializedName("default_message_email") var defaultMessageEmail : String,
-            @SerializedName("default_message_invoice") var defaultMessageInvoice : String,
-            @SerializedName("invoice_due_days") var invoiceDueDays : Int,
-            @SerializedName("rate") var rate : Int
-
-        )
-    }
-
-    data class MlUserDefaultConfigData (
-
-        @SerializedName("default_college_list_view") var defaultCollegeListView : List<String>
-
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
     )
-    data class CurriculumPermission (
 
-        @SerializedName("enable_curriculum_school") var enableCurriculumSchool : Int,
-        @SerializedName("add_curriculum_course") var addCurriculumCourse : Int
+    data class FieldEmailNotProvide(
 
+        @field:SerializedName("und")
+        val und: List<UndItem?>? = null
     )
-    data class MenuPermissions (
 
-        @SerializedName("Explore") var Explore : String,
-        @SerializedName("Interest Profiler") var Interest_Profiler : String,
-        @SerializedName("Work Values") var Work_Values : String,
-        @SerializedName("Personality") var Personality : String,
-        @SerializedName("Skills") var Skills : String,
-        @SerializedName("Intelligences") var Intelligences : String,
-        @SerializedName("Learning & Productivity") var Learning_Productivity : String,
-        @SerializedName("Career Plan") var Caree_Plan : String,
-        @SerializedName("Assessments") var Assessments : String,
-        @SerializedName("Career Search") var Caree_Search : String,
-        @SerializedName("Career List") var Career_List : String,
-        @SerializedName("NYS Career Plan") var NYS_Career_Plan : String,
-        @SerializedName("Academic Plan") var Academic_Plan : String,
-        @SerializedName("Academic Planner") var Academic_Planner : String,
-        @SerializedName("Completed Courses") var Completed_Courses : String,
-        @SerializedName("Course Catalog") var Course_Catalog : String,
-        @SerializedName("IB Transcript") var IB_Transcript : String,
-        @SerializedName("College Plan") var College_Plan : String,
-        @SerializedName("College Search") var College_Search : String,
-        @SerializedName("Colleges Considering") var Colleges_Considering : String,
-        @SerializedName("Colleges Applying") var Colleges_Applying : String,
-        @SerializedName("Compare Me") var Compare_Me : String,
-        @SerializedName("Request Recs") var Request_Recs : String,
-        @SerializedName("College Visits") var Colleg_Visits : String,
-        @SerializedName("Test Scores") var Test_Scores : String,
-        @SerializedName("Portfolio") var Portfolio : String,
-        @SerializedName("Goals") var Goals : String,
-        @SerializedName("Journals") var Journals : String,
-        @SerializedName("Experiences") var Experiences : String,
-        @SerializedName("Galleries") var Galleries : String,
-        @SerializedName("Resume") var Resume : String,
-        @SerializedName("MaiaDrive") var MaiaDrive : String,
-        @SerializedName("Maia Docs") var Maia_Docs : String,
-        @SerializedName("Send Summary") var Send_Summary : String,
-        @SerializedName("Send Docs") var Send_Docs : String,
-        @SerializedName("Reports") var Reports : String,
-        @SerializedName("Career Exploration") var Career_Exploration : String,
-        @SerializedName("College Apps") var College_Apps : String,
-        @SerializedName("Scholarship") var Scholarship : String,
-        @SerializedName("Engagement") var Engagement : String,
-        @SerializedName("PortfolioSummary") var PortfolioSummary : String,
-        @SerializedName("Scholarships") var Scholarships : String,
-        @SerializedName("Notes") var Notes : String,
-        @SerializedName("Thriving Index") var Thriving_Index : String,
-        @SerializedName("AGILE Cognitive") var AGILE_Cognitive : String,
-        @SerializedName("Element X") var Element_X : String,
-        @SerializedName("Admission Office") var Admission_Office : String
+    data class JsonMember9(
 
+        @field:SerializedName("level")
+        val level: Level? = null,
+
+        @field:SerializedName("subject")
+        val subject: Subject? = null,
+
+        @field:SerializedName("midyear")
+        val midyear: Midyear? = null,
+
+        @field:SerializedName("yearend")
+        val yearend: Yearend? = null,
+
+        @field:SerializedName("results")
+        val results: Results? = null,
+
+        @field:SerializedName("predicted")
+        val predicted: Predicted? = null
     )
-//    data class GaugesPermissionConfig (
-//
-//        @SerializedName("gpa") var gpa : Gpa,
-//        @SerializedName("psat") var psat : Psat,
-//        @SerializedName("sat") var sat : Sat,
-//        @SerializedName("pre-act") var pre-act : Pre-act,
-//    @SerializedName("act") var act : Act,
-//    @SerializedName("wgpa") var wgpa : Wgpa,
-//    @SerializedName("french_bac") var frenchBac : FrenchBac,
-//    @SerializedName("ib_score") var ibScore : IbScore,
-//    @SerializedName("ib_predicted") var ibPredicted : IbPredicted
-////    @SerializedName("fafsa") var fafsa : Fafsa
-//
-//    ){
-//        data class IbPredicted (
-//
-//            @SerializedName("visibility") var visibility : Int,
-//            @SerializedName("max_value") var maxValue : Int
-//
-//        )
-//    }
+
+    data class Wwa(
+
+        @field:SerializedName("license")
+        val license: Int? = null,
+
+        @field:SerializedName("token")
+        val token: String? = null
+    )
+
+    data class UndItem(
+
+        @field:SerializedName("target_id")
+        val targetId: String? = null,
+
+        @field:SerializedName("value")
+        val value: String? = null
+    )
+
+    data class Subject(
+
+        @field:SerializedName("label")
+        val label: String? = null
+    )
+
+    data class Roles(
+
+        @field:SerializedName("2")
+        val jsonMember2: String? = null,
+
+        @field:SerializedName("5")
+        val jsonMember5: String? = null
+    )
+
+    data class Midyear(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("label")
+        val label: String? = null
+    )
+
+    data class Predicted(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("label")
+        val label: String? = null
+    )
+
+    data class MlUserDefaultConfigData(
+
+        @field:SerializedName("default_college_list_view")
+        val defaultCollegeListView: ArrayList<String>? = null
+    )
+
+    data class Invoicing(
+
+        @field:SerializedName("allow_invoicing")
+        val allowInvoicing: Int? = null,
+
+        @field:SerializedName("invoice_due_days")
+        val invoiceDueDays: Int? = null,
+
+        @field:SerializedName("company_logo")
+        val companyLogo: String? = null,
+
+        @field:SerializedName("rate")
+        val rate: Double? = null,
+
+        @field:SerializedName("default_message_email")
+        val defaultMessageEmail: String? = null,
+
+        @field:SerializedName("default_currency")
+        val defaultCurrency: String? = null,
+
+        @field:SerializedName("default_message_invoice")
+        val defaultMessageInvoice: String? = null
+    )
+
+    data class PreAct(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class GradeConvention(
+
+        @field:SerializedName("uk_convention")
+        val ukConvention: Int? = null,
+
+        @field:SerializedName("us_convention")
+        val usConvention: Int? = null
+    )
+
+    data class TimeTracking(
+
+        @field:SerializedName("allow_time_tracking")
+        val allowTimeTracking: Int? = null
+    )
+
+    data class SchoolShortcut(
+
+        @field:SerializedName("school")
+        val school: List<SchoolItem?>? = null,
+
+        @field:SerializedName("student")
+        val student: Any? = null
+    )
+
+    data class CurriculumPermission(
+
+        @field:SerializedName("enable_curriculum_school")
+        val enableCurriculumSchool: Int? = null,
+
+        @field:SerializedName("add_curriculum_course")
+        val addCurriculumCourse: Int? = null
+    )
+
+    data class ScattergramXYValues(
+
+        @field:SerializedName("ACT")
+        val aCT: ACT1? = null,
+
+        @field:SerializedName("SAT")
+        val sAT: SAT? = null,
+
+        @field:SerializedName("GPA")
+        val gPA: GPA? = null,
+
+        @field:SerializedName("WGPA")
+        val wGPA: WGPA? = null
+    )
+
+    data class IbPredicted(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class DefaultListing(
+
+        @field:SerializedName("recommendation_letter_requests")
+        val recommendationLetterRequests: Int? = null,
+
+        @field:SerializedName("ucas_reference_letter")
+        val ucasReferenceLetter: Int? = null,
+
+        @field:SerializedName("both")
+        val both: Int? = null
+    )
+
+    data class Psat(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class MenuPermissions(
+
+        @field:SerializedName("Thriving Index")
+        val thrivingIndex: String? = null,
+
+        @field:SerializedName("Explore")
+        val explore: String? = null,
+
+        @field:SerializedName("Career List")
+        val careerList: String? = null,
+
+        @field:SerializedName("Learning & Productivity")
+        val learningProductivity: String? = null,
+
+        @field:SerializedName("Career Exploration")
+        val careerExploration: String? = null,
+
+        @field:SerializedName("Course Catalog")
+        val courseCatalog: String? = null,
+
+        @field:SerializedName("Colleges Considering")
+        val collegesConsidering: String? = null,
+
+        @field:SerializedName("Compare Me")
+        val compareMe: String? = null,
+
+        @field:SerializedName("IB Transcript")
+        val iBTranscript: String? = null,
+
+        @field:SerializedName("Career Plan")
+        val careerPlan: String? = null,
+
+        @field:SerializedName("Send Summary")
+        val sendSummary: String? = null,
+
+        @field:SerializedName("Maia Docs")
+        val maiaDocs: String? = null,
+
+        @field:SerializedName("MaiaDrive")
+        val maiaDrive: String? = null,
+
+        @field:SerializedName("Engagement")
+        val engagement: String? = null,
+
+        @field:SerializedName("Career Search")
+        val careerSearch: String? = null,
+
+        @field:SerializedName("Academic Plan")
+        val academicPlan: String? = null,
+
+        @field:SerializedName("Skills")
+        val skills: String? = null,
+
+        @field:SerializedName("College Visits")
+        val collegeVisits: String? = null,
+
+        @field:SerializedName("Admission Office")
+        val admissionOffice: String? = null,
+
+        @field:SerializedName("College Search")
+        val collegeSearch: String? = null,
+
+        @field:SerializedName("Scholarship")
+        val scholarship: String? = null,
+
+        @field:SerializedName("Element X")
+        val elementX: String? = null,
+
+        @field:SerializedName("Notes")
+        val notes: String? = null,
+
+        @field:SerializedName("Scholarships")
+        val scholarships: String? = null,
+
+        @field:SerializedName("PortfolioSummary")
+        val portfolioSummary: String? = null,
+
+        @field:SerializedName("Request Recs")
+        val requestRecs: String? = null,
+
+        @field:SerializedName("Portfolio")
+        val portfolio: String? = null,
+
+        @field:SerializedName("Experiences")
+        val experiences: String? = null,
+
+        @field:SerializedName("Work Values")
+        val workValues: String? = null,
+
+        @field:SerializedName("Reports")
+        val reports: String? = null,
+
+        @field:SerializedName("Personality")
+        val personality: String? = null,
+
+        @field:SerializedName("Intelligences")
+        val intelligences: String? = null,
+
+        @field:SerializedName("Assessments")
+        val assessments: String? = null,
+
+        @field:SerializedName("Galleries")
+        val galleries: String? = null,
+
+        @field:SerializedName("College Apps")
+        val collegeApps: String? = null,
+
+        @field:SerializedName("College Plan")
+        val collegePlan: String? = null,
+
+        @field:SerializedName("Academic Planner")
+        val academicPlanner: String? = null,
+
+        @field:SerializedName("Colleges Applying")
+        val collegesApplying: String? = null,
+
+        @field:SerializedName("Send Docs")
+        val sendDocs: String? = null,
+
+        @field:SerializedName("Completed Courses")
+        val completedCourses: String? = null,
+
+        @field:SerializedName("AGILE Cognitive")
+        val aGILECognitive: String? = null,
+
+        @field:SerializedName("Test Scores")
+        val testScores: String? = null,
+
+        @field:SerializedName("Journals")
+        val journals: String? = null,
+
+        @field:SerializedName("Interest Profiler")
+        val interestProfiler: String? = null,
+
+        @field:SerializedName("NYS Career Plan")
+        val nYSCareerPlan: String? = null,
+
+        @field:SerializedName("Goals")
+        val goals: String? = null,
+
+        @field:SerializedName("Resume")
+        val resume: String? = null
+    )
+
+    data class MlSchoolConfigData(
+
+        @field:SerializedName("student_can_set_preferred_recommender")
+        val studentCanSetPreferredRecommender: List<Int?>? = null,
+
+        @field:SerializedName("district_wide_recommendation")
+        val districtWideRecommendation: List<Int?>? = null,
+
+        @field:SerializedName("verify_activity_complete")
+        val verifyActivityComplete: List<Int?>? = null,
+
+        @field:SerializedName("mark_activity_complete_counselor")
+        val markActivityCompleteCounselor: List<Int?>? = null,
+
+        @field:SerializedName("show_new_home_page")
+        val showNewHomePage: List<Int?>? = null,
+
+        @field:SerializedName("recommendation")
+        val recommendation: Recommendation? = null,
+
+        @field:SerializedName("internal_application_deadline")
+        val internalApplicationDeadline: InternalApplicationDeadline? = null,
+
+        @field:SerializedName("academic_planner_custom_subject")
+        val academicPlannerCustomSubject: List<AcademicPlannerCustomSubjectItem?>? = null,
+
+        @field:SerializedName("curriculum_permission_school")
+        val curriculumPermissionSchool: CurriculumPermissionSchool? = null,
+
+        @field:SerializedName("ib_transcript_dob_format")
+        val ibTranscriptDobFormat: Any? = null,
+
+        @field:SerializedName("enable_dob_visit_download")
+        val enableDobVisitDownload: List<Int?>? = null,
+
+        @field:SerializedName("bulk_upload_gpa_settings")
+        val bulkUploadGpaSettings: BulkUploadGpaSettings? = null,
+
+        @field:SerializedName("days_before_visits_to_show")
+        val daysBeforeVisitsToShow: Any? = null,
+
+        @field:SerializedName("old_student_dashboard")
+        val oldStudentDashboard: List<Int?>? = null,
+
+        @field:SerializedName("ib_transcript_listing")
+        val ibTranscriptListing: IbTranscriptListing? = null,
+
+        @field:SerializedName("curriculum_permission")
+        val curriculumPermission: CurriculumPermission? = null,
+
+        @field:SerializedName("invoicing")
+        val invoicing: Invoicing? = null,
+
+        @field:SerializedName("grade_convention")
+        val gradeConvention: GradeConvention? = null,
+
+        @field:SerializedName("time_tracking")
+        val timeTracking: TimeTracking? = null,
+
+        @field:SerializedName("essay_outline_developer_view")
+        val essayOutlineDeveloperView: List<Int?>? = null
+    )
+
+    data class UserName(
+
+        @field:SerializedName("last_name")
+        val lastName: String? = null,
+
+        @field:SerializedName("first_name")
+        val firstName: String? = null
+    )
+
+    data class Gpa1(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class Sat1(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class GradeBasedCollegePlan(
+
+        @field:SerializedName("college_plan")
+        val collegePlan: List<Int?>? = null
+    )
+
+    data class IbScore(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class BulkUploadGpaSettings(
+
+        @field:SerializedName("update_gpa_field")
+        val updateGpaField: Int? = null,
+
+        @field:SerializedName("wgpa_search_string")
+        val wgpaSearchString: String? = null,
+
+        @field:SerializedName("gpa_search_string")
+        val gpaSearchString: String? = null,
+
+        @field:SerializedName("update_wgpa_field")
+        val updateWgpaField: Int? = null
+    )
+
+    data class Yearend(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("label")
+        val label: String? = null
+    )
+
+    data class ACT1(
+
+        @field:SerializedName("min")
+        val min: String? = null,
+
+        @field:SerializedName("max")
+        val max: Int? = null
+    )
+
+    data class CcgiAppsPermission(
+
+        @field:SerializedName("hide_university_contact_phone")
+        val hideUniversityContactPhone: Int? = null,
+
+        @field:SerializedName("lsi")
+        val lsi: Int? = null,
+
+        @field:SerializedName("csu")
+        val csu: Int? = null,
+
+        @field:SerializedName("survey_school")
+        val surveySchool: Int? = null,
+
+        @field:SerializedName("send_summary")
+        val sendSummary: Int? = null,
+
+        @field:SerializedName("recommendation")
+        val recommendation: Int? = null,
+
+        @field:SerializedName("university_contacts")
+        val universityContacts: Int? = null,
+
+        @field:SerializedName("hide_university_contact_email")
+        val hideUniversityContactEmail: Int? = null,
+
+        @field:SerializedName("message_center")
+        val messageCenter: Int? = null,
+
+        @field:SerializedName("uc")
+        val uc: Int? = null,
+
+        @field:SerializedName("scheduler")
+        val scheduler: Int? = null,
+
+        @field:SerializedName("college_application_status_lock")
+        val collegeApplicationStatusLock: Int? = null,
+
+        @field:SerializedName("sms")
+        val sms: Int? = null,
+
+        @field:SerializedName("prepare_documents")
+        val prepareDocuments: Int? = null,
+
+        @field:SerializedName("academic_planner")
+        val academicPlanner: Int? = null,
+
+        @field:SerializedName("mi")
+        val mi: Int? = null,
+
+        @field:SerializedName("ny_state_career")
+        val nyStateCareer: Int? = null,
+
+        @field:SerializedName("thriving_index")
+        val thrivingIndex: Int? = null,
+
+        @field:SerializedName("career_plan")
+        val careerPlan: Int? = null,
+
+        @field:SerializedName("college_visits_visibility")
+        val collegeVisitsVisibility: Int? = null,
+
+        @field:SerializedName("recommendation_dashboard")
+        val recommendationDashboard: Int? = null,
+
+        @field:SerializedName("dwya")
+        val dwya: Int? = null,
+
+        @field:SerializedName("parent_add_college_for_student")
+        val parentAddCollegeForStudent: Int? = null,
+
+        @field:SerializedName("college_ratings")
+        val collegeRatings: Int? = null,
+
+        @field:SerializedName("college_planner_lock")
+        val collegePlannerLock: Int? = null,
+
+        @field:SerializedName("course_catalog")
+        val courseCatalog: Int? = null,
+
+        @field:SerializedName("send_documents")
+        val sendDocuments: Int? = null,
+
+        @field:SerializedName("test_score_edit_by_student")
+        val testScoreEditByStudent: Int? = null,
+
+        @field:SerializedName("request_recs")
+        val requestRecs: Int? = null
+    )
+
+    data class JsonMember12(
+
+        @field:SerializedName("level")
+        val level: Level? = null,
+
+        @field:SerializedName("subject")
+        val subject: Subject? = null,
+
+        @field:SerializedName("midyear")
+        val midyear: Midyear? = null,
+
+        @field:SerializedName("yearend")
+        val yearend: Yearend? = null,
+
+        @field:SerializedName("results")
+        val results: Results? = null,
+
+        @field:SerializedName("predicted")
+        val predicted: Predicted? = null
+    )
+
+    data class SAT(
+
+        @field:SerializedName("min")
+        val min: String? = null,
+
+        @field:SerializedName("max")
+        val max: Int? = null
+    )
+
+    data class AcademicPlannerCustomSubjectItem(
+
+        @field:SerializedName("subject_id")
+        val subjectId: Int? = null,
+
+        @field:SerializedName("deleted")
+        val deleted: Int? = null,
+
+        @field:SerializedName("subject_name")
+        val subjectName: String? = null
+    )
+
+    data class CurriculumPermissionSchool(
+
+        @field:SerializedName("allow_parents_to_view_sel_lessons")
+        val allowParentsToViewSelLessons: Int? = null,
+
+        @field:SerializedName("allow_parents_to_see_student_activities_in_the_lessons")
+        val allowParentsToSeeStudentActivitiesInTheLessons: Int? = null,
+
+        @field:SerializedName("allow_parents_to_see_submitted_activities_by_students")
+        val allowParentsToSeeSubmittedActivitiesByStudents: Int? = null
+    )
+
+    data class FrenchBac(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class InternalApplicationDeadline(
+
+        @field:SerializedName("config_values")
+        val configValues: ConfigValues? = null,
+
+        @field:SerializedName("config_choices")
+        val configChoices: ConfigChoices? = null
+    )
+
+    data class Level(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("label")
+        val label: String? = null
+    )
+
+    data class AssessmentPermission(
+
+        @field:SerializedName("skills")
+        val skills: List<Int?>? = null,
+
+        @field:SerializedName("lsi")
+        val lsi: List<Int?>? = null,
+
+        @field:SerializedName("dwyr")
+        val dwyr: List<Int?>? = null,
+
+        @field:SerializedName("work_values")
+        val workValues: List<Int?>? = null,
+
+        @field:SerializedName("tte_ac")
+        val tteAc: List<Int?>? = null,
+
+        @field:SerializedName("tte_ex")
+        val tteEx: List<Int?>? = null,
+
+        @field:SerializedName("tte_ti")
+        val tteTi: List<Int?>? = null,
+
+        @field:SerializedName("mi")
+        val mi: List<Int?>? = null,
+
+        @field:SerializedName("interest_profiler")
+        val interestProfiler: List<Int?>? = null
+    )
+
+    data class Results(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("label")
+        val label: String? = null
+    )
+
+    data class JsonMember10(
+
+        @field:SerializedName("level")
+        val level: Level? = null,
+
+        @field:SerializedName("subject")
+        val subject: Subject? = null,
+
+        @field:SerializedName("midyear")
+        val midyear: Midyear? = null,
+
+        @field:SerializedName("yearend")
+        val yearend: Yearend? = null,
+
+        @field:SerializedName("results")
+        val results: Results? = null,
+
+        @field:SerializedName("predicted")
+        val predicted: Predicted? = null
+    )
+
+    data class User(
+
+        @field:SerializedName("access")
+        val access: String? = null,
+
+        @field:SerializedName("mail")
+        val mail: String? = null,
+
+        @field:SerializedName("data")
+        val data: Data? = null,
+
+        @field:SerializedName("signature")
+        val signature: String? = null,
+
+        @field:SerializedName("created")
+        val created: String? = null,
+
+        @field:SerializedName("timezone")
+        val timezone: Any? = null,
+
+        @field:SerializedName("roles")
+        val roles: Roles? = null,
+
+        @field:SerializedName("language")
+        val language: String? = null,
+
+        @field:SerializedName("og_user_node")
+        val ogUserNode: OgUserNode? = null,
+
+        @field:SerializedName("message_id")
+        val messageId: String? = null,
+
+        @field:SerializedName("field_google_login_id")
+        val fieldGoogleLoginId: List<Any?>? = null,
+
+        @field:SerializedName("login")
+        val login: Int? = null,
+
+        @field:SerializedName("uuid")
+        val uuid: String? = null,
+
+        @field:SerializedName("picture")
+        val picture: String? = null,
+
+        @field:SerializedName("uid")
+        val uid: String? = null,
+
+        @field:SerializedName("signature_format")
+        val signatureFormat: Any? = null,
+
+        @field:SerializedName("field_email_not_provide")
+        val fieldEmailNotProvide: FieldEmailNotProvide? = null,
+
+        @field:SerializedName("field_sign_up")
+        val fieldSignUp: FieldSignUp? = null,
+
+        @field:SerializedName("grade")
+        val grade: String? = null,
+
+        @field:SerializedName("name")
+        val name: String? = null,
+
+        @field:SerializedName("theme")
+        val theme: String? = null,
+
+        @field:SerializedName("field_login_count")
+        val fieldLoginCount: List<Any?>? = null,
+
+        @field:SerializedName("status")
+        val status: String? = null
+    )
+
+    data class Data(
+
+        @field:SerializedName("mimemail_textonly")
+        val mimemailTextonly: Int? = null
+    )
+
+    data class Fafsa(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Any? = null
+    )
+
+    data class JsonMember11(
+
+        @field:SerializedName("level")
+        val level: Level? = null,
+
+        @field:SerializedName("subject")
+        val subject: Subject? = null,
+
+        @field:SerializedName("midyear")
+        val midyear: Midyear? = null,
+
+        @field:SerializedName("yearend")
+        val yearend: Yearend? = null,
+
+        @field:SerializedName("results")
+        val results: Results? = null,
+
+        @field:SerializedName("predicted")
+        val predicted: Predicted? = null
+    )
+
+    data class ConfigChoices(
+
+        @field:SerializedName("internal_deadline_date")
+        val internalDeadlineDate: Int? = null,
+
+        @field:SerializedName("relative_deadline")
+        val relativeDeadline: Int? = null
+    )
+
+    data class IbTranscriptListing(
+
+        @field:SerializedName("11")
+        val jsonMember11: JsonMember11? = null,
+
+        @field:SerializedName("12")
+        val jsonMember12: JsonMember12? = null,
+
+        @field:SerializedName("9")
+        val jsonMember9: JsonMember9? = null,
+
+        @field:SerializedName("10")
+        val jsonMember10: JsonMember10? = null
+    )
+
+    data class Essay(
+
+        @field:SerializedName("list_type")
+        val listType: String? = null
+    )
+
+    data class WGPA(
+
+        @field:SerializedName("min")
+        val min: String? = null,
+
+        @field:SerializedName("max")
+        val max: Int? = null
+    )
+
+    data class Act(
+
+        @field:SerializedName("visibility")
+        val visibility: Int? = null,
+
+        @field:SerializedName("max_value")
+        val maxValue: Int? = null
+    )
+
+    data class CompareMeClassOfRange(
+
+        @field:SerializedName("min_class_of")
+        val minClassOf: String? = null,
+
+        @field:SerializedName("max_class_of")
+        val maxClassOf: String? = null
+    )
 }
-
