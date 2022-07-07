@@ -3,6 +3,7 @@ package com.maialearning.util
 import android.content.Context
 import android.net.ConnectivityManager
 import android.util.Log
+import androidx.viewbinding.BuildConfig
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.maialearning.network.AllAPi
@@ -11,6 +12,7 @@ import com.maialearning.repository.LoginRepositoryImpl
 import com.maialearning.viewmodel.LoginNewModel
 import com.maialearning.viewmodel.LoginViewModel
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.CallAdapter
@@ -19,7 +21,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
+//const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
+const val CAT_API_BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 
 fun Context.isNetworkConnected(): Boolean {
     val connectivityManager: ConnectivityManager? =
@@ -53,13 +56,29 @@ val appModules = module {
 fun createHttpClient(): OkHttpClient {
     val client = OkHttpClient.Builder()
     client.readTimeout(5 * 60, TimeUnit.SECONDS)
-    return client.addInterceptor {
-        val original = it.request()
-        val requestBuilder = original.newBuilder()
-        requestBuilder.header("Content-Type", "application/json, text/plain, */")
-        val request = requestBuilder.method(original.method(), original.body()).build()
-        return@addInterceptor it.proceed(request)
-    }.build()
+//    val loggingInterceptor = HttpLoggingInterceptor()
+//    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+//    return client.addInterceptor {
+//        val original = it.request()
+//        val requestBuilder = original.newBuilder()
+//        requestBuilder.header("Content-Type", "application/json, text/plain, */")
+//        val request = requestBuilder.method(original.method(), original.body()).build()
+//        return@addInterceptor it.proceed(request)
+//    }.build()
+
+   return if (BuildConfig.DEBUG){
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+       client
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }else{
+       val loggingInterceptor = HttpLoggingInterceptor()
+       loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+       client
+           .addInterceptor(loggingInterceptor)
+           .build()
+    }
 }
 
 inline fun <reified T> createWebService(

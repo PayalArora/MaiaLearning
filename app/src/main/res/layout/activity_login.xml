@@ -267,7 +267,7 @@
 
                 <EditText
                     android:id="@+id/email_edt"
-                    android:text="st1000@mailinator.com"
+                    android:text="st1003@mailinator.com"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40dp"
                     android:layout_marginStart="@dimen/_20dp"

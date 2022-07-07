@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnFailureListener
@@ -36,6 +37,7 @@ import java.util.regex.Pattern
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var passVisible: Boolean = false
+    private var googleSignInAccount:GoogleSignInAccount?= null
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -134,14 +136,15 @@ class LoginActivity : AppCompatActivity() {
             it?.let {
                 viewModel.signOut()
                 dialog.show()
-                it.email?.let { it1 -> loginModel.googleLogin(it1,it.email.toString(),it.uid) }
+
+                googleSignInAccount.let { it1 -> loginModel.googleLogin(it1?.email!!,it1.id!!,it1.idToken!!) }
               //  startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
         viewModel.microUser.observe(this) {
             it?.let {
                 viewModel.signOut()
-                dialog.show()
+                //dialog.show()
                 loginModel.microLogin(it.uid?:"")
                // startActivity(Intent(this, DashboardActivity::class.java))
             }
@@ -227,8 +230,9 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)!!
-
+                googleSignInAccount = account
                 viewModel.firebaseAuthWithGoogle(account.idToken!!)
+
             } catch (e: ApiException) {
                 Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
             }
@@ -238,7 +242,9 @@ class LoginActivity : AppCompatActivity() {
     private fun initObserver() {
         loginModel.loginObserver.observe(this) {
             it?.let {
+
                 dialog.dismiss()
+                println("Name "+it?.userName)
                 loginWork()
             }
         }

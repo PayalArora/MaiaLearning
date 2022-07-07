@@ -169,7 +169,6 @@
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
                         android:textSize="@dimen/_16sp"
                         android:fontFamily="@font/inter_medium"
                         android:buttonTint="@color/forgot_color"

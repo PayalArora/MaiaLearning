@@ -52,24 +52,65 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20dp"
+                android:layout_marginStart="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_20dp"
                 android:text="@string/sat_ebrw"
+                android:textAllCaps="true"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_18sp"
+                android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
 
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20dp"
+                android:layout_marginHorizontal="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_5dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20dp"
-               >
+                android:layout_marginHorizontal="@dimen/_15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:padding="@dimen/_5dp"
+                    android:text="@string/twohundred"
+
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="@dimen/_5dp"
+                    android:text="@string/eight_hundred" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15dp"
+                android:layout_marginTop="@dimen/_20dp"
+                android:text="@string/sat_ebrw"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_5dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -92,64 +133,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20dp"
+                android:layout_marginStart="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_20dp"
                 android:text="@string/sat_ebrw"
+                android:textAllCaps="true"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_18sp"
+                android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
 
             <SeekBar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20dp"
+                android:layout_marginHorizontal="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_5dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20dp"
-              >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:padding="@dimen/_5dp"
-                    android:text="@string/twohundred"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:padding="@dimen/_5dp"
-                    android:text="@string/eight_hundred" />
-
-            </RelativeLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20dp"
-                android:layout_marginTop="@dimen/_20dp"
-                android:text="@string/sat_ebrw"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_18sp"
-                android:textStyle="bold" />
-
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20dp"
-                android:layout_marginTop="@dimen/_5dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20dp"
-               >
+                android:layout_marginHorizontal="@dimen/_15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -171,31 +172,32 @@
 
             <View
                 android:id="@+id/view1"
-                android:layout_marginTop="@dimen/_15dp"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1dp"
                 android:layout_below="@+id/filters"
+                android:layout_marginTop="@dimen/_15dp"
                 android:background="@color/divider_color" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20dp"
+                android:layout_marginVertical="@dimen/_10dp"
+                android:layout_marginStart="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_20dp"
                 android:text="@string/diversity"
-                android:layout_marginVertical="@dimen/_10dp"
+                android:textAllCaps="true"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_18sp"
+                android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_5dp"
-                android:fontFamily="@font/inter_regular"
-                android:buttonTint="@color/checkbutton"
                 android:layout_marginHorizontal="@dimen/_15dp"
+                android:layout_marginVertical="@dimen/_5dp"
                 android:layout_marginTop="@dimen/_5dp"
+                android:buttonTint="@color/checkbutton"
+                android:fontFamily="@font/inter_regular"
                 android:text="@string/history_black" />
 
             <View
@@ -207,10 +209,10 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_regular"
-                android:buttonTint="@color/checkbutton"
                 android:layout_marginHorizontal="@dimen/_15dp"
                 android:layout_marginVertical="@dimen/_10dp"
+                android:buttonTint="@color/checkbutton"
+                android:fontFamily="@font/inter_regular"
                 android:text="@string/tribal_college" />
 
             <View
@@ -223,7 +225,7 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_25dp"
+                android:layout_marginHorizontal="@dimen/_20dp"
                 android:layout_marginTop="@dimen/_25dp"
                 android:background="@drawable/white_rounded_withboundary">
 
@@ -239,11 +241,11 @@
                         android:id="@+id/spinner"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_30dp"
+                        android:background="@android:color/transparent"
                         android:dropDownVerticalOffset="20dp"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
                         android:overlapAnchor="false"
-                        android:background="@android:color/transparent"
                         android:spinnerMode="dropdown"
                         android:theme="@style/MatchSpinnerTheme" />
 
@@ -256,7 +258,7 @@
                         android:rotation="270"
                         android:src="@drawable/back_arrow" />
 
-</LinearLayout>
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
 

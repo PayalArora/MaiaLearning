@@ -62,6 +62,7 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
               pendingResultTask
                 .addOnSuccessListener(
                     OnSuccessListener {
+                        _microUser.value = it.user
                         println("cred"+ it.getCredential().toString())
                     })
                 .addOnFailureListener(

@@ -17,5 +17,9 @@ object Coroutines {
             work()
         }
     }
-
+    fun ioWorkerViewModel(viewmodelscope: CoroutineScope, work: (suspend () -> Unit)) {
+        viewmodelscope.launch {
+            work()
+        }
+    }
 }

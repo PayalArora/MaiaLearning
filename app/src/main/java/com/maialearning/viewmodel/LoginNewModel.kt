@@ -8,7 +8,10 @@ import com.maialearning.model.LoginNewModel
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
 class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
@@ -24,7 +27,6 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val showError = SingleLiveEvent<String>()
 
 
-
     fun userLogin(context: Context, email: String, password: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -37,46 +39,54 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> loginObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
             }
         }
     }
-    fun googleLogin(email:String,id:String,id_token:String){
+
+    fun googleLogin(email: String, id: String, id_token: String) {
         showLoading.value = true
-        Coroutines.ioWorker {
-            val result = withContext(Dispatchers.IO) {
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
                 catRepository.getGoogleLogin(
                     email,
                     id, id_token
                 )
             }
-            withContext(Dispatchers.Main) {
-                showLoading.postValue(false)
-                when (result) {
-                    is UseCaseResult.Success -> loginObserver.value = result.data
-                    is UseCaseResult.Error -> showError.value = result.exception.message
-                }
+
+            showLoading.postValue(false)
+            when (result) {
+                is UseCaseResult.Success -> loginObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
             }
+
         }
     }
-    fun microLogin(token:String){
+
+    fun microLogin(token: String) {
         showLoading.value = true
         Coroutines.ioWorker {
             val result = withContext(Dispatchers.IO) {
-                catRepository.getGoogleLogin(
-                    "st1003@mailinator.com",
-                    "NlrtXFV6JlZhDG1Z",""
+                catRepository.getMicroLogin(
+                    token
                 )
             }
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> loginObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
             }
         }
     }
 
-    fun forgetPassword(email:String){
+    fun forgetPassword(email: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -87,10 +97,14 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> forgetObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

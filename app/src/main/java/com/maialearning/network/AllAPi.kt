@@ -3,11 +3,11 @@ package com.maialearning.network
 import com.maialearning.model.ForgetModel
 
 import com.maialearning.model.LoginNewModel
+import com.maialearning.model.ProfileResponse
 import kotlinx.coroutines.Deferred
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
-
+import retrofit2.Response
+import retrofit2.http.*
+//https://maia2-staging-backend.maialearning.com/ajs-services/google_login
 interface AllAPi {
 
     @POST("user/sign-in")
@@ -31,6 +31,13 @@ interface AllAPi {
     fun microLoginAsync(
         @Field("token") id_token: String
     ):  Deferred<LoginNewModel>
+
+ @GET("user_my_account_info/{id}")
+    @FormUrlEncoded
+    fun getProfile(
+     @Header("Authorization") Authorization: String,
+     @Path("id") id: String
+    ):  Deferred<ProfileResponse>
 
     @POST("forgot_password")
     @FormUrlEncoded
