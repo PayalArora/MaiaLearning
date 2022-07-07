@@ -23,10 +23,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import javax.inject.Inject
 
-@AndroidEntryPoint
 class ProfileFragment : Fragment(), OnItemClick {
     private lateinit var mBinding: ProfileViewpagerBinding
-    private val profileModel: ProfileViewModel by viewModel()
+//    private val profileModel: ProfileViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,9 +42,9 @@ class ProfileFragment : Fragment(), OnItemClick {
     }
 
     private fun profileWork() {
-        profileModel.observer.observe(viewLifecycleOwner, {
-
-        })
+//        profileModel.observer.observe(viewLifecycleOwner, {
+//
+//        })
         //profileModel.getProfile()
     }
 
