@@ -11,9 +11,10 @@ import com.maialearning.R
 import com.maialearning.databinding.ConsideringItemLayBinding
 import com.maialearning.databinding.ItemMilestonesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
+import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 
-class ConsiderAdapter(val onItemClickOption: OnItemClickOption) :
+class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>) :
     RecyclerView.Adapter<ConsiderAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -45,6 +46,7 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption) :
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
+            uniName.text=array[position].naviance_college_name
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()
 
@@ -75,7 +77,7 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption) :
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return array.size
     }
 
     fun setValue(value: String, type: Int) {

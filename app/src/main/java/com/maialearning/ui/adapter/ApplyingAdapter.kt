@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ApplyingItemLayBinding
 import com.maialearning.databinding.ConsideringItemLayBinding
+import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 
-class ApplyingAdapter (val onItemClickOption: OnItemClickOption) :
+class ApplyingAdapter (val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>) :
 RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -38,6 +39,7 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
+            uniName.text=array[position].naviance_college_name
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
@@ -66,7 +68,7 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return array.size
     }
 
     fun setValue(value: String, type: Int) {

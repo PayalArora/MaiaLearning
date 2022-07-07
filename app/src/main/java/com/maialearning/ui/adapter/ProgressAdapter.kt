@@ -32,7 +32,7 @@ class ProgressAdapter(private var context: Context,var listData:ArrayList<Commun
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
             holder.binding.progress1bar.progress=listData[position].percent.replace("%","").toInt()
-            holder.binding.progress1bar.setIndicatorColor(Color.parseColor(listData[position].text))
+            holder.binding.progress1bar.setIndicatorColor(Color.parseColor(listData[position].color))
             holder.binding.name.setTextColor(Color.parseColor(listData[position].text))
         holder.binding.name.text = listData[position].name
 

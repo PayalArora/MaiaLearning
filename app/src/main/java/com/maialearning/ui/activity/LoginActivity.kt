@@ -27,6 +27,7 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnSignInStartedListener
 import com.maialearning.databinding.ActivityLoginBinding
 import com.maialearning.factory.LoginViewModelFactory
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.LoginNewModel
 import com.maialearning.viewmodel.LoginViewModel
@@ -232,7 +233,6 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)!!
                 googleSignInAccount = account
                 viewModel.firebaseAuthWithGoogle(account.idToken!!)
-
             } catch (e: ApiException) {
                 Toast.makeText(this, e.localizedMessage, Toast.LENGTH_SHORT).show()
             }
@@ -242,9 +242,10 @@ class LoginActivity : AppCompatActivity() {
     private fun initObserver() {
         loginModel.loginObserver.observe(this) {
             it?.let {
-
                 dialog.dismiss()
                 println("Name "+it?.userName)
+                SharedHelper(this).authkey=it.accessToken
+                SharedHelper(this).login = "1"
                 loginWork()
             }
         }

@@ -1,5 +1,6 @@
 package com.maialearning.ui.fragments
 
+import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,14 +14,23 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.CommentsSheetBinding
+import com.maialearning.databinding.ConsideringLayoutBinding
 import com.maialearning.databinding.FragmentApplyingBinding
+import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.adapter.ApplyingAdapter
 import com.maialearning.ui.adapter.CommentAdapter
+import com.maialearning.ui.adapter.ConsiderAdapter
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.HomeViewModel
+import org.json.JSONArray
+import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     var selectedValue = ""
     private lateinit var mBinding: FragmentApplyingBinding
-
+    private lateinit var dialogP: Dialog
+    private val homeModel: HomeViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +43,53 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentApplyingBinding.inflate(inflater, container, false)
+        init()
         return mBinding.root
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAdapter()
-    }
 
+    }
+    private fun init() {
+        dialogP = showLoadingDialog(requireContext())
+        dialogP.show()
+        initObserver()
+        homeModel.getApplyList("")
+
+
+    }
+    private fun initObserver() {
+        homeModel.applyObserver.observe(requireActivity()) {
+            it?.let {
+                dialogP?.dismiss()
+                val json = JSONObject(it.toString()).getJSONObject("9375").getJSONObject("data")
+                val x = json.keys() as Iterator<String>
+                val jsonArray = JSONArray()
+                while (x.hasNext()) {
+                    val key: String = x.next().toString()
+                    jsonArray.put(json.get(key))
+                }
+                val array: ArrayList<ConsiderModel.Data> = ArrayList()
+                for (i in 0 until jsonArray.length()) {
+                    val object_ = jsonArray.getJSONObject(i)
+                    val model: ConsiderModel.Data = ConsiderModel.Data(
+                        object_.getInt("contact_info"),
+                        object_.getInt("contact_info"),
+                        object_.getInt("contact_info"),
+                        0,
+                        "", object_.getString("naviance_college_name")
+                    )
+                    array.add(model)
+                }
+                mBinding.applyingList.adapter = ApplyingAdapter(this, array)
+
+
+            }
+        }
+    }
     private fun setAdapter() {
-        mBinding.applyingList.adapter = ApplyingAdapter(this)
+//        mBinding.applyingList.adapter = ApplyingAdapter(this)
     }
 
     private fun bottomSheetType(layoutId:Int, rbId:Int, type:Int) {
