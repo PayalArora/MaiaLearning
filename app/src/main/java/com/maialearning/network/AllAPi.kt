@@ -98,9 +98,6 @@ interface AllAPi {
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
     ): Deferred<JsonObject>
-        @Path("id")  id:String,
-        @Header("Authorization")  AutToken:String
-    ):  Deferred<NotesModel>
 
     @GET("get_jwt_token")
     fun getJWTToken(
