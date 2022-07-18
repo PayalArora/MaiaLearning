@@ -11,6 +11,10 @@ import com.maialearning.network.BaseApplication
 import com.maialearning.repository.LoginRepository
 import com.maialearning.repository.LoginRepositoryImpl
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.viewmodel.HomeViewModel
+import com.maialearning.viewmodel.LoginNewModel
+import com.maialearning.viewmodel.LoginViewModel
+import com.maialearning.viewmodel.ProfileViewModel
 import com.maialearning.viewmodel.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -50,16 +54,12 @@ fun showLog(tag: String?, content: String) {
 }
 
 val appModules = module {
-    var url = CAT_API_BASE_URL
-    if (URL.BASEURL == 2){
-        url = CAT_API_MSG_URL
-    }
     // The Retrofit service using our custom HTTP client instance as a singleton
     single {
         createWebService<AllAPi>(
             okHttpClient = createHttpClient(),
             factory = RxJava2CallAdapterFactory.create(),
-            baseUrl = url
+            baseUrl = CAT_API_BASE_URL
         )
     }
     // Tells Koin how to create an instance of CatRepository
@@ -71,6 +71,7 @@ val appModules = module {
     viewModel { HomeViewModel(catRepository = get())}
     viewModel { DashboardViewModel(catRepository = get())}
     viewModel { MessageViewModel(catRepository = get())}
+    viewModel { ProfileViewModel(catRepository = get())}
 }
 fun createHttpClient(): OkHttpClient {
     val client = OkHttpClient.Builder()

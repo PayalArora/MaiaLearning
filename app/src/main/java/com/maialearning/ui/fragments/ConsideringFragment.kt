@@ -58,8 +58,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         dialogP = showLoadingDialog(requireContext())
         initObserver()
         homeModel.getConsiderList("")
-
-
     }
 
     private fun initObserver() {

@@ -255,6 +255,7 @@ class LoginActivity : AppCompatActivity() {
 
                 if(binding.rememberMe.isChecked)
                 SharedHelper(this).login = "1"
+                SharedHelper(this).id=it.user?.uid
                 loginWork()
             }
         }

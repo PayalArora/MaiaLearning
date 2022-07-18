@@ -370,6 +370,19 @@
     <string name="helping">Helping distribute food due to COVID some longer description and talking about some things I\'ve done</string>
     <string name="edit">Edit</string>
     <string name="waiting_for_verification">Waiting for Verification...</string>
+    <string name="err_dob">Please enter dob!</string>
+    <string name="add_citizen">Add citizenship</string>
+    <string name="err_classof">Please enter class year!</string>
+    <string name="err_application_year">Please select application year</string>
+    <string name="err_gender">Please select gender</string>
+    <string name="not_hisponic">Not Hisponic or Latino</string>
+    <string name="hisponic">Hisponic or Latino</string>
+    <string name="unknown">Unknown</string>
+    <string name="err_gapyear">Please enter gap year</string>
+    <string name="err_gapyearnote">Please enter gap year note</string>
+    <string name="err_country">Please select country first</string>
+    <string name="err_state">Please select state first</string>
+    <string name="administrative_area">Administrative Area</string>
 
 
     <string-array name="decision_filter">

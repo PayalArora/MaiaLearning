@@ -4,7 +4,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'kotlin-kapt'
-   id "kotlinx-serialization"
+    id "kotlinx-serialization"
 }
 
 android {
@@ -84,5 +84,14 @@ dependencies {
     //lottie
     implementation 'com.airbnb.android:lottie:3.0.3'
     implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+// Image display
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    // Circular image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+// COuntry code
+    implementation 'com.github.gbksoft:GBKCountryCodePicker:v1.0.0'
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'

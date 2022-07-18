@@ -1,13 +1,11 @@
 package com.maialearning.network
 
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
 
 import com.maialearning.util.prefhandler.SharedHelper
 import kotlinx.coroutines.Deferred
-import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.http.*
 
@@ -70,6 +68,36 @@ interface AllAPi {
 
     @GET("get_notes_for_student/{id}")
     fun getNotes(
+        @Path("id") id: String,
+        @Header("Authorization") AutToken: String
+    ): Deferred<NotesModel>
+
+    @POST("edit-phone-values")
+    @FormUrlEncoded
+    fun updateSMSSetting(
+        @Header("Authorization") AutToken: String,
+        @Field("nid") n_id: String,
+        @Field("phone_number") phone_no: String,
+        @Field("phone_country_code") country_code: String,
+        @Field("sms_enable") sms: String
+    ): Deferred<JsonArray>
+
+    @POST("user_my_account_info")
+    fun updateEmail(
+        @Header("Authorization") AutToken: String,
+        @Body updateUserData: UpdateUserData
+    ): Deferred<JsonArray>
+
+    @GET("get_country_list")
+    fun getCountries(
+        @Header("Authorization") Authorization: String
+    ): Deferred<JsonObject>
+
+    @GET("get-state-list-country/{id}")
+    fun getStates(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<JsonObject>
         @Path("id")  id:String,
         @Header("Authorization")  AutToken:String
     ):  Deferred<NotesModel>

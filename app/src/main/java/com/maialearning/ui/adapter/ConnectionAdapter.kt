@@ -1,13 +1,18 @@
 package com.maialearning.ui.adapter
 
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ConnectionsItemRowBinding
-import com.maialearning.databinding.ReciepentItemBinding
+import com.maialearning.model.ParentItem
+import java.util.*
 
-class ConnectionAdapter (val onItemClick: OnItemClick) :
+class ConnectionAdapter(
+    val connections: List<ParentItem?>?,
+    val onItemClick: OnItemClick
+) :
     RecyclerView.Adapter<ConnectionAdapter.ViewHolder>() {
     var isSelected = false
 
@@ -15,7 +20,8 @@ class ConnectionAdapter (val onItemClick: OnItemClick) :
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(val binding: ConnectionsItemRowBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: ConnectionsItemRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
         }
@@ -25,20 +31,26 @@ class ConnectionAdapter (val onItemClick: OnItemClick) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
         val binding = ConnectionsItemRowBinding.inflate(inflater, viewGroup, false)
-
         return ViewHolder(binding)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-
+        viewHolder.binding.nameTxt.setText(connections!!.get(position)!!.firstName)
+        viewHolder.binding.emailTxt.setText(connections!!.get(position)!!.email)
+        viewHolder.binding.dateTxt.setText(getDate(connections!!.get(position)!!.connectedDate!!.toLong()))
     }
 
+
+    fun getDate(timestamp: Long) :String {
+        val calendar = Calendar.getInstance(Locale.ENGLISH)
+        calendar.timeInMillis = timestamp * 1000L
+        val date = DateFormat.format("MM/dd/yyyy",calendar).toString()
+        return date
+    }
     override fun getItemCount(): Int {
-        return 4
+        return connections!!.size
     }
-
 
 
 }
