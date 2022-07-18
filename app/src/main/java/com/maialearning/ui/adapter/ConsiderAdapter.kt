@@ -46,7 +46,7 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayL
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
-            uniName.text=array[position].naviance_college_name
+            //uniName.text=array[position].naviance_college_name
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()
 

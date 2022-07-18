@@ -52,10 +52,10 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
     private fun init() {
-        dialogP = showLoadingDialog(requireContext())
-        dialogP.show()
-        initObserver()
-        homeModel.getApplyList("")
+//        dialogP = showLoadingDialog(requireContext())
+//        dialogP.show()
+//        initObserver()
+//        homeModel.getApplyList("")
 
 
     }
@@ -89,7 +89,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
         }
     }
     private fun setAdapter() {
-//        mBinding.applyingList.adapter = ApplyingAdapter(this)
+       mBinding.applyingList.adapter = ApplyingAdapter(this, arrayListOf())
     }
 
     private fun bottomSheetType(layoutId:Int, rbId:Int, type:Int) {

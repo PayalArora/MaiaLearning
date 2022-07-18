@@ -145,9 +145,9 @@ class LoginActivity : AppCompatActivity() {
         viewModel.microUser.observe(this) {
             it?.let {
                 viewModel.signOut()
-                //dialog.show()
-                loginModel.microLogin(it.uid?:"")
-               // startActivity(Intent(this, DashboardActivity::class.java))
+                dialog.show()
+               //loginModel.microLogin(  it.getIdToken(false)?.result?.token.toString()?:"")
+                startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
     loginModel.showLoading.observe(this){
@@ -245,6 +245,15 @@ class LoginActivity : AppCompatActivity() {
                 dialog.dismiss()
                 println("Name "+it?.userName)
                 SharedHelper(this).authkey=it.accessToken
+                it.user.let {
+                    it?.messageId.let {
+                        if (it != null) {
+                            SharedHelper(this).messageId= it
+                        }
+                    }
+                }
+
+                if(binding.rememberMe.isChecked)
                 SharedHelper(this).login = "1"
                 loginWork()
             }

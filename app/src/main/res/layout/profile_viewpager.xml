@@ -1070,8 +1070,43 @@
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_baseline_arrow_forward_24" />
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/logout_lay"
+                    android:visibility="invisible"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="@dimen/_25dp"
+                        android:layout_height="@dimen/_25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:rotation="180"
+                        android:src="@drawable/logout" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/_10dp"
+                        android:fontFamily="@font/inter"
+                        android:gravity="center_vertical"
+                        android:text="@string/logout"
+                        android:textColor="@color/univ_name"
+                        android:textSize="@dimen/_16sp" />
+                    <ImageView
+                        android:backgroundTint="@color/univ_name"
+                        android:layout_marginLeft="@dimen/_10dp"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_baseline_arrow_forward_24" />
+                </LinearLayout>
 
             </RelativeLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

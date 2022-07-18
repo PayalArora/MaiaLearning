@@ -1,20 +1,20 @@
 package com.maialearning.repository
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.model.Consider
-import com.maialearning.model.ForgetModel
-import com.maialearning.model.LoginNewModel
-import com.maialearning.model.ProfileResponse
-import com.maialearning.model.NotesModel
+import com.maialearning.model.*
 import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.network.UseCaseResult
+import com.maialearning.util.CAT_API_BASE_URL
+import com.maialearning.util.CAT_API_MSG_URL
 import com.maialearning.util.ORIGIN
 
 import retrofit2.HttpException
 
 import retrofit2.Response
 import com.maialearning.util.prefhandler.SharedHelper
+import org.json.JSONArray
 import org.json.JSONObject
 
 interface LoginRepository {
@@ -33,10 +33,11 @@ interface LoginRepository {
     suspend fun getConsiderList(id: String): UseCaseResult<JsonObject>
     suspend fun getNotes(id: String): UseCaseResult<NotesModel>
     suspend fun getApplyList(id: String): UseCaseResult<JsonObject>
+    suspend fun getJWTToken(): UseCaseResult<String>
+    suspend fun getInbox(): UseCaseResult<InboxResponse>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
-
 
     override suspend fun getUserLogin(
         username: String,
@@ -72,7 +73,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getMicroLogin(token: String): UseCaseResult<LoginNewModel> {
         return try {
-            val result = catApi.microLoginAsync(token).await()
+            val result = catApi.microLoginAsync(ORIGIN, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -131,6 +132,29 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getApplyList(id: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.applyListAsync("9375","Bearer "   + SharedHelper(BaseApplication.applicationContext()).authkey).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        }catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getJWTToken(): UseCaseResult<String> {
+        return try {
+            val result = catApi.getJWTToken("Bearer "+ SharedHelper(BaseApplication.applicationContext()).authkey).await()
+            UseCaseResult.Success(result.get(0).toString())
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        }catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getInbox(): UseCaseResult<InboxResponse> {
+        return try {
+            val result = catApi.getInbox( CAT_API_MSG_URL,SharedHelper(BaseApplication.applicationContext()).jwtToken,
+                SharedHelper(BaseApplication.applicationContext()).messageId).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

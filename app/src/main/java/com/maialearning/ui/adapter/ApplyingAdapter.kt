@@ -39,7 +39,7 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
-            uniName.text=array[position].naviance_college_name
+          //  uniName.text=array[position].naviance_college_name
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)

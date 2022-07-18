@@ -10,7 +10,7 @@ import com.maialearning.calbacks.OnItemClickType
 import com.maialearning.model.NotesModel
 
 
-class NotesAdapter(val onItemClick: OnItemClickType,var array: NotesModel) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
+class NotesAdapter(val onItemClick: OnItemClickType,val array: NotesModel?) : RecyclerView.Adapter<NotesAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -31,18 +31,24 @@ class NotesAdapter(val onItemClick: OnItemClickType,var array: NotesModel) : Rec
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.binding.textTitle.text= array[position].noteTitle
-        viewHolder.binding.textDescription.text= Html.fromHtml(array[position].noteDescription)
-        viewHolder.binding.textDate.text= array[position].noteCreationDate+" "+ array[position].authorName
-        viewHolder. binding.textDescription.setOnClickListener { onItemClick.onClickOpt(position, "root") }
-        viewHolder.binding.apply {
-            commentList.setOnClickListener { onItemClick.onClickOpt(position, "comment") }
+        if (array!= null) {
+            viewHolder.binding.textTitle.text = array[position].noteTitle
+            viewHolder.binding.textDescription.text = Html.fromHtml(array[position].noteDescription)
+            viewHolder.binding.textDate.text =
+                array[position].noteCreationDate + " " + array[position].authorName
+            viewHolder.binding.textDescription.setOnClickListener {
+                onItemClick.onClickOpt(position,
+                    "root")
+            }
+            viewHolder.binding.apply {
+                commentList.setOnClickListener { onItemClick.onClickOpt(position, "comment") }
+            }
         }
 
     }
 
     override fun getItemCount(): Int {
-        return array.size
+        return array?.size?:0
     }
 
 }

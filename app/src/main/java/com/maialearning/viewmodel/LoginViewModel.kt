@@ -7,11 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
+
 import com.google.firebase.ktx.Firebase
 import com.maialearning.R
 import com.maialearning.calbacks.OnSignInStartedListener
@@ -57,16 +57,19 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
         val provider = OAuthProvider.newBuilder("microsoft.com")
         // Force re-consent.
         provider.addCustomParameter("prompt", "consent");
-        val pendingResultTask: Task<AuthResult>? = auth.getPendingAuthResult()
+
+        val pendingResultTask: Task<AuthResult>? =  auth.getPendingAuthResult()
         if (pendingResultTask != null) {
-              pendingResultTask
+            pendingResultTask
                 .addOnSuccessListener(
-                    OnSuccessListener {
-                        _microUser.value = it.user
-                        println("cred"+ it.getCredential().toString())
-                    })
+                     OnSuccessListener<AuthResult>{
+
+                            _microUser.value = it.user
+                            println("cred" + it.getCredential().toString())
+
+                     })
                 .addOnFailureListener(
-                    OnFailureListener {
+                    {
                         println( it.message)
                     })
         } else {
@@ -76,16 +79,26 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
 
             auth
                 .startActivityForSignInWithProvider( /* activity= */activity, provider.build())
-                .addOnSuccessListener(
+                .addOnCompleteListener(
                     {
-                        _microUser.value = it.user
+                        if(it.isSuccessful) {
+                            val result = it.result
+
+
+                           _microUser.value = result.user
+                            println("cred 1" + result.getCredential().toString())
+                            //val cred: OAuthCredential = result.getCredential() as OAuthCredential
+                        }
+
                      //   println(( "name "+it.user?.displayName))
                     })
                 .addOnFailureListener(
-                    OnFailureListener {
+                    {
                         // Handle failure.
                         println( it.message)
                     })
-        }
+
+
+     }
     }
 }

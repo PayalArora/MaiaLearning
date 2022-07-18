@@ -321,6 +321,7 @@
                     android:layout_height="20dp"/>
 
                 <CheckBox
+                    android:id="@+id/remember_me"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_40dp"
                     android:layout_margin="@dimen/_20dp"

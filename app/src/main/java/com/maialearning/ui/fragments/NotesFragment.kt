@@ -17,10 +17,13 @@ import com.maialearning.databinding.ConsideringLayoutBinding
 import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.model.ConsiderModel
+import com.maialearning.model.NotesModel
 import com.maialearning.ui.activity.NotesDetailActivity
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.NotesAdapter
+import com.maialearning.util.DESCRIPTION
+import com.maialearning.util.TITLE
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
@@ -31,6 +34,7 @@ class NotesFragment : Fragment(), OnItemClickType {
     private lateinit var mBinding: LayoutRecyclerviewBinding
     private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
+    private var notesModel:NotesModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +61,7 @@ class NotesFragment : Fragment(), OnItemClickType {
         homeModel.notesObserver.observe(requireActivity()) {
             it?.let {
                 dialogP?.dismiss()
+                notesModel = it
 
                 mBinding.recyclerList.adapter =NotesAdapter(this,it)
 
@@ -65,7 +70,7 @@ class NotesFragment : Fragment(), OnItemClickType {
         }
     }
     private fun setAdapter() {
-//        mBinding.recyclerList.adapter =NotesAdapter(this)
+       mBinding.recyclerList.adapter =NotesAdapter(this, null)
    
     }
 
@@ -74,7 +79,10 @@ class NotesFragment : Fragment(), OnItemClickType {
             bottomSheetComment()
         }
         else if (type == "root"){
-            startActivity(Intent(requireActivity(), NotesDetailActivity::class.java))
+            var intent = Intent(requireActivity(), NotesDetailActivity::class.java)
+            intent.putExtra(TITLE, notesModel?.get(positiion)?.noteTitle)
+            intent.putExtra(DESCRIPTION, notesModel?.get(positiion)?.noteDescription )
+            startActivity(intent)
         }
     }
     private fun bottomSheetComment() {

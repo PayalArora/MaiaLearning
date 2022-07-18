@@ -30,8 +30,6 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
     val notesObserver = MutableLiveData<NotesModel>()
     val showError = SingleLiveEvent<String>()
 
-
-
     fun getConsiderList(id:String) {
         showLoading.value = true
         Coroutines.mainWorker {

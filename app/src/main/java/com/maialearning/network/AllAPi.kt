@@ -1,14 +1,13 @@
 package com.maialearning.network
 
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.model.Consider
-import com.maialearning.model.ForgetModel
+import com.maialearning.model.*
 
-import com.maialearning.model.LoginNewModel
-import com.maialearning.model.NotesModel
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.model.ProfileResponse
 import kotlinx.coroutines.Deferred
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.http.*
 
@@ -34,11 +33,11 @@ interface AllAPi {
     @POST("azure_ad_oauth_login")
     @FormUrlEncoded
     fun microLoginAsync(
-        @Field("token") id_token: String
+        @Header("origin") origin:String,
+        @Field("token") token: String
     ):  Deferred<LoginNewModel>
 
  @GET("user_my_account_info/{id}")
-    @FormUrlEncoded
     fun getProfile(
      @Header("Authorization") Authorization: String,
      @Path("id") id: String
@@ -74,4 +73,21 @@ interface AllAPi {
         @Path("id")  id:String,
         @Header("Authorization")  AutToken:String
     ):  Deferred<NotesModel>
+
+    @GET("get_jwt_token")
+    fun getJWTToken(
+        @Header("Authorization")  AutToken:String
+    ):  Deferred<JsonArray>
+
+//    @GET("{id}/inbox")
+//    fun getInbox(
+//        @Header("x-access-token")  JwtToken:String,
+//        @Path("id")  id:String,
+//    ):  Deferred<InboxResponse>
+
+    @GET
+    fun getInbox(@Url url: String,
+                 @Header("x-access-token")  JwtToken:String,
+                 @Path ("id") id: String,
+    ):  Deferred<InboxResponse>
 }

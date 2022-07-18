@@ -69,8 +69,8 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
 
     fun microLogin(token: String) {
         showLoading.value = true
-        Coroutines.ioWorker {
-            val result = withContext(Dispatchers.IO) {
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
                 catRepository.getMicroLogin(
                     token
                 )

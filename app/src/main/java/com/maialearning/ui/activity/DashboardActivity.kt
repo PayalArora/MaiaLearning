@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.maialearning.R
 import com.maialearning.databinding.ActivityDashboardBinding
 import com.maialearning.ui.bottomsheets.ProfileFilter
@@ -14,12 +15,16 @@ import com.maialearning.ui.fragments.HomeFragment
 import com.maialearning.ui.fragments.MessageFragment
 import com.maialearning.ui.fragments.NotesFragment
 import com.maialearning.ui.fragments.ShortcutFragment
+import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.viewmodel.DashboardViewModel
+import com.maialearning.viewmodel.HomeViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
     public lateinit var toolbarBinding: Toolbar
-
+    private val dashboardViewModel: DashboardViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,6 +39,11 @@ class DashboardActivity : AppCompatActivity() {
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_prof).setOnClickListener {
             ProfileFilter(this, layoutInflater).showDialog()
         }
+        dashboardViewModel.getJwtToken()
+        dashboardViewModel.jwtObserver.observe(this,  {
+            SharedHelper(this).jwtToken = it
+
+        })
 
         loadFragment(HomeFragment())
         setListeners()

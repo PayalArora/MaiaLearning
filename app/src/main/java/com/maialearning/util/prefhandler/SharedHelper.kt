@@ -25,4 +25,14 @@ class SharedHelper(var context: Context) {
             sharedPreference!!.putKey("authkey", authkey)
         }
 
+    var jwtToken:String
+        get() = sharedPreference!!.getKey("jwtToken")
+        set(authkey) {
+            sharedPreference!!.putKey("jwtToken", authkey)
+        }
+    var messageId:String
+        get() = sharedPreference!!.getKey("messageId")
+        set(authkey) {
+            sharedPreference!!.putKey("messageId", authkey)
+        }
 }

@@ -50,7 +50,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = ConsideringLayoutBinding.inflate(inflater, container, false)
-        init()
+       // init()
         return mBinding.root
     }
 
@@ -93,7 +93,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     }
 
     private fun setAdapter() {
-//        mBinding.consideringList.adapter = ConsiderAdapter(this)
+       mBinding.consideringList.adapter = ConsiderAdapter(this, arrayListOf())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

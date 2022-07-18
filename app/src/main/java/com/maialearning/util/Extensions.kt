@@ -11,9 +11,7 @@ import com.maialearning.network.BaseApplication
 import com.maialearning.repository.LoginRepository
 import com.maialearning.repository.LoginRepositoryImpl
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.viewmodel.HomeViewModel
-import com.maialearning.viewmodel.LoginNewModel
-import com.maialearning.viewmodel.LoginViewModel
+import com.maialearning.viewmodel.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -25,8 +23,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 //const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
+const val CAT_API_MSG_URL = "https://msg-staging.maialearning.com/v1/messaging/users/{id}/inbox"
 const val CAT_API_BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
+const val TITLE = "title"
+const val DESCRIPTION = "description"
+
+object URL{
+    var BASEURL = 0
+}
 
 fun Context.isNetworkConnected(): Boolean {
     val connectivityManager: ConnectivityManager? =
@@ -45,12 +50,16 @@ fun showLog(tag: String?, content: String) {
 }
 
 val appModules = module {
+    var url = CAT_API_BASE_URL
+    if (URL.BASEURL == 2){
+        url = CAT_API_MSG_URL
+    }
     // The Retrofit service using our custom HTTP client instance as a singleton
     single {
         createWebService<AllAPi>(
             okHttpClient = createHttpClient(),
             factory = RxJava2CallAdapterFactory.create(),
-            baseUrl = CAT_API_BASE_URL
+            baseUrl = url
         )
     }
     // Tells Koin how to create an instance of CatRepository
@@ -60,6 +69,8 @@ val appModules = module {
         LoginNewModel(catRepository = get())
     }
     viewModel { HomeViewModel(catRepository = get())}
+    viewModel { DashboardViewModel(catRepository = get())}
+    viewModel { MessageViewModel(catRepository = get())}
 }
 fun createHttpClient(): OkHttpClient {
     val client = OkHttpClient.Builder()

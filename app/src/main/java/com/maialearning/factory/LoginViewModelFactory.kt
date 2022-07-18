@@ -11,7 +11,6 @@ public class LoginViewModelFactory(
     private val listener: OnSignInStartedListener
 ) : ViewModelProvider.Factory {
 
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
 

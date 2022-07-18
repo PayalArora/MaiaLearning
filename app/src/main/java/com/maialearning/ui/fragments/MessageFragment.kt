@@ -24,8 +24,13 @@ import com.maialearning.databinding.MessageLayoutBinding
 import com.maialearning.ui.activity.NewMessageActivity
 import com.maialearning.ui.adapter.MessageAdapter
 import com.maialearning.ui.adapter.NotesAdapter
+import com.maialearning.util.URL
+import com.maialearning.viewmodel.DashboardViewModel
+import com.maialearning.viewmodel.MessageViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MessageFragment : Fragment(), OnItemClick {
+    private val messageViewModel: MessageViewModel by viewModel()
     private lateinit var mBinding: MessageLayoutBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +43,8 @@ class MessageFragment : Fragment(), OnItemClick {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = MessageLayoutBinding.inflate(inflater, container, false)
+        URL.BASEURL = 2
+        messageViewModel.getInbox()
         setAdapter()
           return mBinding.root
     }

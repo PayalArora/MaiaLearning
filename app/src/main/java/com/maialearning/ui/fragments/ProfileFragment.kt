@@ -1,6 +1,8 @@
 package com.maialearning.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,9 +16,11 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.MessageLayoutBinding
 import com.maialearning.databinding.ProfileViewpagerBinding
+import com.maialearning.ui.activity.LoginActivity
 import com.maialearning.ui.activity.NewMessageActivity
 import com.maialearning.ui.bottomsheets.PrimaryEmail
 import com.maialearning.ui.bottomsheets.ProfileFilter
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.LoginNewModel
 import com.maialearning.viewmodel.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +57,21 @@ class ProfileFragment : Fragment(), OnItemClick {
         mBinding.emailLay.setOnClickListener {
             PrimaryEmail(requireActivity(), layoutInflater).showDialog()
         }
+        mBinding.logoutLay.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage("Are you sure you want to Logout?")
+                .setPositiveButton("Yes",
+                    DialogInterface.OnClickListener { dialog, which -> logout() })
+                .setNegativeButton("No", null)
+                .show() }
+    }
+    private fun logout() {
+        SharedHelper(requireContext()).login = "0"
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // To clean up all activities
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     override fun onClick(positiion: Int) {
