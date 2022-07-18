@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ConnectionsViewpagerBinding
-import com.maialearning.databinding.SettingsViewpagerBinding
 import com.maialearning.ui.adapter.ConnectionAdapter
-import com.maialearning.ui.adapter.RecipentAdapter
+import com.maialearning.viewmodel.ProfileViewModel
 
-class ConnectionsFragment : Fragment(), OnItemClick {
+class ConnectionsFragment (val viewModel: ProfileViewModel): Fragment(), OnItemClick {
     private lateinit var mBinding: ConnectionsViewpagerBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +31,12 @@ class ConnectionsFragment : Fragment(), OnItemClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.connection_list)
-        recyclerView.adapter = ConnectionAdapter(this)
+//        recyclerView.adapter = ConnectionAdapter(this)
+        viewModel.observer.observe(requireActivity(), {
+            recyclerView.adapter = ConnectionAdapter(it.parent,this)
+        })
     }
+
 
     override fun onClick(positiion: Int) {
 

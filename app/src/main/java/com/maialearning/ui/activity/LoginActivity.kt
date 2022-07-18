@@ -246,6 +246,7 @@ class LoginActivity : AppCompatActivity() {
                 println("Name "+it?.userName)
                 SharedHelper(this).authkey=it.accessToken
                 SharedHelper(this).login = "1"
+                SharedHelper(this).id=it.user?.uid
                 loginWork()
             }
         }

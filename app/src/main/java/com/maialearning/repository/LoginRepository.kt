@@ -1,11 +1,8 @@
 package com.maialearning.repository
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.model.Consider
-import com.maialearning.model.ForgetModel
-import com.maialearning.model.LoginNewModel
-import com.maialearning.model.ProfileResponse
-import com.maialearning.model.NotesModel
+import com.maialearning.model.*
 import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.network.UseCaseResult
@@ -33,6 +30,18 @@ interface LoginRepository {
     suspend fun getConsiderList(id: String): UseCaseResult<JsonObject>
     suspend fun getNotes(id: String): UseCaseResult<NotesModel>
     suspend fun getApplyList(id: String): UseCaseResult<JsonObject>
+    suspend fun updateSmsNotification(
+        token: String,
+        id: String,
+        ph: String,
+        code: String,
+        sms: String
+    ): UseCaseResult<String>
+
+  suspend  fun updateEmail(token: String, userData: UpdateUserData) :UseCaseResult<String>
+   suspend fun getCountries(token: String)  :UseCaseResult<JsonObject>
+    suspend fun getStates(token: String,id: String)  :UseCaseResult<JsonObject>
+
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -48,7 +57,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         } catch (ex: HttpException) {
             println(ex.stackTrace)
             UseCaseResult.Error(ex)
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             println(ex.stackTraceToString())
             UseCaseResult.Exception(ex)
         }
@@ -76,18 +85,18 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
         }
     }
 
     override suspend fun getForgetPassword(email: String): UseCaseResult<ForgetModel> {
         return try {
-            val result = catApi.forgetPassAsync(email,"email").await()
+            val result = catApi.forgetPassAsync(email, "email").await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
         }
     }
@@ -97,47 +106,103 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         id: String,
     ): UseCaseResult<ProfileResponse> {
         return try {
-            val result = catApi.getProfile( id_token, id).await()
+            val result = catApi.getProfile(id_token, id).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
         }
     }
 
     override suspend fun getConsiderList(id: String): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.considerListAsync("Bearer "   + SharedHelper(BaseApplication.applicationContext()).authkey,"9375").await()
+            val result = catApi.considerListAsync(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                "9375"
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
         }
     }
 
     override suspend fun getNotes(id: String): UseCaseResult<NotesModel> {
         return try {
-            val result = catApi.getNotes("9375","Bearer "   + SharedHelper(BaseApplication.applicationContext()).authkey).await()
+            val result = catApi.getNotes(
+                "9375",
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
         }
     }
 
     override suspend fun getApplyList(id: String): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.applyListAsync("9375","Bearer "   + SharedHelper(BaseApplication.applicationContext()).authkey).await()
+            val result = catApi.applyListAsync(
+                "9375",
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
-        }catch (ex: Exception) {
+        } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
         }
     }
 
+    override suspend fun updateSmsNotification(
+        token: String,
+        id: String,
+        ph: String,
+        code: String,
+        sms: String
+    ): UseCaseResult<String> {
+        return try {
+            val result = catApi.updateSMSSetting(token, id, ph, code, sms).await()
+            UseCaseResult.Success(result.toString())
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun updateEmail(token: String, updateUserData:UpdateUserData): UseCaseResult<String> {
+        return try {
+            val result = catApi.updateEmail(token, updateUserData).await()
+            UseCaseResult.Success(result.toString())
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }    }
+
+    override suspend fun getCountries(token: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getCountries(token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getStates(token: String,id:String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getStates(id,token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
 
 }

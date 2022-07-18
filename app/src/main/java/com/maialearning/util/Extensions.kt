@@ -14,6 +14,7 @@ import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
 import com.maialearning.viewmodel.LoginNewModel
 import com.maialearning.viewmodel.LoginViewModel
+import com.maialearning.viewmodel.ProfileViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -60,6 +61,7 @@ val appModules = module {
         LoginNewModel(catRepository = get())
     }
     viewModel { HomeViewModel(catRepository = get())}
+    viewModel { ProfileViewModel(catRepository = get())}
 }
 fun createHttpClient(): OkHttpClient {
     val client = OkHttpClient.Builder()

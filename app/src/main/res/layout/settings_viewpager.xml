@@ -87,6 +87,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10dp">
 
@@ -103,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:layout_toLeftOf="@+id/_receive_sms_btn"
+                    android:layout_toLeftOf="@+id/receive_sms_btn_other"
                     android:layout_toEndOf="@+id/school_name_icon"
                     android:orientation="vertical">
 
@@ -130,7 +131,7 @@
                 </LinearLayout>
 
                 <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/_receive_sms_btn"
+                    android:id="@+id/receive_sms_btn_other"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -145,6 +146,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginBottom="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_10dp">
 

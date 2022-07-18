@@ -95,6 +95,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/phone_lay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
@@ -152,6 +153,7 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
+                        android:id="@+id/dob_lay"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
 
@@ -202,11 +204,13 @@
                             android:layout_centerVertical="true"
                             android:padding="@dimen/_5dp"
                             android:rotation="180"
+                            android:visibility="gone"
                             android:src="@drawable/back_arrow" />
 
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/citizen_lay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
@@ -312,6 +316,7 @@
                             android:layout_height="@dimen/_20dp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
+                            android:visibility="gone"
                             android:padding="@dimen/_5dp"
                             android:rotation="180"
                             android:src="@drawable/back_arrow" />
@@ -370,6 +375,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:padding="@dimen/_5dp"
+                            android:visibility="gone"
                             android:rotation="180"
                             android:src="@drawable/back_arrow" />
 
@@ -404,6 +410,7 @@
                         android:textSize="@dimen/_16sp" />
 
                     <RelativeLayout
+                        android:id="@+id/grad_year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -459,6 +466,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/application_year"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
@@ -516,6 +524,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/country_lay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
@@ -572,6 +581,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/gender_lay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
@@ -628,6 +638,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/ethnicity_lay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
@@ -686,6 +697,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/gap_year"
                         android:layout_marginTop="@dimen/_10dp"
                         android:layout_marginBottom="@dimen/_15dp">
 
@@ -820,6 +832,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:padding="@dimen/_5dp"
+                            android:visibility="gone"
                             android:rotation="180"
                             android:src="@drawable/back_arrow" />
 
@@ -876,6 +889,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:padding="@dimen/_5dp"
+                            android:visibility="gone"
                             android:rotation="180"
                             android:src="@drawable/back_arrow" />
 
@@ -918,6 +932,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_5dp"
+                                android:id="@+id/address_two"
                                 android:fontFamily="@font/inter"
                                 android:gravity="center_vertical"
                                 android:text="@string/school_city"
@@ -932,6 +947,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:padding="@dimen/_5dp"
+                            android:visibility="gone"
                             android:rotation="180"
                             android:src="@drawable/back_arrow" />
 
@@ -991,6 +1007,7 @@
                             android:layout_centerVertical="true"
                             android:padding="@dimen/_5dp"
                             android:rotation="180"
+                            android:visibility="gone"
                             android:src="@drawable/back_arrow" />
 
                     </RelativeLayout>

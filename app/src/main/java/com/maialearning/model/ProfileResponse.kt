@@ -161,7 +161,7 @@ data class Info(
 	val race: List<Any?>? = null,
 
 	@field:SerializedName("citizenship")
-	val citizenship: List<String?>? = null,
+	var citizenship: ArrayList<String?>? = null,
 
 	@field:SerializedName("profile_pic")
 	val profilePic: String? = null,
