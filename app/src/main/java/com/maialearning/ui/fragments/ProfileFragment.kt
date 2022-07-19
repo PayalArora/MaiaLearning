@@ -1,10 +1,10 @@
 package com.maialearning.ui.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Resources
 import android.os.Build
@@ -25,15 +25,13 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.PrimaryEmailSheetBinding
 import com.maialearning.databinding.ProfileViewpagerBinding
-import com.maialearning.model.CountryData
-import com.maialearning.model.ProfileResponse
-import com.maialearning.model.UpdateUserData
+import com.maialearning.model.*
 import com.maialearning.ui.activity.LoginActivity
 import com.maialearning.ui.adapter.CitizenshipAdapter
+import com.maialearning.ui.adapter.EthnicityAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.ProfileViewModel
-import okhttp3.internal.notify
 import org.json.JSONException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,19 +43,14 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
     private lateinit var mBinding: ProfileViewpagerBinding
     var dialog: BottomSheetDialog? = null
     private lateinit var progress: Dialog
-    var profileResponse: ProfileResponse = ProfileResponse()
+    private var profileResponse: ProfileResponse = ProfileResponse()
+    private var ethinicityList = arrayListOf<String>()
 
-
-    //    private val profileModel: ProfileViewModel by viewModel()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         mBinding = ProfileViewpagerBinding.inflate(inflater, container, false)
         // profileModel = ViewModelProvider.get(viewLifecycleOwner,ProfileViewModel::class.java)
@@ -67,68 +60,73 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
     }
 
     private fun profileWork() {
-        viewModel.observer.observe(requireActivity(), {
+        viewModel.observer.observe(requireActivity()) {
             profileResponse = it
             setData(it)
-        })
-        viewModel.updateObserver.observe(viewLifecycleOwner, {
+        }
+        viewModel.updateObserver.observe(viewLifecycleOwner) {
             Log.e("Response", "" + it.toString())
             progress.dismiss()
             SharedHelper(requireContext()).authkey?.let {
                 SharedHelper(requireContext()).id?.let { it1 ->
-                    viewModel.getProfile("Bearer " + it, it1)
+                    viewModel.getProfile("Bearer $it", it1)
                     dialog?.dismiss()
                     progress.dismiss()
                 }
             }
-        })
+        }
         viewModel.showError.observe(viewLifecycleOwner) {
             progress.dismiss()
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setData(it: ProfileResponse?) {
-        mBinding.emailTxt.setText(it?.info?.mail)
-        mBinding.phoneTxt.setText(it?.info?.primaryPhone)
-        mBinding.addTxt.setText(it?.info?.citizenship?.let { it1 ->
+        mBinding.emailTxt.text = it?.info?.mail
+        mBinding.phoneTxt.text = it?.info?.primaryPhone
+        mBinding.addTxt.text = it?.info?.citizenship?.let { it1 ->
             android.text.TextUtils.join(
                 ",",
                 it1
             )
-        })
-        mBinding.idTxt.setText(it?.info?.studentNumber)
-        mBinding.stateidTxt.setText(it?.info?.studentStateId)
-        mBinding.yearTxt.setText(it?.info?.gradYear)
-        mBinding.dobTxt.setText(it?.info?.dob)
-        mBinding.appYearTxt.setText(it?.info?.applicationYear)
-        mBinding.addressTxt.setText(it?.info?.administrativeArea)
-        if (it?.info?.gender.equals("F"))
-            mBinding.genderTxt.setText("Female")
+        }
+        mBinding.idTxt.text = it?.info?.studentNumber
+        mBinding.stateidTxt.text = it?.info?.studentStateId
+        mBinding.yearTxt.text = it?.info?.gradYear
+        mBinding.dobTxt.text = it?.info?.dob
+        mBinding.appYearTxt.text = it?.info?.applicationYear
+        mBinding.addressTxt.text = it?.info?.administrativeArea
+        if (it?.info?.gender == ("F"))
+            mBinding.genderTxt.text = "Female"
+        else if (it?.info?.gender == ("M"))
+            mBinding.genderTxt.text = "Male"
         else
-            mBinding.genderTxt.setText("Male")
+            mBinding.genderTxt.text = "Non-Binary"
 
-        if (it?.info?.gapYear.equals("1"))
-                mBinding.gapTxt.setText(Html.fromHtml(it?.info?.gapYearNote))
+        if (it?.info?.gapYear == ("1"))
+            mBinding.gapTxt.text = Html.fromHtml(it.info.gapYearNote)
         else
-            mBinding.gapTxt.setText("No gap year")
+            mBinding.gapTxt.text = "No gap year"
 
-        mBinding.schoolAddTxt.setText(it?.schoolInfo?.district)
-        mBinding.schoolNameTxt.setText(it?.schoolInfo?.schoolName)
-        mBinding.fullAddressTxt.setText(it?.schoolInfo?.address?.addressLine1 + "," + it?.schoolInfo?.address?.addressLine2)
-        mBinding.addressTwo.setText(it?.schoolInfo?.address?.city + "-" + it?.schoolInfo?.address?.zipcode + ", " + it?.schoolInfo?.address?.state)
-        mBinding.ceebTxt.setText(it?.schoolInfo?.ceebCode)
-        var ethnicityItem: ArrayList<String?>? = ArrayList()
+        mBinding.schoolAddTxt.text = it?.schoolInfo?.district
+        mBinding.schoolNameTxt.text = it?.schoolInfo?.schoolName
+        mBinding.fullAddressTxt.text =
+            it?.schoolInfo?.address?.addressLine1 + "," + it?.schoolInfo?.address?.addressLine2
+        mBinding.addressTwo.text =
+            it?.schoolInfo?.address?.city + "-" + it?.schoolInfo?.address?.zipcode + ", " + it?.schoolInfo?.address?.state
+        mBinding.ceebTxt.text = it?.schoolInfo?.ceebCode
+        ethinicityList.clear()
         for (i in it?.info?.ethnicity?.indices!!) {
-            ethnicityItem?.add(it?.info?.ethnicity?.get(i)?.name)
+            it.info.ethnicity[i]?.name?.let { it1 -> ethinicityList.add(it1) }
         }
 
-        mBinding.ethincityTxt.setText(ethnicityItem?.let { it1 ->
+        mBinding.ethincityTxt.text = ethinicityList.let {
             android.text.TextUtils.join(
                 ",",
-                ethnicityItem
+                ethinicityList
             )
-        })
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -164,8 +162,9 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
             AlertDialog.Builder(requireContext())
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setMessage("Are you sure you want to Logout?")
-                .setPositiveButton("Yes",
-                    DialogInterface.OnClickListener { dialog, which -> logout() })
+                .setPositiveButton(
+                    "Yes"
+                ) { dialog, _ -> logout() }
                 .setNegativeButton("No", null)
                 .show()
         }
@@ -186,264 +185,320 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
     }
 
     //    {"userdata":{"uid":"9375","first_name":"st1003(Test)","last_name":"last nametest","phone_number":{"phone_number":"16164336312","country_code":"1"},"mail":"st1003@mailinator.com","secondary_email":null,"gender":"F","country":"US","administrative_area":"ID","locality":"","postal_code":"","thoroughfare":"address1","premise":"","middle_name":null,"nick_name":null,"citizenship":[],"grad_year":2021,"application_year":"2022","grade":"12","gap_year":"0","gap_year_note":"","efc":null,"state_of_residency":null,"race":[],"ethnicity":["9"]}}
+    @SuppressLint("NotifyDataSetChanged")
     private fun clickListener(
         key: String,
         sheetBinding: PrimaryEmailSheetBinding,
         dialog: BottomSheetDialog
     ) {
         var citizens: ArrayList<String?>? = ArrayList()
+        var ethinicitiesList = arrayListOf<EthnicityResponseItem?>()
+
         var country = "Select country"
         var administrative_area = "Select state"
-        if (key.equals("mail")) {
-            sheetBinding.emailEdt.setText(profileResponse.info?.mail)
-        }
 
-        if (key.equals("phone")) {
-            sheetBinding.emailEdt.visibility = View.GONE
-            sheetBinding.filters.setText(requireActivity().getString(R.string.primary_phone))
-            sheetBinding.phoneLay.visibility = View.VISIBLE
-            sheetBinding.ccp.registerCarrierNumberEditText(sheetBinding.editTextCarrierNumber);
-            sheetBinding.editTextCarrierNumber.setText(profileResponse.info?.primaryPhone)
-        } else if (key.equals("dob")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.birthday))
-            sheetBinding.emailEdt.setText(profileResponse.info?.dob)
-            sheetBinding.emailEdt.setOnClickListener {
-                showDatePicker(sheetBinding.emailEdt)
+
+        when (key) {
+            "mail" -> {
+                sheetBinding.emailEdt.setText(profileResponse.info?.mail)
             }
-        } else if (key.equals("citizenship")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.citizenship))
-            sheetBinding.emailEdt.visibility = View.GONE
-            sheetBinding.citizenShip.visibility = View.VISIBLE
-            sheetBinding.addMore.visibility = View.VISIBLE
-
-
-            if (profileResponse.info?.citizenship != null && profileResponse.info?.citizenship!!.size > 0) {
-                citizens = profileResponse.info?.citizenship
-                sheetBinding.citizenShip.adapter =
-                    CitizenshipAdapter(
-                        citizens, this
-                    )
-            } else {
-                sheetBinding.citizenShip.adapter =
-                    CitizenshipAdapter(
-                        citizens, this
-                    )
+            "phone" -> {
+                sheetBinding.emailEdt.visibility = View.GONE
+                sheetBinding.filters.text = requireActivity().getString(R.string.primary_phone)
+                sheetBinding.phoneLay.visibility = View.VISIBLE
+                sheetBinding.ccp.registerCarrierNumberEditText(sheetBinding.editTextCarrierNumber)
+                sheetBinding.editTextCarrierNumber.setText(profileResponse.info?.primaryPhone)
             }
-            sheetBinding.addMore.setOnClickListener {
-                citizens?.add("")
-                sheetBinding.citizenShip.adapter?.notifyDataSetChanged()
-            }
-        } else if (key.equals("grad_year")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.class_of))
-            sheetBinding.emailEdt.setInputType(InputType.TYPE_CLASS_PHONE)
-            sheetBinding.emailEdt.setText(profileResponse.info?.gradYear)
-        } else if (key.equals("gap_year")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.gap_year))
-                sheetBinding.emailEdt.setText(Html.fromHtml(profileResponse?.info?.gapYearNote))
-            sheetBinding.emailEdt.setHint(requireActivity().getString(R.string.gap_year))
-        } else if (key.equals("application_year")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.app_year))
-            sheetBinding.emailEdt.visibility = View.GONE
-            sheetBinding.spinnerLay.visibility = View.VISIBLE
-            var startingYear = Calendar.getInstance().get(Calendar.YEAR);
-            if (profileResponse.info?.gradYear != null)
-                startingYear = profileResponse.info?.gradYear!!.toInt()
-            val array = arrayOf("", "", "", "", "", "", "")
-            array[0] = "Select application year"
-            array[1] = "" + startingYear
-            for (i in 2 until 7) {
-                startingYear = startingYear + 1
-                array[i] = "" + startingYear
-            }
-            val adapter = ArrayAdapter(
-                sheetBinding.root.context,
-                R.layout.spinner_text, array
-            )
-            sheetBinding.spinner.adapter = adapter
-        } else if (key.equals("gender")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.gender))
-            sheetBinding.emailEdt.visibility = View.GONE
-            sheetBinding.spinnerLay.visibility = View.VISIBLE
-            val array = arrayOf("Select Gender", "Female", "Male", "Non-Binary")
-            val adapter = ArrayAdapter(
-                sheetBinding.root.context,
-                R.layout.spinner_text, array
-            )
-            sheetBinding.spinner.adapter = adapter
-        } else if (key.equals("ethnicity")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.ethincity))
-            sheetBinding.emailEdt.visibility = View.GONE
-            sheetBinding.spinnerLay.visibility = View.GONE
-            sheetBinding.ethnicityLay.visibility = View.VISIBLE
-        } else if (key.equals("country")) {
-            sheetBinding.filters.setText(requireActivity().getString(R.string.administrative_area))
-            sheetBinding.spinnerLay.visibility = View.VISIBLE
-            sheetBinding.secondSpinnerLay.visibility = View.VISIBLE
-            sheetBinding.emailEdt.visibility = View.GONE
-            SharedHelper(requireContext()).authkey?.let { viewModel.getCountries("Bearer " + it) }
-            var countries = arrayListOf<CountryData>()
-            var states = arrayListOf<CountryData>()
-            countries?.add(CountryData("Select country", "Select country"))
-            states?.add(CountryData("Select state", "Select state"))
-            val adapter = ArrayAdapter(
-                sheetBinding.root.context,
-                R.layout.spinner_text, countries
-            )
-            val stateAdapter = ArrayAdapter(
-                sheetBinding.root.context,
-                R.layout.spinner_text, states
-            )
-            sheetBinding.spinner.adapter = adapter
-            sheetBinding.secondSpinner.adapter = stateAdapter
-
-            viewModel.countryObserver.observe(viewLifecycleOwner, {
-                Log.e("Response: ", " " + it)
-                val iter: Iterator<String> = it.keySet().iterator()
-
-                while (iter.hasNext()) {
-                    val key = iter.next()
-                    try {
-                        var countryData = CountryData(key, it.get(key).toString().replace("\"", ""))
-                        countries?.add(countryData)
-                    } catch (e: JSONException) {
-                        // Something went wrong!
-                    }
+            "dob" -> {
+                sheetBinding.filters.text = requireActivity().getString(R.string.birthday)
+                sheetBinding.emailEdt.setText(profileResponse.info?.dob)
+                sheetBinding.emailEdt.setOnClickListener {
+                    showDatePicker(sheetBinding.emailEdt)
                 }
-                sheetBinding.spinner.adapter = adapter
-            })
-            /*SharedHelper(requireContext()).authkey?.let {
-                viewModel.getStates(
-                    "Bearer " + it,
-                    "US"
+            }
+            "citizenship" -> {
+                sheetBinding.filters.text = requireActivity().getString(R.string.citizenship)
+                sheetBinding.emailEdt.visibility = View.GONE
+                sheetBinding.citizenShip.visibility = View.VISIBLE
+                sheetBinding.addMore.visibility = View.VISIBLE
+
+
+                if (profileResponse.info?.citizenship != null && profileResponse.info?.citizenship!!.size > 0) {
+                    citizens = profileResponse.info?.citizenship
+                    sheetBinding.citizenShip.adapter =
+                        CitizenshipAdapter(
+                            citizens, this
+                        )
+                } else {
+                    sheetBinding.citizenShip.adapter =
+                        CitizenshipAdapter(
+                            citizens, this
+                        )
+                }
+                sheetBinding.addMore.setOnClickListener {
+                    citizens?.add("")
+                    sheetBinding.citizenShip.adapter?.notifyDataSetChanged()
+                }
+            }
+            "grad_year" -> {
+                sheetBinding.filters.text = requireActivity().getString(R.string.class_of)
+                sheetBinding.emailEdt.inputType = InputType.TYPE_CLASS_PHONE
+                sheetBinding.emailEdt.setText(profileResponse.info?.gradYear)
+            }
+            "gap_year" -> {
+                sheetBinding.filters.text = requireActivity().getString(R.string.gap_year)
+                sheetBinding.emailEdt.setText(Html.fromHtml(profileResponse.info?.gapYearNote))
+                sheetBinding.emailEdt.hint = requireActivity().getString(R.string.gap_year)
+            }
+            "application_year" -> {
+                sheetBinding.filters.text = requireActivity().getString(R.string.app_year)
+                sheetBinding.emailEdt.visibility = View.GONE
+                sheetBinding.spinnerLay.visibility = View.VISIBLE
+                var startingYear = Calendar.getInstance().get(Calendar.YEAR)
+                if (profileResponse.info?.gradYear != null)
+                    startingYear = profileResponse.info?.gradYear!!.toInt()
+                val array = arrayOf("", "", "", "", "", "", "")
+                array[0] = "Select application year"
+                array[1] = "" + startingYear
+                for (i in 2 until 7) {
+                    startingYear += 1
+                    array[i] = "" + startingYear
+                }
+                val adapter = ArrayAdapter(
+                    sheetBinding.root.context,
+                    R.layout.spinner_text, array
                 )
-            }*/
-            viewModel.stateObserver.observe(viewLifecycleOwner, {
-                Log.e("Response: ", " " + it)
-                val iter: Iterator<String> = it.keySet().iterator()
-                states = arrayListOf()
-                states?.add(CountryData("Select state", "Select state"))
-                while (iter.hasNext()) {
-                    val key = iter.next()
-                    try {
-                        var countryData = CountryData(key, it.get(key).toString().replace("\"", ""))
-                        states?.add(countryData)
-                    } catch (e: JSONException) {
-                        // Something went wrong!
+                sheetBinding.spinner.adapter = adapter
+            }
+            "gender" -> {
+                sheetBinding.filters.text = requireActivity().getString(R.string.gender)
+                sheetBinding.emailEdt.visibility = View.GONE
+                sheetBinding.spinnerLay.visibility = View.VISIBLE
+                val array = arrayOf("Select Gender", "Female", "Male", "Non-Binary")
+                val adapter = ArrayAdapter(
+                    sheetBinding.root.context,
+                    R.layout.spinner_text, array
+                )
+                sheetBinding.spinner.adapter = adapter
+            }
+            "ethnicity" -> {
+                sheetBinding.filters.text = requireActivity().getString(R.string.ethincity)
+                sheetBinding.emailEdt.visibility = View.GONE
+                sheetBinding.spinnerLay.visibility = View.GONE
+                sheetBinding.citizenShip.visibility = View.VISIBLE
+                progress.show()
+                SharedHelper(requireContext()).authkey?.let {
+                    SharedHelper(requireContext()).ethnicityTarget?.let { it1 ->
+                        viewModel.getEthnicity(
+                            "Bearer $it",
+                            it1
+                        )
                     }
                 }
+                viewModel.ethnicityObserver.observe(viewLifecycleOwner) {
+                    Log.e("Response: ", " " + it?.size)
+                    progress.dismiss()
+                    if (it != null) {
+                        ethinicitiesList = it
+                        sheetBinding.citizenShip.adapter =
+                            EthnicityAdapter(ethinicitiesList, ethinicityList, ::ethinicityClick)
+                    }
+                }
+            }
+            "country" -> {
+                sheetBinding.filters.text =
+                    requireActivity().getString(R.string.administrative_area)
+                sheetBinding.spinnerLay.visibility = View.VISIBLE
+                sheetBinding.secondSpinnerLay.visibility = View.VISIBLE
+                sheetBinding.emailEdt.visibility = View.GONE
+                sheetBinding.addressLay.visibility = View.VISIBLE
+                sheetBinding.countryTxt.visibility = View.VISIBLE
+                sheetBinding.stateTxt.visibility = View.VISIBLE
+                sheetBinding.addressEdt.setText(profileResponse.info?.thoroughfare)
+                sheetBinding.address2Edt.setText(profileResponse.info?.premise)
+                sheetBinding.cityEdt.setText(profileResponse.info?.locality)
+                sheetBinding.postalcodeEdt.setText(profileResponse.info?.postalCode)
+                progress.show()
+                SharedHelper(requireContext()).authkey?.let { viewModel.getCountries("Bearer $it") }
+                val countries = arrayListOf<CountryData>()
+                var states = arrayListOf<CountryData>()
+                countries.add(CountryData("Select country", "Select country"))
+                states.add(CountryData("Select state", "Select state"))
+                val adapter = ArrayAdapter(
+                    sheetBinding.root.context,
+                    R.layout.spinner_text, countries
+                )
                 val stateAdapter = ArrayAdapter(
                     sheetBinding.root.context,
                     R.layout.spinner_text, states
                 )
+                sheetBinding.spinner.adapter = adapter
                 sheetBinding.secondSpinner.adapter = stateAdapter
-            })
 
-            sheetBinding.spinner.setOnItemSelectedListener(object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parentView: AdapterView<*>?,
-                    selectedItemView: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    if (position != 0) {
-                        country = countries.get(position).key
-                        SharedHelper(requireContext()).authkey?.let {
-                            viewModel.getStates(
-                                "Bearer " + it,
-                                country
-                            )
+                viewModel.countryObserver.observe(viewLifecycleOwner) {
+                    Log.e("Response: ", " $it")
+                    progress.dismiss()
+                    val iter: Iterator<String> = it.keySet().iterator()
+
+                    while (iter.hasNext()) {
+                        val key = iter.next()
+                        try {
+                            val countryData =
+                                CountryData(key, it.get(key).toString().replace("\"", ""))
+                            countries.add(countryData)
+                        } catch (e: JSONException) {
+                            // Something went wrong!
                         }
-
+                    }
+                    sheetBinding.spinner.adapter = adapter
+                    if (profileResponse.info?.country != null) {
+                        for (i in countries.indices) {
+                            if (profileResponse.info?.country == countries.get(i).name) {
+                                sheetBinding.spinner.setSelection(i)
+                            }
+                        }
                     }
                 }
+                /*SharedHelper(requireContext()).authkey?.let {
+                    viewModel.getStates(
+                        "Bearer " + it,
+                        "US"
+                    )
+                }*/
 
-                override fun onNothingSelected(parentView: AdapterView<*>?) {
-                    // your code here
+
+                viewModel.stateObserver.observe(viewLifecycleOwner) {
+                    val iter: Iterator<String> = it.keySet().iterator()
+                    states = arrayListOf()
+                    progress.dismiss()
+                    states.add(CountryData("Select state", "Select state"))
+                    while (iter.hasNext()) {
+                        val key = iter.next()
+                        try {
+                            val countryData =
+                                CountryData(key, it.get(key).toString().replace("\"", ""))
+                            states.add(countryData)
+                        } catch (e: JSONException) {
+                            // Something went wrong!
+                        }
+                    }
+                    val stateAdapter = ArrayAdapter(
+                        sheetBinding.root.context,
+                        R.layout.spinner_text, states
+                    )
+                    sheetBinding.secondSpinner.adapter = stateAdapter
                 }
 
-            })
+                sheetBinding.spinner.onItemSelectedListener = object :
+                    AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parentView: AdapterView<*>?,
+                        selectedItemView: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        if (position != 0) {
+                            country = countries[position].key
+                            progress.show()
+                            SharedHelper(requireContext()).authkey?.let {
+                                viewModel.getStates(
+                                    "Bearer $it",
+                                    country
+                                )
+                            }
 
-            sheetBinding.secondSpinner.setOnItemSelectedListener(object :
-                AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parentView: AdapterView<*>?,
-                    selectedItemView: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    if (position != 0) {
-                        administrative_area = states.get(position).key
+                        }
+                    }
+
+                    override fun onNothingSelected(parentView: AdapterView<*>?) {
+                        // your code here
+                    }
+
+                }
+
+                sheetBinding.secondSpinner.onItemSelectedListener = object :
+                    AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parentView: AdapterView<*>?,
+                        selectedItemView: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        if (position != 0) {
+                            administrative_area = states[position].key
+                        }
+                    }
+
+                    override fun onNothingSelected(parentView: AdapterView<*>?) {
+                        // your code here
                     }
                 }
-
-                override fun onNothingSelected(parentView: AdapterView<*>?) {
-                    // your code here
-                }
-            })
+            }
         }
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
         sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
         sheetBinding.saveBtn.setOnClickListener {
-            var updateUserData = UpdateUserData()
+            val updateUserData = UpdateUserData()
             updateUserData.userdata.uid = SharedHelper(requireContext()).id.toString()
-            if (key.equals("mail")) {
+            if (key == ("mail")) {
 //                sheetBinding.emailEdt.setText(mBinding.emailTxt.text)
-                if (sheetBinding.emailEdt.getText()
-                        .isBlank() || !isEmailIdValid(sheetBinding.emailEdt.getText().toString())
+                if (sheetBinding.emailEdt.text
+                        .isBlank() || !isEmailIdValid(sheetBinding.emailEdt.text.toString())
                 ) {
-                    sheetBinding.emailEdt.setError(requireContext().getString(R.string.err_invalid_email_id))
+                    sheetBinding.emailEdt.error =
+                        requireContext().getString(R.string.err_invalid_email_id)
                     return@setOnClickListener
 
                 } else {
                     updateUserData.userdata.mail = sheetBinding.emailEdt.text.toString()
                 }
-            } else if (key.equals("phone")) {
-                if (sheetBinding.editTextCarrierNumber.getText()
-                        .isBlank() || sheetBinding.editTextCarrierNumber.getText()
+            } else if (key == "phone") {
+                if (sheetBinding.editTextCarrierNumber.text
+                        .isBlank() || sheetBinding.editTextCarrierNumber.text
                         .toString().length < 6
                 ) {
-                    sheetBinding.editTextCarrierNumber.setError(requireContext().getString(R.string.err_invalid_cellphone))
+                    sheetBinding.editTextCarrierNumber.error =
+                        requireContext().getString(R.string.err_invalid_cellphone)
                     return@setOnClickListener
 
                 }
                 updateUserData.userdata.phone_number.phone_number =
-                    sheetBinding.editTextCarrierNumber.getText().toString()
+                    sheetBinding.editTextCarrierNumber.text.toString()
                 updateUserData.userdata.phone_number.country_code =
                     sheetBinding.ccp.selectedCountryCode
-            } else if (key.equals("dob")) {
-                if (sheetBinding.emailEdt.getText().isBlank()
+            } else if (key == "dob") {
+                if (sheetBinding.emailEdt.text.isBlank()
                 ) {
-                    sheetBinding.emailEdt.setError(requireContext().getString(R.string.err_dob))
+                    sheetBinding.emailEdt.error = requireContext().getString(R.string.err_dob)
                     return@setOnClickListener
                 }
                 updateUserData.userdata.dob =
-                    sheetBinding.emailEdt.getText().toString()
-            } else if (key.equals("citizenship")) {
+                    sheetBinding.emailEdt.text.toString()
+            } else if (key == "citizenship") {
                 if (citizens != null) {
                     for (i in citizens.indices) {
-                        if (citizens.get(i)!!.isEmpty()) {
+                        if (citizens[i]!!.isEmpty()) {
                             citizens.removeAt(i)
                         }
                     }
                 }
                 updateUserData.userdata.citizenship =
                     citizens
-            } else if (key.equals("grad_year")) {
-                if (sheetBinding.emailEdt.getText().isBlank()
+            } else if (key == ("grad_year")) {
+                if (sheetBinding.emailEdt.text.isBlank()
                 ) {
-                    sheetBinding.emailEdt.setError(requireContext().getString(R.string.err_classof))
+                    sheetBinding.emailEdt.error = requireContext().getString(R.string.err_classof)
                     return@setOnClickListener
                 }
                 updateUserData.userdata.grad_year =
-                    sheetBinding.emailEdt.getText().toString()
-            } else if (key.equals("gap_year")) {
-                if (sheetBinding.emailEdt.getText().isBlank()
+                    sheetBinding.emailEdt.text.toString()
+            } else if (key == ("gap_year")) {
+                if (sheetBinding.emailEdt.text.isBlank()
                 ) {
-                    sheetBinding.emailEdt.setError(requireContext().getString(R.string.err_gapyear))
+                    sheetBinding.emailEdt.error = requireContext().getString(R.string.err_gapyear)
                     return@setOnClickListener
                 }
-                if (!sheetBinding.emailEdt.getText().isBlank()) {
+                if (sheetBinding.emailEdt.text.isNotBlank()) {
                     val encoder: Base64.Encoder =
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             Base64.getEncoder()
@@ -451,7 +506,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                             TODO("VERSION.SDK_INT < O")
                         }
                     val encoded: String = encoder.encodeToString(
-                        sheetBinding.emailEdt.getText().toString().toByteArray()
+                        sheetBinding.emailEdt.text.toString().toByteArray()
                     )
 
                     updateUserData.userdata.gap_year_note =
@@ -459,8 +514,8 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 }
                 updateUserData.userdata.gap_year =
                     "1"
-            } else if (key.equals("application_year")) {
-                if (sheetBinding.spinner.selectedItem.equals("Select application year")) {
+            } else if (key == ("application_year")) {
+                if (sheetBinding.spinner.selectedItem == ("Select application year")) {
                     Toast.makeText(
                         requireContext(),
                         requireContext().getString(R.string.err_application_year),
@@ -470,60 +525,69 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 }
                 updateUserData.userdata.application_year =
                     sheetBinding.spinner.selectedItem.toString()
-            } else if (key.equals("gender")) {
-                if (sheetBinding.spinner.selectedItem.equals("Select Gender")) {
+            } else if (key == ("gender")) {
+                when {
+                    sheetBinding.spinner.selectedItem == ("Select Gender") -> {
+                        Toast.makeText(
+                            requireContext(),
+                            requireContext().getString(R.string.err_gender),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                    sheetBinding.spinner.selectedItem.toString() == ("Female") -> updateUserData.userdata.gender =
+                        "F"
+                    sheetBinding.spinner.selectedItem.toString() == ("Male") -> updateUserData.userdata.gender =
+                        "M"
+                    sheetBinding.spinner.selectedItem.toString() == ("Non-Binary") -> updateUserData.userdata.gender =
+                        "X"
+                }
+            } else if (key == ("ethnicity")) {
+                for (i in ethinicitiesList.indices) {
+                    if (ethinicityList.contains(ethinicitiesList[i]?.name)) {
+                        citizens?.add(ethinicitiesList[i]?.id)
+                    }
+                }
+                if (citizens == null || citizens.size == 0) {
                     Toast.makeText(
                         requireContext(),
-                        requireContext().getString(R.string.err_gender),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                } else if (sheetBinding.spinner.selectedItem.toString().equals("Female"))
-                    updateUserData.userdata.gender = "F"
-                else if (sheetBinding.spinner.selectedItem.toString().equals("Male"))
-                    updateUserData.userdata.gender = "M"
-                else if (sheetBinding.spinner.selectedItem.toString().equals("Non-Binary"))
-                    updateUserData.userdata.gender = "N"
-            } else if (key.equals("ethnicity")) {
-                if (sheetBinding.notHisponic.isChecked) {
-                    citizens?.add("8")
-                }
-                if (sheetBinding.hisponic.isChecked) {
-                    citizens?.add("9")
-                }
-                if (sheetBinding.unknown.isChecked) {
-                    citizens?.add("10")
-                }
-                if (citizens?.size!! < 1) {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().getString(R.string.err_gender),
+                        requireContext().getString(R.string.err_ethnicity),
                         Toast.LENGTH_SHORT
                     ).show()
                     return@setOnClickListener
                 }
                 updateUserData.userdata.ethnicity =
                     citizens
-            } else if (key.equals("country")) {
-                if (sheetBinding.spinner.selectedItem.equals("Select country")) {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().getString(R.string.err_country),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                } else if (sheetBinding.secondSpinner.selectedItem.equals("Select state")) {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().getString(R.string.err_state),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                } else {
-                    updateUserData.userdata.country =
-                        country
-                    updateUserData.userdata.administrative_area =
-                        administrative_area
+            } else if (key == ("country")) {
+                when {
+                    sheetBinding.spinner.selectedItem == ("Select country") -> {
+                        Toast.makeText(
+                            requireContext(),
+                            requireContext().getString(R.string.err_country),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                    sheetBinding.secondSpinner.selectedItem == ("Select state") -> {
+                        Toast.makeText(
+                            requireContext(),
+                            requireContext().getString(R.string.err_state),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
+                    else -> {
+                        updateUserData.userdata.country =
+                            country
+                        updateUserData.userdata.administrative_area =
+                            administrative_area
+                        updateUserData.userdata.thoroughfare =
+                            sheetBinding.addressEdt.text.toString()
+                        updateUserData.userdata.premise = sheetBinding.address2Edt.text.toString()
+                        updateUserData.userdata.postal_code =
+                            sheetBinding.postalcodeEdt.text.toString()
+                        updateUserData.userdata.locality = sheetBinding.cityEdt.text.toString()
+                    }
                 }
             }
             progress.show()
@@ -533,8 +597,8 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
 
     private fun showDatePicker(emailEdt: EditText) {
 
-        var date =
-            OnDateSetListener { view, year, month, day ->
+        val date =
+            OnDateSetListener { _, year, month, day ->
                 myCalendar.set(Calendar.YEAR, year)
                 myCalendar.set(Calendar.MONTH, month)
                 myCalendar.set(Calendar.DAY_OF_MONTH, day)
@@ -550,7 +614,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
 
     }
 
-    val myCalendar = Calendar.getInstance()
+    private val myCalendar = Calendar.getInstance()
 
     private fun updateLabel(emailEdt: EditText) {
         val myFormat = "MM/dd/yyyy"
@@ -560,12 +624,12 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
 
     private fun updateEmail(updateUserData: UpdateUserData) {
         SharedHelper(requireContext()).authkey?.let {
-            viewModel.updateEmail("Bearer " + it, updateUserData)
+            viewModel.updateEmail("Bearer $it", updateUserData)
         }
 
     }
 
-    fun isEmailIdValid(emailId: String): Boolean {
+    private fun isEmailIdValid(emailId: String): Boolean {
         val regex = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$"
         val pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE)
         val matcher = pattern.matcher(emailId)
@@ -580,8 +644,14 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
     }
 
     override fun onClick(positiion: Int) {
-        Log.e("pos", " >> " + positiion)
+        Log.e("pos", " >> $positiion")
     }
 
-
+    private fun ethinicityClick(ethinicity: String, checked: Boolean) {
+        if (checked) {
+            if (!ethinicityList.contains(ethinicity))
+                ethinicityList.add(ethinicity)
+        } else
+            ethinicityList.remove(ethinicity)
+    }
 }

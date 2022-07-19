@@ -3,6 +3,8 @@ package com.maialearning.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonObject
+import com.maialearning.model.EthnicityResponse
+import com.maialearning.model.EthnicityResponseItem
 import com.maialearning.model.ProfileResponse
 import com.maialearning.model.UpdateUserData
 import com.maialearning.network.UseCaseResult
@@ -29,6 +31,7 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
     val updateObserver = MutableLiveData<String>()
     val countryObserver = MutableLiveData<JsonObject>()
     val stateObserver = MutableLiveData<JsonObject>()
+    val ethnicityObserver = MutableLiveData< ArrayList<EthnicityResponseItem?>?>()
 
 
     fun getProfile(token: String, id: String) {
@@ -81,7 +84,7 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
         job.cancel()
     }
 
-    fun updateEmail(token:String,updateUserData:UpdateUserData) {
+    fun updateEmail(token: String, updateUserData: UpdateUserData) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -89,7 +92,7 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> updateObserver.value =result.toString()
+                is UseCaseResult.Success -> updateObserver.value = result.toString()
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
@@ -106,27 +109,46 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> countryObserver.value =result.data
+                is UseCaseResult.Success -> countryObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
 
             }
-        }    }
+        }
+    }
 
-    fun getStates(token: String,id: String) {
+    fun getStates(token: String, id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getStates(token,id)
+                catRepository.getStates(token, id)
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> stateObserver.value =result.data
+                is UseCaseResult.Success -> stateObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
 
             }
-        }    }
+        }
+    }
+
+    fun getEthnicity(token: String, id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getEthnicities(token, id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> ethnicityObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
 }

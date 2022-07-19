@@ -90,6 +90,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:text="@string/grade"
+            android:id="@+id/grade_txt"
             android:textColor="@color/purple"
             android:fontFamily="@font/inter_bold"
             android:paddingHorizontal="@dimen/_15dp"

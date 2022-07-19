@@ -37,7 +37,9 @@ class DashboardViewModel(private val catRepository: LoginRepository) : ViewModel
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> jwtObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Error -> {
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
                 is UseCaseResult.Exception -> showError.value = result.exception.message
 
             }

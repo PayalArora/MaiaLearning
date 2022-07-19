@@ -1,0 +1,20 @@
+<LinearLayout android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBox
+        android:id="@+id/not_hisponic"
+        android:fontFamily="@font/inter"
+        android:layout_marginStart="@dimen/_10dp"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:layout_width="match_parent"
+        android:text="@string/not_hisponic"
+        android:layout_height="wrap_content"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_5dp"
+        android:background="@color/divider_color"
+        android:layout_height="1dp"/>
+
+</LinearLayout>

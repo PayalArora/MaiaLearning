@@ -1,6 +1,8 @@
 package com.maialearning.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.util.Log
 import androidx.viewbinding.BuildConfig
@@ -10,6 +12,7 @@ import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.repository.LoginRepository
 import com.maialearning.repository.LoginRepositoryImpl
+import com.maialearning.ui.activity.LoginActivity
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
 import com.maialearning.viewmodel.LoginNewModel
@@ -21,6 +24,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.CallAdapter
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -113,4 +117,13 @@ inline fun <reified T> createWebService(
         .client(okHttpClient)
         .build()
     return retrofit.create(T::class.java)
+}
+
+private fun checkToken(ex: HttpException, con: Context) {
+    if(ex.code()==401){
+        val intent = Intent(con, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // To clean up all activities
+        con.startActivity(intent)
+        ( con as Activity).finish()
+    }
 }
