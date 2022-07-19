@@ -6,7 +6,6 @@ import com.maialearning.model.*
 import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.network.UseCaseResult
-import com.maialearning.util.CAT_API_BASE_URL
 import com.maialearning.util.CAT_API_MSG_URL
 import com.maialearning.util.ORIGIN
 
@@ -46,6 +45,7 @@ interface LoginRepository {
   suspend  fun updateEmail(token: String, userData: UpdateUserData) :UseCaseResult<String>
    suspend fun getCountries(token: String)  :UseCaseResult<JsonObject>
     suspend fun getStates(token: String,id: String)  :UseCaseResult<JsonObject>
+    suspend fun getEthnicities(token: String,id: String)  :UseCaseResult<ArrayList<EthnicityResponseItem?>>
 
 }
 
@@ -199,6 +199,17 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getStates(token: String,id:String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.getStates(id,token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getEthnicities(token: String, id: String): UseCaseResult<ArrayList<EthnicityResponseItem?>> {
+        return try {
+            val result = catApi.getEthnicities(id,token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
