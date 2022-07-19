@@ -23,8 +23,31 @@ data class ConsiderModel (
         var transcriptNid: Int,
         @SerializedName("university_nid")
         var universityNid: String,
-        @SerializedName("naviance_college_name")
-        var naviance_college_name: String)
+        @SerializedName("name")
+        var naviance_college_name: String,
+        @SerializedName("country")
+        var country: String,
+        @SerializedName("country_name")
+        var country_name: String,
+        @SerializedName("created_by_name")
+        var created_name: String,
+        @SerializedName("created_date")
+        var created_date: String,
+        @SerializedName("internal_deadline")
+        var internal_deadline: String,
+        @SerializedName("app_by_program_data")
+        var program_data: ArrayList<ProgramData>?
+    )
+    data class ProgramData(
+        @SerializedName("program_id")
+        var program_id: Int,
+        @SerializedName("program_name")
+        var program_name: String,
+        @SerializedName("program_deadline")
+        var program_deadline: String,
+        @SerializedName("program_status")
+        var program_status: String,
+    )
 
     }
 
