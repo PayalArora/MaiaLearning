@@ -54,7 +54,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/email_arrow"
+                            android:layout_toStartOf="@+id/email_arrow"
                             android:layout_toEndOf="@+id/email_icon"
                             android:orientation="vertical">
 
@@ -113,7 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/phone_arrow"
+                            android:layout_toStartOf="@+id/phone_arrow"
                             android:layout_toEndOf="@+id/phone_icon"
                             android:orientation="vertical">
 
@@ -228,7 +228,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/add_arrow"
+                            android:layout_toStartOf="@+id/add_arrow"
                             android:layout_toEndOf="@+id/add_icon"
                             android:orientation="vertical">
 
@@ -427,7 +427,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/year_arrow"
+                            android:layout_toStartOf="@+id/year_arrow"
                             android:layout_toEndOf="@+id/year_icon"
                             android:orientation="vertical">
 
@@ -485,7 +485,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/app_year_arrow"
+                            android:layout_toStartOf="@+id/app_year_arrow"
                             android:layout_toEndOf="@+id/app_year_icon"
                             android:orientation="vertical">
 
@@ -542,7 +542,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/address_arrow"
+                            android:layout_toStartOf="@+id/address_arrow"
                             android:layout_toEndOf="@+id/address_icon"
                             android:orientation="vertical">
 
@@ -599,7 +599,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/gender_arrow"
+                            android:layout_toStartOf="@+id/gender_arrow"
                             android:layout_toEndOf="@+id/gender_icon"
                             android:orientation="vertical">
 
@@ -656,7 +656,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/ethincity_arrow"
+                            android:layout_toStartOf="@+id/ethincity_arrow"
                             android:layout_toEndOf="@+id/ethincity_icon"
                             android:orientation="vertical">
 
@@ -666,7 +666,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_5dp"
                                 android:fontFamily="@font/inter"
-                                android:gravity="center_vertical"
                                 android:text="@string/ethincity_text"
                                 android:textColor="@color/univ_name"
                                 android:textSize="@dimen/_14sp" />
@@ -676,7 +675,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_5dp"
                                 android:fontFamily="@font/inter"
-                                android:gravity="center_vertical"
                                 android:text="@string/ethincity"
                                 android:textColor="@color/grey_3"
                                 android:textSize="@dimen/_14sp" />
@@ -714,7 +712,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10dp"
-                            android:layout_toLeftOf="@+id/gap_arrow"
+                            android:layout_toStartOf="@+id/gap_arrow"
                             android:layout_toEndOf="@+id/gap_icon"
                             android:orientation="vertical">
 
@@ -724,7 +722,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_5dp"
                                 android:fontFamily="@font/inter"
-                                android:gravity="center_vertical"
+                                android:singleLine="true"
                                 android:text="@string/no_gap"
                                 android:textColor="@color/univ_name"
                                 android:textSize="@dimen/_14sp" />
@@ -734,7 +732,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/_5dp"
                                 android:fontFamily="@font/inter"
-                                android:gravity="center_vertical"
                                 android:text="@string/gap_year"
                                 android:textColor="@color/grey_3"
                                 android:textSize="@dimen/_14sp" />

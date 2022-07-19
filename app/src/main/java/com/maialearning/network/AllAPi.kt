@@ -3,10 +3,7 @@ package com.maialearning.network
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
-
-import com.maialearning.util.prefhandler.SharedHelper
 import kotlinx.coroutines.Deferred
-import org.json.JSONObject
 import retrofit2.http.*
 
 interface AllAPi {
@@ -113,6 +110,5 @@ interface AllAPi {
     @GET
     fun getInbox(@Url url: String,
                  @Header("x-access-token")  JwtToken:String,
-                 @Path ("id") id: String,
     ):  Deferred<InboxResponse>
 }

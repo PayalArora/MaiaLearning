@@ -2,6 +2,7 @@ package com.maialearning.ui.fragments
 
 import ViewPagerAdapter
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -21,10 +23,12 @@ import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.databinding.LayoutMessageBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.databinding.MessageLayoutBinding
+import com.maialearning.model.InboxResponse
 import com.maialearning.ui.activity.NewMessageActivity
 import com.maialearning.ui.adapter.MessageAdapter
 import com.maialearning.ui.adapter.NotesAdapter
 import com.maialearning.util.URL
+import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardViewModel
 import com.maialearning.viewmodel.MessageViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,6 +36,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MessageFragment : Fragment(), OnItemClick {
     private val messageViewModel: MessageViewModel by viewModel()
     private lateinit var mBinding: MessageLayoutBinding
+    private lateinit var dialog: Dialog
+    var inboxResponse:InboxResponse? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,10 +49,18 @@ class MessageFragment : Fragment(), OnItemClick {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = MessageLayoutBinding.inflate(inflater, container, false)
-        URL.BASEURL = 2
+        dialog = showLoadingDialog(requireContext())
         messageViewModel.getInbox()
+        observer()
         setAdapter()
           return mBinding.root
+    }
+
+    private fun observer() {
+        messageViewModel.inboxObserver.observe(viewLifecycleOwner, {
+            inboxResponse = it
+
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

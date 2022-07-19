@@ -1,8 +1,10 @@
 package com.maialearning.ui.activity
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,6 +18,7 @@ import com.maialearning.ui.fragments.MessageFragment
 import com.maialearning.ui.fragments.NotesFragment
 import com.maialearning.ui.fragments.ShortcutFragment
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardViewModel
 import com.maialearning.viewmodel.HomeViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,6 +28,7 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
     public lateinit var toolbarBinding: Toolbar
     private val dashboardViewModel: DashboardViewModel by viewModel()
+    private lateinit var dialog: Dialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,12 +43,23 @@ class DashboardActivity : AppCompatActivity() {
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_prof).setOnClickListener {
             ProfileFilter(this, layoutInflater).showDialog()
         }
+
         dashboardViewModel.getJwtToken()
         dashboardViewModel.jwtObserver.observe(this,  {
             SharedHelper(this).jwtToken = it
 
         })
-
+        dashboardViewModel.showLoading.observe(this) {
+            if (it == true){
+                dialog = showLoadingDialog(this)
+            } else{
+                dialog.dismiss()
+            }
+        }
+        dashboardViewModel.showError.observe(this) {
+            dialog.dismiss()
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
         loadFragment(HomeFragment())
         setListeners()
     }

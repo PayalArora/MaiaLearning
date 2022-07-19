@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
@@ -108,7 +109,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
             mBinding.genderTxt.setText("Male")
 
         if (it?.info?.gapYear.equals("1"))
-                mBinding.gapTxt.setText("" +it?.info?.gapYearNote)
+                mBinding.gapTxt.setText(Html.fromHtml(it?.info?.gapYearNote))
         else
             mBinding.gapTxt.setText("No gap year")
 
@@ -238,7 +239,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
             sheetBinding.emailEdt.setText(profileResponse.info?.gradYear)
         } else if (key.equals("gap_year")) {
             sheetBinding.filters.setText(requireActivity().getString(R.string.gap_year))
-                sheetBinding.emailEdt.setText(""+(profileResponse?.info?.gapYearNote))
+                sheetBinding.emailEdt.setText(Html.fromHtml(profileResponse?.info?.gapYearNote))
             sheetBinding.emailEdt.setHint(requireActivity().getString(R.string.gap_year))
         } else if (key.equals("application_year")) {
             sheetBinding.filters.setText(requireActivity().getString(R.string.app_year))

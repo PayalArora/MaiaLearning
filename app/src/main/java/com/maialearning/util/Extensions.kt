@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 //const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
-const val CAT_API_MSG_URL = "https://msg-staging.maialearning.com/v1/messaging/users/{id}/inbox"
+const val CAT_API_MSG_URL = "https://msg-staging.maialearning.com/v1/messaging/users/"
 const val CAT_API_BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
 const val TITLE = "title"

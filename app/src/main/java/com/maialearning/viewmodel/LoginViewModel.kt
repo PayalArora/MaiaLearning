@@ -23,10 +23,10 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
 
 
     private val _currentUser = MutableLiveData<FirebaseUser>()
-    private val _microUser = MutableLiveData<FirebaseUser>()
+    private val _microUser = MutableLiveData<String>()
 
     val currentUser: LiveData<FirebaseUser> = _currentUser
-    val microUser: LiveData<FirebaseUser> = _microUser
+    val microUser: LiveData<String> = _microUser
 
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
         .requestIdToken(app.getString(R.string.default_web_client_id))
@@ -64,8 +64,9 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
                 .addOnSuccessListener(
                      OnSuccessListener<AuthResult>{
 
-                            _microUser.value = it.user
-                            println("cred" + it.getCredential().toString())
+                         val cred:OAuthCredential = it.getCredential() as OAuthCredential
+                         println("cred" + it.getCredential().toString())
+                         _microUser.value =cred.accessToken
 
                      })
                 .addOnFailureListener(
@@ -85,8 +86,10 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
                             val result = it.result
 
 
-                           _microUser.value = result.user
+
+                            val cred:OAuthCredential = result.getCredential() as OAuthCredential
                             println("cred 1" + result.getCredential().toString())
+                            _microUser.value =cred.accessToken
                             //val cred: OAuthCredential = result.getCredential() as OAuthCredential
                         }
 

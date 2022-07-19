@@ -210,7 +210,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getJWTToken(): UseCaseResult<String> {
         return try {
             val result = catApi.getJWTToken("Bearer "+ SharedHelper(BaseApplication.applicationContext()).authkey).await()
-            UseCaseResult.Success(result.get(0).toString())
+            UseCaseResult.Success(result.get(0).toString().replace("\"", ""))
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
         }catch (ex: Exception) {
@@ -220,8 +220,8 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getInbox(): UseCaseResult<InboxResponse> {
         return try {
-            val result = catApi.getInbox( CAT_API_MSG_URL,SharedHelper(BaseApplication.applicationContext()).jwtToken,
-                SharedHelper(BaseApplication.applicationContext()).messageId).await()
+            val result = catApi.getInbox( CAT_API_MSG_URL+"${SharedHelper(BaseApplication.applicationContext()).messageId}/inbox"
+                ,SharedHelper(BaseApplication.applicationContext()).jwtToken).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

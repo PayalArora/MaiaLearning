@@ -146,8 +146,8 @@ class LoginActivity : AppCompatActivity() {
             it?.let {
                 viewModel.signOut()
                 dialog.show()
-               //loginModel.microLogin(  it.getIdToken(false)?.result?.token.toString()?:"")
-                startActivity(Intent(this, DashboardActivity::class.java))
+              loginModel.microLogin(  it)
+                //startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
     loginModel.showLoading.observe(this){
@@ -256,6 +256,8 @@ class LoginActivity : AppCompatActivity() {
                 if(binding.rememberMe.isChecked)
                 SharedHelper(this).login = "1"
                 SharedHelper(this).id=it.user?.uid
+                SharedHelper(this).ethnicityTarget=it.user?.ogUserNode?.und?.get(0)?.targetId
+
                 loginWork()
             }
         }

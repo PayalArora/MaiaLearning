@@ -40,4 +40,9 @@ class SharedHelper(var context: Context) {
         set(authkey) {
             sharedPreference!!.putKey("id", authkey)
         }
+    var ethnicityTarget:String?
+        get() = sharedPreference!!.getKey("target_id")
+        set(authkey) {
+            sharedPreference!!.putKey("target_id", authkey)
+        }
 }
