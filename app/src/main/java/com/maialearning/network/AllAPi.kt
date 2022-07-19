@@ -111,4 +111,10 @@ interface AllAPi {
     fun getInbox(@Url url: String,
                  @Header("x-access-token")  JwtToken:String,
     ):  Deferred<InboxResponse>
+
+    @GET("school_wide_configuration/field_ethnicity_config/{id}")
+    fun getEthnicities(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred< ArrayList<EthnicityResponseItem?>>
 }

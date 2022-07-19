@@ -1,7 +1,7 @@
 package com.maialearning.model
 
 data class EthnicityResponse(
-	val ethnicityResponse: List<EthnicityResponseItem?>? = null
+	val ethnicityResponse: ArrayList<EthnicityResponseItem?>? = null
 )
 
 data class EthnicityResponseItem(

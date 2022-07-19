@@ -6,6 +6,7 @@ import com.maialearning.model.*
 import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.network.UseCaseResult
+import com.maialearning.util.CAT_API_BASE_URL
 import com.maialearning.util.CAT_API_MSG_URL
 import com.maialearning.util.ORIGIN
 

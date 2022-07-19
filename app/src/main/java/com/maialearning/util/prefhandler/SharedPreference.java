@@ -26,12 +26,21 @@ public class SharedPreference {
         editor.apply();
 
     }
+    void putBooleanKey(String Key, Boolean Value) {
+        sharedPreferences = context.getSharedPreferences("Cache", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.putBoolean(Key, Value);
+        editor.apply();
+
+    }
     String getKey(String Key) {
         sharedPreferences = context.getSharedPreferences("Cache", Context.MODE_PRIVATE);
         return sharedPreferences.getString(Key, "");
     }
-
-    void clearAll() {
+    Boolean getBooleanKey(String Key) {
+        sharedPreferences = context.getSharedPreferences("Cache", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(Key, false);
+    }    void clearAll() {
         sharedPreferences = context.getSharedPreferences("Cache", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.clear();

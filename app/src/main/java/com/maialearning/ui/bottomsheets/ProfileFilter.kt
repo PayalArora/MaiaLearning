@@ -24,6 +24,7 @@ import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.ProfileViewModel
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.ext.isInt
 
 class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflater) {
     private val profileModel: ProfileViewModel by con.viewModel()
@@ -70,8 +71,16 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             }
         }
         profileModel.observer.observe(con, {
-            mBinding.nameTxt.setText(it?.info?.firstName + " " + it?.info?.lastName)
-            Picasso.with(con).load(it?.info?.profilePic).into(mBinding.toolbarProf)
+            mBinding.nameTxt.setText(it.info?.firstName + " " + it?.info?.lastName)
+            if (SharedHelper(con).convention?:false){
+                mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Grade ${it.info?.grade})")
+            } else {
+                if (it.info?.grade?.isInt() == true)
+                mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade.toInt() + 1})")
+                else
+                    mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade})")
+            }
+            Picasso.with(con).load(it.info?.profilePic).into(mBinding.toolbarProf)
         })
     }
 
