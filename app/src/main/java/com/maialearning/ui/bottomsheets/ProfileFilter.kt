@@ -1,30 +1,41 @@
 package com.maialearning.ui.bottomsheets
 
-import ViewPagerAdapter
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.Manifest.permission_group.CAMERA
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Typeface
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.widget.ArrayAdapter
-import androidx.core.content.ContentProviderCompat.requireContext
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.databinding.ProfileLayoutBinding
-import com.maialearning.databinding.UniversityFilterBinding
-import com.maialearning.ui.activity.ClickFilters
-import com.maialearning.ui.activity.NewMessageActivity
-import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.ProfileViewModel
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.ext.isInt
+import java.io.File
+import java.io.InputStream
+
 
 class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflater) {
     private val profileModel: ProfileViewModel by con.viewModel()
@@ -60,8 +71,36 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         }.attach()
 
         mBinding.tabs.tabGravity = TabLayout.GRAVITY_FILL
+        mBinding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val tabLayout = (mBinding.tabs.getChildAt(0) as ViewGroup).getChildAt(
+                    tab!!.position
+                ) as LinearLayout
+                val tabTextView = tabLayout.getChildAt(1) as TextView
+                tabTextView.setTypeface(tabTextView.typeface, Typeface.BOLD)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                val tabLayout = (mBinding.tabs.getChildAt(0) as ViewGroup).getChildAt(
+                    tab!!.position
+                ) as LinearLayout
+                val tabTextView = tabLayout.getChildAt(1) as TextView
+                tabTextView.setTypeface(null, Typeface.NORMAL)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
+        mBinding.toolbarProf.setOnClickListener {
+            if (checkAndRequestPermissions(con)) {
+                chooseImage()
+            } else {
+                checkAndRequestPermissions(con)
+            }
+        }
 
     }
+
 
     private fun profileWork(mBinding: ProfileLayoutBinding) {
         SharedHelper(con).authkey?.let {
@@ -72,11 +111,11 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         }
         profileModel.observer.observe(con, {
             mBinding.nameTxt.setText(it.info?.firstName + " " + it?.info?.lastName)
-            if (SharedHelper(con).convention?:false){
+            if (SharedHelper(con).convention ?: false) {
                 mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Grade ${it.info?.grade})")
             } else {
                 if (it.info?.grade?.isInt() == true)
-                mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade.toInt() + 1})")
+                    mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade.toInt() + 1})")
                 else
                     mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade})")
             }
@@ -84,4 +123,99 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         })
     }
 
+
+    val REQUEST_ID_MULTIPLE_PERMISSIONS = 101
+
+    fun checkAndRequestPermissions(context: Activity?): Boolean {
+        val WExtstorePermission = ContextCompat.checkSelfPermission(
+            context!!,
+           WRITE_EXTERNAL_STORAGE
+        )
+        val cameraPermission = ContextCompat.checkSelfPermission(
+            context!!,
+            CAMERA
+        )
+        val listPermissionsNeeded: MutableList<String> = ArrayList()
+        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(CAMERA)
+        }
+        if (WExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded
+                .add(WRITE_EXTERNAL_STORAGE)
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                context, listPermissionsNeeded
+                    .toTypedArray(),
+                REQUEST_ID_MULTIPLE_PERMISSIONS
+            )
+            return false
+        }
+        return true
+    }
+
+
+    private val PERMISSION_REQUEST_CODE = 200
+
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>?,
+        grantResults: IntArray?
+    ) {
+        when (requestCode) {
+            REQUEST_ID_MULTIPLE_PERMISSIONS -> if (ContextCompat.checkSelfPermission(
+                    con,
+                    CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(
+                    getApplicationContext(),
+                    "FlagUp Requires Access to Camara.", Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else if (ContextCompat.checkSelfPermission(
+                    con,
+                    WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                Toast.makeText(
+                    getApplicationContext(),
+                    "FlagUp Requires Access to Your Storage.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                chooseImage()
+            }
+        }
+    }
+
+    private fun chooseImage() {
+        val optionsMenu = arrayOf<CharSequence>(
+            "Take Photo",
+            "Choose from Gallery",
+            "Exit"
+        ) // create a menuOption Array
+        // create a dialog for showing the optionsMenu
+        val builder = AlertDialog.Builder(con)
+        // set the items in builder
+        builder.setItems(
+            optionsMenu
+        ) { dialogInterface, i ->
+            if (optionsMenu[i] == "Take Photo") {
+                // Open the camera and get the photo
+                val takePicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                con.startActivityForResult(takePicture, 0)
+            } else if (optionsMenu[i] == "Choose from Gallery") {
+                // choose from  external storage
+                val pickPhoto = Intent(
+                    Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                )
+                con.startActivityForResult(pickPhoto, 1)
+            } else if (optionsMenu[i] == "Exit") {
+                dialogInterface.dismiss()
+            }
+        }
+        builder.show()
+    }
 }

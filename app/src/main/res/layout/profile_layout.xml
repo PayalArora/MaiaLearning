@@ -5,11 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/_20dp">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:id="@+id/tablayout"
+    android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/toolbar_prof"
         android:layout_width="@dimen/_35dp"
         android:layout_height="@dimen/_35dp"
+        android:layout_centerVertical="true"
         android:layout_gravity="end|center_vertical"
         android:layout_marginVertical="@dimen/_15dp"
         android:layout_marginLeft="@dimen/_10dp"
@@ -22,6 +27,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/toolbar_prof"
         android:padding="@dimen/_15dp"
+        android:layout_toStartOf="@+id/close"
         android:text="Ms. Karishma Coulson"
         android:textColor="@color/black"
         android:textSize="@dimen/_21sp"
@@ -43,19 +49,19 @@
             android:layout_centerInParent="true"
             android:src="@drawable/cross" />
     </RelativeLayout>
-
+</RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_txt"
-        app:tabIndicatorColor="@color/white"
-        app:tabMode="scrollable"
+        android:layout_below="@+id/tablayout"
+        app:tabIndicator="@drawable/ta_indiicator"
+        app:tabIndicatorColor="@color/black"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/blue"
-        app:tabIndicator="@color/blue"
         app:tabTextAppearance="@style/MyCustomAppearance"
-        app:tabTextColor="@color/univ_name"/>
+        app:tabTextColor="@color/univ_name" />
 
     <View
         android:id="@+id/view3"
