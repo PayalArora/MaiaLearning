@@ -9,6 +9,7 @@ import com.maialearning.databinding.ApplyingItemLayBinding
 import com.maialearning.databinding.ConsideringItemLayBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
+import com.maialearning.util.CommonClass
 
 class ApplyingAdapter (val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>) :
 RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
@@ -39,10 +40,12 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
-          //  uniName.text=array[position].naviance_college_name
+            uniName.text=array[position].naviance_college_name
+            dateName.setText(CommonClass.getDate(array[position].created_date.toLong())+" by: "+array[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
+
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()
 
@@ -57,7 +60,11 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             commentImg.setOnClickListener {
                 onItemClickOption.onCommentClick()
             }
-            val others = root.context.resources.getStringArray(R.array.spinner_programs)
+            val others= ArrayList<String>()
+            for (i in 0 until array[position].program_data?.size!!){
+                others.add(array[position].program_data?.get(i)?.program_name?:"")
+            }
+//            val others: Array<out String> = root.context.resources.getStringArray(R.array.spinner_programs)
             val adapter = ArrayAdapter(
                 root.context,
                 R.layout.spinner_text, others

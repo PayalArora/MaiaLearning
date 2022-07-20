@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.CommentsSheetBinding
@@ -20,10 +18,8 @@ import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
-import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
-import com.maialearning.viewmodel.LoginNewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -50,14 +46,21 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = ConsideringLayoutBinding.inflate(inflater, container, false)
-       // init()
+
         return mBinding.root
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setListeners()
+        init()
+//        setAdapter()
     }
 
     private fun init() {
         dialogP = showLoadingDialog(requireContext())
+        dialogP.show()
         initObserver()
-        homeModel.getConsiderList("")
+        homeModel.getConsiderList("9375")
     }
 
     private fun initObserver() {
@@ -74,12 +77,19 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 val array: ArrayList<ConsiderModel.Data> = ArrayList()
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
+                    val arrayProgram: ArrayList<ConsiderModel.ProgramData> = ArrayList()
+                    var programArray=object_.getJSONArray("app_by_program_data")
+                    for(j in 0 until programArray.length()){
+                        val objectProgram= programArray.getJSONObject(j)
+                        arrayProgram.add(ConsiderModel.ProgramData(objectProgram.getInt("program_id"),objectProgram.getString("program_name"),"",""))
+                    }
                     val model: ConsiderModel.Data = ConsiderModel.Data(
                         object_.getInt("contact_info"),
-                        object_.getInt("contact_info"),
-                        object_.getInt("contact_info"),
-                        0,
-                        "", object_.getString("naviance_college_name")
+                        object_.getInt("parchment"),
+                        object_.getInt("slate"),
+                        object_.getInt("transcript_nid"),
+                        object_.getString("university_nid"), object_.getString("name"),object_.getString("country"),
+                    object_.getString("country_name"),   object_.getString("created_by_name"),object_.getString("created_date"),object_.getString("internal_deadline"),arrayProgram
                     )
                     array.add(model)
                 }
@@ -94,11 +104,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
        mBinding.consideringList.adapter = ConsiderAdapter(this, arrayListOf())
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setListeners()
-//        setAdapter()
-    }
+
 
     private fun setListeners() {
 
