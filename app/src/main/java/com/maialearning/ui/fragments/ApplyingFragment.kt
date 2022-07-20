@@ -14,12 +14,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.CommentsSheetBinding
-import com.maialearning.databinding.ConsideringLayoutBinding
 import com.maialearning.databinding.FragmentApplyingBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.adapter.ApplyingAdapter
 import com.maialearning.ui.adapter.CommentAdapter
-import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
@@ -43,22 +41,26 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentApplyingBinding.inflate(inflater, container, false)
-        init()
+
         return mBinding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
         setAdapter()
 
     }
+
     private fun init() {
-//        dialogP = showLoadingDialog(requireContext())
-//        dialogP.show()
-//        initObserver()
-//        homeModel.getApplyList("")
+        dialogP = showLoadingDialog(requireContext())
+        dialogP.show()
+        initObserver()
+        homeModel.getApplyList("")
 
 
     }
+
     private fun initObserver() {
         homeModel.applyObserver.observe(requireActivity()) {
             it?.let {
@@ -73,12 +75,32 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                 val array: ArrayList<ConsiderModel.Data> = ArrayList()
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
+                    val arrayProgram: ArrayList<ConsiderModel.ProgramData> = ArrayList()
+                    var programArray = object_.getJSONArray("app_by_program_data")
+                    for (j in 0 until programArray.length()) {
+                        val objectProgram = programArray.getJSONObject(j)
+                        arrayProgram.add(
+                            ConsiderModel.ProgramData(
+                                objectProgram.getInt("program_id"),
+                                objectProgram.getString("program_name"),
+                                "",
+                                ""
+                            )
+                        )
+                    }
                     val model: ConsiderModel.Data = ConsiderModel.Data(
                         object_.getInt("contact_info"),
-                        object_.getInt("contact_info"),
-                        object_.getInt("contact_info"),
-                        0,
-                        "", object_.getString("naviance_college_name")
+                        object_.getInt("parchment"),
+                        object_.getInt("slate"),
+                        object_.getInt("transcript_nid"),
+                        object_.getString("university_nid"),
+                        object_.getString("name"),
+                        object_.getString("country"),
+                        object_.getString("country_name"),
+                        object_.getString("created_by_name"),
+                        object_.getString("created_date"),
+                        object_.getString("internal_deadline"),
+                        arrayProgram
                     )
                     array.add(model)
                 }
@@ -88,15 +110,16 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
             }
         }
     }
+
     private fun setAdapter() {
-       mBinding.applyingList.adapter = ApplyingAdapter(this, arrayListOf())
+        mBinding.applyingList.adapter = ApplyingAdapter(this, arrayListOf())
     }
 
-    private fun bottomSheetType(layoutId:Int, rbId:Int, type:Int) {
+    private fun bottomSheetType(layoutId: Int, rbId: Int, type: Int) {
         val dialog = BottomSheetDialog(requireContext())
 
         val view = layoutInflater.inflate(layoutId, null)
-        view?.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        view?.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         val radioAppType = view.findViewById<RadioGroup>(rbId)
         dialog.setContentView(view)
         dialog.show()
@@ -106,7 +129,10 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
         radioAppType.setOnCheckedChangeListener(
             { group, checkedId ->
                 val radioButton = radioAppType.findViewById(checkedId) as RadioButton
-                ( mBinding.applyingList.adapter as ApplyingAdapter).setValue(radioButton.text.toString(), type)
+                (mBinding.applyingList.adapter as ApplyingAdapter).setValue(
+                    radioButton.text.toString(),
+                    type
+                )
             })
     }
 
@@ -125,10 +151,12 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     override fun onCommentClick() {
         bottomSheetComment()
     }
+
     private fun bottomSheetComment() {
         val dialog = BottomSheetDialog(requireContext())
-        val sheetBinding: com.maialearning.databinding.CommentsSheetBinding = CommentsSheetBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight =( (Resources.getSystem().displayMetrics.heightPixels))
+        val sheetBinding: com.maialearning.databinding.CommentsSheetBinding =
+            CommentsSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
         sheetBinding.close.setOnClickListener {
