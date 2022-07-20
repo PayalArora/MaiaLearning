@@ -8,35 +8,37 @@
     <TextView
         android:id="@+id/back_txt"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_50dp"
         android:layout_alignParentTop="true"
         android:drawableStart="@drawable/back_arrow"
         android:drawablePadding="@dimen/_10dp"
-        android:padding="@dimen/_15dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/_15dp"
         android:text="@string/back"
-        android:textSize="@dimen/_16sp" />
+        android:textSize="@dimen/_14sp" />
 
     <TextView
         android:id="@+id/filters"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:padding="@dimen/_15dp"
         android:text="@string/primary_email"
+        android:gravity="center_vertical"
         android:textColor="@color/black"
-        android:textSize="@dimen/_21sp"
+        android:textSize="@dimen/_18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/clear_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_50dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:padding="@dimen/_15dp"
+        android:gravity="center_vertical"
         android:text="@string/clear"
-        android:textSize="@dimen/_16sp" />
+        android:paddingHorizontal="@dimen/_15dp"
+        android:textSize="@dimen/_14sp" />
 
     <View
         android:id="@+id/view3"
