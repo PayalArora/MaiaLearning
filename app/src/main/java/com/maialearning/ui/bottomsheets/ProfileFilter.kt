@@ -4,15 +4,18 @@ import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.Manifest.permission_group.CAMERA
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Typeface
+import android.opengl.Visibility
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -26,9 +29,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
+import com.maialearning.databinding.PrimaryEmailSheetBinding
 import com.maialearning.databinding.ProfileLayoutBinding
+import com.maialearning.model.ProfileResponse
+import com.maialearning.model.UpdateUserData
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.ProfileViewModel
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,7 +56,6 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         dialog.show()
         profileWork(sheetBinding)
         setAdapter(sheetBinding)
-
     }
 
     private fun setAdapter(mBinding: ProfileLayoutBinding) {
@@ -101,6 +107,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
 
     }
 
+    private var profileResponse: ProfileResponse = ProfileResponse()
 
     private fun profileWork(mBinding: ProfileLayoutBinding) {
         SharedHelper(con).authkey?.let {
@@ -120,16 +127,82 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
                     mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade})")
             }
             Picasso.with(con).load(it.info?.profilePic).into(mBinding.toolbarProf)
+            profileResponse = it
         })
+
+        mBinding.nameTxt.setOnClickListener {
+            showSheet("name")
+        }
     }
 
+    var dialog: BottomSheetDialog? = null
+    private lateinit var progress: Dialog
+
+
+    private fun showSheet(s: String) {
+        dialog = BottomSheetDialog(con)
+        val sheetBinding: PrimaryEmailSheetBinding =
+            PrimaryEmailSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog?.setContentView(sheetBinding.root)
+        dialog?.show()
+        sheetBinding.emailEdt.visibility = View.GONE
+        sheetBinding.addressLay.visibility = View.VISIBLE
+        sheetBinding.addOne.setText(con.getString(R.string.firs_name))
+        sheetBinding.addTwo.setText(con.getString(R.string.middle_name))
+        sheetBinding.postalTxt.setText(con.getString(R.string.last_name))
+        sheetBinding.cityTxt.setText(con.getString(R.string.nick_name))
+        sheetBinding.filters.setText(con.getString(R.string.name))
+        sheetBinding.addressEdt.setText(profileResponse.info?.firstName)
+        sheetBinding.address2Edt.setText(profileResponse.info?.middleName)
+        sheetBinding.postalcodeEdt.setText(profileResponse.info?.lastName)
+        sheetBinding.cityEdt.setText(profileResponse.info?.nickName)
+        sheetBinding.saveBtn.setOnClickListener {
+            if (sheetBinding.addressEdt.text.isBlank()) {
+                sheetBinding.addressEdt.setError(con.getString(R.string.err_firstname))
+                return@setOnClickListener
+            } else if (sheetBinding.postalcodeEdt.text.isBlank()) {
+                sheetBinding.addressEdt.setError(con.getString(R.string.err_lastname))
+                return@setOnClickListener
+            } else {
+            }
+            val updateUserData = UpdateUserData()
+            updateUserData.userdata.uid = SharedHelper(con).id.toString()
+            updateUserData.userdata.first_name = sheetBinding.addressEdt.text.toString()
+            updateUserData.userdata.last_name = sheetBinding.address2Edt.text.toString()
+            updateUserData.userdata.middle_name = sheetBinding.postalcodeEdt.text.toString()
+            updateUserData.userdata.nick_name = sheetBinding.cityEdt.text.toString()
+            progress = showLoadingDialog(con)
+            progress.show()
+            updateName(updateUserData)
+        }
+
+    }
+
+    private fun updateName(updateUserData: UpdateUserData) {
+        SharedHelper(con).authkey?.let {
+            profileModel.updateEmail("Bearer $it", updateUserData)
+        }
+
+        profileModel.updateObserver.observe(con) {
+            Log.e("Response", "" + it.toString())
+            progress.dismiss()
+            SharedHelper(con).authkey?.let {
+                SharedHelper(con).id?.let { it1 ->
+                    profileModel.getProfile("Bearer $it", it1)
+                    dialog?.dismiss()
+                    progress.dismiss()
+                }
+            }
+        }
+    }
 
     val REQUEST_ID_MULTIPLE_PERMISSIONS = 101
 
     fun checkAndRequestPermissions(context: Activity?): Boolean {
         val WExtstorePermission = ContextCompat.checkSelfPermission(
             context!!,
-           WRITE_EXTERNAL_STORAGE
+            WRITE_EXTERNAL_STORAGE
         )
         val cameraPermission = ContextCompat.checkSelfPermission(
             context!!,

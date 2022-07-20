@@ -60,11 +60,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_45dp"
         android:layout_below="@+id/view3"
-        android:layout_marginStart="@dimen/_20dp"
-        android:layout_marginTop="@dimen/_20dp"
-        android:layout_marginEnd="@dimen/_20dp"
         android:singleLine="true"
-        android:layout_marginBottom="@dimen/_20dp"
+        android:layout_margin="@dimen/_20dp"
         android:background="@drawable/white_rect_border"
         android:fontFamily="@font/inter"
         android:paddingHorizontal="@dimen/_15dp"
@@ -189,6 +186,7 @@
             android:layout_marginTop="@dimen/_10dp"
             android:fontFamily="@font/inter_bold"
             android:text="@string/address_1"
+            android:id="@+id/add_one"
             android:textColor="@color/black" />
 
         <EditText
@@ -214,6 +212,7 @@
             android:fontFamily="@font/inter_bold"
             android:singleLine="true"
             android:text="@string/address_2"
+            android:id="@+id/add_two"
             android:textColor="@color/black" />
 
         <EditText
@@ -237,6 +236,7 @@
             android:layout_marginTop="@dimen/_10dp"
             android:fontFamily="@font/inter_bold"
             android:text="@string/postal_Code"
+            android:id="@+id/postal_txt"
             android:textColor="@color/black" />
 
         <EditText
@@ -260,6 +260,7 @@
             android:fontFamily="@font/inter_bold"
             android:singleLine="true"
             android:text="@string/city_caps"
+            android:id="@+id/city_txt"
             android:textAllCaps="false"
             android:textColor="@color/black" />
 

@@ -389,6 +389,13 @@
     <string name="postal_Code">Postal Code</string>
     <string name="city_caps">City</string>
     <string name="state">State</string>
+    <string name="err_firstname">Please enter first name</string>
+    <string name="err_lastname">Please enter last name</string>
+    <string name="firs_name">First Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="nick_name">Nick Name</string>
+    <string name="name">Name</string>
 
 
     <string-array name="decision_filter">
