@@ -17,6 +17,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/_15dp"
                 android:layout_marginHorizontal="@dimen/_15dp">
 
                 <LinearLayout
@@ -28,10 +29,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_40dp"
-                        android:layout_marginLeft="@dimen/_5dp"
                         android:fontFamily="@font/inter_bold"
                         android:gravity="center_vertical"
-                        android:paddingHorizontal="@dimen/_15dp"
                         android:text="@string/contact_info"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sp" />
@@ -43,8 +42,8 @@
 
                         <ImageView
                             android:id="@+id/email_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -102,8 +101,8 @@
 
                         <ImageView
                             android:id="@+id/phone_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -159,8 +158,8 @@
 
                         <ImageView
                             android:id="@+id/dob_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -217,8 +216,8 @@
 
                         <ImageView
                             android:id="@+id/add_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -273,8 +272,8 @@
 
                         <ImageView
                             android:id="@+id/id_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -331,8 +330,8 @@
 
                         <ImageView
                             android:id="@+id/state_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -388,6 +387,7 @@
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
+                app:cardCornerRadius="@dimen/_15dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_15dp">
@@ -401,10 +401,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_40dp"
-                        android:layout_marginLeft="@dimen/_5dp"
                         android:fontFamily="@font/inter_bold"
                         android:gravity="center_vertical"
-                        android:paddingHorizontal="@dimen/_15dp"
                         android:text="@string/additional_info"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sp" />
@@ -416,8 +414,8 @@
 
                         <ImageView
                             android:id="@+id/year_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -473,12 +471,12 @@
 
                         <ImageView
                             android:id="@+id/app_year_icon"
-                            android:backgroundTint="@color/purple"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
+                            android:backgroundTint="@color/purple"
                             android:src="@drawable/purple_tick" />
 
                         <LinearLayout
@@ -531,8 +529,8 @@
 
                         <ImageView
                             android:id="@+id/address_icon"
-                            android:layout_width="9dp"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -588,8 +586,8 @@
 
                         <ImageView
                             android:id="@+id/gender_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -645,8 +643,9 @@
 
                         <ImageView
                             android:id="@+id/ethincity_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
+
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -701,8 +700,9 @@
 
                         <ImageView
                             android:id="@+id/gap_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
+
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -758,6 +758,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15dp"
+                app:cardCornerRadius="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_15dp">
 
                 <LinearLayout
@@ -769,10 +770,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_40dp"
-                        android:layout_marginLeft="@dimen/_5dp"
                         android:fontFamily="@font/inter_bold"
                         android:gravity="center_vertical"
-                        android:paddingHorizontal="@dimen/_15dp"
                         android:text="@string/my_school"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sp" />
@@ -783,14 +782,14 @@
 
                         <ImageView
                             android:id="@+id/school_add_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
+
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
                             android:src="@drawable/ic_cap"
-                            app:tint="@color/blue_2"
-                            />
+                            app:tint="@color/blue_2" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -842,8 +841,9 @@
 
                         <ImageView
                             android:id="@+id/school_name_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
+
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -899,8 +899,8 @@
 
                         <ImageView
                             android:id="@+id/full_address_icon"
-                            android:layout_width="@dimen/_16dp"
-                            android:layout_height="@dimen/_16dp"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
@@ -955,16 +955,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_10dp">
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/ceeb_icon"
-                            android:backgroundTint="@color/grey"
                             android:layout_width="@dimen/_20dp"
-                            android:background="@drawable/circle"
                             android:layout_height="@dimen/_20dp"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10dp"
                             android:layout_marginLeft="@dimen/_5dp"
-                            android:src="@drawable/ic_hash" />
+                            android:background="@drawable/circle_grey"
+                            android:fontFamily="@font/inter_bold"
+                            android:gravity="center"
+                            android:text="#"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_14sp"
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -992,6 +996,7 @@
                                 android:fontFamily="@font/inter"
                                 android:gravity="center_vertical"
                                 android:text="@string/ceeb_code"
+                                android:textAllCaps="true"
                                 android:textColor="@color/grey_3"
                                 android:textSize="@dimen/_14sp" />
                         </LinearLayout>
@@ -1024,6 +1029,7 @@
                         <ImageView
                             android:id="@+id/common_icon"
                             android:layout_width="wrap_content"
+                            android:layout_marginLeft="@dimen/_15dp"
                             android:layout_height="@dimen/_40dp"
                             android:src="@drawable/ic_common_app" />
 

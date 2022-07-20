@@ -260,8 +260,8 @@
     <string name="student">Student</string>
     <string name="grade">ID: CP1212 (Grade 11)</string>
     <string name="contact_info"><![CDATA[Contact & Info]]></string>
-    <string name="primary_email">Primary email</string>
-    <string name="primary_phone">Primary phone</string>
+    <string name="primary_email">Primary Email</string>
+    <string name="primary_phone">Primary Phone</string>
     <string name="dob">DOB</string>
     <string name="birthday">Birthday</string>
     <string name="citizenship">Citizenship</string>
@@ -272,7 +272,7 @@
     <string name="year">2022</string>
     <string name="class_of">Class of</string>
     <string name="app_year">Application Year</string>
-    <string name="address">Palo Alto</string>
+    <string name="address">Address</string>
     <string name="female">Female</string>
     <string name="gender">Gender</string>
     <string name="ethincity_text">Hispanic or Latino</string>
