@@ -94,8 +94,10 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.microLoginAsync(ORIGIN, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
+            print(ex.response()?.errorBody().toString())
             UseCaseResult.Error(ex)
         } catch (ex: Exception) {
+            print( ex.message)
             UseCaseResult.Exception(ex)
         }
     }

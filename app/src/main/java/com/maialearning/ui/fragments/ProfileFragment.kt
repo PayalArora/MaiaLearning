@@ -21,6 +21,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.PrimaryEmailSheetBinding
@@ -637,6 +640,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
     }
 
     private fun logout() {
+        Firebase.auth.signOut()
         val intent = Intent(requireContext(), LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // To clean up all activities
         startActivity(intent)
