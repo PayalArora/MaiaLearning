@@ -6,6 +6,10 @@ class UpdateUserData {
 }
 
 class UserData {
+    lateinit var nick_name: String
+    lateinit var middle_name: String
+    lateinit var last_name: String
+    lateinit var first_name: String
     lateinit var gap_year_note: String
     lateinit var country: String
     lateinit var administrative_area: String

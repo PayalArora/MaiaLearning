@@ -626,7 +626,6 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         SharedHelper(requireContext()).authkey?.let {
             viewModel.updateEmail("Bearer $it", updateUserData)
         }
-
     }
 
     private fun isEmailIdValid(emailId: String): Boolean {
