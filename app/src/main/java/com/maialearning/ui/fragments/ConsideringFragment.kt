@@ -115,6 +115,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 }
                 val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
                 var pos = 0
+                countries.reverse()
                 for (j in 0 until countries.size) {
                     var firstTime = true
                     var count = 0
