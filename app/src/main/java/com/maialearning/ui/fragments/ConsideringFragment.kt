@@ -23,6 +23,8 @@ import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
@@ -49,6 +51,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
         return mBinding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
@@ -74,26 +77,66 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                     val key: String = x.next().toString()
                     jsonArray.put(json.get(key))
                 }
+                val countries = ArrayList<String>()
                 val array: ArrayList<ConsiderModel.Data> = ArrayList()
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
                     val arrayProgram: ArrayList<ConsiderModel.ProgramData> = ArrayList()
-                    var programArray=object_.getJSONArray("app_by_program_data")
-                    for(j in 0 until programArray.length()){
-                        val objectProgram= programArray.getJSONObject(j)
-                        arrayProgram.add(ConsiderModel.ProgramData(objectProgram.getInt("program_id"),objectProgram.getString("program_name"),"",""))
+                    var programArray = object_.getJSONArray("app_by_program_data")
+                    for (j in 0 until programArray.length()) {
+                        val objectProgram = programArray.getJSONObject(j)
+                        arrayProgram.add(
+                            ConsiderModel.ProgramData(
+                                objectProgram.getInt("program_id"),
+                                objectProgram.getString("program_name"),
+                                "",
+                                ""
+                            )
+                        )
                     }
+                    if (!countries.contains(object_.getString("country_name")))
+                        countries.add(object_.getString("country_name"))
                     val model: ConsiderModel.Data = ConsiderModel.Data(
                         object_.getInt("contact_info"),
                         object_.getInt("parchment"),
                         object_.getInt("slate"),
                         object_.getInt("transcript_nid"),
-                        object_.getString("university_nid"), object_.getString("name"),object_.getString("country"),
-                    object_.getString("country_name"),   object_.getString("created_by_name"),object_.getString("created_date"),object_.getString("internal_deadline"),arrayProgram
+                        object_.getString("university_nid"),
+                        object_.getString("name"),
+                        object_.getString("country"),
+                        object_.getString("country_name"),
+                        object_.getString("created_by_name"),
+                        object_.getString("created_date"),
+                        object_.getString("internal_deadline"),
+                        arrayProgram,
+                        0
                     )
                     array.add(model)
                 }
-                mBinding.consideringList.adapter = ConsiderAdapter(this, array)
+                val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
+                var pos = 0
+                for (j in 0 until countries.size) {
+                    var firstTime = true
+                    var count = 0
+                    for (k in 0 until array.size) {
+                        if (countries[j] == array[k].country_name) {
+                            count += 1
+                            if (firstTime) {
+                                firstTime = false
+                                array[k].country_name = countries[j]
+                            } else {
+                                array[k].country_name = ""
+                            }
+                            finalArray.add(array[k])
+                            finalArray[pos].count = count
+                        }
+                    }
+                    pos = finalArray.size
+                }
+
+
+                mBinding.universitisCounte.text = array.size.toString() + " Universities"
+                mBinding.consideringList.adapter = ConsiderAdapter(this, finalArray)
 
 
             }
@@ -101,9 +144,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     }
 
     private fun setAdapter() {
-       mBinding.consideringList.adapter = ConsiderAdapter(this, arrayListOf())
+        mBinding.consideringList.adapter = ConsiderAdapter(this, arrayListOf())
     }
-
 
 
     private fun setListeners() {

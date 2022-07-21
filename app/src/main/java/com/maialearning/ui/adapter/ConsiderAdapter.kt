@@ -44,8 +44,16 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayL
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
+            if(array[position].country_name==""){
+                top.visibility=View.GONE
+            }else{
+                top.visibility=View.VISIBLE
+                countryTxt.text = array[position].country_name
+                count.text = array[position].count.toString()
+            }
             uniName.text=array[position].naviance_college_name
-            dateName.setText(CommonClass.getDate(array[position].created_date.toLong())+" by: "+array[position].created_name)
+            date.setText(CommonClass.getDate(array[position].created_date.toLong()))
+            name.setText(array[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)

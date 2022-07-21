@@ -11,7 +11,9 @@ data class ConsiderModel (
             @SerializedName("data")
             var `data`: Data,
             @SerializedName("ncaa")
-            var ncaa: String
+            var ncaa: String ,
+            @SerializedName("country_Name")
+            var country_Name: String
         ) data class Data(
         @SerializedName("contact_info")
         var contactInfo: Int,
@@ -36,7 +38,9 @@ data class ConsiderModel (
         @SerializedName("internal_deadline")
         var internal_deadline: String,
         @SerializedName("app_by_program_data")
-        var program_data: ArrayList<ProgramData>?
+        var program_data: ArrayList<ProgramData>?,
+        @SerializedName("count")
+        var count: Int
     )
     data class ProgramData(
         @SerializedName("program_id")

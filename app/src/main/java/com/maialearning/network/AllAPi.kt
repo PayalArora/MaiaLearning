@@ -45,11 +45,7 @@ interface AllAPi {
         @Field("type") type: String
     ):  Deferred<ForgetModel>
 
-//    @GET("counselor_college/{id}?status={status}")
-//    fun considerListAsync(
-//        @Path("id")  id:String,
-//        @Header("status") status: String
-//    ):  Deferred<JSONObject>
+
 
     @GET("counselor_college/{id}?status=considering")
     fun considerListAsync(
