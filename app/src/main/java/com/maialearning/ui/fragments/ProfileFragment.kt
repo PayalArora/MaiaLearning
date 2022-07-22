@@ -96,7 +96,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         mBinding.yearTxt.text = it?.info?.gradYear
         mBinding.dobTxt.text = it?.info?.dob
         mBinding.appYearTxt.text = it?.info?.applicationYear
-        mBinding.addressTxt.text = it?.info?.administrativeArea
+        mBinding.addressTxt.text = it?.info?.address
         if (it?.info?.gender == ("F"))
             mBinding.genderTxt.text = "Female"
         else if (it?.info?.gender == ("M"))

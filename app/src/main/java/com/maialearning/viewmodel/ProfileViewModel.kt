@@ -2,6 +2,7 @@ package com.maialearning.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.EthnicityResponse
 import com.maialearning.model.EthnicityResponseItem
@@ -14,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
@@ -32,6 +35,11 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
     val countryObserver = MutableLiveData<JsonObject>()
     val stateObserver = MutableLiveData<JsonObject>()
     val ethnicityObserver = MutableLiveData< ArrayList<EthnicityResponseItem?>?>()
+    val imageUrlObserver = MutableLiveData<JsonArray>()
+    val uploadImageObserver = MutableLiveData<String>()
+
+
+
 
 
     fun getProfile(token: String, id: String) {
@@ -144,6 +152,39 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> ethnicityObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+
+    fun getImageURl(token: String, id: String,ext:String,schoolID:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getImageURL(token, id,ext,schoolID)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> imageUrlObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun uploadImage(content:String,url: String, body: RequestBody) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.uploadImage(content,url, body)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> uploadImageObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
