@@ -6,6 +6,9 @@ class UpdateUserData {
 }
 
 class UserData {
+    var state_of_residency: String? = null
+    lateinit var race: ArrayList<String?>
+    lateinit var secondary_email: String
     lateinit var nick_name: String
     lateinit var middle_name: String
     lateinit var last_name: String

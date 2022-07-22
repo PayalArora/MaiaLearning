@@ -6,6 +6,7 @@
     android:textSize="@dimen/_14sp"
     android:paddingStart="@dimen/_10dp"
     android:maxLines="1"
+    android:layout_centerVertical="true"
     android:paddingVertical="@dimen/_5dp"
     android:layout_height="@dimen/_35dp" />
 

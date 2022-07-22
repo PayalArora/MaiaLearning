@@ -40,9 +40,6 @@ import com.maialearning.viewmodel.ProfileViewModel
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.ext.isInt
-import java.io.File
-import java.io.InputStream
-
 
 class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflater) {
     private val profileModel: ProfileViewModel by con.viewModel()
@@ -66,7 +63,6 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         )
         for (item in tabArray) {
             mBinding.tabs.addTab(mBinding.tabs.newTab().setText(item))
-
         }
         val fm: FragmentManager = con.supportFragmentManager
         val adapter = ProfileAdapter(fm, con.lifecycle, tabArray.size, profileModel)
@@ -117,7 +113,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             }
         }
         profileModel.observer.observe(con, {
-            mBinding.nameTxt.setText(it.info?.firstName + " " + it?.info?.lastName)
+            mBinding.nameTxt.setText("${it.info?.salutation} ${it.info?.lastName}, ${it.info?.firstName} ${it.info?.middleName}")
             if (SharedHelper(con).convention ?: false) {
                 mBinding.gradeTxt.setText("ID: ${it.info?.nid} (Grade ${it.info?.grade})")
             } else {

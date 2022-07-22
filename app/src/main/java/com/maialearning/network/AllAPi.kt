@@ -117,4 +117,10 @@ interface AllAPi {
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
     ): Deferred< ArrayList<EthnicityResponseItem?>>
+
+    @GET("school_wide_configuration/field_race_config/{id}")
+    fun getRaces(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred< ArrayList<RaceItem?>>
 }

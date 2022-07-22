@@ -384,6 +384,7 @@
     <string name="err_state">Please select state first</string>
     <string name="administrative_area">Administrative Area</string>
     <string name="err_ethnicity">Please select ethnicities first</string>
+    <string name="err_race">Please select race first</string>
     <string name="address_1">Address 1</string>
     <string name="address_2">Address 2</string>
     <string name="postal_Code">Postal Code</string>
@@ -396,6 +397,10 @@
     <string name="last_name">Last Name</string>
     <string name="nick_name">Nick Name</string>
     <string name="name">Name</string>
+    <string name="secondary_email">Secondary Email</string>
+    <string name="race">Race</string>
+    <string name="residence">Residence</string>
+    <string name="state_residence">State Of Residence</string>
 
 
     <string-array name="decision_filter">
@@ -404,6 +409,12 @@
         <item>Deferred</item>
         <item>Waitlisted</item>
         <item>Declined</item>
+    </string-array>
+
+    <string-array name="residence">
+        <item>Unset</item>
+        <item>Resident of US</item>
+        <item>Nonresident of US</item>
     </string-array>
 
     <string-array name="sports">

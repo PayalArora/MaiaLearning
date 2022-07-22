@@ -46,6 +46,7 @@ interface LoginRepository {
    suspend fun getCountries(token: String)  :UseCaseResult<JsonObject>
     suspend fun getStates(token: String,id: String)  :UseCaseResult<JsonObject>
     suspend fun getEthnicities(token: String,id: String)  :UseCaseResult<ArrayList<EthnicityResponseItem?>>
+    suspend fun getRaces(token: String,id: String)  :UseCaseResult<ArrayList<RaceItem?>>
 
 }
 
@@ -212,6 +213,17 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getEthnicities(token: String, id: String): UseCaseResult<ArrayList<EthnicityResponseItem?>> {
         return try {
             val result = catApi.getEthnicities(id,token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getRaces(token: String, id: String): UseCaseResult<ArrayList<RaceItem?>> {
+        return try {
+            val result = catApi.getRaces(id,token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

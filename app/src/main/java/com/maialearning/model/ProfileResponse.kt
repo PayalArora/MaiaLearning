@@ -158,7 +158,7 @@ data class Info(
 	val address: String? = null,
 
 	@field:SerializedName("race")
-	val race: List<Any?>? = null,
+	val race: List<RaceItem?>? = null,
 
 	@field:SerializedName("citizenship")
 	var citizenship: ArrayList<String?>? = null,
@@ -363,4 +363,25 @@ data class ParentItem(
 
 	@field:SerializedName("connected_date")
 	val connectedDate: String? = null
+)
+
+data class RaceItem(
+
+	@field:SerializedName("default")
+	val jsonMemberDefault: String? = null,
+
+	@field:SerializedName("code")
+	val code: String? = null,
+
+	@field:SerializedName("name")
+	val name: String? = null,
+
+	@field:SerializedName("nid")
+	val nid: Any? = null,
+
+	@field:SerializedName("id")
+	val id: String? = null,
+
+	@field:SerializedName("type")
+	val type: String? = null
 )
