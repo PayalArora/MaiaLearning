@@ -481,7 +481,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 var states = arrayListOf<CountryData>()
 
                 countries.add(CountryData("Select country", "Select country"))
-                states.add(CountryData("Select state", "Select state"))
+              //  states.add(CountryData("Select state", "Select state"))
                 val adapter = ArrayAdapter(
                     sheetBinding.root.context,
                     R.layout.spinner_text, countries
@@ -590,7 +590,15 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         sheetBinding.root.context,
                         R.layout.spinner_text, states
                     )
-                    sheetBinding.secondSpinner.adapter = stateAdapter
+                    if (states.size == 1){
+                        sheetBinding.secondSpinner.isClickable = false
+                        sheetBinding.secondSpinner.setEnabled(false);
+                        sheetBinding.secondSpinner.adapter = stateAdapter
+                    } else {
+                        sheetBinding.secondSpinner.setEnabled(true);
+                        sheetBinding.secondSpinner.isClickable = true
+                        sheetBinding.secondSpinner.adapter = stateAdapter
+                    }
                     sheetBinding.secondSpinner.setSelection(pos)
                 }
                 viewModel.stateResidenceObserver.observe(viewLifecycleOwner) {

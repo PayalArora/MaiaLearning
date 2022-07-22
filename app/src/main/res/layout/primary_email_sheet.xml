@@ -198,6 +198,8 @@
                         android:dropDownVerticalOffset="20dp"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_vertical"
+                        android:clickable="false"
+                        android:enabled="false"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
                         android:theme="@style/MatchSpinnerTheme" />
