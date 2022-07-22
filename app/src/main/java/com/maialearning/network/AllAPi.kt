@@ -4,7 +4,11 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.http.*
+
 
 interface AllAPi {
 
@@ -13,13 +17,13 @@ interface AllAPi {
     fun userLoginAsync(
         @Field("username") username: String,
         @Field("password") password: String
-    ):  Deferred<LoginNewModel>
+    ): Deferred<LoginNewModel>
 
 
     @POST("google_login")
     @FormUrlEncoded
     fun googleLoginAsync(
-        @Header("origin") origin:String,
+        @Header("origin") origin: String,
         @Field("email") email: String,
         @Field("id") id: String,
         @Field("id_token") id_token: String
@@ -45,7 +49,11 @@ interface AllAPi {
         @Field("type") type: String
     ):  Deferred<ForgetModel>
 
-
+//    @GET("counselor_college/{id}?status={status}")
+//    fun considerListAsync(
+//        @Path("id")  id:String,
+//        @Header("status") status: String
+//    ):  Deferred<JSONObject>
 
     @GET("counselor_college/{id}?status=considering")
     fun considerListAsync(
@@ -119,4 +127,20 @@ interface AllAPi {
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
     ): Deferred< ArrayList<RaceItem?>>
+
+    @POST("get_profile_picure_update_presigned_url")
+    @FormUrlEncoded
+    fun updateProfImage(
+        @Header("Authorization") AutToken: String,
+        @Field("uid") n_id: String,
+        @Field("ext") ext: String,
+        @Field("school_id") schoolId: String
+    ): Deferred<JsonArray>
+
+    @PUT
+    fun uploadImage(
+        @Url() url: String,
+        @Header("Content-Type") content: String,
+        @Body body:RequestBody): Deferred<String>
+
 }
