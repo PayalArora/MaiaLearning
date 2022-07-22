@@ -1,5 +1,6 @@
 package com.maialearning.model
 
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 
 data class LoginNewModel(
@@ -612,65 +613,65 @@ data class LoginNewModel(
 
     data class MlSchoolConfigData(
 
-        @field:SerializedName("student_can_set_preferred_recommender")
-        val studentCanSetPreferredRecommender: List<Int?>? = null,
+//        @field:SerializedName("student_can_set_preferred_recommender")
+//        val studentCanSetPreferredRecommender: List<Int?>? = null,
+//
+//        @field:SerializedName("district_wide_recommendation")
+//        val districtWideRecommendation: List<Int?>? = null,
+//
+//        @field:SerializedName("verify_activity_complete")
+//        val verifyActivityComplete: JsonObject? = null,
 
-        @field:SerializedName("district_wide_recommendation")
-        val districtWideRecommendation: List<Int?>? = null,
+//        @field:SerializedName("mark_activity_complete_counselor")
+//        val markActivityCompleteCounselor: List<Int?>? = null,
+//
+//        @field:SerializedName("show_new_home_page")
+//        val showNewHomePage: List<Int?>? = null,
 
-        @field:SerializedName("verify_activity_complete")
-        val verifyActivityComplete: List<Int?>? = null,
-
-        @field:SerializedName("mark_activity_complete_counselor")
-        val markActivityCompleteCounselor: List<Int?>? = null,
-
-        @field:SerializedName("show_new_home_page")
-        val showNewHomePage: List<Int?>? = null,
-
-        @field:SerializedName("recommendation")
-        val recommendation: Recommendation? = null,
-
-        @field:SerializedName("internal_application_deadline")
-        val internalApplicationDeadline: InternalApplicationDeadline? = null,
-
-        @field:SerializedName("academic_planner_custom_subject")
-        val academicPlannerCustomSubject: List<AcademicPlannerCustomSubjectItem?>? = null,
-
-        @field:SerializedName("curriculum_permission_school")
-        val curriculumPermissionSchool: CurriculumPermissionSchool? = null,
-
-        @field:SerializedName("ib_transcript_dob_format")
-        val ibTranscriptDobFormat: Any? = null,
-
-        @field:SerializedName("enable_dob_visit_download")
-        val enableDobVisitDownload: List<Int?>? = null,
-
-        @field:SerializedName("bulk_upload_gpa_settings")
-        val bulkUploadGpaSettings: BulkUploadGpaSettings? = null,
-
-        @field:SerializedName("days_before_visits_to_show")
-        val daysBeforeVisitsToShow: Any? = null,
-
-        @field:SerializedName("old_student_dashboard")
-        val oldStudentDashboard: List<Int?>? = null,
-
-        @field:SerializedName("ib_transcript_listing")
-        val ibTranscriptListing: IbTranscriptListing? = null,
-
-        @field:SerializedName("curriculum_permission")
-        val curriculumPermission: CurriculumPermission? = null,
-
-        @field:SerializedName("invoicing")
-        val invoicing: Invoicing? = null,
+//        @field:SerializedName("recommendation")
+//        val recommendation: Recommendation? = null,
+//
+//        @field:SerializedName("internal_application_deadline")
+//        val internalApplicationDeadline: InternalApplicationDeadline? = null,
+//
+//        @field:SerializedName("academic_planner_custom_subject")
+//        val academicPlannerCustomSubject: List<AcademicPlannerCustomSubjectItem?>? = null,
+//
+//        @field:SerializedName("curriculum_permission_school")
+//        val curriculumPermissionSchool: CurriculumPermissionSchool? = null,
+//
+//        @field:SerializedName("ib_transcript_dob_format")
+//        val ibTranscriptDobFormat: Any? = null,
+//
+//        @field:SerializedName("enable_dob_visit_download")
+//        val enableDobVisitDownload: List<Int?>? = null,
+//
+//        @field:SerializedName("bulk_upload_gpa_settings")
+//        val bulkUploadGpaSettings: BulkUploadGpaSettings? = null,
+//
+//        @field:SerializedName("days_before_visits_to_show")
+//        val daysBeforeVisitsToShow: Any? = null,
+//
+//        @field:SerializedName("old_student_dashboard")
+//        val oldStudentDashboard: List<Int?>? = null,
+//
+//        @field:SerializedName("ib_transcript_listing")
+//        val ibTranscriptListing: IbTranscriptListing? = null,
+//
+//        @field:SerializedName("curriculum_permission")
+//        val curriculumPermission: CurriculumPermission? = null,
+//
+//        @field:SerializedName("invoicing")
+//        val invoicing: Invoicing? = null,
 
         @field:SerializedName("grade_convention")
         val gradeConvention: GradeConvention? = null,
 
-        @field:SerializedName("time_tracking")
-        val timeTracking: TimeTracking? = null,
-
-        @field:SerializedName("essay_outline_developer_view")
-        val essayOutlineDeveloperView: List<Int?>? = null
+//        @field:SerializedName("time_tracking")
+//        val timeTracking: TimeTracking? = null,
+//
+//        @field:SerializedName("essay_outline_developer_view")
+//        val essayOutlineDeveloperView: List<Int?>? = null
     )
 
     data class UserName(

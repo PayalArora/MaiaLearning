@@ -80,8 +80,8 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             con.getString(R.string.connections)
         )
         for (item in tabArray) {
-            sheetBinding.tabs.addTab(sheetBinding.tabs.newTab().setText(item))
 
+            sheetBinding.tabs.addTab(sheetBinding.tabs.newTab().setText(item))
         }
         val fm: FragmentManager = con.supportFragmentManager
         val adapter = ProfileAdapter(fm, con.lifecycle, tabArray.size, profileModel)
@@ -128,7 +128,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             }
         }
         profileModel.observer.observe(con, {
-            sheetBinding.nameTxt.setText(it.info?.firstName + " " + it?.info?.lastName)
+            sheetBinding.nameTxt.setText("${it.info?.salutation} ${it.info?.lastName}, ${it.info?.firstName} ${it.info?.middleName}")
             if (SharedHelper(con).convention ?: false) {
                 sheetBinding.gradeTxt.setText("ID: ${it.info?.nid} (Grade ${it.info?.grade})")
             } else {

@@ -91,7 +91,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 // COuntry code
     implementation 'com.github.gbksoft:GBKCountryCodePicker:v1.0.0'
-
+    implementation 'jp.wasabeef:richeditor-android:2.0.0'
 
 
 }

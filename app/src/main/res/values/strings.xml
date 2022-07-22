@@ -260,8 +260,8 @@
     <string name="student">Student</string>
     <string name="grade">ID: CP1212 (Grade 11)</string>
     <string name="contact_info"><![CDATA[Contact & Info]]></string>
-    <string name="primary_email">Primary email</string>
-    <string name="primary_phone">Primary phone</string>
+    <string name="primary_email">Primary Email</string>
+    <string name="primary_phone">Primary Phone</string>
     <string name="dob">DOB</string>
     <string name="birthday">Birthday</string>
     <string name="citizenship">Citizenship</string>
@@ -272,7 +272,7 @@
     <string name="year">2022</string>
     <string name="class_of">Class of</string>
     <string name="app_year">Application Year</string>
-    <string name="address">Palo Alto</string>
+    <string name="address">Address</string>
     <string name="female">Female</string>
     <string name="gender">Gender</string>
     <string name="ethincity_text">Hispanic or Latino</string>
@@ -384,6 +384,7 @@
     <string name="err_state">Please select state first</string>
     <string name="administrative_area">Administrative Area</string>
     <string name="err_ethnicity">Please select ethnicities first</string>
+    <string name="err_race">Please select race first</string>
     <string name="address_1">Address 1</string>
     <string name="address_2">Address 2</string>
     <string name="postal_Code">Postal Code</string>
@@ -396,6 +397,10 @@
     <string name="last_name">Last Name</string>
     <string name="nick_name">Nick Name</string>
     <string name="name">Name</string>
+    <string name="secondary_email">Secondary Email</string>
+    <string name="race">Race</string>
+    <string name="residence">Residence</string>
+    <string name="state_residence">State Of Residence</string>
 
 
     <string-array name="decision_filter">
@@ -404,6 +409,12 @@
         <item>Deferred</item>
         <item>Waitlisted</item>
         <item>Declined</item>
+    </string-array>
+
+    <string-array name="residence">
+        <item>Unset</item>
+        <item>Resident of US</item>
+        <item>Nonresident of US</item>
     </string-array>
 
     <string-array name="sports">

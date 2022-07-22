@@ -44,14 +44,11 @@ interface LoginRepository {
         sms: String
     ): UseCaseResult<String>
 
-    suspend fun updateEmail(token: String, userData: UpdateUserData): UseCaseResult<String>
-    suspend fun getCountries(token: String): UseCaseResult<JsonObject>
-    suspend fun getStates(token: String, id: String): UseCaseResult<JsonObject>
-    suspend fun getEthnicities(
-        token: String,
-        id: String
-    ): UseCaseResult<ArrayList<EthnicityResponseItem?>>
-
+  suspend  fun updateEmail(token: String, userData: UpdateUserData) :UseCaseResult<String>
+   suspend fun getCountries(token: String)  :UseCaseResult<JsonObject>
+    suspend fun getStates(token: String,id: String)  :UseCaseResult<JsonObject>
+    suspend fun getEthnicities(token: String,id: String)  :UseCaseResult<ArrayList<EthnicityResponseItem?>>
+    suspend fun getRaces(token: String,id: String)  :UseCaseResult<ArrayList<RaceItem?>>
     suspend fun getImageURL(
         token: String,
         id: String,
@@ -60,7 +57,6 @@ interface LoginRepository {
     ): UseCaseResult<JsonArray>
 
     suspend fun uploadImage(content:String,url: String, bode:RequestBody): UseCaseResult<String>
-
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -103,8 +99,10 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.microLoginAsync(ORIGIN, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
+            print(ex.response()?.errorBody().toString())
             UseCaseResult.Error(ex)
         } catch (ex: Exception) {
+            print( ex.message)
             UseCaseResult.Exception(ex)
         }
     }
@@ -136,10 +134,8 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getConsiderList(id: String): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.considerListAsync(
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-                "9375"
-            ).await()
+            BASE_URL=CAT_API_BASE_URL
+            val result = catApi.considerListAsync("Bearer "   + SharedHelper(BaseApplication.applicationContext()).authkey,"9375").await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -193,10 +189,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun updateEmail(
-        token: String,
-        updateUserData: UpdateUserData
-    ): UseCaseResult<String> {
+    override suspend fun updateEmail(token: String, updateUserData:UpdateUserData): UseCaseResult<String> {
         return try {
             val result = catApi.updateEmail(token, updateUserData).await()
             UseCaseResult.Success(result.toString())
@@ -235,6 +228,17 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     ): UseCaseResult<ArrayList<EthnicityResponseItem?>> {
         return try {
             val result = catApi.getEthnicities(id, token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getRaces(token: String, id: String): UseCaseResult<ArrayList<RaceItem?>> {
+        return try {
+            val result = catApi.getRaces(id,token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

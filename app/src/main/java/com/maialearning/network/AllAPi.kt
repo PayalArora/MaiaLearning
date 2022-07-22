@@ -27,27 +27,27 @@ interface AllAPi {
         @Field("email") email: String,
         @Field("id") id: String,
         @Field("id_token") id_token: String
-    ): Deferred<LoginNewModel>
+    ):  Deferred<LoginNewModel>
 
     @POST("azure_ad_oauth_login")
     @FormUrlEncoded
     fun microLoginAsync(
-        @Header("origin") origin: String,
+        @Header("origin") origin:String,
         @Field("token") token: String
-    ): Deferred<LoginNewModel>
+    ):  Deferred<LoginNewModel>
 
-    @GET("user_my_account_info/{id}")
+ @GET("user_my_account_info/{id}")
     fun getProfile(
-        @Header("Authorization") Authorization: String,
-        @Path("id") id: String
-    ): Deferred<ProfileResponse>
+     @Header("Authorization") Authorization: String,
+     @Path("id") id: String
+    ):  Deferred<ProfileResponse>
 
     @POST("forgot_password")
     @FormUrlEncoded
     fun forgetPassAsync(
         @Field("email") email: String,
         @Field("type") type: String
-    ): Deferred<ForgetModel>
+    ):  Deferred<ForgetModel>
 
 //    @GET("counselor_college/{id}?status={status}")
 //    fun considerListAsync(
@@ -57,15 +57,15 @@ interface AllAPi {
 
     @GET("counselor_college/{id}?status=considering")
     fun considerListAsync(
-        @Header("Authorization") AutToken: String,
-        @Path("id") id: String
-    ): Deferred<JsonObject>
+        @Header("Authorization")  AutToken:String,
+        @Path("id") id:String
+    ):  Deferred<JsonObject>
 
     @GET("counselor_college/{id}?status=applying")
     fun applyListAsync(
-        @Path("id") id: String,
-        @Header("Authorization") AutToken: String
-    ): Deferred<JsonObject>
+        @Path("id")  id:String,
+        @Header("Authorization")  AutToken:String
+    ):  Deferred<JsonObject>
 
     @GET("get_notes_for_student/{id}")
     fun getNotes(
@@ -102,8 +102,8 @@ interface AllAPi {
 
     @GET("get_jwt_token")
     fun getJWTToken(
-        @Header("Authorization") AutToken: String
-    ): Deferred<JsonArray>
+        @Header("Authorization")  AutToken:String
+    ):  Deferred<JsonArray>
 
 //    @GET("{id}/inbox")
 //    fun getInbox(
@@ -112,16 +112,21 @@ interface AllAPi {
 //    ):  Deferred<InboxResponse>
 
     @GET
-    fun getInbox(
-        @Url url: String,
-        @Header("x-access-token") JwtToken: String,
-    ): Deferred<InboxResponse>
+    fun getInbox(@Url url: String,
+                 @Header("x-access-token")  JwtToken:String,
+    ):  Deferred<InboxResponse>
 
     @GET("school_wide_configuration/field_ethnicity_config/{id}")
     fun getEthnicities(
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
-    ): Deferred<ArrayList<EthnicityResponseItem?>>
+    ): Deferred< ArrayList<EthnicityResponseItem?>>
+
+    @GET("school_wide_configuration/field_race_config/{id}")
+    fun getRaces(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred< ArrayList<RaceItem?>>
 
     @POST("get_profile_picure_update_presigned_url")
     @FormUrlEncoded

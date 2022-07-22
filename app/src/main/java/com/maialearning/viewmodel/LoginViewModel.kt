@@ -2,6 +2,8 @@ package com.maialearning.viewmodel
 
 import android.app.Activity
 import android.app.Application
+import android.util.Log
+import android.webkit.CookieManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -50,13 +52,14 @@ class LoginViewModel(private val app: Application, private val listener: OnSignI
     }
 
     fun signOut() {
+        googleSignInClient.signOut()
         auth.signOut()
     }
 
     fun signinToMicrosoft(activity: Activity) {
         val provider = OAuthProvider.newBuilder("microsoft.com")
         // Force re-consent.
-        provider.addCustomParameter("prompt", "consent");
+        provider.addCustomParameter("prompt", "select_account");
 
         val pendingResultTask: Task<AuthResult>? =  auth.getPendingAuthResult()
         if (pendingResultTask != null) {
