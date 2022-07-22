@@ -100,7 +100,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("created_by_name"),
                         object_.getString("created_date"),
                         object_.getString("internal_deadline"),
-                        arrayProgram
+                        arrayProgram,0
                     )
                     array.add(model)
                 }

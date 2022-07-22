@@ -41,7 +41,8 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
 
         viewHolder.binding.apply {
             uniName.text=array[position].naviance_college_name
-            dateName.setText(CommonClass.getDate(array[position].created_date.toLong())+" by: "+array[position].created_name)
+            date.setText(CommonClass.getDate(array[position].created_date.toLong()))
+            name.setText(" by: "+array[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)

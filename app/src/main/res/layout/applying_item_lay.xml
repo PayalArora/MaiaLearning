@@ -118,6 +118,7 @@
                 android:paddingVertical="@dimen/_5dp">
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/add"
                     android:layout_width="@dimen/_20dp"
                     android:layout_height="@dimen/_20dp"
@@ -126,20 +127,34 @@
                     android:layout_marginStart="@dimen/_5dp"
                     android:src="@drawable/add_icon" />
 
+
                 <TextView
-                    android:id="@+id/date_name"
+                    android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/_5dp"
-                    android:layout_toLeftOf="@+id/commentImg"
-                    android:layout_toRightOf="@+id/add"
                     android:ellipsize="end"
                     android:fontFamily="@font/inter_regular"
                     android:maxLines="2"
-                    android:text="@string/date_by"
+                    android:text=""
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_12sp" />
 
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/commentImg"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_15dp"
+                    android:layout_toEndOf="@+id/date"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/inter_regular"
+                    android:maxLines="2"
+                    android:text=""
+                    android:textSize="@dimen/_12sp" />
 
                 <ImageView
                     android:layout_width="@dimen/_18dp"
@@ -437,6 +452,8 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/add_button"
                     android:gravity="center_vertical"
+                    android:background="@drawable/white_rect_15"
+                    android:backgroundTint="@color/gray_2"
                     android:orientation="vertical">
 
                     <TextView
@@ -457,7 +474,8 @@
                         android:layout_marginStart="@dimen/_5dp"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
-                        android:background="@drawable/white_rect_24"
+                        android:background="@drawable/white_rect_15"
+                        android:backgroundTint="@color/gray_2"
                         android:dropDownVerticalOffset="20dp"
                         android:overlapAnchor="false"
                         android:theme="@style/MatchSpinnerTheme"
