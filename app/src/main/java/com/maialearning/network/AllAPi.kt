@@ -141,6 +141,6 @@ interface AllAPi {
     fun uploadImage(
         @Url() url: String,
         @Header("Content-Type") content: String,
-        @Body body:RequestBody): Deferred<String>
+        @Body body:RequestBody): Deferred<Unit>
 
 }

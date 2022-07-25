@@ -43,8 +43,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:gravity="center_vertical"
-        android:text="@string/clear"
         android:paddingHorizontal="@dimen/_15dp"
+        android:text="@string/cancel"
         android:textSize="@dimen/_14sp" />
 </RelativeLayout>
 

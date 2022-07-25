@@ -1,6 +1,7 @@
 package com.maialearning.ui.bottomsheets
 
 import android.Manifest
+import android.R.attr.dial
 import android.R.attr.path
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -58,19 +59,27 @@ import java.net.URI.create
 
 class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflater) {
     private val profileModel: ProfileViewModel by con.viewModel()
+
     val sheetBinding: ProfileLayoutBinding = ProfileLayoutBinding.inflate(layoutInflater)
     var dialog: BottomSheetDialog? = null
     private lateinit var progress: Dialog
 
     fun showDialog() {
+        progress = showLoadingDialog(con)
         val dialog = BottomSheetDialog(con)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
+        val layout = sheetBinding.root
+        dialog.setContentView(layout)
         sheetBinding.close.setOnClickListener { dialog.dismiss() }
         dialog.show()
-        progress = showLoadingDialog(con)
         profileWork()
         setAdapter(sheetBinding)
+        dialog.setOnDismissListener {
+                if (sheetBinding.root.parent != null) {
+                    val parentViewGroup = sheetBinding.root.parent as ViewGroup?
+                    parentViewGroup?.removeAllViews();
+                }
+        }
     }
 
     private fun setAdapter(sheetBinding: ProfileLayoutBinding) {
@@ -121,9 +130,11 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
     private var profileResponse: ProfileResponse = ProfileResponse()
 
     private fun profileWork() {
+
         SharedHelper(con).authkey?.let {
             SharedHelper(con).id?.let { it1 ->
                 Log.e(" it1 ", it1)
+                progress.show()
                 profileModel.getProfile("Bearer " + it, it1)
             }
         }
@@ -139,8 +150,8 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             }
             Picasso.with(con).load(it.info?.profilePic).into(sheetBinding.toolbarProf)
             profileResponse = it
+            progress.dismiss()
         })
-
         sheetBinding.nameTxt.setOnClickListener {
             showSheet("name")
         }
@@ -169,6 +180,12 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         sheetBinding.address2Edt.setText(profileResponse.info?.middleName)
         sheetBinding.postalcodeEdt.setText(profileResponse.info?.lastName)
         sheetBinding.cityEdt.setText(profileResponse.info?.nickName)
+        sheetBinding.backTxt.setOnClickListener {
+            dialog?.dismiss()
+        }
+        sheetBinding.clearText.setOnClickListener {
+            dialog?.dismiss()
+        }
         sheetBinding.saveBtn.setOnClickListener {
             if (sheetBinding.addressEdt.text.isBlank()) {
                 sheetBinding.addressEdt.setError(con.getString(R.string.err_firstname))
@@ -185,6 +202,8 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             updateUserData.userdata.middle_name = sheetBinding.postalcodeEdt.text.toString()
             updateUserData.userdata.nick_name = sheetBinding.cityEdt.text.toString()
             progress.show()
+            sheetBinding.backTxt.setOnClickListener { dialog?.dismiss()}
+            sheetBinding.clearText.setOnClickListener { dialog?.dismiss() }
             updateName(updateUserData)
         }
 
@@ -287,7 +306,6 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
     fun setData(requestCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            sheetBinding.toolbarProf.setImageBitmap(imageBitmap)
             fileUri = data.data
             bitmap = imageBitmap
             val byteArrayOutputStream = ByteArrayOutputStream()
@@ -298,6 +316,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             imagePath = getRealPathFromURI(tempUri)
             imageExt = tempUri?.let { getMimeType(con, it) }
+            sheetBinding.toolbarProf.setImageBitmap(imageBitmap)
             uploadImageWork()
         } else if (requestCode == REQUEST_CHOOSE_PHOTO) {
             handleImageFromGallery(data)
@@ -363,7 +382,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
     private fun displayImage(imagePath: String?) {
         if (imagePath != null) {
             val bitmap = BitmapFactory.decodeFile(imagePath)
-//            profileImageView.setImageBitmap(bitmap)
+            sheetBinding.toolbarProf.setImageBitmap(bitmap)
         } else {
             Toast.makeText(con, "Failed to get image", Toast.LENGTH_SHORT).show()
         }
@@ -387,7 +406,6 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
 
     fun getMimeType(context: Context, uri: Uri): String? {
         val extension: String?
-
         //Check uri format to avoid null
         extension = if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
             //If scheme is a content
@@ -415,18 +433,16 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         }
 
         profileModel.imageUrlObserver.observe(con) {
-            Log.e("Response: ", " $it")
             upload(it)
         }
 
     }
 
     private fun upload(it: JsonArray?) {
-
-
-        val file: File = File(imagePath)
+        val file = File(imagePath)
         val requestBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
-        it?.get(0)?.let { it1 ->
+        val url = it?.get(0)?.toString()?.replace("\"", "")
+        url.let { it1 ->
             profileModel.uploadImage(
                 "image/${imageExt}",
                 it1.toString(),
@@ -436,7 +452,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         profileModel.uploadImageObserver.observe(con) {
             Log.e("Response: ", " $it")
             progress.dismiss()
-            profileWork()
+            //profileWork()
         }
 
 

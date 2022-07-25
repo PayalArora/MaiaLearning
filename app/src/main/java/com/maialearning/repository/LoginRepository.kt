@@ -56,7 +56,7 @@ interface LoginRepository {
         schoolId: String
     ): UseCaseResult<JsonArray>
 
-    suspend fun uploadImage(content:String,url: String, bode:RequestBody): UseCaseResult<String>
+    suspend fun uploadImage(content:String,url: String, bode:RequestBody): UseCaseResult<Unit>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -134,7 +134,6 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getConsiderList(id: String): UseCaseResult<JsonObject> {
         return try {
-            BASE_URL=CAT_API_BASE_URL
             val result = catApi.considerListAsync("Bearer "   + SharedHelper(BaseApplication.applicationContext()).authkey,"9375").await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -263,7 +262,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun uploadImage(content:String,url: String, bode: RequestBody): UseCaseResult<String> {
+    override suspend fun uploadImage(content:String,url: String, bode: RequestBody): UseCaseResult<Unit> {
         return try {
             val result = catApi.uploadImage(url,content, bode).await()
             UseCaseResult.Success(result)

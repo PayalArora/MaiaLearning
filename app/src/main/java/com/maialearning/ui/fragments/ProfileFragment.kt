@@ -11,6 +11,8 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
@@ -369,6 +371,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
             "grad_year" -> {
                 sheetBinding.filters.text = requireActivity().getString(R.string.class_of)
                 sheetBinding.emailEdt.inputType = InputType.TYPE_CLASS_PHONE
+                sheetBinding.emailEdt.setFilters(arrayOf<InputFilter>(LengthFilter(4)))
                 sheetBinding.emailEdt.setText(profileResponse.info?.gradYear)
             }
             "gap_year" -> {
@@ -461,7 +464,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
             }
             "country" -> {
                 sheetBinding.filters.text =
-                    requireActivity().getString(R.string.administrative_area)
+                    requireActivity().getString(R.string.address)
                 sheetBinding.spinnerLay.visibility = View.VISIBLE
                 sheetBinding.secondSpinnerLay.visibility = View.VISIBLE
                 sheetBinding.emailEdt.visibility = View.GONE

@@ -50,4 +50,9 @@ class SharedHelper(var context: Context) {
         set(convention) {
             sharedPreference!!.putBooleanKey("convention", convention)
         }
+    var picture:String?
+        get() = sharedPreference!!.getKey("picture")
+        set(authkey) {
+            sharedPreference!!.putKey("picture", picture)
+        }
 }

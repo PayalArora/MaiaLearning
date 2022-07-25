@@ -8,13 +8,8 @@ import com.maialearning.model.*
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.withContext
-import okhttp3.MultipartBody
+import kotlinx.coroutines.*
 import okhttp3.RequestBody
-import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
 class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
@@ -188,7 +183,7 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> uploadImageObserver.value = result.data
+                is UseCaseResult.Success -> uploadImageObserver.value = result.toString()
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
@@ -196,6 +191,7 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
             }
         }
     }
+
     fun getRace(token: String, id: String) {
         showLoading.value = true
         Coroutines.mainWorker {

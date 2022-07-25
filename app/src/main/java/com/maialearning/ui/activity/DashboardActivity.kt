@@ -21,6 +21,7 @@ import com.maialearning.ui.fragments.ShortcutFragment
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardViewModel
+import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DashboardActivity : AppCompatActivity() {
@@ -43,10 +44,10 @@ class DashboardActivity : AppCompatActivity() {
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.VISIBLE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_prof).setOnClickListener {
-
+            profileFilter = ProfileFilter(this, layoutInflater)
             profileFilter.showDialog()
         }
-        profileFilter = ProfileFilter(this, layoutInflater)
+
         dashboardViewModel.getJwtToken()
         dashboardViewModel.jwtObserver.observe(this, {
             SharedHelper(this).jwtToken = it
@@ -64,6 +65,7 @@ class DashboardActivity : AppCompatActivity() {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
         loadFragment(HomeFragment())
+//        Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
         setListeners()
     }
 
