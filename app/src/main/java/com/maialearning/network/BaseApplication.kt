@@ -3,6 +3,7 @@ package com.maialearning.network
 import android.app.Application
 import android.content.Context
 import com.maialearning.util.appModules
+import com.maialearning.util.appModules1
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -29,6 +30,7 @@ class BaseApplication : Application() {
             androidLogger(Level.ERROR)
             androidContext(this@BaseApplication)
             modules(appModules)
+            modules(appModules1)
         }
 
     }

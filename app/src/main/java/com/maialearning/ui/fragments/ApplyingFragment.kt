@@ -18,6 +18,7 @@ import com.maialearning.databinding.FragmentApplyingBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.adapter.ApplyingAdapter
 import com.maialearning.ui.adapter.CommentAdapter
+import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
@@ -72,6 +73,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                     val key: String = x.next().toString()
                     jsonArray.put(json.get(key))
                 }
+                val countries = ArrayList<String>()
                 val array: ArrayList<ConsiderModel.Data> = ArrayList()
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
@@ -88,6 +90,8 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                             )
                         )
                     }
+                    if (!countries.contains(object_.getString("country_name")))
+                        countries.add(object_.getString("country_name"))
                     val model: ConsiderModel.Data = ConsiderModel.Data(
                         object_.getInt("contact_info"),
                         object_.getInt("parchment"),
@@ -100,11 +104,34 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("created_by_name"),
                         object_.getString("created_date"),
                         object_.getString("internal_deadline"),
-                        arrayProgram,0
+                        arrayProgram,
+                        0
                     )
                     array.add(model)
                 }
-                mBinding.applyingList.adapter = ApplyingAdapter(this, array)
+                val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
+                var pos = 0
+                countries.reverse()
+                for (j in 0 until countries.size) {
+                    var firstTime = true
+                    var count = 0
+                    for (k in 0 until array.size) {
+                        if (countries[j] == array[k].country_name) {
+                            count += 1
+                            if (firstTime) {
+                                firstTime = false
+                                array[k].country_name = countries[j]
+                            } else {
+                                array[k].country_name = ""
+                            }
+                            finalArray.add(array[k])
+                            finalArray[pos].count = count
+                        }
+                    }
+                    pos = finalArray.size
+                }
+                mBinding.applyingList.adapter = ApplyingAdapter(this, finalArray)
+
 
 
             }

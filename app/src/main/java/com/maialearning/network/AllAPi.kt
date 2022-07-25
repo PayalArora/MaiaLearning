@@ -112,9 +112,16 @@ interface AllAPi {
 //    ):  Deferred<InboxResponse>
 
     @GET
-    fun getInbox(@Url url: String,
+    fun getInboxN(@Url url: String,
                  @Header("x-access-token")  JwtToken:String,
-    ):  Deferred<InboxResponse>
+    ):  Deferred<JsonObject>
+
+    @GET("{id}/inbox")
+    fun getInbox(
+        @Header("x-access-token")  AutToken:String,
+        @Path("id") id:String
+    ):  Deferred<JsonObject>
+
 
     @GET("school_wide_configuration/field_ethnicity_config/{id}")
     fun getEthnicities(

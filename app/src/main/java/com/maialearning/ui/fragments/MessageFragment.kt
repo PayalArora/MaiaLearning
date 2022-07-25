@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.FragmentDashboardBinding
@@ -37,7 +38,7 @@ class MessageFragment : Fragment(), OnItemClick {
     private val messageViewModel: MessageViewModel by viewModel()
     private lateinit var mBinding: MessageLayoutBinding
     private lateinit var dialog: Dialog
-    var inboxResponse:InboxResponse? = null
+    var inboxResponse:JsonObject? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,10 +58,10 @@ class MessageFragment : Fragment(), OnItemClick {
     }
 
     private fun observer() {
-        messageViewModel.inboxObserver.observe(viewLifecycleOwner, {
+        messageViewModel.inboxObserver.observe(viewLifecycleOwner) {
             inboxResponse = it
 
-        })
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
