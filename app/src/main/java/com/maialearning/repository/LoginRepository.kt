@@ -7,7 +7,6 @@ import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.network.UseCaseResult
 import com.maialearning.util.BASE_URL
-import com.maialearning.util.CAT_API_BASE_URL
 import com.maialearning.util.CAT_API_MSG_URL
 import com.maialearning.util.ORIGIN
 
@@ -37,7 +36,7 @@ interface LoginRepository {
     suspend fun getNotes(id: String): UseCaseResult<NotesModel>
     suspend fun getApplyList(id: String): UseCaseResult<JsonObject>
     suspend fun getJWTToken(): UseCaseResult<String>
-    suspend fun getInbox(): UseCaseResult<InboxResponse>
+    suspend fun getInbox(): UseCaseResult<JsonObject>
     suspend fun updateSmsNotification(
         token: String,
         id: String,
@@ -288,12 +287,21 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getInbox(): UseCaseResult<InboxResponse> {
+    override suspend fun getInbox(): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.getInbox(
-                CAT_API_MSG_URL + "${SharedHelper(BaseApplication.applicationContext()).messageId}/inbox",
-                SharedHelper(BaseApplication.applicationContext()).jwtToken
+            BASE_URL=CAT_API_MSG_URL
+//            val result = catApi.getInboxN(
+//                CAT_API_MSG_URL + "${SharedHelper(BaseApplication.applicationContext()).messageId}/inbox",
+//                "Bearer " +SharedHelper(BaseApplication.applicationContext()).jwtToken
+//            ).await()
+            val result = catApi.getInboxN(
+                CAT_API_MSG_URL + "96c607b0-9a6c-4928-bd8c-8f332525fbe7/inbox",
+                "Bearer " +SharedHelper(BaseApplication.applicationContext()).jwtToken
             ).await()
+//            val result = catApi.getInbox(
+//                SharedHelper(BaseApplication.applicationContext()).jwtToken,
+//                 SharedHelper(BaseApplication.applicationContext()).messageId
+//            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

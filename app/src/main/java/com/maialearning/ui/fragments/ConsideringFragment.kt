@@ -134,8 +134,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                     }
                     pos = finalArray.size
                 }
-
-
                 mBinding.universitisCounte.text = array.size.toString() + " Universities"
                 mBinding.consideringList.adapter = ConsiderAdapter(this, finalArray)
 

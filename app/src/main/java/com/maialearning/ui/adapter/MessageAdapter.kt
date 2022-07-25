@@ -9,8 +9,9 @@ import com.maialearning.calbacks.OnItemClickDelete
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.databinding.LayoutMessageBinding
+import com.maialearning.model.InboxResponse
 
-class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<String>) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
+class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<InboxResponse.MessagesItem>) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: LayoutMessageBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
