@@ -48,7 +48,7 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
         messageViewModel.inboxObserver.observe(viewLifecycleOwner) {
             it?.let {
                 dialog?.dismiss()
-                val json = JSONObject(it.toString()).getJSONObject("JSON").getJSONObject("item")
+                val json = JSONObject(it.toString()).getJSONObject("Item")
                 val array=json.getJSONArray("messages")
                 for (j in 0 until array.length()) {
                     val objectProgram = array.getJSONObject(j)
@@ -56,7 +56,7 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
                         InboxResponse.MessagesItem(
                             objectProgram.getString("senderName"),
                             objectProgram.getString("subject"), objectProgram.getString("sentTimestamp"), objectProgram.getString("messageId"),
-                            objectProgram.getString("shortMessageBody"), objectProgram.getInt("isRead")
+                            objectProgram.getString("shortMessageBody"), 0
                         )
                     )
                 }
