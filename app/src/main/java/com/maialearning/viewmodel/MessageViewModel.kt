@@ -45,6 +45,36 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             }
         }
     }
+    fun getSent() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getSent()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> inboxObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun getTrash() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getTrash()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> inboxObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()

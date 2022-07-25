@@ -17,12 +17,26 @@ interface AllMessageAPi {
                  @Header("x-access-token")  JwtToken:String,
     ):  Deferred<JsonObject>
 
-    @GET("{id}/inbox")
+    @GET("v1/messaging/users/{id}/inbox")
     fun getInbox(
-        @Header("Authorization")  AutToken:String,
+        @Header("x-access-token")  AutToken:String,
         @Path("id") id:String
     ):  Deferred<JsonObject>
 
+    @GET("v1/messaging/users/{id}/sent")
+    fun getSent(
+        @Header("x-access-token")  AutToken:String,
+        @Path("id") id:String
+    ):  Deferred<JsonObject>
+    @GET("v1/messaging/users/{id}/trash")
+    fun getTrash(
+        @Header("x-access-token")  AutToken:String,
+        @Path("id") id:String
+    ):  Deferred<JsonObject>
 
+    @GET("get_jwt_token")
+    fun getJWTToken(
+        @Header("Authorization")  AutToken:String
+    ):  Deferred<JsonArray>
 
 }

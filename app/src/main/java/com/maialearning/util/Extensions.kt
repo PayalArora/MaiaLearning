@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit
 
 const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
 //const val CAT_API_MSG_URL = "https://msg-staging.maialearning.com/v1/messaging/users/"
-const val CAT_API_MSG_URL = "https://maia2-msg.maialearning.com/v1/messaging/users/"
+const val CAT_API_MSG_URL = "https://maia2-msg.maialearning.com/"
 var BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
 const val TITLE = "title"
