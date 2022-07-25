@@ -48,7 +48,8 @@ import java.util.*
 import java.util.regex.Pattern
 
 
-class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick, OnTextChangeListener {
+class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick,
+    OnTextChangeListener {
 
     private lateinit var mBinding: ProfileViewpagerBinding
     var dialog: BottomSheetDialog? = null
@@ -112,7 +113,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 raceList
             )
         }
-        mBinding.phoneTxt.text = it?.info?.primaryPhone
+        mBinding.phoneTxt.text = "+"  + it?.info?.primaryPhone
         mBinding.addTxt.text = it?.info?.citizenship?.let { it1 ->
             android.text.TextUtils.join(
                 ",",
@@ -137,6 +138,12 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         else
             mBinding.gapTxt.text = "No gap year"
 
+        if (it?.schoolInfo?.commonAppSend == "1") {
+            mBinding.transcriptBtn.isChecked = true
+        } else {
+            mBinding.transcriptBtn.isChecked = false
+        }
+        mBinding.transcriptBtn.isEnabled = false
         mBinding.schoolAddTxt.text = it?.schoolInfo?.district
         mBinding.schoolNameTxt.text = it?.schoolInfo?.schoolName
         mBinding.fullAddressTxt.text =
@@ -218,7 +225,8 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         }
 
         val mEditor = sheetBinding.gapEdt
-        sheetBinding.gapEdt.apply { setEditorHeight(200);
+        sheetBinding.gapEdt.apply {
+            setEditorHeight(200);
             setEditorFontSize(14)
             setPadding(10, 10, 10, 10);
             setPlaceholder(requireContext().resources.getString(R.string.gap_year));
@@ -401,6 +409,11 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                     R.layout.spinner_text, array
                 )
                 sheetBinding.spinner.adapter = adapter
+                for (i in array.indices) {
+                    if (array[i] == profileResponse.info?.applicationYear) {
+                        sheetBinding.spinner.setSelection(i)
+                    }
+                }
             }
             "gender" -> {
                 sheetBinding.filters.text = requireActivity().getString(R.string.gender)
@@ -484,7 +497,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 var states = arrayListOf<CountryData>()
 
                 countries.add(CountryData("Select country", "Select country"))
-              //  states.add(CountryData("Select state", "Select state"))
+                //  states.add(CountryData("Select state", "Select state"))
                 val adapter = ArrayAdapter(
                     sheetBinding.root.context,
                     R.layout.spinner_text, countries
@@ -593,7 +606,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         sheetBinding.root.context,
                         R.layout.spinner_text, states
                     )
-                    if (states.size == 1){
+                    if (states.size == 1) {
                         sheetBinding.secondSpinner.isClickable = false
                         sheetBinding.secondSpinner.setEnabled(false);
                         sheetBinding.secondSpinner.adapter = stateAdapter
@@ -728,9 +741,9 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
 
                 }
                 updateUserData.userdata.phone_number.phone_number =
-                    sheetBinding.editTextCarrierNumber.text.toString()
+                    "${sheetBinding.ccp.selectedCountryCodeAsInt}${sheetBinding.editTextCarrierNumber.text.toString()}"
                 updateUserData.userdata.phone_number.country_code =
-                    sheetBinding.ccp.selectedCountryCode
+                    "" + sheetBinding.ccp.selectedCountryCodeAsInt
             } else if (key == "dob") {
                 if (sheetBinding.emailEdt.text.isBlank()
                 ) {
@@ -760,10 +773,13 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
             } else if (key == ("gap_year")) {
                 if (gapText.isBlank()
                 ) {
-                    Toast.makeText(requireContext(), requireContext().getString(R.string.err_gapyear), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        requireContext(),
+                        requireContext().getString(R.string.err_gapyear),
+                        Toast.LENGTH_LONG
+                    ).show()
                     return@setOnClickListener
-                }
-                else  {
+                } else {
                     val encoder: Base64.Encoder =
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             Base64.getEncoder()
@@ -973,7 +989,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
 
     override fun onTextChange(text: String?) {
         if (text != null) {
-            gapText =text
+            gapText = text
         }
     }
 }

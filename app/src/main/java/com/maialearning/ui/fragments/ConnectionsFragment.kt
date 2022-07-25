@@ -10,6 +10,7 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ConnectionsViewpagerBinding
 import com.maialearning.ui.adapter.ConnectionAdapter
+import com.maialearning.ui.adapter.CounselorAdapter
 import com.maialearning.viewmodel.ProfileViewModel
 
 class ConnectionsFragment (val viewModel: ProfileViewModel): Fragment(), OnItemClick {
@@ -30,10 +31,11 @@ class ConnectionsFragment (val viewModel: ProfileViewModel): Fragment(), OnItemC
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.connection_list)
+//        val recyclerView = view.findViewById<RecyclerView>(R.id.connection_list)
 //        recyclerView.adapter = ConnectionAdapter(this)
         viewModel.observer.observe(requireActivity(), {
-            recyclerView.adapter = ConnectionAdapter(it.parent,this)
+          mBinding.connectionList.adapter = ConnectionAdapter(it.parent,this)
+            mBinding.counselorList.adapter = CounselorAdapter(it.assignedCounselors,this)
         })
     }
 

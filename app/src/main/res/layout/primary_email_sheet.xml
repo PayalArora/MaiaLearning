@@ -449,6 +449,8 @@
                     app:ccp_autoFormatNumber="true"
                     app:ccp_countryPreference="gb,us,ca,ch"
                     app:ccp_defaultNameCode="US"
+                    app:ccpDropDown_showFullCountryName="true"
+                    app:ccp_rememberLastSelection="true"
                     app:ccp_showNameCode="false" />
 
                 <EditText
@@ -514,6 +516,7 @@
             android:background="@drawable/white_rect_15"
             android:backgroundTint="@color/blue"
             android:text="@string/save"
+            android:textColor="@color/white"
             android:textAllCaps="false" />
 
     </LinearLayout>

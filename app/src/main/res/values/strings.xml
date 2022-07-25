@@ -401,6 +401,8 @@
     <string name="race">Race</string>
     <string name="residence">Residence</string>
     <string name="state_residence">State Of Residence</string>
+    <string name="parent_connections">Parent Connections</string>
+    <string name="counselors_connections">Counselors Connections</string>
 
 
     <string-array name="decision_filter">

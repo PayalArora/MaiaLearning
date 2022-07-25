@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -75,10 +76,10 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
         profileWork()
         setAdapter(sheetBinding)
         dialog.setOnDismissListener {
-                if (sheetBinding.root.parent != null) {
-                    val parentViewGroup = sheetBinding.root.parent as ViewGroup?
-                    parentViewGroup?.removeAllViews();
-                }
+            if (sheetBinding.root.parent != null) {
+                val parentViewGroup = sheetBinding.root.parent as ViewGroup?
+                parentViewGroup?.removeAllViews();
+            }
         }
     }
 
@@ -149,6 +150,10 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
                     sheetBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade})")
             }
             Picasso.with(con).load(it.info?.profilePic).into(sheetBinding.toolbarProf)
+            if (it.info?.profilePic != null) {
+                SharedHelper(con).picture = it.info?.profilePic
+                Picasso.with(con).load(it.info?.profilePic).into(con.findViewById<ImageView>(R.id.toolbar_prof))
+            }
             profileResponse = it
             progress.dismiss()
         })
@@ -202,7 +207,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             updateUserData.userdata.middle_name = sheetBinding.postalcodeEdt.text.toString()
             updateUserData.userdata.nick_name = sheetBinding.cityEdt.text.toString()
             progress.show()
-            sheetBinding.backTxt.setOnClickListener { dialog?.dismiss()}
+            sheetBinding.backTxt.setOnClickListener { dialog?.dismiss() }
             sheetBinding.clearText.setOnClickListener { dialog?.dismiss() }
             updateName(updateUserData)
         }

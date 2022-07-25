@@ -65,7 +65,9 @@ class DashboardActivity : AppCompatActivity() {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
         loadFragment(HomeFragment())
-//        Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
+        if (SharedHelper(this).picture != null && SharedHelper(this).picture?.length!! > 5) {
+            Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
+        }
         setListeners()
     }
 
