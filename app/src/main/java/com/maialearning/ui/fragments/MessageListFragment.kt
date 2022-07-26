@@ -67,6 +67,10 @@ class MessageListFragment : Fragment(), OnItemClickDelete {
                 setAdapter()
             }
         }
+        messageViewModel.showError.observe(viewLifecycleOwner) {
+                dialog?.dismiss()
+            }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

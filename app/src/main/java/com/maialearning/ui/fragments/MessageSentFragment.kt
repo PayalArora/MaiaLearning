@@ -63,6 +63,9 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
                 setAdapter()
             }
         }
+        messageViewModel.showError.observe(viewLifecycleOwner) {
+            dialog?.dismiss()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,6 +97,7 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
             }
 
         }
+
     }
 
     override fun onClick(positiion: Int) {

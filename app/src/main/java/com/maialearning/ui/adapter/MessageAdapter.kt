@@ -10,6 +10,7 @@ import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.databinding.LayoutMessageBinding
 import com.maialearning.model.InboxResponse
+import com.maialearning.util.CommonClass
 
 class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<InboxResponse.MessagesItem>) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
@@ -29,6 +30,9 @@ class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<Inb
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        viewHolder. binding.textTitle.text=array[position].senderName
+        viewHolder. binding.textDate.text=CommonClass.getTime(array[position].sentTimestamp!!.toLong())
+        viewHolder. binding.textDescription.text=array[position].shortMessageBody
         viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position) }
 
     }
