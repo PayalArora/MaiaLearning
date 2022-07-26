@@ -32,7 +32,7 @@ class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<Inb
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder. binding.textTitle.text=array[position].senderName
         viewHolder. binding.textDate.text=CommonClass.getTime(array[position].sentTimestamp!!.toLong())
-        viewHolder. binding.textDescription.text=array[position].shortMessageBody
+        viewHolder. binding.textDescription.text=array[position].subject
         viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position) }
 
     }
