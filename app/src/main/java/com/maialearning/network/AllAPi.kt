@@ -150,4 +150,10 @@ interface AllAPi {
         @Header("Content-Type") content: String,
         @Body body:RequestBody): Deferred<Unit>
 
+    @GET("student-assignment-dashboard/{id}")
+    fun getOverDueCompleted(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<DashboardOverdueResponse>
+
 }

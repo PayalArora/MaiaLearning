@@ -3,17 +3,22 @@ package com.maialearning.ui.fragments
 import DashboardPagerAdapter
 import ViewPagerAdapter
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -23,14 +28,33 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
+import com.maialearning.model.AssignmentItem
+import com.maialearning.model.DashboardOverdueResponse
+import com.maialearning.model.SortedDateModel
 import com.maialearning.ui.activity.NewMessageActivity
 import com.maialearning.ui.adapter.AddUniversiityAdapter
 import com.maialearning.ui.adapter.MessageAdapter
 import com.maialearning.ui.adapter.NotesAdapter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
+import com.maialearning.util.getDate
+import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.DashboardFragViewModel
+import com.maialearning.viewmodel.DashboardViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class DashboardFragment : Fragment(), OnItemClick {
     private lateinit var mBinding: DashbordFragBinding
+    private val dashboardViewModel: DashboardFragViewModel by viewModel()
+    private lateinit var dialog: Dialog
+    var assignmentList = arrayListOf<AssignmentItem>()
+    var endList = arrayListOf<SortedDateModel>()
+    var endCompletedList = arrayListOf<SortedDateModel>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,7 +67,7 @@ class DashboardFragment : Fragment(), OnItemClick {
         // Inflate the layout for this fragment
         mBinding = DashbordFragBinding.inflate(inflater, container, false)
 
-        val toolbarBinding:Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+        val toolbarBinding: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
         toolbarBinding.title = getString(R.string.dashboard)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
@@ -58,12 +82,16 @@ class DashboardFragment : Fragment(), OnItemClick {
                 showApplicationFilter()
             }
         }
-       setAdapter()
+        setAdapter()
+
+
         return mBinding.root
     }
-    fun showApplicationFilter(){
+
+    fun showApplicationFilter() {
         val dialog = BottomSheetDialog(requireContext())
-        val sheetBinding: ApplicationFilterBinding = ApplicationFilterBinding.inflate(layoutInflater)
+        val sheetBinding: ApplicationFilterBinding =
+            ApplicationFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
@@ -73,18 +101,135 @@ class DashboardFragment : Fragment(), OnItemClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setAdapter()
+        SharedHelper(requireContext()).id?.let {
+            dashboardViewModel.getOverDueCompleted(
+                "Bearer " + SharedHelper(requireContext()).authkey,
+                it
+            )
+        }
+
+        dashboardViewModel.showLoading.observe(viewLifecycleOwner) {
+            if (it == true) {
+                dialog = showLoadingDialog(requireContext())
+                dialog.show()
+            } else {
+                dialog.dismiss()
+            }
+        }
+        dashboardViewModel.showError.observe(viewLifecycleOwner) {
+            dialog.dismiss()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
+        dashboardViewModel.overdueObserver.observe(viewLifecycleOwner) {
+            Log.e("Response ", " " + it.assignment?.size)
+            lifecycleScope.launch {
+                dataSet(it)
+                dialog.dismiss()
+            }
+        }
+
     }
+
+    private fun dataSet(dashboardOverdueResponse: DashboardOverdueResponse) {
+        assignmentList = dashboardOverdueResponse.assignment as ArrayList<AssignmentItem>
+        overDueListWork()
+        completedListWork()
+//        setAdapter()
+    }
+
+    private fun completedListWork() {
+      var  completedList = assignmentList.filter { it.completed == 1 } as ArrayList<AssignmentItem>
+
+        val dateTimeFormatter: DateTimeFormatter =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                DateTimeFormatter.ofPattern("E dd MMM, yyyy")
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
+        completedList.sortBy {
+            it.date?.toLong()?.let { it1 ->
+                LocalDate.parse(
+                    getDate(
+                        it1,
+                        "E dd MMM, yyyy"
+                    ), dateTimeFormatter
+                )
+            }
+
+        }
+        var mappedList = completedList.groupBy {
+            it.date?.toLong()?.let { it1 ->
+                getDate(
+                    it1,
+                    "E dd MMM, yyyy"
+                )
+            }
+        }
+
+
+
+        Log.e("data ", "" + mappedList.size)
+        mappedList.map {
+            if (it.key != null) {
+                endCompletedList.add(SortedDateModel(it.key.toString(), it.value))
+            }
+        }
+    }
+
+    private fun overDueListWork() {
+       var overdueList = assignmentList.filter { it.overdue == 1 } as ArrayList<AssignmentItem>
+
+        val dateTimeFormatter: DateTimeFormatter =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                DateTimeFormatter.ofPattern("E dd MMM, yyyy")
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
+        overdueList.sortBy {
+            it.date?.toLong()?.let { it1 ->
+                LocalDate.parse(
+                    getDate(
+                        it1,
+                        "E dd MMM, yyyy"
+                    ), dateTimeFormatter
+                )
+            }
+
+        }
+        var mappedList = overdueList.groupBy {
+            it.date?.toLong()?.let { it1 ->
+                getDate(
+                    it1,
+                    "E dd MMM, yyyy"
+                )
+            }
+        }
+
+
+
+        Log.e("data ", "" + mappedList.size)
+        mappedList.map {
+            if (it.key != null) {
+                endList.add(SortedDateModel(it.key.toString(), it.value))
+            }
+        }
+    }
+
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun setAdapter() {
-        var tabArray = arrayOf(getString(R.string.upcomings),
+        var tabArray = arrayOf(
+            getString(R.string.upcomings),
             getString(R.string.overdue),
-            getString(R.string.complete))
+            getString(R.string.complete)
+        )
         for (item in tabArray) {
             mBinding.tabs.addTab(mBinding.tabs.newTab().setText(item))
         }
-        val adapter = DashboardPagerAdapter(requireContext(), this,
-            tabArray.size)
+        val adapter = DashboardPagerAdapter(
+            requireContext(), this,
+            tabArray.size, dashboardViewModel,endList,endCompletedList
+        )
         mBinding.viewPager.adapter = adapter
         mBinding.viewPager.isUserInputEnabled = false
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
@@ -95,15 +240,18 @@ class DashboardFragment : Fragment(), OnItemClick {
             when (position) {
                 0 -> {
                     tab.setCustomView(R.layout.item_tab)
-                    tab.customView?.findViewById<TextView>(R.id.tab_title)?.setText(tabArray[position])
+                    tab.customView?.findViewById<TextView>(R.id.tab_title)
+                        ?.setText(tabArray[position])
                 }
                 1 -> {
                     tab.setCustomView(R.layout.item_tab)
-                    tab.customView?.findViewById<TextView>(R.id.tab_title)?.setText(tabArray[position])
+                    tab.customView?.findViewById<TextView>(R.id.tab_title)
+                        ?.setText(tabArray[position])
                 }
-                2->{
+                2 -> {
                     tab.setCustomView(R.layout.item_tab)
-                    tab.customView?.findViewById<TextView>(R.id.tab_title)?.setText(tabArray[position])
+                    tab.customView?.findViewById<TextView>(R.id.tab_title)
+                        ?.setText(tabArray[position])
                 }
             }
         }.attach()
@@ -114,7 +262,7 @@ class DashboardFragment : Fragment(), OnItemClick {
     }
 
     override fun onClick(positiion: Int) {
-       // loadFragment(MessageDetailFragment())
+        // loadFragment(MessageDetailFragment())
     }
 
 }

@@ -58,6 +58,8 @@ interface LoginRepository {
     ): UseCaseResult<JsonArray>
 
     suspend fun uploadImage(content:String,url: String, bode:RequestBody): UseCaseResult<Unit>
+    suspend fun getOverDueCompleted(token:String,id: String): UseCaseResult<DashboardOverdueResponse>
+
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -302,6 +304,18 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 //                SharedHelper(BaseApplication.applicationContext()).jwtToken,
 //                 SharedHelper(BaseApplication.applicationContext()).messageId
 //            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+
+    override suspend fun getOverDueCompleted(token: String, id: String): UseCaseResult<DashboardOverdueResponse> {
+        return try {
+            val result = catApi.getOverDueCompleted(id,token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
