@@ -31,7 +31,7 @@ class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<Inb
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder. binding.textTitle.text=array[position].senderName
-        viewHolder. binding.textDate.text=CommonClass.getTime(array[position].sentTimestamp!!.toLong())
+        viewHolder. binding.textDate.text=CommonClass.getDate(array[position].sentTimestamp!!.toLong())
         viewHolder. binding.textDescription.text=array[position].subject
         viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position) }
 

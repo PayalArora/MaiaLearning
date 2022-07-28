@@ -7,8 +7,8 @@ object CommonClass {
 
     fun getDate(timestamp: Long) :String {
         val calendar = Calendar.getInstance(Locale.ENGLISH)
-        calendar.timeInMillis = timestamp * 1000L
-        val date = DateFormat.format("MMM dd yyyy, hh:mm a",calendar).toString()
+        calendar.timeInMillis = timestamp * 1000
+        val date = DateFormat.format("MMM dd yyyy , hh:mm a",calendar).toString()
         return date
     }
     fun getTime(timestamp: Long) :String {
