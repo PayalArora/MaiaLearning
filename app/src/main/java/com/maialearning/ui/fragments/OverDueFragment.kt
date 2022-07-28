@@ -1,53 +1,56 @@
 package com.maialearning.ui.fragments
 
-import android.os.Build
+import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.FragmentOverDueBinding
-import com.maialearning.model.AssignmentItem
-import com.maialearning.model.DashboardOverdueResponse
 import com.maialearning.model.SortedDateModel
 import com.maialearning.ui.adapter.OverDueHeadAdapter
 import com.maialearning.ui.adapter.UpcomingBannerAdapter
-import com.maialearning.util.getDate
+import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardFragViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
 
 class OverDueFragment(
     val dashboardViewModel: DashboardFragViewModel,
-    var endList: ArrayList<SortedDateModel>
+    var endList: ArrayList<SortedDateModel>,
 ) : Fragment(), OnItemClick {
-
+    private lateinit var dialog: Dialog
     private lateinit var mBinding: FragmentOverDueBinding
-    var assignmentList = arrayListOf<AssignmentItem>()
-    var overdueList = arrayListOf<AssignmentItem>()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentOverDueBinding.inflate(inflater, container, false)
-//        setAdapter()
+        dialog = showLoadingDialog(requireContext())
+
+
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        mBinding.upcomingList.adapter = OverDueHeadAdapter(null, this)
+        dialog.show()
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(100)
+            setAdapter()
+            delay(3300)
+            dialog.dismiss()
+        }
+
 //        dashboardViewModel.overdueObserver.observe(viewLifecycleOwner) {
 //            Log.e("Response ", " " + it.assignment?.size)
 //            lifecycleScope.launch {
@@ -57,53 +60,10 @@ class OverDueFragment(
 
     }
 
-//    private fun dataSet(dashboardOverdueResponse: DashboardOverdueResponse) {
-//        assignmentList = dashboardOverdueResponse.assignment as ArrayList<AssignmentItem>
-//        if (overdue)
-//            overdueList = assignmentList.filter { it.overdue == 1 } as ArrayList<AssignmentItem>
-//        else
-//            overdueList =
-//                assignmentList.filter { it.completed == 1 } as ArrayList<AssignmentItem>
-//
-//        val dateTimeFormatter: DateTimeFormatter =
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                DateTimeFormatter.ofPattern("E dd MMM, yyyy")
-//            } else {
-//                TODO("VERSION.SDK_INT < O")
-//            }
-//        overdueList.sortBy {
-//            it.date?.toLong()?.let { it1 ->
-//                LocalDate.parse(
-//                    getDate(
-//                        it1,
-//                        "E dd MMM, yyyy"
-//                    ), dateTimeFormatter
-//                )
-//            }
-//
-//        }
-//        var mappedList = overdueList.groupBy {
-//            it.date?.toLong()?.let { it1 ->
-//                getDate(
-//                    it1,
-//                    "E dd MMM, yyyy"
-//                )
-//            }
-//        }
-//
-//
-//
-//        Log.e("data ", "" + mappedList.size)
-//        mappedList.map {
-//            if (it.key != null) {
-//                endList.add(SortedDateModel(it.key.toString(), it.value))
-//            }
-//        }
-//        setAdapter()
-//    }
-
     private fun setAdapter() {
-        mBinding.upcomingList.adapter = OverDueHeadAdapter(endList, this)
+        // mBinding.upcomingList.adapter = OverDueHeadAdapter(overdueList = , this)
+        ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).overdueList = endList
+        ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).notifyDataSetChanged()
     }
 
     private fun initView() {

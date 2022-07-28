@@ -140,7 +140,7 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             }
         }
         profileModel.observer.observe(con, {
-            sheetBinding.nameTxt.setText("${it.info?.salutation} ${it.info?.lastName}, ${it.info?.firstName} ${it.info?.middleName}")
+            sheetBinding.nameTxt.setText("${it.info?.lastName}, ${it.info?.firstName} ${it.info?.middleName}")
             if (SharedHelper(con).convention ?: false) {
                 sheetBinding.gradeTxt.setText("ID: ${it.info?.nid} (Grade ${it.info?.grade})")
             } else {

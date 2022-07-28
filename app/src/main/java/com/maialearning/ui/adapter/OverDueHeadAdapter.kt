@@ -11,7 +11,7 @@ import com.maialearning.model.AssignmentItem
 import com.maialearning.model.SortedDateModel
 import com.maialearning.util.getDate
 
-class OverDueHeadAdapter (var overdueList: ArrayList<SortedDateModel>, val onItemClick: OnItemClick
+class OverDueHeadAdapter (var overdueList: ArrayList<SortedDateModel>?, val onItemClick: OnItemClick
 ) :
 RecyclerView.Adapter<OverDueHeadAdapter.ViewHolder>() {
     var isSelected = false
@@ -37,13 +37,13 @@ RecyclerView.Adapter<OverDueHeadAdapter.ViewHolder>() {
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.setOnClickListener { onItemClick.onClick(position) }
-        viewHolder.binding.dateTxt.setText(overdueList.get(position).date)
-        overdueList.get(position).assignment?.let { viewHolder.binding.countTxt.setText(""+it.size) }
-        viewHolder.binding.assignmentRow.adapter=OverDueAdapter(overdueList.get(position).assignment as ArrayList<AssignmentItem>)
+        viewHolder.binding.dateTxt.setText(overdueList?.get(position)?.date)
+        overdueList?.get(position)?.assignment?.let { viewHolder.binding.countTxt.setText(""+it.size) }
+        viewHolder.binding.assignmentRow.adapter=OverDueAdapter(overdueList?.get(position)?.assignment as ArrayList<AssignmentItem>)
     }
 
     override fun getItemCount(): Int {
-        return overdueList.size
+        return overdueList?.size?:0
     }
 
 }

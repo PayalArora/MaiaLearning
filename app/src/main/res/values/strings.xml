@@ -279,6 +279,7 @@
     <string name="ethincity">Ethnicity</string>
     <string name="no_gap">No gap year</string>
     <string name="gap_year">Gap Year Note</string>
+    <string name="gap_year_txt">Gap Year</string>
     <string name="my_school">My School</string>
     <string name="san_francisco">San Francisco, CA</string>
     <string name="district">School District</string>
@@ -434,6 +435,4 @@
         <item>Basketball</item>
         <item>Cricket</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
