@@ -82,4 +82,9 @@
         <item name="android:minWidth">1dip</item>
         <item name="android:maxWidth">12dip</item>
     </style>
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slideup</item>
+        <item name="android:windowExitAnimation">@anim/slidedown</item>
+    </style>
+
 </resources>

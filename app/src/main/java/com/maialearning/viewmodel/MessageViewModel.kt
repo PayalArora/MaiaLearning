@@ -27,6 +27,7 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
 
     val showLoading = MutableLiveData<Boolean>()
     val inboxObserver = MutableLiveData<JsonObject>()
+    val delObserver = MutableLiveData<JsonObject>()
     val showError = SingleLiveEvent<String>()
 
 
@@ -69,6 +70,36 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> inboxObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+ fun getMessage(id:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getMessage(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> inboxObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun delMessage(id:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.delMessage(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> delObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
 

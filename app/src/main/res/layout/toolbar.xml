@@ -33,6 +33,7 @@
         android:textSize="@dimen/_16sp"/>
 
     <ImageButton
+        android:id="@+id/menu"
         android:layout_width="@dimen/_40dp"
         android:layout_height="@dimen/_40dp"
         android:layout_marginRight="@dimen/_5dp"

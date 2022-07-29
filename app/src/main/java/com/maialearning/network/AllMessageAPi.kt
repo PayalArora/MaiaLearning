@@ -18,25 +18,32 @@ interface AllMessageAPi {
     ):  Deferred<JsonObject>
 
     @GET("v1/messaging/users/{id}/inbox")
-    fun getInbox(
+    fun getInboxAsync(
         @Header("x-access-token")  AutToken:String,
         @Path("id") id:String
     ):  Deferred<JsonObject>
 
     @GET("v1/messaging/users/{id}/sent")
-    fun getSent(
+    fun getSentAsync(
         @Header("x-access-token")  AutToken:String,
         @Path("id") id:String
     ):  Deferred<JsonObject>
     @GET("v1/messaging/users/{id}/trash")
-    fun getTrash(
+    fun getTrashAsync(
         @Header("x-access-token")  AutToken:String,
         @Path("id") id:String
     ):  Deferred<JsonObject>
 
-    @GET("get_jwt_token")
-    fun getJWTToken(
-        @Header("Authorization")  AutToken:String
-    ):  Deferred<JsonArray>
+    @GET("v1/messaging/messages/{id}")
+    fun getMessageAsync(
+        @Header("x-access-token")  AutToken:String,
+        @Path("id") id:String
+    ):  Deferred<JsonObject>
+
+    @DELETE("v1/messaging/messages/{id}")
+    fun delMessageAsync(
+        @Header("x-access-token")  AutToken:String,
+        @Path("id") id:String
+    ):  Deferred<JsonObject>
 
 }

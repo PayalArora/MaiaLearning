@@ -13,18 +13,19 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.MessageDetailBinding
 import com.maialearning.databinding.NewMessageBinding
+import com.maialearning.model.AttachMessages
 import com.maialearning.ui.adapter.FilesAdapter
 import com.maialearning.ui.adapter.RecipentAdapter
 
 class NewMessageActivity : AppCompatActivity(), OnItemClick {
     private lateinit var mBinding: NewMessageBinding
-
+    var attachedArray=ArrayList<AttachMessages>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = NewMessageBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.root.setBackgroundColor(getResources().getColor(R.color.white))
-        mBinding.filesList.adapter = FilesAdapter(this)
+        mBinding.filesList.adapter = FilesAdapter(this,attachedArray)
         mBinding.toolbar.backBtn.setOnClickListener { finish() }
         mBinding.toolbar.textTitle.setText(getString(R.string.new_message))
         mBinding.textReciepent.setOnClickListener { bottomSheetWork() }

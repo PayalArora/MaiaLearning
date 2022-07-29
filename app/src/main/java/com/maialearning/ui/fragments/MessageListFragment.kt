@@ -10,12 +10,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClickDelete
 import com.maialearning.databinding.LayoutRecyclerviewBinding
-import com.maialearning.databinding.MessageLayoutBinding
-import com.maialearning.model.ConsiderModel
 import com.maialearning.model.InboxResponse
 import com.maialearning.ui.activity.MessageDetailActivity
 import com.maialearning.ui.adapter.MessageAdapter
@@ -70,19 +67,26 @@ class MessageListFragment : Fragment(), OnItemClickDelete {
         messageViewModel.showError.observe(viewLifecycleOwner) {
                 dialog?.dismiss()
             }
+        messageViewModel.delObserver.observe(viewLifecycleOwner) {
+                dialog?.dismiss()
+            }
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         dialog = showLoadingDialog(requireContext())
         dialog.show()
         messageViewModel.getInbox()
         observer()
         setAdapter()
-
     }
-
 
 
     private fun setAdapter() {
@@ -101,7 +105,7 @@ class MessageListFragment : Fragment(), OnItemClickDelete {
 //            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 //                // this method is called when we swipe our item to right direction.
 //                // on below line we are getting the item at a particular position.
-//                (mBinding.recyclerList.adapter as MessageAdapter).showDelete(viewHolder.adapterPosition)
+//
 //                (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(viewHolder.adapterPosition)
 //            } // at last we are adding this
 //            // to our recycler view.
@@ -115,23 +119,28 @@ class MessageListFragment : Fragment(), OnItemClickDelete {
                 underlayButtons.add(UnderlayButton(
                     "Delete",
                     0,
-                    Color.parseColor("#10E94235"), SwipeHelper.UnderlayButtonClickListener {
-                        onDelete(it)
-                    }
-                ))
+                    Color.parseColor("#10E94235")
+                ) {
+                    onDelete(it)
+                })
+
             }
+
+
 
         }
     }
 
-    override fun onClick(positiion: Int) {
-        val intent = Intent(requireActivity(), MessageDetailActivity::class.java)
+    override fun onClick(positiion: Int,id: String) {
+        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id)
         startActivity(intent)
     }
 
     override fun onDelete(position: Int) {
         // this method is called when item is swiped.
         // below line is to remove item from our array list.
+        dialog.show()
+        messageViewModel.delMessage(recyclerDataArrayList[position].messageId?:"")
         recyclerDataArrayList.removeAt(position)
 
         // below line is to notify our item is removed from adapter.

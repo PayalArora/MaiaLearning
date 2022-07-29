@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClickDelete
+import com.maialearning.calbacks.OnItemClickId
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.model.InboxResponse
 import com.maialearning.ui.activity.MessageDetailActivity
@@ -22,7 +23,7 @@ import com.maialearning.viewmodel.MessageViewModel
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MessageSentFragment : Fragment(), OnItemClickDelete {
+class MessageSentFragment : Fragment(),  OnItemClickDelete  {
     private lateinit var mBinding: LayoutRecyclerviewBinding
     private var recyclerDataArrayList: ArrayList<InboxResponse.MessagesItem> = arrayListOf()
     private val messageViewModel: MessageViewModel by viewModel()
@@ -100,8 +101,8 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
 
     }
 
-    override fun onClick(positiion: Int) {
-        val intent = Intent(requireActivity(), MessageDetailActivity::class.java)
+    override fun onClick(positiion: Int, id: String) {
+        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id)
         startActivity(intent)
     }
 
@@ -110,6 +111,7 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
         (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)
 
     }
+
 
 }
 
