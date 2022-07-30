@@ -4,10 +4,7 @@ import android.annotation.TargetApi
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.maialearning.databinding.ActivityLoadUrlBinding
@@ -29,10 +26,10 @@ class LoadUrlActivity: AppCompatActivity() {
         mWebView = mBinding.webView
         mWebView.settings.javaScriptEnabled = true // enable javascript
         mWebView.settings.loadWithOverviewMode = true
-//        mWebView.settings.useWideViewPort = true
-//        mWebView.settings.domStorageEnabled = true
+        mWebView.settings.useWideViewPort = true
+        mWebView.settings.domStorageEnabled = true
         dialog = showLoadingDialog(this)
-
+        mWebView.setWebChromeClient(WebChromeClient())
         mWebView.webViewClient = object : WebViewClient() {
             override fun onReceivedError(
                 view: WebView,

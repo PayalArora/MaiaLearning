@@ -58,6 +58,7 @@ interface LoginRepository {
     ): UseCaseResult<JsonArray>
 
     suspend fun uploadImage(content:String,url: String, bode:RequestBody): UseCaseResult<Unit>
+    suspend fun getRecipients(id: String, type:String): UseCaseResult<JSONArray>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -266,6 +267,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun uploadImage(content:String,url: String, bode: RequestBody): UseCaseResult<Unit> {
         return try {
             val result = catApi.uploadImage(url,content, bode).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getRecipients(
+        id: String,
+        type: String
+    ): UseCaseResult<JSONArray> {
+        return try {
+            val result = catApi.getRecipients("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey ,id, type).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

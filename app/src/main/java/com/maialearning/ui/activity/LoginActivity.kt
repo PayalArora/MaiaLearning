@@ -47,7 +47,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val application = requireNotNull(this).application
         val factory = LoginViewModelFactory(application, object : OnSignInStartedListener {
             override fun onSignInStarted(client: GoogleSignInClient?) {

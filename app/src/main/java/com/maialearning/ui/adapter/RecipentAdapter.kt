@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ReciepentItemBinding
+import com.maialearning.model.ReceipentModel
 
 
-class RecipentAdapter(val onItemClick: OnItemClick) :
+class RecipentAdapter(val onItemClick: OnItemClick,var list:ArrayList<ReceipentModel>) :
     RecyclerView.Adapter<RecipentAdapter.ViewHolder>() {
     var isSelected = false
 
@@ -42,7 +43,7 @@ class RecipentAdapter(val onItemClick: OnItemClick) :
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return list.size
     }
 
     fun selectAll(checked: Boolean) {

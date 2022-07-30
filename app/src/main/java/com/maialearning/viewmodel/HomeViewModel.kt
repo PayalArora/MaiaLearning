@@ -1,8 +1,10 @@
 package com.maialearning.viewmodel
 
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.Consider
 import com.maialearning.model.NotesModel
@@ -14,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
@@ -28,6 +31,7 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
     val listObserver = MutableLiveData<JsonObject>()
     val applyObserver = MutableLiveData<JsonObject>()
     val notesObserver = MutableLiveData<NotesModel>()
+    val listArrayObserver = MutableLiveData<JSONArray>()
     val showError = SingleLiveEvent<String>()
 
     fun getConsiderList(id:String) {
@@ -69,7 +73,24 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+    fun getRecipients(context: Context, id: String, type: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getRecipients(
+                    id,
+                    type
+                )
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> listArrayObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
 
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

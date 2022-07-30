@@ -6,6 +6,7 @@ import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -149,5 +150,12 @@ interface AllAPi {
         @Url() url: String,
         @Header("Content-Type") content: String,
         @Body body:RequestBody): Deferred<Unit>
+
+    @POST("get_message_center_recipients_for_students")
+    @FormUrlEncoded
+    fun getRecipients(
+        @Header("Authorization") AutToken: String,
+        @Field("school_id") n_id: String,
+        @Field("user_type") type: String): Deferred<JSONArray>
 
 }
