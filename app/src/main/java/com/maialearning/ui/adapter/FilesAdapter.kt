@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.calbacks.OnItemClick
+import com.maialearning.calbacks.OnItemClickId
 import com.maialearning.databinding.ItemFilesBinding
 import com.maialearning.model.AttachMessages
 
 
-class FilesAdapter(val onItemClick: OnItemClick,var attachedArray:ArrayList<AttachMessages>) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
+class FilesAdapter(val onItemClick: OnItemClickId,var attachedArray:ArrayList<AttachMessages>) : RecyclerView.Adapter<FilesAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -31,7 +32,7 @@ class FilesAdapter(val onItemClick: OnItemClick,var attachedArray:ArrayList<Atta
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position) }
+        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position,attachedArray[position].url) }
             viewHolder. binding.textTitle.setText(attachedArray[position].name)
 //            viewHolder.binding.note.setImageDrawable( viewHolder. binding.root.context.getDrawable(R.drawable.sheet))
 

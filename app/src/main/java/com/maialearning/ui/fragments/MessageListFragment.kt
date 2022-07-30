@@ -132,7 +132,7 @@ class MessageListFragment : Fragment(), OnItemClickDelete {
     }
 
     override fun onClick(positiion: Int,id: String) {
-        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id)
+        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id).putExtra("type","true")
         startActivity(intent)
     }
 

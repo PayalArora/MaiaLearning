@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
+import com.maialearning.calbacks.OnItemClickId
 import com.maialearning.databinding.MessageDetailBinding
 import com.maialearning.databinding.NewMessageBinding
 import com.maialearning.model.AttachMessages
 import com.maialearning.ui.adapter.FilesAdapter
 import com.maialearning.ui.adapter.RecipentAdapter
 
-class NewMessageActivity : AppCompatActivity(), OnItemClick {
+class NewMessageActivity : AppCompatActivity(), OnItemClickId ,OnItemClick{
     private lateinit var mBinding: NewMessageBinding
     var attachedArray=ArrayList<AttachMessages>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,10 @@ class NewMessageActivity : AppCompatActivity(), OnItemClick {
         view.findViewById<RelativeLayout>(R.id.close).setOnClickListener{
             dialog.dismiss()
         }
+    }
+
+    override fun onClick(positiion: Int,id:String) {
+
     }
 
     override fun onClick(positiion: Int) {

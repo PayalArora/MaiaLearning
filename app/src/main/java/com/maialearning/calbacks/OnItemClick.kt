@@ -11,6 +11,6 @@ interface OnItemClickType: OnItemClick {
     fun onClickOpt(positiion:Int, type:String)
 }
 
-interface OnItemClickId {
+    interface OnItemClickId {
     fun onClick(positiion:Int,id:String)
 }
