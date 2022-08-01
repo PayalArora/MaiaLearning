@@ -156,6 +156,6 @@ interface AllAPi {
     fun getRecipients(
         @Header("Authorization") AutToken: String,
         @Field("school_id") n_id: String,
-        @Field("user_type") type: String): Deferred<JSONArray>
+        @Field("user_type") type: String): Deferred<JsonArray>
 
 }

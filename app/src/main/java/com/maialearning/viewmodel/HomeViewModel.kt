@@ -31,7 +31,7 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
     val listObserver = MutableLiveData<JsonObject>()
     val applyObserver = MutableLiveData<JsonObject>()
     val notesObserver = MutableLiveData<NotesModel>()
-    val listArrayObserver = MutableLiveData<JSONArray>()
+    val listArrayObserver = MutableLiveData<JsonArray>()
     val showError = SingleLiveEvent<String>()
 
     fun getConsiderList(id:String) {
@@ -91,6 +91,7 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

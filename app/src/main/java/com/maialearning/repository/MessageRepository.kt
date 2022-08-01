@@ -8,6 +8,7 @@ import com.maialearning.network.UseCaseResult
 import retrofit2.HttpException
 
 import com.maialearning.util.prefhandler.SharedHelper
+import org.json.JSONObject
 
 interface MessageRepository {
     // Suspend is used to await the result from Deferred
@@ -17,6 +18,7 @@ interface MessageRepository {
     suspend fun getTrash(): UseCaseResult<JsonObject>
     suspend fun getMessage(id:String): UseCaseResult<JsonObject>
     suspend fun delMessage(id:String): UseCaseResult<JsonObject>
+    suspend fun createMessage(id: JSONObject): UseCaseResult<JsonObject>
    }
 
 class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageRepository {
@@ -81,6 +83,21 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
     override suspend fun delMessage(id:String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.delMessageAsync(
+                SharedHelper(BaseApplication.applicationContext()).jwtToken,
+                id
+
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun createMessage(id: JSONObject): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.createMessage(
                 SharedHelper(BaseApplication.applicationContext()).jwtToken,
                 id
 

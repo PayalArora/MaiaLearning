@@ -6,6 +6,7 @@ import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -44,6 +45,12 @@ interface AllMessageAPi {
     fun delMessageAsync(
         @Header("x-access-token")  AutToken:String,
         @Path("id") id:String
+    ):  Deferred<JsonObject>
+
+    @POST("v1/messaging/messages/")
+    fun createMessage(
+        @Header("x-access-token")  AutToken:String,
+        @Body id:JSONObject
     ):  Deferred<JsonObject>
 
 

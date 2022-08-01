@@ -3,9 +3,7 @@ package com.maialearning.ui.activity
 import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
-import android.view.View
 import android.widget.CheckBox
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +11,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickId
-import com.maialearning.databinding.MessageDetailBinding
 import com.maialearning.databinding.NewMessageBinding
 import com.maialearning.model.AttachMessages
 import com.maialearning.model.ReceipentModel
@@ -21,16 +18,20 @@ import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.FilesAdapter
 import com.maialearning.ui.adapter.RecipentAdapter
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.prefhandler.SharedPreference
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
+import com.maialearning.viewmodel.MessageViewModel
+import kotlinx.serialization.json.JsonObject
+import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private lateinit var mBinding: NewMessageBinding
     private lateinit var dialog: Dialog
     private val homeModel: HomeViewModel by viewModel()
+    private val msgModel: MessageViewModel by viewModel()
     var attachedArray = ArrayList<AttachMessages>()
     var list = ArrayList<ReceipentModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,19 +50,38 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     fun init() {
         dialog = showLoadingDialog(this)
         dialog.show()
-        homeModel.getRecipients(this, SharedHelper(BaseApplication.applicationContext()).id?:"" , "all")
+        homeModel.getRecipients(this, SharedHelper(BaseApplication.applicationContext()).schoolId?:"" , "all")
+   mBinding.sendMessageBtn.setOnClickListener {
+       var json=JSONObject()
+       var jsonData=JSONObject()
+       jsonData.put("senderUid",SharedHelper(BaseApplication.applicationContext()).messageId)
+       jsonData.put("messageStatus","sent")
+       jsonData.put("messageBody","test")
+       jsonData.put("isReply",0)
+       jsonData.put("isReplyAll",0)
+       jsonData.put("subject","test")
+       jsonData.put("auditEntity",SharedHelper(BaseApplication.applicationContext()).auditId)
+       jsonData.put("recipients",list)
+       json.put("message",jsonData)
+       msgModel.createMessage(this,json)
+
+   }
+
     }
     fun observer() {
         homeModel.listArrayObserver.observe(this) {
             it?.let {
                 dialog.dismiss()
-                for (j in 0 until it.length()) {
-                    val objectProgram = it.getJSONObject(j)
+                val jsonArray =
+                    JSONArray(it.toString()) // here  i am getting out of memory
+
+                for (j in 0 until jsonArray.length()) {
+                    val objectProgram = jsonArray.get(j)
                     list.add(
                         ReceipentModel(
-                            objectProgram.getString("name"),
-                            objectProgram.getString("message_center_uid"),
-                            objectProgram.getString("uid")
+                            (objectProgram as JSONObject).getString("name"),
+                            (objectProgram as JSONObject).getString("message_center_uid"),
+                            (objectProgram as JSONObject).getString("uid")
                         )
                     )
                 }
@@ -95,8 +115,6 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     }
 
     override fun onClick(positiion: Int) {
-
+        mBinding.textReciepent.text=list[positiion].name
     }
-
-
 }

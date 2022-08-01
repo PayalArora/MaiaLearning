@@ -245,11 +245,17 @@ class LoginActivity : AppCompatActivity() {
                             SharedHelper(this).messageId= it
                         }
                     }
+                    it?.uuid.let {
+                        if (it != null) {
+                            SharedHelper(this).auditId= it
+                        }
+                    }
                 }
 
                 if(binding.rememberMe.isChecked)
                 SharedHelper(this).login = "1"
                 SharedHelper(this).id=it.user?.uid
+                SharedHelper(this).schoolId=it.user?.ogUserNode?.und?.get(0)?.targetId
                 SharedHelper(this).ethnicityTarget=it.user?.ogUserNode?.und?.get(0)?.targetId
                 if (it.mlSchoolConfigData?.gradeConvention?.usConvention == 1?:0){
                     SharedHelper(this).convention= true

@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
+import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
 class MessageViewModel(private val catRepository: MessageRepository) : ViewModel(), CoroutineScope {
@@ -28,6 +29,7 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
     val showLoading = MutableLiveData<Boolean>()
     val inboxObserver = MutableLiveData<JsonObject>()
     val delObserver = MutableLiveData<JsonObject>()
+    val createObserver = MutableLiveData<JsonObject>()
     val showError = SingleLiveEvent<String>()
 
 
@@ -106,7 +108,24 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             }
         }
     }
+    fun createMessage(context: Context, id: JSONObject) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.createMessage(
+                    id
 
+                )
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> createObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks
