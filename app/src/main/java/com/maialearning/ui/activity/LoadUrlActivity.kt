@@ -2,13 +2,23 @@ package com.maialearning.ui.activity
 
 import android.annotation.TargetApi
 import android.app.Dialog
-import android.os.Build
-import android.os.Bundle
+import android.os.*
+import android.view.View
 import android.webkit.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+
+
 import com.maialearning.databinding.ActivityLoadUrlBinding
 import com.maialearning.util.showLoadingDialog
+import java.io.BufferedInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLEncoder
+import java.util.concurrent.Executors
+import javax.net.ssl.HttpsURLConnection
 
 
 class LoadUrlActivity: AppCompatActivity() {
@@ -19,9 +29,50 @@ class LoadUrlActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mBinding = ActivityLoadUrlBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        init()
+        init1()
     }
 
+    fun init1() {
+        mWebView = mBinding.webView
+        mWebView.getSettings().setJavaScriptEnabled(true)
+        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON)
+        mWebView.getSettings().setDomStorageEnabled(false)
+        mWebView.getSettings().setDisplayZoomControls(false)
+        mWebView.setWebViewClient(WebViewClient()) // set the WebViewClient
+        var url=intent.getStringExtra("url")?:""
+//        mWebView.loadUrl(url)
+        mWebView.loadUrl("http://docs.google.com/gview?embedded=true&url="+ URLEncoder.encode(url, "ISO-8859-1"))
+        mWebView.setWebViewClient(object : WebViewClient() {
+            //add this line to Hide pop-out tool bar of pdfview in pagLoadFinish
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url)
+                //                webView.setVisibility(View.VISIBLE);
+//                progress.setVisibility(View.GONE);
+//                mWebView.loadUrl(
+//                    "javascript:(function() { " +
+//                            "document.getElementsByClassName('ndfHFb-c4YZDc-GSQQnc-LgbsSe ndfHFb-c4YZDc-to915-LgbsSe VIpgJd-TzA9Ye-eEGnhe ndfHFb-c4YZDc-LgbsSe')[0].style.display='none'; })()"
+//                )
+            }
+
+            override fun onPageCommitVisible(view: WebView, url: String) {
+                super.onPageCommitVisible(view, url)
+                mWebView.setVisibility(View.VISIBLE)
+//                progress.setVisibility(View.GONE)
+            }
+        })
+        mWebView.webChromeClient = object : WebChromeClient() {
+            override fun onJsAlert(
+                view: WebView,
+                url: String,
+                message: String,
+                result: JsResult
+            ): Boolean {
+                return super.onJsAlert(view, url, message, result)
+            }
+        }
+
+//        loadPdfFromUrl().execute(url)
+    }
     fun init() {
         mWebView = mBinding.webView
         mWebView.settings.javaScriptEnabled = true // enable javascript
@@ -67,8 +118,29 @@ class LoadUrlActivity: AppCompatActivity() {
             }
         }
         mWebView.loadUrl(intent.getStringExtra("url")?:"")
+        val executor = Executors.newSingleThreadExecutor()
+        val handler = Handler(Looper.getMainLooper())
+        executor.execute {
+            /*
+            * Your task will be executed here
+            * you can execute anything here that
+            * you cannot execute in UI thread
+            * for example a network operation
+            * This is a background thread and you cannot
+            * access view elements here
+            *
+            * its like doInBackground()
+            * */
+            handler.post {
+                /*
+                * You can perform any operation that
+                * requires UI Thread here.
+                *
+                * its like onPostExecute()
+                * */
+            }
+        }
     }
-
 
 
 }
