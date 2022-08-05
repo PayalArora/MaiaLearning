@@ -50,6 +50,7 @@ interface AllMessageAPi {
     @POST("v1/messaging/messages/")
     fun createMessage(
         @Header("x-access-token")  AutToken:String,
+        @Header("Content-Type") content: String,
         @Body id:JSONObject
     ):  Deferred<JsonObject>
 

@@ -98,7 +98,7 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
     override suspend fun createMessage(id: JSONObject): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.createMessage(
-                SharedHelper(BaseApplication.applicationContext()).jwtToken,
+                SharedHelper(BaseApplication.applicationContext()).jwtToken,"application/json; charset=utf-8",
                 id
 
             ).await()

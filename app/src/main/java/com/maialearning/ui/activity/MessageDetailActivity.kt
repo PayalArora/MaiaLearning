@@ -50,6 +50,9 @@ class MessageDetailActivity : AppCompatActivity(), OnItemClickId {
             mBinding.toolbar.menu.visibility=View.GONE
         }
         observer()
+        mBinding.toolbar.backBtn.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     override fun onClick(positiion: Int, id: String) {

@@ -52,16 +52,22 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         dialog.show()
         homeModel.getRecipients(this, SharedHelper(BaseApplication.applicationContext()).schoolId?:"" , "all")
    mBinding.sendMessageBtn.setOnClickListener {
-       var json=JSONObject()
-       var jsonData=JSONObject()
+var arrayList=ArrayList<HashMap<String,String>>()
+       for(i in 0 until 4){
+       var mMap=HashMap<String,String>()
+       mMap.put("uid",list[i].message_center_uid)
+       arrayList.add(mMap)
+       }
+       val json=JSONObject()
+       val jsonData=JSONObject()
        jsonData.put("senderUid",SharedHelper(BaseApplication.applicationContext()).messageId)
        jsonData.put("messageStatus","sent")
        jsonData.put("messageBody","test")
        jsonData.put("isReply",0)
        jsonData.put("isReplyAll",0)
        jsonData.put("subject","test")
-       jsonData.put("auditEntity",SharedHelper(BaseApplication.applicationContext()).auditId)
-       jsonData.put("recipients",list)
+       jsonData.put("auditEntity","96452bf5-8156-49e4-af30-ec35a958850c")
+       jsonData.put("recipients",arrayList)
        json.put("message",jsonData)
        msgModel.createMessage(this,json)
 
