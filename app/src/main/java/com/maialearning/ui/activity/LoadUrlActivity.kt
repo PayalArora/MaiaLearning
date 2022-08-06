@@ -34,32 +34,32 @@ class LoadUrlActivity: AppCompatActivity() {
 
     fun init1() {
         mWebView = mBinding.webView
-        mWebView.getSettings().setJavaScriptEnabled(true)
-        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON)
-        mWebView.getSettings().setDomStorageEnabled(false)
-        mWebView.getSettings().setDisplayZoomControls(false)
-        mWebView.setWebViewClient(WebViewClient()) // set the WebViewClient
+        mWebView.settings.javaScriptEnabled = true
+        mWebView.settings.setPluginState(WebSettings.PluginState.ON)
+        mWebView.settings.setDomStorageEnabled(false)
+        mWebView.settings.setDisplayZoomControls(false)
+        mWebView.webViewClient = WebViewClient() // set the WebViewClient
         var url=intent.getStringExtra("url")?:""
 //        mWebView.loadUrl(url)
         mWebView.loadUrl("http://docs.google.com/gview?embedded=true&url="+ URLEncoder.encode(url, "ISO-8859-1"))
-        mWebView.setWebViewClient(object : WebViewClient() {
+        mWebView.webViewClient = object : WebViewClient() {
             //add this line to Hide pop-out tool bar of pdfview in pagLoadFinish
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 //                webView.setVisibility(View.VISIBLE);
-//                progress.setVisibility(View.GONE);
-//                mWebView.loadUrl(
-//                    "javascript:(function() { " +
-//                            "document.getElementsByClassName('ndfHFb-c4YZDc-GSQQnc-LgbsSe ndfHFb-c4YZDc-to915-LgbsSe VIpgJd-TzA9Ye-eEGnhe ndfHFb-c4YZDc-LgbsSe')[0].style.display='none'; })()"
-//                )
+    //                progress.setVisibility(View.GONE);
+    //                mWebView.loadUrl(
+    //                    "javascript:(function() { " +
+    //                            "document.getElementsByClassName('ndfHFb-c4YZDc-GSQQnc-LgbsSe ndfHFb-c4YZDc-to915-LgbsSe VIpgJd-TzA9Ye-eEGnhe ndfHFb-c4YZDc-LgbsSe')[0].style.display='none'; })()"
+    //                )
             }
 
             override fun onPageCommitVisible(view: WebView, url: String) {
                 super.onPageCommitVisible(view, url)
                 mWebView.setVisibility(View.VISIBLE)
-//                progress.setVisibility(View.GONE)
+    //                progress.setVisibility(View.GONE)
             }
-        })
+        }
         mWebView.webChromeClient = object : WebChromeClient() {
             override fun onJsAlert(
                 view: WebView,

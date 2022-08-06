@@ -1,13 +1,31 @@
 package com.maialearning.ui.activity
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.*
+import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.MediaStore
+import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.CheckBox
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.JsonArray
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickId
@@ -21,10 +39,15 @@ import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import com.maialearning.viewmodel.MessageViewModel
+import com.maialearning.viewmodel.ProfileViewModel
 import kotlinx.serialization.json.JsonObject
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
@@ -32,8 +55,15 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private lateinit var dialog: Dialog
     private val homeModel: HomeViewModel by viewModel()
     private val msgModel: MessageViewModel by viewModel()
+    private val profileModel: ProfileViewModel by viewModel()
     var attachedArray = ArrayList<AttachMessages>()
     var list = ArrayList<ReceipentModel>()
+    private val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_CHOOSE_PHOTO = 2
+    private val REQUEST_FILE_ACCESS = 3
+    private var fileUri: Uri? = null
+    private var bitmap: Bitmap? = null
+    private var imageExt: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = NewMessageBinding.inflate(layoutInflater)
@@ -66,7 +96,9 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
        msgModel.createMessage(this,json)
 
    }
-
+mBinding.textAddFile.setOnClickListener {
+    checkStoragePermissionAndOpenImageSelection()
+}
     }
     fun observer() {
         homeModel.listArrayObserver.observe(this) {
@@ -116,5 +148,227 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
 
     override fun onClick(positiion: Int) {
         mBinding.textReciepent.text=list[positiion].name
+    }
+    private fun checkStoragePermissionAndOpenImageSelection() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            selectImage(this)
+        } else {
+            //changed here
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_FILE_ACCESS
+                )
+            }
+        }
+    }
+    private fun selectImage(context: Context) {
+        val options =
+            arrayOf<CharSequence>("Take Photo", "Choose from Gallery", "Cancel")
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+        builder.setTitle("Choose your profile picture")
+        builder.setItems(options, DialogInterface.OnClickListener { dialogInterface, item ->
+            if (options[item] == "Take Photo") {
+                checkCameraPermissionAndOpen()
+            } else if (options[item] == "Choose from Gallery") {
+                openAlbum()
+            } else if (options[item] == "Cancel") {
+                dialogInterface.dismiss()
+            }
+        })
+        builder.show()
+    }
+    private fun openAlbum() {
+        val intent = Intent("android.intent.action.GET_CONTENT")
+        intent.type = "image/*"
+        startActivityForResult(intent, REQUEST_CHOOSE_PHOTO)
+    }
+    private fun checkCameraPermissionAndOpen() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            openCamera()
+        } else {
+            //changed here
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CAMERA),
+                    REQUEST_IMAGE_CAPTURE
+                )
+            }
+        }
+    }
+    private fun openCamera() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+           startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        } catch (e: ActivityNotFoundException) {
+            // display error state to the user
+            Log.e("Exception", e.localizedMessage)
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            setData(requestCode, data)
+        } else if (requestCode == REQUEST_CHOOSE_PHOTO && resultCode == RESULT_OK) {
+            setData(requestCode, data)
+        }
+    }
+    fun setData(requestCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            fileUri = data.data
+            bitmap = imageBitmap
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+            val tempUri = getImageUri(this.applicationContext, imageBitmap)
+            // CALL THIS METHOD TO GET THE ACTUAL PATH
+            imagePath = getRealPathFromURI(tempUri)
+            imageExt = tempUri?.let { getMimeType(this, it) }
+//            sheetBinding.toolbarProf.setImageBitmap(imageBitmap)
+            uploadImageWork()
+        } else if (requestCode == REQUEST_CHOOSE_PHOTO) {
+            handleImageFromGallery(data)
+        }
+    }
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path: String =
+            MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
+    }
+
+    fun getRealPathFromURI(uri: Uri?): String? {
+        var path = ""
+        if (this.getContentResolver() != null) {
+            val cursor: Cursor? =
+                uri?.let {
+                    this.getContentResolver().query(it, null, null, null, null)
+                }
+            if (cursor != null) {
+                cursor.moveToFirst()
+                val idx: Int = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                path = cursor.getString(idx)
+                cursor.close()
+            }
+        }
+        return path
+    }
+    var imagePath: String? = null
+    private fun handleImageFromGallery(data: Intent?) {
+        imagePath = null
+        val uri = data!!.data
+        if (DocumentsContract.isDocumentUri(this ,uri)) {
+            val docId = DocumentsContract.getDocumentId(uri)
+            if ("com.android.providers.media.documents" == uri?.authority) {
+                //Getting Images from Documents
+                val id = docId.split(":")[1]
+                val selsetion = MediaStore.Images.Media._ID + "=" + id
+                imagePath = imagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selsetion)
+            } else if ("com.android.providers.downloads.documents" == uri?.authority) {
+                //Getting Images from Downloads
+                val contentUri = ContentUris.withAppendedId(
+                    Uri.parse("content://downloads/public_downloads"),
+                    java.lang.Long.valueOf(docId)
+                )
+                imagePath = imagePath(contentUri, null)
+            }
+        } else if ("content".equals(uri?.scheme, ignoreCase = true)) {
+            imagePath = imagePath(uri, null)
+        } else if ("file".equals(uri?.scheme, ignoreCase = true)) {
+            imagePath = uri?.path
+        }
+        imageExt = uri?.let { getMimeType(this ,it) }
+        displayImage(imagePath)
+        uploadImageWork()
+    }
+
+
+    private fun displayImage(imagePath: String?) {
+        if (imagePath != null) {
+            val bitmap = BitmapFactory.decodeFile(imagePath)
+//            sheetBinding.toolbarProf.setImageBitmap(bitmap)
+        } else {
+            Toast.makeText(this, "Failed to get image", Toast.LENGTH_SHORT).show()
+        }
+    }
+    @SuppressLint("Range")
+    private fun imagePath(uri: Uri?, selection: String?): String {
+        var path: String? = null
+        val cursor =
+            uri?.let {
+                this.contentResolver.query(it, null, selection, null, null)
+            }
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
+            }
+            cursor.close()
+        }
+        return path!!
+    }
+
+    fun getMimeType(context: Context, uri: Uri): String? {
+        val extension: String?
+        //Check uri format to avoid null
+        extension = if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
+            //If scheme is a content
+            val mime = MimeTypeMap.getSingleton()
+            mime.getExtensionFromMimeType(context.contentResolver.getType(uri))
+        } else {
+            //If scheme is a File
+            //This will replace white spaces with %20 and also other special characters. This will avoid returning null values on file name with spaces and special characters.
+            MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(File(uri.path)).toString())
+        }
+        return extension
+    }
+    private fun uploadImageWork() {
+        dialog.show()
+        SharedHelper(this).id?.let {
+            imageExt?.let { it1 ->
+                SharedHelper(this).ethnicityTarget?.let { it2 ->
+                    profileModel.getImageURl(
+                        "Bearer " + SharedHelper(this).authkey,
+                        it, it1, it2
+                    )
+                }
+            }
+        }
+
+        profileModel.imageUrlObserver.observe(this) {
+            upload(it)
+        }
+
+    }
+    private fun upload(it: JsonArray?) {
+        val file = File(imagePath)
+        val requestBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+        val url = it?.get(0)?.toString()?.replace("\"", "")
+        url.let { it1 ->
+            profileModel.uploadImage(
+                "image/${imageExt}",
+                it1.toString(),
+                requestBody
+            )
+        }
+        profileModel.uploadImageObserver.observe(this) {
+            Log.e("Response: ", " $it")
+            dialog.dismiss()
+            //profileWork()
+        }
+
+
     }
 }
