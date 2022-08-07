@@ -53,6 +53,21 @@ interface AllMessageAPi {
         @Header("Content-Type") content: String,
         @Body id:JSONObject
     ):  Deferred<JsonObject>
+    @POST("v1/messaging/messages/get-presigned-url")
+    @FormUrlEncoded
+    fun updateProfImage(
+        @Header("x-access-token") AutToken: String,
+        @Field("filename") filename: String,
+        @Field("fileType") fileType: String,
+        @Field("Key") key: String,
+        @Field("type") type: String,
+        @Field("schoolnid") schoolId: String
+    ): Deferred<JsonObject>
 
+    @POST("v1/messaging/messages/get-presigned-url")
+    fun updateProfImage1(
+        @Header("x-access-token") AutToken: String,
+        @Body id:JSONObject
+    ): Deferred<JsonObject>
 
 }

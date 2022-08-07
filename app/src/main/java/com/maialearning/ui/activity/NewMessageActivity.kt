@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickId
@@ -40,7 +41,6 @@ import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import com.maialearning.viewmodel.MessageViewModel
 import com.maialearning.viewmodel.ProfileViewModel
-import kotlinx.serialization.json.JsonObject
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import org.json.JSONArray
@@ -48,6 +48,10 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
@@ -64,6 +68,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private var fileUri: Uri? = null
     private var bitmap: Bitmap? = null
     private var imageExt: String? = null
+    private var fileName: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = NewMessageBinding.inflate(layoutInflater)
@@ -77,35 +82,51 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         observer()
     }
 
+    //  "attachments":[{"type":"Message Attachment","fileType":"image/png","key":"1659869062_college_pic.png","filename":"college_pic.png","schoolNid":"381509"}],
     fun init() {
         dialog = showLoadingDialog(this)
         dialog.show()
-        homeModel.getRecipients(this, SharedHelper(BaseApplication.applicationContext()).schoolId?:"" , "all")
-   mBinding.sendMessageBtn.setOnClickListener {
-var arrayList=ArrayList<HashMap<String,String>>()
-       for(i in 0 until 4){
-       var mMap=HashMap<String,String>()
-       mMap.put("uid",list[i].message_center_uid)
-       arrayList.add(mMap)
-       }
-       val json=JSONObject()
-       val jsonData=JSONObject()
-       jsonData.put("senderUid",SharedHelper(BaseApplication.applicationContext()).messageId)
-       jsonData.put("messageStatus","sent")
-       jsonData.put("messageBody","test")
-       jsonData.put("isReply",0)
-       jsonData.put("isReplyAll",0)
-       jsonData.put("subject","test")
-       jsonData.put("auditEntity","96452bf5-8156-49e4-af30-ec35a958850c")
-       jsonData.put("recipients",arrayList)
-       json.put("message",jsonData)
-       msgModel.createMessage(this,json)
+        homeModel.getRecipients(
+            this,
+            SharedHelper(BaseApplication.applicationContext()).schoolId ?: "",
+            "all"
+        )
+        mBinding.sendMessageBtn.setOnClickListener {
+            var arrayList = ArrayList<HashMap<String, String>>()
+            for (i in 0 until 4) {
+                var mMap = HashMap<String, String>()
+                mMap.put("uid", list[i].message_center_uid)
+                arrayList.add(mMap)
+            }
+            var attach=ArrayList<JSONObject>()
+            val attachJson = JSONObject()
+            attachJson.put("type","Message Attachment")
+            attachJson.put("fileType","image/png")
+            attachJson.put("key","image/png")
+            attachJson.put("filename",fileName)
+            attachJson.put("schoolNid",SharedHelper(this).ethnicityTarget)
+            attach.add(attachJson)
+            val json = JSONObject()
+            val jsonData = JSONObject()
+            jsonData.put("senderUid", SharedHelper(BaseApplication.applicationContext()).messageId)
+            jsonData.put("messageStatus", "sent")
+            jsonData.put("messageBody", "test")
+            jsonData.put("isReply", 0)
+            jsonData.put("isForwad", 0)
+            jsonData.put("isReplyAll", 0)
+            jsonData.put("subject", "test")
+            jsonData.put("auditEntity", "96452bf5-8156-49e4-af30-ec35a958850c")
+            jsonData.put("recipients", arrayList)
+            jsonData.put("attachments", arrayList)
+            json.put("message", jsonData)
+            msgModel.createMessage(this, json)
 
-   }
-mBinding.textAddFile.setOnClickListener {
-    checkStoragePermissionAndOpenImageSelection()
-}
+        }
+        mBinding.textAddFile.setOnClickListener {
+            checkStoragePermissionAndOpenImageSelection()
+        }
     }
+
     fun observer() {
         homeModel.listArrayObserver.observe(this) {
             it?.let {
@@ -128,7 +149,14 @@ mBinding.textAddFile.setOnClickListener {
         homeModel.showError.observe(this) {
             dialog.dismiss()
         }
+        msgModel.imageUrlObserver.observe(this) {
+            upload(it)
+        }
+        msgModel.showError.observe(this) {
+            dialog.dismiss()
+        }
     }
+
     private fun bottomSheetWork() {
         val dialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.reciepent_layout_bottomsheet, null)
@@ -153,8 +181,9 @@ mBinding.textAddFile.setOnClickListener {
     }
 
     override fun onClick(positiion: Int) {
-        mBinding.textReciepent.text=list[positiion].name
+        mBinding.textReciepent.text = list[positiion].name
     }
+
     private fun checkStoragePermissionAndOpenImageSelection() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -173,6 +202,7 @@ mBinding.textAddFile.setOnClickListener {
             }
         }
     }
+
     private fun selectImage(context: Context) {
         val options =
             arrayOf<CharSequence>("Take Photo", "Choose from Gallery", "Cancel")
@@ -189,11 +219,13 @@ mBinding.textAddFile.setOnClickListener {
         })
         builder.show()
     }
+
     private fun openAlbum() {
         val intent = Intent("android.intent.action.GET_CONTENT")
         intent.type = "image/*"
         startActivityForResult(intent, REQUEST_CHOOSE_PHOTO)
     }
+
     private fun checkCameraPermissionAndOpen() {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -212,15 +244,17 @@ mBinding.textAddFile.setOnClickListener {
             }
         }
     }
+
     private fun openCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
-           startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
         } catch (e: ActivityNotFoundException) {
             // display error state to the user
             Log.e("Exception", e.localizedMessage)
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -229,6 +263,7 @@ mBinding.textAddFile.setOnClickListener {
             setData(requestCode, data)
         }
     }
+
     fun setData(requestCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
@@ -242,12 +277,14 @@ mBinding.textAddFile.setOnClickListener {
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             imagePath = getRealPathFromURI(tempUri)
             imageExt = tempUri?.let { getMimeType(this, it) }
+             fileName = imagePath!!.substring(imagePath?.lastIndexOf("/")!! + 1)
 //            sheetBinding.toolbarProf.setImageBitmap(imageBitmap)
             uploadImageWork()
         } else if (requestCode == REQUEST_CHOOSE_PHOTO) {
             handleImageFromGallery(data)
         }
     }
+
     fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
         val bytes = ByteArrayOutputStream()
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
@@ -272,11 +309,13 @@ mBinding.textAddFile.setOnClickListener {
         }
         return path
     }
+
     var imagePath: String? = null
     private fun handleImageFromGallery(data: Intent?) {
+
         imagePath = null
         val uri = data!!.data
-        if (DocumentsContract.isDocumentUri(this ,uri)) {
+        if (DocumentsContract.isDocumentUri(this, uri)) {
             val docId = DocumentsContract.getDocumentId(uri)
             if ("com.android.providers.media.documents" == uri?.authority) {
                 //Getting Images from Documents
@@ -296,8 +335,9 @@ mBinding.textAddFile.setOnClickListener {
         } else if ("file".equals(uri?.scheme, ignoreCase = true)) {
             imagePath = uri?.path
         }
-        imageExt = uri?.let { getMimeType(this ,it) }
+        imageExt = uri?.let { getMimeType(this, it) }
         displayImage(imagePath)
+        fileName = imagePath!!.substring(imagePath?.lastIndexOf("/")!! + 1)
         uploadImageWork()
     }
 
@@ -310,6 +350,7 @@ mBinding.textAddFile.setOnClickListener {
             Toast.makeText(this, "Failed to get image", Toast.LENGTH_SHORT).show()
         }
     }
+
     @SuppressLint("Range")
     private fun imagePath(uri: Uri?, selection: String?): String {
         var path: String? = null
@@ -340,22 +381,28 @@ mBinding.textAddFile.setOnClickListener {
         }
         return extension
     }
+
     private fun uploadImageWork() {
         dialog.show()
+        mBinding.fileName.text=fileName
         SharedHelper(this).id?.let {
             imageExt?.let { it1 ->
                 SharedHelper(this).ethnicityTarget?.let { it2 ->
-                    profileModel.getImageURl(
-                        "Bearer " + SharedHelper(this).authkey,
-                        it, it1, it2
-                    )
+                   msgModel.getImageURl( SharedHelper(this).jwtToken,fileName?:"",it1,
+                       SimpleDateFormat("yyyyMMddHHmmss").format(Date())+"_"+fileName,it2)
+//                    profileModel.getImageURl(
+//                        "Bearer " + SharedHelper(this).authkey,
+//                        it, it1, it2
+//                    )
                 }
             }
         }
 
-        profileModel.imageUrlObserver.observe(this) {
-            upload(it)
-        }
+
+
+    }
+
+    private fun upload(it: JsonObject?) {
 
     }
     private fun upload(it: JsonArray?) {

@@ -1,5 +1,6 @@
 package com.maialearning.repository
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.network.AllMessageAPi
 import com.maialearning.network.BaseApplication
@@ -19,6 +20,13 @@ interface MessageRepository {
     suspend fun getMessage(id:String): UseCaseResult<JsonObject>
     suspend fun delMessage(id:String): UseCaseResult<JsonObject>
     suspend fun createMessage(id: JSONObject): UseCaseResult<JsonObject>
+    suspend fun getImageURL(
+        token: String,
+        filename: String,
+        fileTypeExt: String,
+        key: String,
+        schoolId: String
+    ): UseCaseResult<JsonObject>
    }
 
 class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageRepository {
@@ -102,6 +110,31 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
                 id
 
             ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getImageURL(
+        token: String,
+        filename: String,
+        fileTypeExt: String,
+        key: String,
+        schoolId: String
+    ): UseCaseResult<JsonObject> {
+        return try {
+            var object_ = JSONObject()
+                object_.put("filename",filename)
+                object_.put("fileType",fileTypeExt)
+                object_.put("Key",key)
+                object_.put("type","Message Attachment")
+                object_.put("schoolnid",schoolId)
+
+            val result = catApi.updateProfImage(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
+//            val result = catApi.updateProfImage1(token, object_).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

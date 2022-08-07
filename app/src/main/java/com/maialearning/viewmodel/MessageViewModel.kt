@@ -3,6 +3,7 @@ package com.maialearning.viewmodel
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.ForgetModel
 import com.maialearning.model.InboxResponse
@@ -31,7 +32,7 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
     val delObserver = MutableLiveData<JsonObject>()
     val createObserver = MutableLiveData<JsonObject>()
     val showError = SingleLiveEvent<String>()
-
+    val imageUrlObserver = MutableLiveData<JsonObject>()
 
     fun getInbox() {
         showLoading.value = true
@@ -121,6 +122,22 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             when (result) {
                 is UseCaseResult.Success -> createObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun getImageURl(token: String, filename: String,ext:String,key:String,schoolID:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getImageURL(token, filename,ext,key,schoolID)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> imageUrlObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
 
             }

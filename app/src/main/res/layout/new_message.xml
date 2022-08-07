@@ -88,6 +88,7 @@
         android:id="@+id/text_add_file"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20dp"
         android:layout_marginTop="@dimen/_20dp"
         android:background="@drawable/ic_rect"
         android:gravity="center"
@@ -100,6 +101,19 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topLayout" />
 
+    <TextView
+        android:id="@+id/fileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        android:text="gdgdgdgdg"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_16sp"
+        app:layout_constraintBottom_toBottomOf="@id/text_add_file"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_add_file"
+        app:layout_constraintTop_toTopOf="@+id/text_add_file" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/files_list"
         android:layout_width="wrap_content"
@@ -107,6 +121,7 @@
         android:layout_marginLeft="@dimen/_10dp"
         android:layout_marginTop="@dimen/_15dp"
         android:orientation="horizontal"
+        android:visibility="gone"
 
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintLeft_toRightOf="@+id/text_add_file"
