@@ -7,13 +7,21 @@ import android.view.View
 import android.webkit.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+
+
 import com.maialearning.databinding.ActivityLoadUrlBinding
 import com.maialearning.util.showLoadingDialog
+import java.io.BufferedInputStream
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import java.net.URLEncoder
 import java.util.concurrent.Executors
+import javax.net.ssl.HttpsURLConnection
 
 
-class LoadUrlActivity : AppCompatActivity() {
+class LoadUrlActivity: AppCompatActivity() {
     private lateinit var mBinding: ActivityLoadUrlBinding
     private lateinit var mWebView: WebView
     private lateinit var dialog: Dialog
@@ -25,24 +33,15 @@ class LoadUrlActivity : AppCompatActivity() {
     }
 
     fun init1() {
-        dialog = showLoadingDialog(this)
-        mBinding.toolbar.textTitle.text = "Attachments"
-
         mWebView = mBinding.webView
         mWebView.getSettings().setJavaScriptEnabled(true)
         mWebView.getSettings().setPluginState(WebSettings.PluginState.ON)
         mWebView.getSettings().setDomStorageEnabled(false)
-        mWebView.getSettings().setDisplayZoomControls(true)
+        mWebView.getSettings().setDisplayZoomControls(false)
         mWebView.setWebViewClient(WebViewClient()) // set the WebViewClient
-        var url = intent.getStringExtra("url") ?: ""
+        var url=intent.getStringExtra("url")?:""
 //        mWebView.loadUrl(url)
-        dialog.show()
-        mWebView.loadUrl(
-            "http://docs.google.com/gview?embedded=true&url=" + URLEncoder.encode(
-                url,
-                "ISO-8859-1"
-            )
-        )
+        mWebView.loadUrl("http://docs.google.com/gview?embedded=true&url="+ URLEncoder.encode(url, "ISO-8859-1"))
         mWebView.setWebViewClient(object : WebViewClient() {
             //add this line to Hide pop-out tool bar of pdfview in pagLoadFinish
             override fun onPageFinished(view: WebView, url: String) {
@@ -58,7 +57,7 @@ class LoadUrlActivity : AppCompatActivity() {
             override fun onPageCommitVisible(view: WebView, url: String) {
                 super.onPageCommitVisible(view, url)
                 mWebView.setVisibility(View.VISIBLE)
-                dialog.dismiss()
+//                progress.setVisibility(View.GONE)
             }
         })
         mWebView.webChromeClient = object : WebChromeClient() {
@@ -71,12 +70,9 @@ class LoadUrlActivity : AppCompatActivity() {
                 return super.onJsAlert(view, url, message, result)
             }
         }
-        mBinding.toolbar.backBtn.setOnClickListener {
-            onBackPressed()
-        }
+
 //        loadPdfFromUrl().execute(url)
     }
-
     fun init() {
         mWebView = mBinding.webView
         mWebView.settings.javaScriptEnabled = true // enable javascript
@@ -114,15 +110,14 @@ class LoadUrlActivity : AppCompatActivity() {
 
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 dialog.show()
-                view?.loadUrl(url ?: "")
+                view?.loadUrl(url?:"")
                 return true
             }
-
             override fun onPageFinished(view: WebView?, url: String?) {
                 dialog.dismiss()
             }
         }
-        mWebView.loadUrl(intent.getStringExtra("url") ?: "")
+        mWebView.loadUrl(intent.getStringExtra("url")?:"")
         val executor = Executors.newSingleThreadExecutor()
         val handler = Handler(Looper.getMainLooper())
         executor.execute {
