@@ -7,18 +7,10 @@ import android.view.View
 import android.webkit.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
-
 import com.maialearning.databinding.ActivityLoadUrlBinding
 import com.maialearning.util.showLoadingDialog
-import java.io.BufferedInputStream
-import java.io.IOException
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
 import java.net.URLEncoder
 import java.util.concurrent.Executors
-import javax.net.ssl.HttpsURLConnection
 
 
 class LoadUrlActivity: AppCompatActivity() {
@@ -39,7 +31,9 @@ class LoadUrlActivity: AppCompatActivity() {
         mWebView.getSettings().setDomStorageEnabled(false)
         mWebView.getSettings().setDisplayZoomControls(false)
         mWebView.setWebViewClient(WebViewClient()) // set the WebViewClient
-        var url=intent.getStringExtra("url")?:""
+        val url=intent.getStringExtra("url")?:""
+        dialog = showLoadingDialog(this)
+        dialog.show()
 //        mWebView.loadUrl(url)
         mWebView.loadUrl("http://docs.google.com/gview?embedded=true&url="+ URLEncoder.encode(url, "ISO-8859-1"))
         mWebView.setWebViewClient(object : WebViewClient() {
@@ -56,8 +50,8 @@ class LoadUrlActivity: AppCompatActivity() {
 
             override fun onPageCommitVisible(view: WebView, url: String) {
                 super.onPageCommitVisible(view, url)
-                mWebView.setVisibility(View.VISIBLE)
-//                progress.setVisibility(View.GONE)
+                mWebView.visibility = View.VISIBLE
+                dialog.dismiss()
             }
         })
         mWebView.webChromeClient = object : WebChromeClient() {
