@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <FrameLayout
         android:id="@+id/map"
+        android:visibility="gone"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,6 +16,7 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:id="@+id/search"
+        android:visibility="gone"
         android:layout_margin="@dimen/_10dp"
 android:padding="@dimen/_5sp"
         android:background="@drawable/black_stroke_round"
@@ -64,7 +66,8 @@ android:padding="@dimen/_5sp"
         android:id="@+id/rv_univ"
         tools:listitem="@layout/uni_list_item"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="@dimen/_400dp"/>
+        android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

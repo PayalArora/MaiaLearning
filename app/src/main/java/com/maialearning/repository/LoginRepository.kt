@@ -59,6 +59,7 @@ interface LoginRepository {
 
     suspend fun uploadImage(content:String,url: String, bode:RequestBody): UseCaseResult<Unit>
     suspend fun getOverDueCompleted(token:String,id: String): UseCaseResult<DashboardOverdueResponse>
+  //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
 }
 
