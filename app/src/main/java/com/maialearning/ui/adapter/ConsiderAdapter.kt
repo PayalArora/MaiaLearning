@@ -15,7 +15,7 @@ import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 import com.maialearning.util.CommonClass
 
-class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>) :
+class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>, val notesClick:(data: ConsiderModel.Data)->Unit) :
     RecyclerView.Adapter<ConsiderAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -52,7 +52,11 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayL
                 count.text = array[position].count.toString()
             }
             uniName.text=array[position].naviance_college_name
+            if (array[position].created_date!=null)
             date.setText(CommonClass.getDate(array[position].created_date.toLong()))
+            if (array[position].internal_deadline!=null && array[position].internal_deadline!="null")
+            textInternalDate.setText(array[position]?.internal_deadline?.toLong()
+                ?.let { CommonClass.getDate(it) })
             name.setText(array[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)
@@ -86,11 +90,11 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayL
                 R.layout.spinner_text, others
             )
             allSystem.adapter = adapter
-
-
+            commentImg.setOnClickListener { notesClick(array[position]) }
     }
 
     }
+
 
     override fun getItemCount(): Int {
         return array.size

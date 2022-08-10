@@ -2,19 +2,8 @@ package com.maialearning.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ConsiderModel (
-
-        @SerializedName("9375")
-        var x9375: X9375
-    ) {
-        data class X9375(
-            @SerializedName("data")
-            var `data`: Data,
-            @SerializedName("ncaa")
-            var ncaa: String ,
-            @SerializedName("country_Name")
-            var country_Name: String
-        ) data class Data(
+ class ConsiderModel {
+        data class Data(
         @SerializedName("contact_info")
         var contactInfo: Int,
         @SerializedName("parchment")
@@ -36,11 +25,15 @@ data class ConsiderModel (
         @SerializedName("created_date")
         var created_date: String,
         @SerializedName("internal_deadline")
-        var internal_deadline: String,
+        var internal_deadline: String?,
         @SerializedName("app_by_program_data")
         var program_data: ArrayList<ProgramData>?,
         @SerializedName("count")
-        var count: Int
+        var count: Int,
+        @SerializedName("notes")
+        var notes: String,
+        @SerializedName("counselor_notes")
+        var counselorNotes: ArrayList<CounselorNotes>?,
     )
     data class ProgramData(
         @SerializedName("program_id")
@@ -52,6 +45,17 @@ data class ConsiderModel (
         @SerializedName("program_status")
         var program_status: String,
     )
-
+     data class CounselorNotes(
+         @SerializedName("id")
+         var id: String,
+         @SerializedName("uid")
+         var uid: String,
+         @SerializedName("counselor_note")
+         var counselorNote: String,
+         @SerializedName("first_name")
+         var firstName: String,
+         @SerializedName("last_name")
+         var lastName: String
+     )
     }
 

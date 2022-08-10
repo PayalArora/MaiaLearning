@@ -50,6 +50,9 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             }
             uniName.text=array[position].naviance_college_name
             date.setText(CommonClass.getDate(array[position].created_date.toLong()))
+            if (array[position].internal_deadline!=null && array[position].internal_deadline!="null")
+                textInternalDate.setText(array[position].internal_deadline?.toLong()
+                    ?.let { CommonClass.getDate(it) })
             name.setText(" by: "+array[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)

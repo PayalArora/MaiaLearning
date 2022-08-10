@@ -9,15 +9,15 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
-import com.maialearning.databinding.CommentsSheetBinding
-import com.maialearning.databinding.ConsideringLayoutBinding
-import com.maialearning.databinding.LayoutProgramsBinding
+import com.maialearning.databinding.*
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
@@ -33,9 +33,11 @@ const val plan = "Early Action"
 class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     var count: Int = 0
     var dialog: BottomSheetDialog? = null
+    var notesDialog: BottomSheetDialog? = null
     private lateinit var dialogP: Dialog
     private lateinit var mBinding: ConsideringLayoutBinding
     private val homeModel: HomeViewModel by viewModel()
+    lateinit var userid: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,14 +65,18 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
         initObserver()
-        homeModel.getConsiderList("9375")
+        SharedHelper(requireContext()).id?.let {
+            userid = SharedHelper(requireContext()).id!!
+            homeModel.getConsiderList(userid)
+        }
+
     }
 
     private fun initObserver() {
         homeModel.listObserver.observe(requireActivity()) {
             it?.let {
                 dialogP?.dismiss()
-                val json = JSONObject(it.toString()).getJSONObject("9375").getJSONObject("data")
+                val json = JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
                 val x = json.keys() as Iterator<String>
                 val jsonArray = JSONArray()
                 while (x.hasNext()) {
@@ -82,7 +88,39 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
                     val arrayProgram: ArrayList<ConsiderModel.ProgramData> = ArrayList()
+                    var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
+                        arrayListOf()
                     var programArray = object_.getJSONArray("app_by_program_data")
+                    for (j in 0 until programArray.length()) {
+                        val objectProgram = programArray.getJSONObject(j)
+                        arrayProgram.add(
+                            ConsiderModel.ProgramData(
+                                objectProgram.getInt("program_id"),
+                                objectProgram.getString("program_name"),
+                                "",
+                                ""
+                            )
+                        )
+                    }
+
+                    var counselorNotes = object_.getJSONArray("counselor_notes")
+                    if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
+                        if (counselorNotes is JSONObject) {
+                            val x = counselorNotes.keys() as Iterator<String>
+                            while (x.hasNext()) {
+                                var json: JSONObject = counselorNotes.get(x.next()) as JSONObject
+                                val notesObj: ConsiderModel.CounselorNotes =
+                                    ConsiderModel.CounselorNotes(json.optString("id"),
+                                        json.optString("uid"),
+                                        json.optString("counselor_note"),
+                                        json.optString("first_name"),
+                                        json.optString("last_name"))
+                                arrayCounselor.add(notesObj)
+                            }
+
+
+                        }
+                    }
                     for (j in 0 until programArray.length()) {
                         val objectProgram = programArray.getJSONObject(j)
                         arrayProgram.add(
@@ -109,13 +147,16 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("created_date"),
                         object_.getString("internal_deadline"),
                         arrayProgram,
-                        0
+                        0,
+                                object_.getString("notes"),
+                        arrayCounselor
                     )
                     array.add(model)
                 }
                 val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
                 var pos = 0
-                countries.reverse()
+                // Sorted countries by name
+                countries.sortBy { it }
                 for (j in 0 until countries.size) {
                     var firstTime = true
                     var count = 0
@@ -135,15 +176,26 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                     pos = finalArray.size
                 }
                 mBinding.universitisCounte.text = array.size.toString() + " Universities"
-                mBinding.consideringList.adapter = ConsiderAdapter(this, finalArray)
-
-
+                mBinding.consideringList.adapter = ConsiderAdapter(this, finalArray, ::notesClick)
             }
         }
     }
 
+    private fun notesClick(data: ConsiderModel.Data) {
+        val sheetBinding: ConsideringNotesBottomsheetBinding =
+            ConsideringNotesBottomsheetBinding.inflate(layoutInflater)
+        notesDialog = BottomSheetDialog(requireContext())
+        notesDialog?.setContentView(sheetBinding.root)
+        sheetBinding.backBtn.setOnClickListener { notesDialog?.dismiss() }
+        notesDialog?.show()
+        sheetBinding.apply {
+            //notesAddedby.setText(data.c)
+        }
+
+    }
+
     private fun setAdapter() {
-        mBinding.consideringList.adapter = ConsiderAdapter(this, arrayListOf())
+        mBinding.consideringList.adapter = ConsiderAdapter(this, arrayListOf(), ::notesClick)
     }
 
 

@@ -105,13 +105,14 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("created_date"),
                         object_.getString("internal_deadline"),
                         arrayProgram,
-                        0
+                        0,
+                        object_.getString("notes"),
                     )
                     array.add(model)
                 }
                 val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
                 var pos = 0
-                countries.reverse()
+                countries.sortBy { it }
                 for (j in 0 until countries.size) {
                     var firstTime = true
                     var count = 0
