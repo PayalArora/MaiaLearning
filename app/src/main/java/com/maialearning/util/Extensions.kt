@@ -41,6 +41,8 @@ const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services
 const val CAT_API_MSG_URL = "https://maia2-msg.maialearning.com/"
 var BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
+const val ML_URL = "https://ml-api-staging.maialearning.com/"
+const val ANTI_VIRUS = "https://api-gw-staging.maialearning.com/ml-s3-antivirus-status"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
 
@@ -106,7 +108,7 @@ val appModules1 = module {
 
 fun createHttpClient(): OkHttpClient {
     val client = OkHttpClient.Builder()
-    client.readTimeout(5 * 60, TimeUnit.SECONDS)
+    client.readTimeout((5 * 60).toLong(), TimeUnit.SECONDS)
 //    val loggingInterceptor = HttpLoggingInterceptor()
 //    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 //    return client.addInterceptor {
@@ -133,7 +135,7 @@ fun createHttpClient(): OkHttpClient {
 }
 
 
-fun getDate(timestamp: Long,format:String): String {
+fun getDate(timestamp: Long, format: String): String {
     val calendar = Calendar.getInstance(Locale.ENGLISH)
     calendar.timeInMillis = timestamp * 1000L
     val date = DateFormat.format(format, calendar).toString()
@@ -161,4 +163,11 @@ private fun checkToken(ex: HttpException, con: Context) {
         con.startActivity(intent)
         (con as Activity).finish()
     }
+}
+
+fun String.replaceNextLine(): String {
+    return this.replace("\n", " ").replace("\t", " ").replace("\r", " ")
+}
+fun String.replaceInvertedComas():String {
+    return this.replace("\"", "")
 }

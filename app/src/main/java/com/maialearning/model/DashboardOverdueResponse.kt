@@ -11,82 +11,89 @@ data class DashboardOverdueResponse(
 data class AssignmentItem(
 
 	@field:SerializedName("date")
-	val date: String? = null,
+	var date: String? = null,
+
+	@field:SerializedName("written_response")
+	var writtenResponse: Any? = null,
 
 	@field:SerializedName("task")
-	val task: String? = null,
+	var task: String? = null,
 
 	@field:SerializedName("assignment_type")
-	val assignmentType: String? = null,
+	var assignmentType: String? = null,
 
 	@field:SerializedName("assignee")
-	val assignee: String? = null,
+	var assignee: String? = null,
 
 	@field:SerializedName("assigned_student")
-	val assignedStudent: String? = null,
+	var assignedStudent: String? = null,
 
 	@field:SerializedName("body")
-	val body: String? = null,
+	var body: String? = null,
 
 	@field:SerializedName("category")
-	val category: String? = null,
+	var category: String? = null,
 
 	@field:SerializedName("title")
-	val title: Any? = null,
+	var title: Any? = null,
 
 	@field:SerializedName("fid")
-	val fid: Any? = null,
+	var fid: Any? = null,
 
 	@field:SerializedName("nid")
-	val nid: String? = null,
+	var nid: String? = null,
 
 	@field:SerializedName("type")
-	val type: String? = null,
+	var type: String? = null,
 
 	@field:SerializedName("assignment_req_type")
-	val assignmentReqType: Any? = null,
+	var assignmentReqType: Any? = null,
 
 	@field:SerializedName("unit")
-	val unit: Any? = null,
+	var unit: Any? = null,
 
 	@field:SerializedName("category_id")
-	val categoryId: String? = null,
+	var categoryId: String? = null,
 
 	@field:SerializedName("overdue")
-	val overdue: Int? = null,
+	var overdue: Int? = null,
 
 	@field:SerializedName("grade")
-	val grade: String? = null,
+	var grade: String? = null,
 
 	@field:SerializedName("worksheet_file_id")
-	val worksheetFileId: List<WorksheetFileIdItem?>? = null,
+	var worksheetFileId: List<WorksheetFileIdItem?>? = null,
 
 	@field:SerializedName("content_url")
-	val contentUrl: Any? = null,
+	var contentUrl: Any? = null,
 
 	@field:SerializedName("allow_edit_delete")
-	val allowEditDelete: Int? = null,
+	var allowEditDelete: Int? = null,
 
 	@field:SerializedName("status")
-	val status: Int? = null,
+	var status: Int? = null,
 
 	@field:SerializedName("filename")
-	val filename: String? = null,
+	var filename: String? = null,
 
 	@field:SerializedName("verified_status")
-	val verifiedStatus: Any? = null,
+	var verifiedStatus: Any? = null,
 
 	@field:SerializedName("completed")
-	val completed: Int? = null,
+	var completed: Int? = null,
 
 	@field:SerializedName("completed_date")
-	val completedDate: String? = null,
+	var completedDate: String? = null,
 
 	@field:SerializedName("verified_teacher")
-	val verifiedTeacher: Any? = null,
+	var verifiedTeacher: Any? = null,
 
 	@field:SerializedName("verified_time")
-	val verifiedTime: Any? = null
+	var verifiedTime: Any? = null
+
+
+
+
 )
 
 data class WorksheetFileIdItem(

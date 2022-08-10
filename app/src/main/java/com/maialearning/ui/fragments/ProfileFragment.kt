@@ -806,8 +806,8 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         val encoder: Base64.Encoder =
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 Base64.getEncoder()
-                            } else {
-
+                            }else{
+                                TODO("VERSION.SDK_INT<0")
                             }
                         val encoded: String = encoder.encodeToString(
                             gapText.toByteArray()

@@ -42,7 +42,7 @@ int size=0;
                  return new EssaysFragment();
             }
 
-            return new UpcomingFragment();
+            return new EssaysFragment();
         }
 
         @Override

@@ -4,16 +4,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.OverdueItemRowBinding
 import com.maialearning.model.AssignmentItem
 import com.maialearning.model.SortedDateModel
 import com.maialearning.util.getDate
+import com.maialearning.viewmodel.DashboardFragViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class OverDueHeadAdapter (var overdueList: ArrayList<SortedDateModel>?, val onItemClick: OnItemClick
+class OverDueHeadAdapter(
+    var overdueList: ArrayList<SortedDateModel>?,
+    val con: FragmentActivity,
+    val onItemClick: OnItemClick,
+    val fragment: Fragment
 ) :
-RecyclerView.Adapter<OverDueHeadAdapter.ViewHolder>() {
+    RecyclerView.Adapter<OverDueHeadAdapter.ViewHolder>() {
     var isSelected = false
 
     /**
@@ -33,17 +41,23 @@ RecyclerView.Adapter<OverDueHeadAdapter.ViewHolder>() {
 
         return ViewHolder(binding)
     }
+    private val dashboardViewModel: DashboardFragViewModel by fragment.viewModel()
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.itemView.setOnClickListener { onItemClick.onClick(position) }
         viewHolder.binding.dateTxt.setText(overdueList?.get(position)?.date)
-        overdueList?.get(position)?.assignment?.let { viewHolder.binding.countTxt.setText(""+it.size) }
-        viewHolder.binding.assignmentRow.adapter=OverDueAdapter(overdueList?.get(position)?.assignment as ArrayList<AssignmentItem>)
+        overdueList?.get(position)?.assignment?.let { viewHolder.binding.countTxt.setText("" + it.size) }
+        viewHolder.binding.assignmentRow.adapter = OverDueAdapter(
+            overdueList?.get(position)?.assignment as ArrayList<AssignmentItem>,
+            con,
+            fragment
+        )
+
     }
 
     override fun getItemCount(): Int {
-        return overdueList?.size?:0
+        return overdueList?.size ?: 0
     }
 
 }

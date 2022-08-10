@@ -131,9 +131,6 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                     pos = finalArray.size
                 }
                 mBinding.applyingList.adapter = ApplyingAdapter(this, finalArray)
-
-
-
             }
         }
     }

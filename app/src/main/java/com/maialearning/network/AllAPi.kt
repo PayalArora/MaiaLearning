@@ -4,9 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.http.*
 
 
@@ -156,4 +154,70 @@ interface AllAPi {
         @Header("Authorization") Authorization: String
     ): Deferred<DashboardOverdueResponse>
 
+    @GET
+    fun getSurveys(
+        @Url() url: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<SurveysResponse>
+    @GET
+    fun getWebinars(
+        @Url() url: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<WebinarResponse>
+
+    @POST("get_documents_download_presigned_url")
+    @FormUrlEncoded
+    fun downloadWorkSheet( @Header("Authorization") AutToken: String,
+                           @Header("origin") origin: String,
+                           @Header("referer") referer: String,
+                           @Field("student_uid") uuid: String,
+                           @Field("file_id") fileid: String,
+                           @Field("document_type") docType: String): Deferred<JsonArray>
+
+    @POST("add-student-response-activity")
+    @FormUrlEncoded
+    fun writeToCounselor(
+        @Header("Authorization") AutToken: String,
+        @Field("nid") n_id: String,
+        @Field("response") ext: String,
+    ): Deferred<JsonArray>
+
+    @POST("fm_user_file/presigned_url")
+    @FormUrlEncoded
+    fun uploadAttachmentFile(
+        @Header("Authorization") AutToken: String,
+        @Field("filename") n_id: String,
+        @Field("fm_uid") ext: String
+    ): Deferred<JsonObject>
+
+    @POST("fm_user_file")
+    fun updateFileAttachData(
+        @Header("Authorization") AutToken: String,
+        @Body updateUserData: FileUploadData
+    ): Deferred<JsonObject>
+
+    @GET("fm_tag")
+    fun getTags(
+        @Header("Authorization") AutToken: String
+    ): Deferred<ArrayList<FmTagsResponseItem?>>
+
+    @POST
+    fun checkFileVirus(
+        @Url() url: String,
+        @Header("Authorization") AutToken: String,
+        @Body file: JsonObject
+    ): Deferred<JsonObject>
+
+    @PUT("itask/{itask_nid}/{student_uid}")
+    fun completeTask(
+        @Header("Authorization") AutToken: String,
+        @Path("itask_nid") nid: String,
+        @Path("student_uid") uid: String,
+    ): Deferred<JsonArray>
+
+    @GET("uncheck-itask-student/{student_uid}")
+    fun resetTaskCompleteion(
+        @Header("Authorization") AutToken: String,
+        @Path("student_uid") uid: String,
+    ): Deferred<JsonArray>
 }
