@@ -90,6 +90,26 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                             )
                         )
                     }
+                    var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
+                        arrayListOf()
+                    var counselorNotes = object_.getJSONArray("counselor_notes")
+                    if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
+                        if (counselorNotes is JSONObject) {
+                            val x = counselorNotes.keys() as Iterator<String>
+                            while (x.hasNext()) {
+                                var json: JSONObject = counselorNotes.get(x.next()) as JSONObject
+                                val notesObj: ConsiderModel.CounselorNotes =
+                                    ConsiderModel.CounselorNotes(json.optString("id"),
+                                        json.optString("uid"),
+                                        json.optString("counselor_note"),
+                                        json.optString("first_name"),
+                                        json.optString("last_name"))
+                                arrayCounselor.add(notesObj)
+                            }
+
+
+                        }
+                    }
                     if (!countries.contains(object_.getString("country_name")))
                         countries.add(object_.getString("country_name"))
                     val model: ConsiderModel.Data = ConsiderModel.Data(
@@ -107,6 +127,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                         arrayProgram,
                         0,
                         object_.getString("notes"),
+                        arrayCounselor
                     )
                     array.add(model)
                 }
