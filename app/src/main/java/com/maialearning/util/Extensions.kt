@@ -35,13 +35,14 @@ import java.util.concurrent.TimeUnit
 
 const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
 const val CAT_API_MSG_URL = "https://msg-staging.maialearning.com/"
+
 //const val CAT_API_MSG_URL = "https://maia2-msg.maialearning.com/"
 var BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
 
-object URL{
+object URL {
     var BASEURL = 0
 }
 
@@ -82,12 +83,12 @@ val appModules = module {
     viewModel {
         LoginNewModel(catRepository = get())
     }
-    viewModel { HomeViewModel(catRepository = get())}
-    viewModel { DashboardViewModel(catRepository = get())}
+    viewModel { HomeViewModel(catRepository = get()) }
+    viewModel { DashboardViewModel(catRepository = get()) }
 
-    viewModel { ProfileViewModel(catRepository = get())}
+    viewModel { ProfileViewModel(catRepository = get()) }
 }
-val appModules1 = module{
+val appModules1 = module {
     single {
         createWebService<AllMessageAPi>(
             okHttpClient = createHttpClient(),
@@ -96,8 +97,9 @@ val appModules1 = module{
         )
     }
     factory<MessageRepository> { MessageRepositoryImpl(catApi = get()) }
-    viewModel { MessageViewModel(catRepository = get())}
+    viewModel { MessageViewModel(catRepository = get()) }
 }
+
 fun createHttpClient(): OkHttpClient {
     val client = OkHttpClient.Builder()
     client.readTimeout(5 * 60, TimeUnit.SECONDS)
@@ -111,18 +113,18 @@ fun createHttpClient(): OkHttpClient {
 //        return@addInterceptor it.proceed(request)
 //    }.build()
 
-   return if (BuildConfig.DEBUG){
+    return if (BuildConfig.DEBUG) {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-       client
+        client
             .addInterceptor(loggingInterceptor)
             .build()
-    }else{
-       val loggingInterceptor = HttpLoggingInterceptor()
-       loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-       client
-           .addInterceptor(loggingInterceptor)
-           .build()
+    } else {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        client
+            .addInterceptor(loggingInterceptor)
+            .build()
     }
 }
 
@@ -141,10 +143,10 @@ inline fun <reified T> createWebService(
 }
 
 private fun checkToken(ex: HttpException, con: Context) {
-    if(ex.code()==401){
+    if (ex.code() == 401) {
         val intent = Intent(con, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // To clean up all activities
         con.startActivity(intent)
-        ( con as Activity).finish()
+        (con as Activity).finish()
     }
 }

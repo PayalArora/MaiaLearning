@@ -34,7 +34,14 @@ class RecipentAdapter(val onItemClick: OnItemClick,var list:ArrayList<ReceipentM
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.checkName.text = list[position].name
-        viewHolder.binding.root.setOnClickListener { onItemClick.onClick(position) }
+        viewHolder.binding.checkName.setOnClickListener {
+            if(list[position].isSelected){
+                list[position].isSelected=false
+                onItemClick.onClick(position)
+            }else{
+                list[position].isSelected=true
+                onItemClick.onClick(position)
+            }}
         if (isSelected) {
             viewHolder.binding.checkName.isChecked = true
         } else {

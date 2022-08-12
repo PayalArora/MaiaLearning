@@ -62,6 +62,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private val profileModel: ProfileViewModel by viewModel()
     var attachedArray = ArrayList<AttachMessages>()
     var list = ArrayList<ReceipentModel>()
+    var selectedList = ArrayList<ReceipentModel>()
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_CHOOSE_PHOTO = 2
     private val REQUEST_FILE_ACCESS = 3
@@ -69,6 +70,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private var bitmap: Bitmap? = null
     private var imageExt: String? = null
     private var fileName: String? = null
+    var arrayList = ArrayList<HashMap<String, String>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = NewMessageBinding.inflate(layoutInflater)
@@ -82,7 +84,6 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         observer()
     }
 
-    //  "attachments":[{"type":"Message Attachment","fileType":"image/png","key":"1659869062_college_pic.png","filename":"college_pic.png","schoolNid":"381509"}],
     fun init() {
         dialog = showLoadingDialog(this)
         dialog.show()
@@ -92,39 +93,58 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
             "all"
         )
         mBinding.sendMessageBtn.setOnClickListener {
-            var arrayList = ArrayList<HashMap<String, String>>()
-            for (i in 0 until 4) {
-                var mMap = HashMap<String, String>()
-                mMap.put("uid", list[i].message_center_uid)
-                arrayList.add(mMap)
+            if (selectRecipent()) {
+//                var attach = ArrayList<JSONObject>()
+//            val attachJson = JSONObject()
+//            attachJson.put("type","Message Attachment")
+//            attachJson.put("fileType","image/png")
+//            attachJson.put("key","image/png")
+//            attachJson.put("filename",fileName)
+//            attachJson.put("schoolNid",SharedHelper(this).ethnicityTarget)
+//            attach.add(attachJson)
+                if (mBinding.textDescription.text.toString().trim() != "") {
+                    val json = JSONObject()
+                    val jsonData = JSONObject()
+                    jsonData.put(
+                        "senderUid",
+                        SharedHelper(BaseApplication.applicationContext()).messageId
+                    )
+                    jsonData.put("messageStatus", "sent")
+                    jsonData.put("messageBody", "test")
+                    jsonData.put("isReply", 0)
+                    jsonData.put("isForwad", 0)
+                    jsonData.put("isReplyAll", 0)
+                    jsonData.put("subject", "test")
+                    jsonData.put("auditEntity", "96452bf5-8156-49e4-af30-ec35a958850c")
+                    jsonData.put("recipients", arrayList)
+                    jsonData.put("attachments", arrayList)
+                    json.put("message", jsonData)
+                    msgModel.createMessage(this, json)
+                } else {
+                    Toast.makeText(this, "Please add description", Toast.LENGTH_LONG).show()
+                }
             }
-            var attach=ArrayList<JSONObject>()
-            val attachJson = JSONObject()
-            attachJson.put("type","Message Attachment")
-            attachJson.put("fileType","image/png")
-            attachJson.put("key","image/png")
-            attachJson.put("filename",fileName)
-            attachJson.put("schoolNid",SharedHelper(this).ethnicityTarget)
-            attach.add(attachJson)
-            val json = JSONObject()
-            val jsonData = JSONObject()
-            jsonData.put("senderUid", SharedHelper(BaseApplication.applicationContext()).messageId)
-            jsonData.put("messageStatus", "sent")
-            jsonData.put("messageBody", "test")
-            jsonData.put("isReply", 0)
-            jsonData.put("isForwad", 0)
-            jsonData.put("isReplyAll", 0)
-            jsonData.put("subject", "test")
-            jsonData.put("auditEntity", "96452bf5-8156-49e4-af30-ec35a958850c")
-            jsonData.put("recipients", arrayList)
-            jsonData.put("attachments", arrayList)
-            json.put("message", jsonData)
-            msgModel.createMessage(this, json)
-
         }
         mBinding.textAddFile.setOnClickListener {
             checkStoragePermissionAndOpenImageSelection()
         }
+    }
+
+    private fun selectRecipent(): Boolean {
+        if (selectedList.size > 0) {
+            for (i in 0 until selectedList.size) {
+                if (selectedList[i].isSelected) {
+                    val mMap = HashMap<String, String>()
+                    mMap.put("uid", selectedList[i].message_center_uid)
+                    arrayList.add(mMap)
+                }
+
+            }
+        } else {
+            Toast.makeText(this, "Please select list", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
     }
 
     fun observer() {
@@ -165,7 +185,13 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
 
         val selectAll = view.findViewById<CheckBox>(R.id.select_all)
         selectAll.setOnClickListener {
+            if (selectAll.isChecked) {
+                selectedList = list
+            } else {
+                selectedList = ArrayList()
+            }
             (recyclerView.adapter as RecipentAdapter).selectAll(selectAll.isChecked)
+//            dialog.dismiss()
         }
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
 
@@ -181,7 +207,13 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     }
 
     override fun onClick(positiion: Int) {
-        mBinding.textReciepent.text = list[positiion].name
+        if (list[positiion].isSelected) {
+            selectedList.add(list[positiion])
+            mBinding.textReciepent.text = list[positiion].name
+        } else {
+            selectedList.remove(list[positiion])
+        }
+
     }
 
     private fun checkStoragePermissionAndOpenImageSelection() {
@@ -277,7 +309,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             imagePath = getRealPathFromURI(tempUri)
             imageExt = tempUri?.let { getMimeType(this, it) }
-             fileName = imagePath!!.substring(imagePath?.lastIndexOf("/")!! + 1)
+            fileName = imagePath!!.substring(imagePath?.lastIndexOf("/")!! + 1)
 //            sheetBinding.toolbarProf.setImageBitmap(imageBitmap)
             uploadImageWork()
         } else if (requestCode == REQUEST_CHOOSE_PHOTO) {
@@ -384,27 +416,23 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
 
     private fun uploadImageWork() {
         dialog.show()
-        mBinding.fileName.text=fileName
+        mBinding.fileName.text = fileName
         SharedHelper(this).id?.let {
             imageExt?.let { it1 ->
                 SharedHelper(this).ethnicityTarget?.let { it2 ->
-                   msgModel.getImageURl( SharedHelper(this).jwtToken,fileName?:"",it1,
-                       SimpleDateFormat("yyyyMMddHHmmss").format(Date())+"_"+fileName,it2)
-//                    profileModel.getImageURl(
-//                        "Bearer " + SharedHelper(this).authkey,
-//                        it, it1, it2
-//                    )
+                    msgModel.getImageURl(
+                        SharedHelper(this).jwtToken, fileName ?: "", it1,
+                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + "_" + fileName, it2
+                    )
                 }
             }
         }
-
-
-
     }
 
     private fun upload(it: JsonObject?) {
 
     }
+
     private fun upload(it: JsonArray?) {
         val file = File(imagePath)
         val requestBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)

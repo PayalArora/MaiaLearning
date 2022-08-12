@@ -9,4 +9,5 @@ data class ReceipentModel (
     var message_center_uid: String,
     @SerializedName("uid")
     var uid: String,
+    var isSelected :Boolean=false
     )
