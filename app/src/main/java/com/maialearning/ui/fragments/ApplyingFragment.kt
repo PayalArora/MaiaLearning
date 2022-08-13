@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
@@ -28,7 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     var selectedValue = ""
     private lateinit var mBinding: FragmentApplyingBinding
-    private lateinit var dialogP: Dialog
+        private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,6 +158,10 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
 
             }
+        }
+        homeModel.showError.observe(requireActivity()) {
+            dialogP.dismiss()
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 

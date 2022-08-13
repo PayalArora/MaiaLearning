@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maialearning.databinding.AdmisionLayoutBinding
+import com.maialearning.model.CollegeFactSheetModel
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.AdmissionAdapter
 import com.maialearning.ui.model.CommunityModel
 
@@ -14,6 +16,7 @@ class AdmissionFragment : Fragment() {
     private lateinit var mBinding: AdmisionLayoutBinding
     var listData=ArrayList<CommunityModel>()
     var listDataProgress=ArrayList<CommunityModel>()
+     var model: CollegeFactSheetModel? =null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -37,7 +40,17 @@ class AdmissionFragment : Fragment() {
 
     }
     private fun initData(){
+
         mBinding.listView.adapter = AdmissionAdapter(requireContext())
+        model=( context as UniversitiesActivity).getData()
+        if(model != null){
+            mBinding.add2.text=model?.admissions?.applicationFee
+            mBinding.addm2.text=model?.admissions?.appType
+            mBinding.addm2.text=model?.admissions?.appType
+            mBinding.addi2.text=model?.admissions?.admissionInterview
+            mBinding.sat1.text=model?.admissions?.satAct
+        }
+
 
     }
 }

@@ -87,6 +87,7 @@ val appModules = module {
     }
     viewModel { HomeViewModel(catRepository = get()) }
     viewModel { DashboardViewModel(catRepository = get()) }
+    viewModel { FactSheetModel(catRepository = get()) }
 
     viewModel { ProfileViewModel(catRepository = get()) }
     viewModel { DashboardFragViewModel(catRepository = get()) }

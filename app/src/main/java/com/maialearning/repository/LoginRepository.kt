@@ -12,12 +12,8 @@ import com.maialearning.util.ORIGIN
 
 import retrofit2.HttpException
 
-import retrofit2.Response
 import com.maialearning.util.prefhandler.SharedHelper
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONArray
-import org.json.JSONObject
 
 interface LoginRepository {
     // Suspend is used to await the result from Deferred
@@ -59,6 +55,10 @@ interface LoginRepository {
 
     suspend fun uploadImage(content:String,url: String, bode:RequestBody): UseCaseResult<Unit>
     suspend fun getOverDueCompleted(token:String,id: String): UseCaseResult<DashboardOverdueResponse>
+    suspend fun getColFactSheet(token:String,id: String): UseCaseResult<JsonObject>
+    suspend fun getCollegeNid(token:String,id: String): UseCaseResult<JsonObject>
+    suspend fun getUniversityContact(token:String,id: String): UseCaseResult<CollegeContactModel>
+    suspend fun getUniversityNotes(token:String,id: String,id2: String): UseCaseResult<CollegeContactModel>
   //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
 }
@@ -317,6 +317,47 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getOverDueCompleted(token: String, id: String): UseCaseResult<DashboardOverdueResponse> {
         return try {
             val result = catApi.getOverDueCompleted(id,token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getCollegeNid(token: String, id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getCollegeNid(id,token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getColFactSheet(token: String, id: String): UseCaseResult<JsonObject> {
+        return try {
+            val url="https://maia2-staging.maialearning.com/v2/atlas-static-data/college-factsheet/222178.json"
+            val result = catApi.getColFactSheet(url).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getUniversityContact(token: String, id: String): UseCaseResult<CollegeContactModel> {
+        return try {
+            val result = catApi.universityContacts(id,token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getUniversityNotes(token: String, id: String,id2 :String): UseCaseResult<CollegeContactModel> {
+        return try {
+            val result = catApi.universityNotes(id,id2,token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

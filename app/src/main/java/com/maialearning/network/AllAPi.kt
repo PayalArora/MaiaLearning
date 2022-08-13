@@ -4,9 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.http.*
 
 
@@ -155,5 +153,30 @@ interface AllAPi {
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
     ): Deferred<DashboardOverdueResponse>
+
+    @GET
+    fun getColFactSheet(
+        @Url() url: String,
+
+    ): Deferred<JsonObject>
+
+    @GET("college_nid_by_unitid/{id}")
+    fun getCollegeNid(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<JsonObject>
+
+    @GET("university-contact-student/{id}")
+    fun universityContacts(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<CollegeContactModel>
+
+    @GET("counselor_college_notes/{id}/{CId}")
+    fun universityNotes(
+        @Path("id") id: String,
+        @Path("id") CId: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<CollegeContactModel>
 
 }

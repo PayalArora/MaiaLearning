@@ -249,7 +249,7 @@
                         android:lineSpacingExtra="2sp"
                         android:paddingStart="@dimen/_20dp"
                         android:paddingEnd="@dimen/_20dp"
-                        android:text="Application Deadline: January 24, 2016"
+                        android:text="Application Deadline: "
                         android:textColor="#B55B51"
                         android:textSize="14sp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -281,6 +281,7 @@
                         app:layout_constraintTop_toBottomOf="@id/view1" />
 
                     <TextView
+                        android:id="@+id/fallTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_20dp"
@@ -306,6 +307,7 @@
                         app:layout_constraintTop_toBottomOf="@id/web1" />
 
                     <TextView
+                        android:id="@+id/sringTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_5sp"
@@ -331,6 +333,7 @@
                         app:layout_constraintTop_toBottomOf="@id/phone1" />
 
                     <TextView
+                        android:id="@+id/sumTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_5sp"
@@ -356,6 +359,7 @@
                         app:layout_constraintTop_toBottomOf="@id/enviro" />
 
                     <TextView
+                        android:id="@+id/winTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_5sp"

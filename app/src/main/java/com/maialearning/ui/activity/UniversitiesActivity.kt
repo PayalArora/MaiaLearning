@@ -1,11 +1,13 @@
 package com.maialearning.ui.activity
 
+import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
@@ -18,11 +20,20 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.databinding.*
+import com.maialearning.model.CollegeFactSheetModel
+import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
+import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.FactSheetModel
+import org.json.JSONArray
+import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class UniversitiesActivity : FragmentActivity(), ClickFilters {
@@ -30,7 +41,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private lateinit var toolbarBinding: Toolbar
     var dialog: BottomSheetDialog? = null
     var dialogFacts: BottomSheetDialog? = null
-
+    var model: CollegeFactSheetModel? = null
+    private val mModel: FactSheetModel by viewModel()
+    private lateinit var dialogP: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +63,65 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         binding.toolbarProf.setOnClickListener {
             ProfileFilter(this, layoutInflater).showDialog()
         }
+        observerInit()
 
     }
 
+    private fun observerInit() {
+        mModel.factSheetObserver.observe(this) {
+            dialogP.dismiss()
+            val gson = GsonBuilder().create()
+            val itModel = gson.fromJson(it, CollegeFactSheetModel::class.java)
+
+            val array: ArrayList<CollegeFactSheetModel.DegreeMajors1.Majors1> = ArrayList()
+            val json =
+                JSONObject(it.toString()).getJSONObject("degree_majors").getJSONObject("majors")
+            val keyList = ArrayList<String>()
+            val x = json.keys() as Iterator<String>
+            val jsonArray = JSONArray()
+            while (x.hasNext()) {
+                val key: String = x.next().toString()
+                jsonArray.put(json.get(key))
+                keyList.add(key)
+            }
+            for (i in 0 until jsonArray.length()) {
+                val objectProgram = jsonArray.getJSONObject(i)
+                array.add(
+                    CollegeFactSheetModel.DegreeMajors1.Majors1(
+                        keyList.get(i), CollegeFactSheetModel.DegreeMajors1.Majors1.AnimalSciences(
+                            objectProgram.getInt("Associate Degree"),
+                            objectProgram.getInt("Master Degree"),
+                            objectProgram.getInt("Bachelor Degree"),
+                            objectProgram.getInt("Doctorate Degree"),
+                            objectProgram.getInt("count"),
+                            ""
+                        )
+                    )
+                )
+
+            }
+            itModel.degreeMajors1 = CollegeFactSheetModel.DegreeMajors1(array,itModel.degreeMajors.programOffered)
+            loadData(itModel)
+            dialogFacts?.show()
+
+        }
+        mModel.showError.observe(this) {
+            dialogP.dismiss()
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun initView() {
-        var tabArray = arrayOf(getString(R.string.search),
+        var tabArray = arrayOf(
+            getString(R.string.search),
             getString(R.string.considering),
             getString(R.string.applying),
             getString(R.string.milestone),
             getString(R.string.recommendations),
             getString(R.string.decisions),
             getString(R.string.essays),
-            getString(R.string.scholarships))
+            getString(R.string.scholarships)
+        )
         for (item in tabArray) {
             binding.tabs.addTab(binding.tabs.newTab().setText(item))
 
@@ -132,14 +192,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val close = view.findViewById<ImageView>(R.id.close)
-        val tabArray = arrayOf(getString(R.string.overview),
+        val tabArray = arrayOf(
+            getString(R.string.overview),
             getString(R.string.community),
             getString(R.string.admission),
             getString(R.string.cost_),
             getString(R.string.degree),
             getString(R.string.transfer),
             getString(R.string.notes),
-            getString(R.string.campus_service))
+            getString(R.string.campus_service)
+        )
         for (item in tabArray) {
             factTabs.addTab(factTabs.newTab().setText(item))
         }
@@ -157,7 +219,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             likeClick()
         }
         dialogFacts?.setContentView(view)
-        dialogFacts?.show()
+        dialogP = showLoadingDialog(this)
+        dialogP.show()
+        mModel.getColFactSheet(
+            "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+            "222178"
+        )
+
     }
 
     private fun bottomSheetAddUniv() {
@@ -200,27 +268,37 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             if (positiion == 0) {
                 countryFilter()
             } else if (positiion == 1) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
+                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                    View.VISIBLE,
                     resources.getString(R.string.reigon),
-                    positiion)
+                    positiion
+                )
             } else if (positiion == 2) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
+                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                    View.VISIBLE,
                     resources.getString(R.string.list),
-                    positiion, View.GONE)
+                    positiion, View.GONE
+                )
             } else if (positiion == 3) {
                 typeFilter()
             } else if (positiion == 4) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                    View.GONE,
                     resources.getString(R.string.selectivity),
-                    positiion)
+                    positiion
+                )
             } else if (positiion == 5) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(View.VISIBLE,
+                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                    View.VISIBLE,
                     resources.getString(R.string.programs),
-                    positiion)
+                    positiion
+                )
             } else if (positiion == 6) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(View.GONE,
+                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                    View.GONE,
                     resources.getString(R.string.sports),
-                    positiion, View.VISIBLE)
+                    positiion, View.VISIBLE
+                )
             } else if (positiion == 7) {
                 moreFilter()
             }
@@ -238,9 +316,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
-        val adapter = ArrayAdapter.createFromResource(this,
+        val adapter = ArrayAdapter.createFromResource(
+            this,
             R.array.capmpus_activity,
-            android.R.layout.simple_spinner_item)
+            android.R.layout.simple_spinner_item
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         //sheetBinding.spinner.setPrompt("Campus Activities")
 
@@ -248,7 +328,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             NothingSelectedSpinnerAdapter(
                 adapter,
                 R.layout.nothing_adapter,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                this))
+                this
+            )
+        )
         sheetBinding.campusActivity.setOnClickListener { sheetBinding.spinner.performClick() }
 
 
@@ -263,15 +345,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
         sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
-        val adapter = ArrayAdapter.createFromResource(this,
+        val adapter = ArrayAdapter.createFromResource(
+            this,
             R.array.religious_affilation,
-            android.R.layout.simple_spinner_item)
+            android.R.layout.simple_spinner_item
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sheetBinding.spinner.setAdapter(
             NothingSelectedSpinnerAdapter(
                 adapter,
                 R.layout.nothing_adapter,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                this))
+                this
+            )
+        )
         sheetBinding.religous.setOnClickListener { sheetBinding.spinner.performClick() }
 
 
@@ -281,6 +367,15 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         binding.tabs.selectTab(binding.tabs.getTabAt(1))
         dialogFacts?.let { it.dismiss() }
         dialog?.let { it.dismiss() }
+    }
+
+    fun loadData(model: CollegeFactSheetModel) {
+        this.model = model
+    }
+
+    fun getData(): CollegeFactSheetModel? {
+
+        return model
     }
 
 }

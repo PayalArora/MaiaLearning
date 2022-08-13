@@ -9,6 +9,8 @@
         android:id="@+id/labeled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+
         android:background="@color/white">
 
         <ImageView
@@ -92,18 +94,21 @@
                 app:tabTextColor="@color/black_1" />
         </com.google.android.material.appbar.AppBarLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_below="@id/labeled"
-    android:layout_alignParentBottom="true"
-    >
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+    <LinearLayout
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-</LinearLayout>
+        android:layout_below="@id/labeled"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </LinearLayout>
 </RelativeLayout>

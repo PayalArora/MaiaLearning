@@ -55,4 +55,9 @@ class SharedHelper(var context: Context) {
         set(authkey) {
             sharedPreference!!.putKey("picture", picture)
         }
+    var collegeNId:String
+        get() = sharedPreference!!.getKey("collegenId")
+        set(authkey) {
+            sharedPreference!!.putKey("collegenId", authkey)
+        }
 }

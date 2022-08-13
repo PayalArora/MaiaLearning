@@ -7,8 +7,10 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:padding="@dimen/_10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,13 +44,12 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/about_"
+                    android:id="@+id/aboutdes"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20dp"
                     android:fontFamily="@font/inter_regular"
                     android:lineSpacingExtra="2sp"
-                    android:text="@string/about_uni"
                     android:textColor="@color/black_1"
                     android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -66,9 +67,10 @@
                     android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/about_" />
+                    app:layout_constraintTop_toBottomOf="@id/aboutdes" />
 
                 <TextView
+                    android:id="@+id/webUrl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20dp"
@@ -77,7 +79,7 @@
                     android:textColor="@color/black_1"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@id/web"
-                    app:layout_constraintTop_toBottomOf="@id/about_" />
+                    app:layout_constraintTop_toBottomOf="@id/aboutdes" />
 
                 <TextView
                     android:id="@+id/phone"
@@ -93,6 +95,7 @@
                     app:layout_constraintTop_toBottomOf="@id/web" />
 
                 <TextView
+                    android:id="@+id/phoneNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="2sp"
@@ -141,6 +144,7 @@
                     app:layout_constraintTop_toBottomOf="@id/enviro" />
 
                 <TextView
+                    android:id="@+id/entType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="2sp"
@@ -165,6 +169,7 @@
                     app:layout_constraintTop_toBottomOf="@id/public_type" />
 
                 <TextView
+                    android:id="@+id/degree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="2sp"
@@ -232,7 +237,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_View"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/textVideo" />
         </androidx.constraintlayout.widget.ConstraintLayout>
