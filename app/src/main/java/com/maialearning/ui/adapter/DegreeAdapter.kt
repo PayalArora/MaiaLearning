@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.DegreeAdapterBinding
 import com.maialearning.model.CollegeFactSheetModel
 
-class DegreeAdapter (var list:ArrayList<CollegeFactSheetModel.DegreeMajors1.Majors1>) : RecyclerView.Adapter<DegreeAdapter.ViewHolder>() {
+class DegreeAdapter (var list:MutableList<CollegeFactSheetModel.DegreeMajors1.Majors1>) : RecyclerView.Adapter<DegreeAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).

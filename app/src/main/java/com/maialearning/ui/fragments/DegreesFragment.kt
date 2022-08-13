@@ -14,6 +14,7 @@ import com.maialearning.viewmodel.FactSheetModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 class DegreesFragment : Fragment() {
     private val mModel: FactSheetModel by viewModel()
@@ -51,7 +52,15 @@ class DegreesFragment : Fragment() {
     private fun init() {
         model = (context as UniversitiesActivity).getData()
         if (model != null) {
-            mBinding.recyclerView.adapter = DegreeAdapter(model?.degreeMajors1?.majors!!)
+            val sortedList: MutableList<CollegeFactSheetModel.DegreeMajors1.Majors1> =
+                model?.degreeMajors1?.majors!!.groupBy { it.name }
+                    .values
+                    .map {
+                        it.reduce {
+                                acc, item -> CollegeFactSheetModel.DegreeMajors1.Majors1(item.name,item.agriculturalBusinessAndManagement)
+                        }
+                    }.sortedWith(compareBy { it.name }).toMutableList()
+            mBinding.recyclerView.adapter = DegreeAdapter(sortedList)
 
         }
     }
