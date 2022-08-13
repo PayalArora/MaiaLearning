@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.databinding.OverviewLayoutBinding
 import com.maialearning.model.CollegeFactSheetModel
@@ -42,8 +41,6 @@ class OverViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        mModel.getColFactSheet("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
-//        mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
         val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
@@ -66,18 +63,6 @@ class OverViewFragment : Fragment() {
 
         }}
     fun observer(){
-        mModel.factSheetObserver.observe(requireActivity()) {
-            val gson = GsonBuilder().create()
-            val it = gson.fromJson(it, CollegeFactSheetModel::class.java)
-            ( context as UniversitiesActivity).loadData(it)
-            mBinding.aboutdes.text=it.basicInfo.description
-            mBinding.phoneNo.text=it.basicInfo.phone
-            mBinding.webUrl.text=it.basicInfo.webAddr
-            mBinding.entType.text=it.basicInfo.environmentType
-            mBinding.degree.text=it.basicInfo.environmentType
-            mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
-
-        }
         mModel.idObserver.observe(requireActivity()) {
             SharedHelper(requireContext()).collegeNId = it.get("nid").toString()
             mModel.getUniversityContact("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,SharedHelper(requireContext()).collegeNId)

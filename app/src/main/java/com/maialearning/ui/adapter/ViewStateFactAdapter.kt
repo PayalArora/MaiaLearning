@@ -22,10 +22,12 @@ class ViewStateFactAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycl
         }else if (position == 4) {
             return DegreesFragment()
         }else if (position == 5) {
-            return TransferFragment()
+            return VarsityFragment()
         }else if (position == 6) {
-            return FactsNotesFragment()
+            return TransferFragment()
         }else if (position == 7) {
+            return FactsNotesFragment()
+        }else if (position == 8) {
             return CampusFragment()
         }
         return OverViewFragment()

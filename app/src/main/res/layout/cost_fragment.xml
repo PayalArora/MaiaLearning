@@ -149,6 +149,7 @@
                     app:layout_constraintTop_toBottomOf="@id/vieew" />
 
                 <TextView
+                    android:id="@+id/periorTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20dp"
@@ -184,6 +185,7 @@
                     app:layout_constraintTop_toBottomOf="@id/view" />
 
                 <TextView
+                    android:id="@+id/regularTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20dp"
@@ -219,6 +221,7 @@
                     app:layout_constraintTop_toBottomOf="@id/view1" />
 
                 <TextView
+                    android:id="@+id/notTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20dp"

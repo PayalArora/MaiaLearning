@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maialearning.databinding.DegreeFragmentBinding
+import com.maialearning.databinding.VarsityLayoutBinding
 import com.maialearning.model.CollegeFactSheetModel
 import com.maialearning.ui.activity.UniversitiesActivity
-import com.maialearning.ui.adapter.DegreeAdapter
+import com.maialearning.ui.adapter.VarsityAdapter
 
 
-class DegreesFragment : Fragment() {
-    private lateinit var mBinding: DegreeFragmentBinding
+class VarsityFragment  : Fragment() {
+    private lateinit var mBinding: VarsityLayoutBinding
     var model: CollegeFactSheetModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +25,8 @@ class DegreesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = DegreeFragmentBinding.inflate(inflater, container, false)
+
+        mBinding = VarsityLayoutBinding.inflate(inflater, container, false)
         return mBinding.root
 
     }
@@ -38,17 +39,22 @@ class DegreesFragment : Fragment() {
     }
 
     private fun init() {
+        mBinding.aa.visibility=View.INVISIBLE
+        mBinding.ma.visibility=View.INVISIBLE
+        mBinding.dda.visibility=View.INVISIBLE
+        mBinding.ba.text="Men"
+        mBinding.da.text="Women"
         model = (context as UniversitiesActivity).getData()
         if (model != null) {
-            val sortedList: MutableList<CollegeFactSheetModel.DegreeMajors1.Majors1> =
-                model?.degreeMajors1?.majors!!.groupBy { it.name }
+            val sortedList: MutableList<CollegeFactSheetModel.VarsityAthleticSports1.Teams1> =
+                model?.varsityAthleticSports1?.teams!!.groupBy { it.name }
                     .values
                     .map {
                         it.reduce {
-                                acc, item -> CollegeFactSheetModel.DegreeMajors1.Majors1(item.name,item.agriculturalBusinessAndManagement)
+                                acc, item -> CollegeFactSheetModel.VarsityAthleticSports1.Teams1(item.name,item.values)
                         }
                     }.sortedWith(compareBy { it.name }).toMutableList()
-            mBinding.recyclerView.adapter = DegreeAdapter(sortedList)
+            mBinding.recyclerView.adapter = VarsityAdapter(sortedList)
 
         }
     }

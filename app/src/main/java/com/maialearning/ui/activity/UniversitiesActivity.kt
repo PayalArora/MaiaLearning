@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +45,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var model: CollegeFactSheetModel? = null
     private val mModel: FactSheetModel by viewModel()
     private lateinit var dialogP: Dialog
+    private lateinit var universityName : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,20 +90,44 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 val objectProgram = jsonArray.getJSONObject(i)
                 array.add(
                     CollegeFactSheetModel.DegreeMajors1.Majors1(
-                        keyList.get(i), CollegeFactSheetModel.DegreeMajors1.Majors1.AnimalSciences(
+                        keyList[i], CollegeFactSheetModel.DegreeMajors1.Majors1.AnimalSciences(
                             objectProgram.getInt("Associate Degree"),
                             objectProgram.getInt("Master Degree"),
                             objectProgram.getInt("Bachelor Degree"),
                             objectProgram.getInt("Doctorate Degree"),
                             objectProgram.getInt("count"),
-                            ""
+                            objectProgram.getString("description")
                         )
                     )
                 )
 
             }
+            val varArray: ArrayList<CollegeFactSheetModel.VarsityAthleticSports1.Teams1> = ArrayList()
+            val jsonVar =
+                JSONObject(it.toString()).getJSONObject("varsity_athletic_sports").getJSONObject("teams")
+            val varList = ArrayList<String>()
+            val x1 = jsonVar.keys() as Iterator<String>
+            val jsonVarArray = JSONArray()
+            while (x1.hasNext()) {
+                val key: String = x1.next().toString()
+                jsonVarArray.put(jsonVar.get(key))
+                varList.add(key)
+            }
+            for (i in 0 until jsonVarArray.length()) {
+                val objectProgram = jsonVarArray.getJSONObject(i)
+                varArray.add(
+                    CollegeFactSheetModel.VarsityAthleticSports1.Teams1(
+                        varList[i],  CollegeFactSheetModel.VarsityAthleticSports1.Teams1.Baseball(
+                            objectProgram.getString("men"),
+                            objectProgram.getString("women")
+                        )
+                    )
+                )
+            }
+            itModel.varsityAthleticSports1=CollegeFactSheetModel.VarsityAthleticSports1(varArray,itModel.varsityAthleticSports.athleticAssociation)
             itModel.degreeMajors1 = CollegeFactSheetModel.DegreeMajors1(array,itModel.degreeMajors.programOffered)
             loadData(itModel)
+            universityName.text=itModel.basicInfo.name
             dialogFacts?.show()
 
         }
@@ -198,6 +224,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             getString(R.string.admission),
             getString(R.string.cost_),
             getString(R.string.degree),
+            getString(R.string.var_sport) ,
             getString(R.string.transfer),
             getString(R.string.notes),
             getString(R.string.campus_service)
@@ -215,6 +242,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             tab.text = tabArray[position]
         }.attach()
         val like = view.findViewById<ImageView>(R.id.like)
+        universityName = view.findViewById<TextView>(R.id.university)
         like.setOnClickListener {
             likeClick()
         }

@@ -143,6 +143,7 @@
                 app:layout_constraintTop_toBottomOf="@id/web" />
 
             <TextView
+                android:id="@+id/religTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"

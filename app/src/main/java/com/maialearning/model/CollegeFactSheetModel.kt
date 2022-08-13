@@ -20,6 +20,8 @@ data class CollegeFactSheetModel(
     var varsityAthleticTeams: VarsityAthleticTeams,
     @SerializedName("varsity_athletic_sports")
     var varsityAthleticSports: VarsityAthleticSports,
+    @SerializedName("varsity_athletic_sports1")
+    var varsityAthleticSports1: VarsityAthleticSports1,
     @SerializedName("transfers")
     var transfers: Transfers,
     @SerializedName("services")
@@ -315,9 +317,9 @@ data class CollegeFactSheetModel(
 
         data class FinancialDeadlines(
             @SerializedName("priority_deadline")
-            var priorityDeadline: Any,
+            var priorityDeadline: String,
             @SerializedName("regular_deadline")
-            var regularDeadline: Any,
+            var regularDeadline: String,
             @SerializedName("notification_date")
             var notificationDate: String
         )
@@ -3097,6 +3099,8 @@ data class CollegeFactSheetModel(
         )
     }
 
+
+
     data class VarsityAthleticSports(
         @SerializedName("teams")
         var teams: Teams,
@@ -3358,6 +3362,26 @@ data class CollegeFactSheetModel(
                 var count: Int,
                 @SerializedName("description")
                 var description: String
+            )
+        }
+    }
+    data class VarsityAthleticSports1(
+        @SerializedName("teams")
+        var teams: ArrayList<Teams1>?,
+        @SerializedName("athletic_association")
+        var athleticAssociation: String
+    ) {
+        data class Teams1(
+            @SerializedName("key")
+            var name: String,
+            @SerializedName("values")
+            var values: Baseball
+        ) {
+            data class Baseball(
+                @SerializedName("men")
+                var men: String,
+                @SerializedName("women")
+                var women: String
             )
         }
     }
