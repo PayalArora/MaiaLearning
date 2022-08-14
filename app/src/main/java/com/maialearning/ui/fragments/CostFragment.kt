@@ -160,5 +160,7 @@ class CostFragment : Fragment() {
         }
         mBinding.textdead.text= financial.financialOffice.mail
         mBinding.phoneno.text= financial.financialOffice.phone1
+        mBinding.fax.text= financial.financialOffice.phone2
+        mBinding.faf.text= financial.financialOffice.fafsaCode
     }
 }

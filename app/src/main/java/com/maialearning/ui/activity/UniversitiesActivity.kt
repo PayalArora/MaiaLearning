@@ -105,6 +105,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             val varArray: ArrayList<CollegeFactSheetModel.VarsityAthleticSports1.Teams1> = ArrayList()
             val jsonVar =
                 JSONObject(it.toString()).getJSONObject("varsity_athletic_sports").getJSONObject("teams")
+             val jsonServices =
+                JSONObject(it.toString()).getJSONObject("services")
             val varList = ArrayList<String>()
             val x1 = jsonVar.keys() as Iterator<String>
             val jsonVarArray = JSONArray()
@@ -113,6 +115,15 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 jsonVarArray.put(jsonVar.get(key))
                 varList.add(key)
             }
+            val serList = ArrayList<String>()
+            val x2 = jsonServices.keys() as Iterator<String>
+            val jsonSerArray = JSONArray()
+            while (x2.hasNext()) {
+                val key: String = x2.next().toString()
+                jsonSerArray.put(jsonServices.get(key))
+                serList.add(key)
+            }
+
             for (i in 0 until jsonVarArray.length()) {
                 val objectProgram = jsonVarArray.getJSONObject(i)
                 varArray.add(

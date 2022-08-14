@@ -377,7 +377,78 @@
                     app:layout_constraintStart_toEndOf="@id/ph_icon"
                     app:layout_constraintTop_toBottomOf="@id/phoneno" />
 
-
+                <ImageView
+                    android:id="@+id/fa_icon"
+                    android:layout_width="@dimen/_30dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:padding="@dimen/_5sp"
+                    android:backgroundTint="@color/black_1"
+                    android:src="@drawable/ic_phone"
+                    android:layout_marginStart="@dimen/_10dp"
+                    app:layout_constraintBottom_toBottomOf="@id/fax"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/fax"
+                    app:tint="@color/black_1" />
+                <TextView
+                    android:id="@+id/fax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="+1 415 555 12 12 "
+                    android:textColor="@color/black_1"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/fa_icon"
+                    app:layout_constraintTop_toBottomOf="@id/phone1" />
+                <TextView
+                    android:id="@+id/fax1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:lineSpacingExtra="2sp"
+                    android:text=" FAX"
+                    android:textColor="@color/black_1"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/fa_icon"
+                    app:layout_constraintTop_toBottomOf="@id/fax" />
+                <ImageView
+                    android:id="@+id/faf_icon"
+                    android:layout_width="@dimen/_30dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:padding="@dimen/_5sp"
+                    android:backgroundTint="@color/black_1"
+                    android:src="@drawable/ic_phone"
+                    android:layout_marginStart="@dimen/_10dp"
+                    app:layout_constraintBottom_toBottomOf="@id/faf"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/faf"
+                    app:tint="@color/black_1" />
+                <TextView
+                    android:id="@+id/faf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="+1 415 555 12 12 "
+                    android:textColor="@color/black_1"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/faf_icon"
+                    app:layout_constraintTop_toBottomOf="@id/fax1" />
+                <TextView
+                    android:id="@+id/faf1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:lineSpacingExtra="2sp"
+                    android:text=" FAFSA"
+                    android:textColor="@color/black_1"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@id/fa_icon"
+                    app:layout_constraintTop_toBottomOf="@id/faf" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
