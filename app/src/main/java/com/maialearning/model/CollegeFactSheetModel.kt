@@ -3275,7 +3275,7 @@ data class CollegeFactSheetModel(
             @SerializedName("7")
             var x7: String,
             @SerializedName("other_counseling")
-            var otherCounseling: Any
+            var otherCounseling: String
         )
 
         data class CareerServices(
