@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/filters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/_15dp"
+        android:text="@string/select_application_plan"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_21sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/close"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="@dimen/_30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/_15dp"
+        android:background="@drawable/circle_lay">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/cross" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@+id/filters"
+        android:background="@color/divider_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/_15dp"
+            android:text="@string/school_within_uni"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/school_within_univ"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginHorizontal="@dimen/_15dp"
+            android:background="@drawable/white_rect_border"
+            android:fontFamily="@font/inter"
+            android:gravity="center_vertical"
+            android:hint="@string/enter_name"
+            android:paddingHorizontal="@dimen/_10dp"
+            android:paddingVertical="5dp"
+            android:textAllCaps="false"
+            android:textColor="@color/grey"
+            android:textColorHint="@color/hintColor"
+            android:textFontWeight="500"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/_5dp"
+            android:padding="@dimen/_15dp"
+            android:text="@string/did_you_take"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_15dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/no_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no" />
+
+            <RadioButton
+                android:id="@+id/yes_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10dp"
+                android:text="@string/yes" />
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/filters"
+            android:layout_marginVertical="@dimen/_10dp"
+            android:background="@color/divider_color" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45dp"
+            android:layout_marginHorizontal="@dimen/_15dp"
+            android:background="@drawable/white_rect_border">
+
+
+            <Spinner
+                android:id="@+id/rate_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45dp"
+                android:background="@android:color/transparent"
+                android:dropDownVerticalOffset="20dp"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center_vertical"
+                android:entries="@array/rate_college"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown"
+                android:theme="@style/MatchSpinnerTheme" />
+
+            <ImageView
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:layout_marginRight="@dimen/_10dp"
+                android:padding="@dimen/_5dp"
+                android:rotation="270"
+                android:src="@drawable/back_arrow" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45dp"
+            android:layout_marginHorizontal="@dimen/_15dp"
+            android:layout_marginTop="@dimen/_15dp"
+            android:background="@drawable/white_rect_border">
+
+
+            <Spinner
+                android:id="@+id/interview_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45dp"
+                android:background="@android:color/transparent"
+                android:dropDownVerticalOffset="20dp"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center_vertical"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown"
+                android:entries="@array/have_interview"
+                android:theme="@style/MatchSpinnerTheme" />
+
+            <ImageView
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp"
+                android:layout_marginRight="@dimen/_10dp"
+                android:padding="@dimen/_5dp"
+                android:rotation="270"
+                android:src="@drawable/back_arrow" />
+
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/saveLayout"
+            android:background="@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_5dp"
+            android:layout_height="wrap_content"
+            >
+
+            <Button
+                android:id="@+id/save_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_15dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/inter_bold"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/blue"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

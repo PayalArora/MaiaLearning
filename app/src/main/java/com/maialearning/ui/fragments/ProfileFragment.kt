@@ -803,18 +803,18 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         ).show()
                         return@setOnClickListener
                     } else {
-//                        val encoder: Base64.Encoder =
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                                Base64.getEncoder()
-//                            } else {
-//
-//                            }
-//                        val encoded: String = encoder.encodeToString(
-//                            gapText.toByteArray()
-//                        )
+                        val encoder: Base64.Encoder =
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                Base64.getEncoder()
+                            } else {
+                                   TODO()
+                            }
+                        val encoded: String = encoder.encodeToString(
+                            gapText.toByteArray()
+                        )
 
-//                        updateUserData.userdata.gap_year_note =
-//                            encoded
+                        updateUserData.userdata.gap_year_note =
+                            encoded
                     }
                 }
                 else {

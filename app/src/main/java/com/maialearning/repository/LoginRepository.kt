@@ -12,8 +12,12 @@ import com.maialearning.util.ORIGIN
 
 import retrofit2.HttpException
 
+import retrofit2.Response
 import com.maialearning.util.prefhandler.SharedHelper
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONArray
+import org.json.JSONObject
 
 interface LoginRepository {
     // Suspend is used to await the result from Deferred
@@ -61,6 +65,13 @@ interface LoginRepository {
     suspend fun getUniversityNotes(token:String,id: String,id2: String): UseCaseResult<CollegeContactModel>
   //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
+    suspend fun updateStudentPlan(
+        updateStudentPlan: UpdateStudentPlan
+    ): UseCaseResult<JsonObject>
+
+    suspend fun searchUniversities(
+        payload: UniversitySearchPayload
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -365,5 +376,36 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
+    override suspend fun updateStudentPlan(
+        updateStudentPlan: UpdateStudentPlan
+    ): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.editStudentPlan(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                updateStudentPlan
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun searchUniversities(payload: UniversitySearchPayload): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.searchUniversties(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                payload
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
 
 }

@@ -2,8 +2,8 @@ package com.maialearning.model
 
 import com.google.gson.annotations.SerializedName
 
- class ConsiderModel {
-        data class Data(
+class ConsiderModel {
+    data class Data(
         @SerializedName("contact_info")
         var contactInfo: Int,
         @SerializedName("parchment")
@@ -24,6 +24,10 @@ import com.google.gson.annotations.SerializedName
         var created_name: String,
         @SerializedName("created_date")
         var created_date: String,
+        @SerializedName("college_priority_choice")
+        var college_priority_choice: String,
+        @SerializedName("university_nid")
+        var university_nid: String,
         @SerializedName("internal_deadline")
         var internal_deadline: String?,
         @SerializedName("app_by_program_data")
@@ -35,6 +39,7 @@ import com.google.gson.annotations.SerializedName
         @SerializedName("counselor_notes")
         var counselorNotes: ArrayList<CounselorNotes>?,
     )
+
     data class ProgramData(
         @SerializedName("program_id")
         var program_id: Int,
@@ -45,17 +50,18 @@ import com.google.gson.annotations.SerializedName
         @SerializedName("program_status")
         var program_status: String,
     )
-     data class CounselorNotes(
-         @SerializedName("id")
-         var id: String,
-         @SerializedName("uid")
-         var uid: String,
-         @SerializedName("counselor_note")
-         var counselorNote: String,
-         @SerializedName("first_name")
-         var firstName: String,
-         @SerializedName("last_name")
-         var lastName: String
-     )
-    }
+
+    data class CounselorNotes(
+        @SerializedName("id")
+        var id: String,
+        @SerializedName("uid")
+        var uid: String,
+        @SerializedName("counselor_note")
+        var counselorNote: String,
+        @SerializedName("first_name")
+        var firstName: String,
+        @SerializedName("last_name")
+        var lastName: String
+    )
+}
 

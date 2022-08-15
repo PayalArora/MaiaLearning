@@ -15,7 +15,11 @@ import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 import com.maialearning.util.CommonClass
 
-class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>, val notesClick:(data: ConsiderModel.Data)->Unit) :
+class ConsiderAdapter(
+    val onItemClickOption: OnItemClickOption,
+    var array: ArrayList<ConsiderModel.Data>,
+    val notesClick: (data: ConsiderModel.Data) -> Unit
+) :
     RecyclerView.Adapter<ConsiderAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -44,24 +48,33 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayL
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
-            if(array[position].country_name==""){
-                top.visibility=View.GONE
-            }else{
-                top.visibility=View.VISIBLE
+            if (array[position].country_name == "") {
+                top.visibility = View.GONE
+            } else {
+                top.visibility = View.VISIBLE
                 countryTxt.text = array[position].country_name
                 count.text = array[position].count.toString()
             }
-            uniName.text=array[position].naviance_college_name
-            if (array[position].created_date!=null)
-            date.setText(CommonClass.getDate(array[position].created_date.toLong()))
-            if (array[position].internal_deadline!=null && array[position].internal_deadline!="null")
-            textInternalDate.setText(array[position]?.internal_deadline?.toLong()
-                ?.let { CommonClass.getDate(it) })
+            uniName.text = array[position].naviance_college_name
+            if (array[position].created_date != null)
+                date.setText(CommonClass.getDate(array[position].created_date.toLong()))
+            if (array[position].internal_deadline != null && array[position].internal_deadline != "null")
+                textInternalDate.setText(array[position]?.internal_deadline?.toLong()
+                    ?.let { CommonClass.getDate(it) })
             name.setText(array[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
 
+            if (array[position].college_priority_choice.equals("null")) {
+                countTxt.setText("?")
+            } else if (array[position].college_priority_choice.equals("1")) {
+                countTxt.setText("1st")
+            } else if (array[position].college_priority_choice.equals("2")) {
+                countTxt.setText("2nd")
+            } else {
+                countTxt.setText(array[position].college_priority_choice)
+            }
             //uniName.text=array[position].naviance_college_name
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()
@@ -80,9 +93,12 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayL
             addButton.setOnClickListener {
                 onItemClickOption.onAddClick()
             }
-            val others= ArrayList<String>()
-            for (i in 0 until array[position].program_data?.size!!){
-                others.add(array[position].program_data?.get(i)?.program_name?:"")
+            infoIcon.setOnClickListener {
+                onItemClickOption.onInfoClick(position)
+            }
+            val others = ArrayList<String>()
+            for (i in 0 until array[position].program_data?.size!!) {
+                others.add(array[position].program_data?.get(i)?.program_name ?: "")
             }
 //            val others: Array<out String> = root.context.resources.getStringArray(R.array.spinner_programs)
             val adapter = ArrayAdapter(
@@ -91,7 +107,7 @@ class ConsiderAdapter(val onItemClickOption: OnItemClickOption,var array :ArrayL
             )
             allSystem.adapter = adapter
             commentImg.setOnClickListener { notesClick(array[position]) }
-    }
+        }
 
     }
 

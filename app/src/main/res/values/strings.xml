@@ -54,7 +54,7 @@
     <string name="trash">Trash</string>
     <string name="upcomings">Upcoming</string>
     <string name="overdue">Overdue</string>
-    <string name="complete">Complete</string>
+    <string name="complete">Completed</string>
     <string name="new_message">New Message</string>
     <string name="add_file">+ Add Files</string>
     <string name="send_message">Send Message</string>
@@ -405,6 +405,17 @@
     <string name="state_residence">State Of Residence</string>
     <string name="parent_connections">Parent Connections</string>
     <string name="counselors_connections">Counselors Connections</string>
+    <string name="select_application_plan">Select Application Plan</string>
+    <string name="school_within_uni">School within university,if applicable</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="did_you_take">Did you take the campus tour?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="institution_type">Institution Type : </string>
+    <string name="degree_type">Type of Degrees Offered:</string>
+    <string name="fax">FAX</string>
+    <string name="fsfa">FAFSA</string>
+    <string name="transfer_req">Transfer Requirements</string>
 
 
     <string-array name="decision_filter">
@@ -435,5 +446,19 @@
         <item>Vollyball</item>
         <item>Basketball</item>
         <item>Cricket</item>
+    </string-array>
+
+    <string-array name="rate_college">
+        <item>How much do you like college?</item>
+        <item>Love it</item>
+        <item>Like it a lot</item>
+        <item>Like it</item>
+        <item>Its okay</item>
+    </string-array>
+    <string-array name="have_interview">
+        <item>Do you have an interview?</item>
+        <item>Yes</item>
+        <item>I plan to</item>
+        <item>College doesnt offer interviews</item>
     </string-array>
 </resources>

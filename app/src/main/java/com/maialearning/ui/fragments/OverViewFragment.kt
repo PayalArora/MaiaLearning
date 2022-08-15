@@ -54,11 +54,13 @@ class OverViewFragment : Fragment() {
     private fun init() {
         model = (context as UniversitiesActivity).getData()
         if (model != null) {
-            mBinding.aboutdes.text=model?.basicInfo?.description
-            mBinding.phoneNo.text=model?.basicInfo?.phone
-            mBinding.webUrl.text=model?.basicInfo?.webAddr
-            mBinding.entType.text=model?.basicInfo?.environmentType
-            mBinding.degree.text=model?.basicInfo?.environmentType
+            mBinding.aboutdes.text=" ${ model?.basicInfo?.description}"
+            mBinding.phoneNo.text=" ${ model?.basicInfo?.phone}"
+            mBinding.webUrl.text=" ${ model?.basicInfo?.webAddr}"
+            mBinding.entType.text=" ${ model?.basicInfo?.environmentType}"
+            mBinding.termTyp.text=" ${ model?.basicInfo?.termType}"
+            mBinding.intsType.text=" ${ model?.basicInfo?.institutionType}"
+            mBinding.degree.text=" ${ model?.basicInfo?.award?.joinToString(",")}"
             mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
 
         }}

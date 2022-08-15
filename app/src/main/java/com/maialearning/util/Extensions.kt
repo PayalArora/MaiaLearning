@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.text.format.DateFormat
 import android.util.Log
+import android.view.View
 import androidx.viewbinding.BuildConfig
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -162,4 +163,8 @@ private fun checkToken(ex: HttpException, con: Context) {
         con.startActivity(intent)
         (con as Activity).finish()
     }
+}
+
+fun View.visible(isVisible: Boolean) {
+    visibility = if (isVisible) View.VISIBLE else View.GONE
 }

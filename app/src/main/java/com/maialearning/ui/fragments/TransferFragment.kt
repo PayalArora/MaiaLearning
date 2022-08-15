@@ -104,6 +104,7 @@ class TransferFragment : Fragment() {
             } else {
                 mBinding.sumTxt.text = require.summer
             }
+            mBinding.reqTxt.text = model?.transfers?.transferReqirements?.collegeTranscripts?:"N/A"
         }
     }
 }

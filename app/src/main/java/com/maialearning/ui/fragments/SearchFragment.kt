@@ -1,29 +1,38 @@
 package com.maialearning.ui.fragments
 
+import android.app.Dialog
 import android.content.res.Resources
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
-
 import com.maialearning.databinding.SearchLayoutBinding
+import com.maialearning.model.UniversitiesSearchModel
+import com.maialearning.model.UniversitySearchPayload
+import com.maialearning.model.UniversitySearchResponse
+import com.maialearning.parser.SearchParser
 import com.maialearning.ui.adapter.UniFactAdapter
+import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.HomeViewModel
+import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
+import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class SearchFragment : Fragment() {
     private lateinit var mBinding: SearchLayoutBinding
+    private val homeModel: HomeViewModel by viewModel()
+    private lateinit var progress: Dialog
+    var page: Int = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -34,7 +43,8 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        mBinding= SearchLayoutBinding.inflate(inflater,container,false)
+        mBinding = SearchLayoutBinding.inflate(inflater, container, false)
+        progress = showLoadingDialog(requireContext())
 
         return mBinding.root
 
@@ -46,22 +56,58 @@ class SearchFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
             .commit()
-        mBinding.rvUniv .adapter= UniFactAdapter(requireContext(),::click)
-       // bottomSheetList()
+        hitAPI(page)
+
+        homeModel.searchUniversityObserver.observe(requireActivity()) {
+            val univ = SearchParser(it).parseJson()
+            progress.dismiss()
+        //    mBinding.swipyrefreshlayout.isRefreshing=false
+            mBinding.rvUniv.adapter =
+                univ.university_list?.let { it1 -> UniFactAdapter(requireContext(), it1, ::click) }
+
+        }
+//        mBinding.swipyrefreshlayout.setOnRefreshListener(object :
+//            SwipyRefreshLayout.OnRefreshListener {
+//            override fun onRefresh(direction: SwipyRefreshLayoutDirection?) {
+//                if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
+//                    page = page + 1
+//                    hitAPI(page)
+//                }
+//                }else if(direction == SwipyRefreshLayoutDirection.TOP){
+//                    if(page!=1 && page>1){
+//                        page=page-1
+//                        hitAPI(page)
+//                    }
+//                }
+//            }
+//
+//        })
+        // bottomSheetList()
 
     }
+
+    private fun hitAPI(pageNo: Int) {
+        progress.show()
+        var payload = UniversitySearchPayload()
+        payload.student_uid = SharedHelper(requireContext()).id.toString()
+        payload.country = "US"
+        payload.pager = pageNo
+        homeModel.searchUniversities(payload)
+    }
+
     private fun bottomSheetList() {
         val dialog = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.search_bottom_sheet, null)
-        view.minimumHeight = Resources.getSystem().displayMetrics.heightPixels/3
+        view.minimumHeight = Resources.getSystem().displayMetrics.heightPixels / 3
 //
 
         val listing = view.findViewById<RecyclerView>(R.id.listing)
 //        val bottomSheet = view.findViewById<View>(R.id.listing)
 //        val mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 //        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        listing.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false);
-        listing.adapter= UniFactAdapter(requireContext(),::click)
+        listing.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+//        listing.adapter = UniFactAdapter(requireContext(), ::click)
 //        close.setOnClickListener {
 //            dialog.dismiss()
 //        }
@@ -69,5 +115,7 @@ class SearchFragment : Fragment() {
         dialog.setContentView(view)
         dialog.show()
     }
-    fun click(){}
+
+    fun click() {}
+
 }

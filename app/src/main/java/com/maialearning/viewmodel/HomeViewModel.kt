@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.JsonObject
 import com.maialearning.model.Consider
 import com.maialearning.model.NotesModel
+import com.maialearning.model.UniversitySearchPayload
+import com.maialearning.model.UpdateStudentPlan
 
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
@@ -29,6 +31,10 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
     val applyObserver = MutableLiveData<JsonObject>()
     val notesObserver = MutableLiveData<NotesModel>()
     val showError = SingleLiveEvent<String>()
+    val updateStudentPlanObserver = MutableLiveData<JsonObject>()
+    val searchUniversityObserver = MutableLiveData<JsonObject>()
+
+
 
     fun getConsiderList(id:String) {
         showLoading.value = true
@@ -65,6 +71,33 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> notesObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+    fun updateStudentPlan(updateStudentPlan: UpdateStudentPlan) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.updateStudentPlan(updateStudentPlan)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> updateStudentPlanObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun searchUniversities(payload: UniversitySearchPayload) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.searchUniversities(payload)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> searchUniversityObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

@@ -93,7 +93,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                     }
                     var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
                         arrayListOf()
-                    var counselorNotes = object_.getJSONArray("counselor_notes")
+             /*       var counselorNotes = object_.getJSONArray("counselor_notes")
                     if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
                         if (counselorNotes is JSONObject) {
                             val x = counselorNotes.keys() as Iterator<String>
@@ -110,7 +110,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
 
                         }
-                    }
+                    }*/
                     if (!countries.contains(object_.getString("country_name")))
                         countries.add(object_.getString("country_name"))
                     val model: ConsiderModel.Data = ConsiderModel.Data(
@@ -124,6 +124,8 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("country_name"),
                         object_.getString("created_by_name"),
                         object_.getString("created_date"),
+                        object_.getString("college_priority_choice"),
+                        object_.getString("university_nid"),
                         object_.getString("internal_deadline"),
                         arrayProgram,
                         0,
@@ -225,6 +227,9 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     override fun onAddClick() {
 
+    }
+
+    override fun onInfoClick(postion: Int) {
     }
 
 }

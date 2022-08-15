@@ -26,6 +26,7 @@ import com.maialearning.R
 import com.maialearning.databinding.*
 import com.maialearning.model.CollegeFactSheetModel
 import com.maialearning.network.BaseApplication
+import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
@@ -201,7 +202,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
 
         listing.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        listing.adapter = UniFactAdapter(this, ::bottomSheetWork)
+        var arrayList= arrayListOf<UniversitiesSearchModel>()
+        listing.adapter = UniFactAdapter(this, arrayList, ::bottomSheetWork)
 //        close.setOnClickListener {
 //            dialog.dismiss()
 //        }
@@ -218,8 +220,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val close = view.findViewById<ImageView>(R.id.close)
-        val tabArray = arrayOf(
-            getString(R.string.overview),
+        val tabArray = arrayOf(getString(R.string.overview),
             getString(R.string.community),
             getString(R.string.admission),
             getString(R.string.cost_),

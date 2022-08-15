@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
 import com.maialearning.model.ConsiderModel
+import com.maialearning.model.UpdateStudentPlan
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
@@ -38,6 +38,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     private lateinit var mBinding: ConsideringLayoutBinding
     private val homeModel: HomeViewModel by viewModel()
     lateinit var userid: String
+    val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,24 +104,24 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                         )
                     }
 
-                    var counselorNotes = object_.getJSONArray("counselor_notes")
-                    if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
-                        if (counselorNotes is JSONObject) {
-                            val x = counselorNotes.keys() as Iterator<String>
-                            while (x.hasNext()) {
-                                var json: JSONObject = counselorNotes.get(x.next()) as JSONObject
-                                val notesObj: ConsiderModel.CounselorNotes =
-                                    ConsiderModel.CounselorNotes(json.optString("id"),
-                                        json.optString("uid"),
-                                        json.optString("counselor_note"),
-                                        json.optString("first_name"),
-                                        json.optString("last_name"))
-                                arrayCounselor.add(notesObj)
-                            }
+                    /*      var counselorNotes = object_.getJSONArray("counselor_notes")
+                          if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
+                              if (counselorNotes is JSONObject) {
+                                  val x = counselorNotes.keys() as Iterator<String>
+                                  while (x.hasNext()) {
+                                      var json: JSONObject = counselorNotes.get(x.next()) as JSONObject
+                                      val notesObj: ConsiderModel.CounselorNotes =
+                                          ConsiderModel.CounselorNotes(json.optString("id"),
+                                              json.optString("uid"),
+                                              json.optString("counselor_note"),
+                                              json.optString("first_name"),
+                                              json.optString("last_name"))
+                                      arrayCounselor.add(notesObj)
+                                  }
 
 
-                        }
-                    }
+                              }
+                          }*/
                     for (j in 0 until programArray.length()) {
                         val objectProgram = programArray.getJSONObject(j)
                         arrayProgram.add(
@@ -145,15 +146,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("country_name"),
                         object_.getString("created_by_name"),
                         object_.getString("created_date"),
+                        object_.getString("college_priority_choice"),
+                        object_.getString("university_nid"),
                         object_.getString("internal_deadline"),
                         arrayProgram,
                         0,
-                                object_.getString("notes"),
+                        object_.getString("notes"),
                         arrayCounselor
                     )
                     array.add(model)
                 }
-                val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
+                finalArray.clear()
                 var pos = 0
                 // Sorted countries by name
                 countries.sortBy { it }
@@ -249,6 +252,56 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         bottomSheetProgram()
     }
 
+    override fun onInfoClick(postion: Int) {
+        bottonSheetInfo(postion)
+    }
+
+    private fun bottonSheetInfo(postion: Int) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: ConsideringInfoSheetBinding =
+            ConsideringInfoSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.close.setOnClickListener {
+            dialog.dismiss()
+        }
+        sheetBinding.saveBtn.setOnClickListener {
+            var updateStudentPlan = UpdateStudentPlan()
+            updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+            updateStudentPlan.college_nid = finalArray[postion].university_nid
+            updateStudentPlan.school_within_university =
+                sheetBinding.schoolWithinUniv.text.toString()
+            updateStudentPlan.app_type="4"
+            updateStudentPlan.request_transcript="0"
+            if (sheetBinding.rateSpinner.selectedItemPosition != 0) {
+                updateStudentPlan.college_interest =
+                    sheetBinding.rateSpinner.selectedItemPosition.toString()
+            }
+            if (sheetBinding.interviewSpinner.selectedItemPosition != 0) {
+                updateStudentPlan.interview_interest =
+                    sheetBinding.interviewSpinner.selectedItemPosition.toString()
+            }
+
+            if (sheetBinding.yesRadio.isChecked) {
+                updateStudentPlan.campus_tour = "1"
+            } else {
+                updateStudentPlan.campus_tour = "0"
+            }
+
+          //  dialogP.show()
+            homeModel.updateStudentPlan(updateStudentPlan)
+            homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+                dialog.dismiss()
+                dialogP.dismiss()
+            }
+            homeModel.showError.observe(requireActivity()) {
+                dialogP.dismiss()
+            }
+        }
+    }
+
+
     private fun bottomSheetComment() {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: CommentsSheetBinding = CommentsSheetBinding.inflate(layoutInflater)
@@ -259,6 +312,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
             dialog.dismiss()
         }
         sheetBinding.commentList.adapter = CommentAdapter(this)
+
     }
 
     override fun onDestroy() {
@@ -296,4 +350,5 @@ interface OnItemClickOption {
     fun onPlanClick()
     fun onCommentClick()
     fun onAddClick()
+    fun onInfoClick(postion: Int)
 }
