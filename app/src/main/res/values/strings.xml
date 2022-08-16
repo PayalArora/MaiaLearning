@@ -415,7 +415,12 @@
     <string name="degree_type">Type of Degrees Offered:</string>
     <string name="fax">FAX</string>
     <string name="fsfa">FAFSA</string>
+    <string name="na">N/A</string>
+    <string name="no_data_found">No data found</string>
     <string name="transfer_req">Transfer Requirements</string>
+    <string name="zero">0</string>
+    <string name="min_req">The maximum amount of credits that can be transferred varies from school to school, as does the minimum credits transferors must complete prior to transferring.\n\nThe two circles to the right represent relevant semester hours for this particular school.\n\n
+</string>
 
 
     <string-array name="decision_filter">

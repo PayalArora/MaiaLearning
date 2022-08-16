@@ -71,12 +71,6 @@ class OverViewFragment : Fragment() {
             mModel.getUniversityContact("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,SharedHelper(requireContext()).collegeNId)
 
         }
-        mModel.contactInfoObserver.observe(requireActivity()) {
-            it
-//            SharedHelper(requireContext()).collegeNId = it.get("nid").toString()
-//            mModel.getUniversityContact("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,SharedHelper(requireContext()).collegeNId)
-
-        }
     }
 
 }

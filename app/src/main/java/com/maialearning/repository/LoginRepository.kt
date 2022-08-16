@@ -62,7 +62,7 @@ interface LoginRepository {
     suspend fun getColFactSheet(token:String,id: String): UseCaseResult<JsonObject>
     suspend fun getCollegeNid(token:String,id: String): UseCaseResult<JsonObject>
     suspend fun getUniversityContact(token:String,id: String): UseCaseResult<CollegeContactModel>
-    suspend fun getUniversityNotes(token:String,id: String,id2: String): UseCaseResult<CollegeContactModel>
+    suspend fun getUniversityNotes(token:String,id: String,id2: String): UseCaseResult<JsonObject>
   //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
     suspend fun updateStudentPlan(
@@ -72,6 +72,10 @@ interface LoginRepository {
     suspend fun searchUniversities(
         payload: UniversitySearchPayload
     ): UseCaseResult<JsonObject>
+
+
+    suspend fun hitLikeUniv(studentId: String, collegeId: String): UseCaseResult<JsonArray>
+    suspend fun hitUnlikeUniv(studentId: String, collegeId: String): UseCaseResult<Unit>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -366,7 +370,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getUniversityNotes(token: String, id: String,id2 :String): UseCaseResult<CollegeContactModel> {
+    override suspend fun getUniversityNotes(token: String, id: String,id2 :String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.universityNotes(id,id2,token).await()
             UseCaseResult.Success(result)
@@ -407,5 +411,38 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
+    override suspend fun hitLikeUniv(
+        studentId: String,
+        collegeId: String
+    ): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.hitLikeUniversity(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                studentId, collegeId, ""
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun hitUnlikeUniv(
+        studentId: String,
+        collegeId: String
+    ): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.hitUnlikeUniversity(
+                collegeId, studentId,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
 
 }
