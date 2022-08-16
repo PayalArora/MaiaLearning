@@ -282,19 +282,19 @@ data class CollegeFactSheetModel(
 
     data class TutionFinancial(
         @SerializedName("tution_fees_instate")
-        var tutionFeesInstate: Int,
+        var tutionFeesInstate: Int = 0,
         @SerializedName("tution_fees_outstate")
-        var tutionFeesOutstate: Int,
+        var tutionFeesOutstate: Int = 0,
         @SerializedName("books")
-        var books: Int,
+        var books:  Int = 0,
         @SerializedName("room_board")
-        var roomBoard: Int,
+        var roomBoard:  Int = 0,
         @SerializedName("other_charges")
-        var otherCharges: Int,
+        var otherCharges:  Int = 0,
         @SerializedName("total_instate")
-        var totalInstate: Int,
+        var totalInstate:  Int = 0,
         @SerializedName("total_outstate")
-        var totalOutstate: Int,
+        var totalOutstate:  Int = 0,
         @SerializedName("financial_aid")
         var financialAid: FinancialAid,
         @SerializedName("financial_deadlines")

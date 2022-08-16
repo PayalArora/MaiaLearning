@@ -416,7 +416,6 @@
     <string name="fax">FAX</string>
     <string name="fsfa">FAFSA</string>
     <string name="transfer_req">Transfer Requirements</string>
-    <string name="min_req">Here is quick snapshot of the requirements for transfer students.\n\nIf you have any questions about these requirements, be sure to contact the Admission Contact listed in the Admission tab for this school\n\n</string>
 
 
     <string-array name="decision_filter">

@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -33,6 +34,7 @@ import com.maialearning.ui.bottomsheets.SheetUniversityFilter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
+import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -46,7 +48,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var model: CollegeFactSheetModel? = null
     private val mModel: FactSheetModel by viewModel()
     private lateinit var dialogP: Dialog
-    private lateinit var universityName : TextView
+    private lateinit var universityName: TextView
+    private lateinit var noData: TextView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +62,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         binding.toolbar.title = getString(R.string.universities)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
-        toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).visibility = View.VISIBLE
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).visibility = View.GONE
         toolbarBinding.setNavigationOnClickListener {
             finish()
         }
@@ -103,10 +107,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 )
 
             }
-            val varArray: ArrayList<CollegeFactSheetModel.VarsityAthleticSports1.Teams1> = ArrayList()
+            val varArray: ArrayList<CollegeFactSheetModel.VarsityAthleticSports1.Teams1> =
+                ArrayList()
             val jsonVar =
-                JSONObject(it.toString()).getJSONObject("varsity_athletic_sports").getJSONObject("teams")
-             val jsonServices =
+                JSONObject(it.toString()).getJSONObject("varsity_athletic_sports")
+                    .getJSONObject("teams")
+            val jsonServices =
                 JSONObject(it.toString()).getJSONObject("services")
             val varList = ArrayList<String>()
             val x1 = jsonVar.keys() as Iterator<String>
@@ -129,17 +135,27 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 val objectProgram = jsonVarArray.getJSONObject(i)
                 varArray.add(
                     CollegeFactSheetModel.VarsityAthleticSports1.Teams1(
-                        varList[i],  CollegeFactSheetModel.VarsityAthleticSports1.Teams1.Baseball(
+                        varList[i], CollegeFactSheetModel.VarsityAthleticSports1.Teams1.Baseball(
                             objectProgram.getString("men"),
                             objectProgram.getString("women")
                         )
                     )
                 )
             }
-            itModel.varsityAthleticSports1=CollegeFactSheetModel.VarsityAthleticSports1(varArray,itModel.varsityAthleticSports.athleticAssociation)
-            itModel.degreeMajors1 = CollegeFactSheetModel.DegreeMajors1(array,itModel.degreeMajors.programOffered)
-            loadData(itModel)
-            universityName.text=itModel.basicInfo.name
+            itModel.varsityAthleticSports1 = CollegeFactSheetModel.VarsityAthleticSports1(
+                varArray,
+                itModel.varsityAthleticSports.athleticAssociation
+            )
+            if (itModel.degreeMajors.programOffered != null) {
+                itModel.degreeMajors1 =
+                    CollegeFactSheetModel.DegreeMajors1(array, itModel.degreeMajors.programOffered)
+                loadData(itModel)
+                universityName.text = itModel.basicInfo.name
+            } else {
+                if (binding.tabs.selectedTabPosition == 0)
+                    noData.visibility = View.VISIBLE
+            }
+
             dialogFacts?.show()
 
         }
@@ -213,8 +229,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
 
         listing.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        var arrayList= arrayListOf<UniversitiesSearchModel>()
-        listing.adapter = UniFactAdapter(this, arrayList, ::bottomSheetWork)
+        var arrayList = arrayListOf<UniversitiesSearchModel>()
+        //listing.adapter = UniFactAdapter(this, arrayList, ::click)
 //        close.setOnClickListener {
 //            dialog.dismiss()
 //        }
@@ -223,7 +239,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog?.show()
     }
 
-    public fun bottomSheetWork() {
+    fun click() {}
+    public fun bottomSheetWork(get: UniversitiesSearchModel) {
         dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -231,12 +248,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val close = view.findViewById<ImageView>(R.id.close)
-        val tabArray = arrayOf(getString(R.string.overview),
+        val tabArray = arrayOf(
+            getString(R.string.overview),
             getString(R.string.community),
             getString(R.string.admission),
             getString(R.string.cost_),
             getString(R.string.degree),
-            getString(R.string.var_sport) ,
+            getString(R.string.var_sport),
             getString(R.string.transfer),
             getString(R.string.notes),
             getString(R.string.campus_service)
@@ -255,6 +273,24 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }.attach()
         val like = view.findViewById<ImageView>(R.id.like)
         universityName = view.findViewById<TextView>(R.id.university)
+        universityName.setText(get.collegeName)
+        noData = view.findViewById<TextView>(R.id.no_data)
+        factTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (factTabs.selectedTabPosition != 0)
+                    noData.visibility = View.GONE
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        }
+        )
         like.setOnClickListener {
             likeClick()
         }
@@ -263,10 +299,61 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialogP.show()
         mModel.getColFactSheet(
             "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-            "222178"
+            get.unitid.toString()
         )
+        //  val likePic = view.findViewById<ImageView>(R.id.like)
 
+        if (get.topPickFlag == 1) {
+            like.setImageResource(R.drawable.heart_filled)
+        } else {
+            like.setImageResource(R.drawable.like)
+        }
+
+//        likePic.setOnClickListener {
+//            if (get.topPickFlag == 1) {
+//                hitUnlikeWork(get)
+//                likePic.setImageResource(R.drawable.heart_filled)
+//            } else {
+//                hitLikeWork(get)
+//                likePic.setImageResource(R.drawable.like)
+//            }
+//        }
+//        homeModel.unlikeObserver.observe(this) {
+//            dialogP.dismiss()
+////            hitAPI(page)
+//        }
+//        homeModel.showError.observe(this) {
+//            dialogP.dismiss()
+//            Log.e("Error", "err" + it)
+//        }
     }
+
+    private val homeModel: HomeViewModel by viewModel()
+
+    private fun hitLikeWork(get: UniversitiesSearchModel) {
+        dialogP.show()
+        SharedHelper(this).id?.let {
+            get.nid?.let { it1 ->
+                homeModel.hitlike(
+                    it,
+                    it1
+                )
+            }
+        }
+    }
+
+    private fun hitUnlikeWork(get: UniversitiesSearchModel) {
+        dialogP.show()
+        SharedHelper(this).id?.let {
+            get.nid?.let { it1 ->
+                homeModel.hitunlike(
+                    it,
+                    it1
+                )
+            }
+        }
+    }
+
 
     private fun bottomSheetAddUniv() {
         val dialog = BottomSheetDialog(this)
@@ -417,6 +504,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         return model
     }
+
 
 }
 

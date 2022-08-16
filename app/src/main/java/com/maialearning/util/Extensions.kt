@@ -10,6 +10,7 @@ import android.view.View
 import androidx.viewbinding.BuildConfig
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.maialearning.R
 import com.maialearning.network.AllAPi
 import com.maialearning.network.AllMessageAPi
 import com.maialearning.network.BaseApplication
@@ -135,7 +136,7 @@ fun createHttpClient(): OkHttpClient {
 }
 
 
-fun getDate(timestamp: Long,format:String): String {
+fun getDate(timestamp: Long, format: String): String {
     val calendar = Calendar.getInstance(Locale.ENGLISH)
     calendar.timeInMillis = timestamp * 1000L
     val date = DateFormat.format(format, calendar).toString()
@@ -165,6 +166,42 @@ private fun checkToken(ex: HttpException, con: Context) {
     }
 }
 
+fun parseNA(string: String?): String {
+    if (string == null || string == "null") {
+        return BaseApplication.applicationContext().getString(R.string.na)
+    } else {
+        return string
+    }
+}
+
+fun parsePercentNA(string: String?): String {
+
+    if (string == null || string == "null") {
+        return BaseApplication.applicationContext().getString(R.string.na)
+    } else {
+        return "${string}%"
+    }
+
+}
+
+fun parsePercentZero(string: String?): String {
+
+    if (string == null || string == "null") {
+        return "${BaseApplication.applicationContext().getString(R.string.zero)}%"
+    } else {
+        return "${string}%"
+    }
+
+}
+fun parsePercentDollar(string: Int?): String {
+
+    if (string == null || string.toString() == "null") {
+        return "$${BaseApplication.applicationContext().getString(R.string.zero)}"
+    } else {
+        return "$${string}"
+    }
+
+}
 fun View.visible(isVisible: Boolean) {
     visibility = if (isVisible) View.VISIBLE else View.GONE
 }

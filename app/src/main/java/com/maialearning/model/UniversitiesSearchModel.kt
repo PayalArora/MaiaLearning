@@ -26,7 +26,7 @@ data class UniversitiesSearchModel(
 	val campusType: String? = null,
 
 	@field:SerializedName("top_pick_flag")
-	val topPickFlag: Int? = null,
+	var topPickFlag: Int? = null,
 
 	@field:SerializedName("country_code")
 	val countryCode: String? = null,
