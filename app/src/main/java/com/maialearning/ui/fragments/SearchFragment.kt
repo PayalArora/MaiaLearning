@@ -32,6 +32,7 @@ class SearchFragment : Fragment() {
     private val homeModel: HomeViewModel by viewModel()
     private lateinit var progress: Dialog
     var page: Int = 1
+    var universityList: ArrayList<UniversitiesSearchModel>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,10 +62,11 @@ class SearchFragment : Fragment() {
         homeModel.searchUniversityObserver.observe(requireActivity()) {
             val univ = SearchParser(it).parseJson()
             progress.dismiss()
-        //    mBinding.swipyrefreshlayout.isRefreshing=false
+            //    mBinding.swipyrefreshlayout.isRefreshing=false
+            universityList = univ.university_list
+
             mBinding.rvUniv.adapter =
                 univ.university_list?.let { it1 -> UniFactAdapter(requireContext(), it1, ::click) }
-
         }
 //        mBinding.swipyrefreshlayout.setOnRefreshListener(object :
 //            SwipyRefreshLayout.OnRefreshListener {
@@ -84,6 +86,18 @@ class SearchFragment : Fragment() {
 //        })
         // bottomSheetList()
 
+        homeModel.likeObserver.observe(requireActivity()) {
+            progress.dismiss()
+//            hitAPI(page)
+        }
+        homeModel.unlikeObserver.observe(requireActivity()) {
+            progress.dismiss()
+//            hitAPI(page)
+        }
+        homeModel.showError.observe(requireActivity()){
+            progress.dismiss()
+            Log.e("Error","err"+it)
+        }
     }
 
     private fun hitAPI(pageNo: Int) {
@@ -92,6 +106,7 @@ class SearchFragment : Fragment() {
         payload.student_uid = SharedHelper(requireContext()).id.toString()
         payload.country = "US"
         payload.pager = pageNo
+        universityList?.clear()
         homeModel.searchUniversities(payload)
     }
 
@@ -116,6 +131,40 @@ class SearchFragment : Fragment() {
         dialog.show()
     }
 
-    fun click() {}
+    fun click(position: Int) {
+        likeWork(universityList!!.get(position))
+    }
 
+    fun likeWork(get: UniversitiesSearchModel) {
+        if (get.topPickFlag == 0) {
+            hitLikeWork(get)
+        } else {
+            hitUnlikeWork(get)
+        }
+    }
+
+    private fun hitUnlikeWork(get: UniversitiesSearchModel) {
+        progress.show()
+        SharedHelper(requireContext()).id?.let {
+            get.nid?.let { it1 ->
+                homeModel.hitunlike(
+                    it,
+                    it1
+                )
+            }
+        }
+    }
+
+    private fun hitLikeWork(get: UniversitiesSearchModel) {
+        progress.show()
+
+        SharedHelper(requireContext()).id?.let {
+            get.nid?.let { it1 ->
+                homeModel.hitlike(
+                    it,
+                    it1
+                )
+            }
+        }
+    }
 }

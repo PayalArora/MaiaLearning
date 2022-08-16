@@ -193,4 +193,20 @@ interface AllAPi {
         @Header("Authorization") Authorization: String,
         @Body payload: UniversitySearchPayload
     ): Deferred<JsonObject>
+
+    @POST("top-picks")
+    @FormUrlEncoded
+    fun hitLikeUniversity(
+        @Header("Authorization") Authorization: String,
+        @Field("student_id") schoolId: String,
+        @Field("college_id") collegeId: String,
+        @Field("applying_flag") ext: String
+    ): Deferred<JsonArray>
+
+    @DELETE("top-picks/{schoolId}/{studentId}")
+    fun hitUnlikeUniversity(
+        @Path("schoolId") schoolId: String,
+        @Path("studentId") studentId: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<Unit>
 }

@@ -4,11 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.R
 import com.maialearning.databinding.UniListItemBinding
 import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.ui.activity.UniversitiesActivity
 
-class UniFactAdapter(var context:Context, var university_list: ArrayList<UniversitiesSearchModel>,var click: () -> Unit) : RecyclerView.Adapter<UniFactAdapter.ViewHolder>() {
+class UniFactAdapter(
+    var context: Context,
+    var university_list: ArrayList<UniversitiesSearchModel>,
+    var click: (position: Int) -> Unit
+) : RecyclerView.Adapter<UniFactAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -37,21 +42,32 @@ class UniFactAdapter(var context:Context, var university_list: ArrayList<Univers
         viewHolder.binding.type.setText(university_list.get(position).satScores)
         viewHolder.binding.term.setText(university_list.get(position).actScores)
         viewHolder.binding.termValue.setText("ACT Scores")
-        viewHolder.binding.plan.setText(university_list.get(position).acceptance?:"N/A")
+        viewHolder.binding.plan.setText(university_list.get(position).acceptance ?: "N/A")
         viewHolder.binding.planValue.setText("Acceptance Rate")
-
+        if (university_list.get(position).topPickFlag == 0) {
+            viewHolder.binding.like.setImageResource(R.drawable.like)
+        }else if(university_list.get(position).topPickFlag == 1){
+            viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
+        }
 
 
         viewHolder.binding.university.setOnClickListener {
-            click
-            ( context as UniversitiesActivity).bottomSheetWork()
+           // click
+            (context as UniversitiesActivity).bottomSheetWork(university_list.get(position))
         }
         viewHolder.binding.image.setOnClickListener {
-            click
-            ( context as UniversitiesActivity).bottomSheetWork()
+           // click
+            (context as UniversitiesActivity).bottomSheetWork(university_list.get(position))
         }
-
-
+        viewHolder.binding.like.setOnClickListener {
+            click(position)
+            if(university_list.get(position).topPickFlag==1){
+               university_list.get(position).topPickFlag=0
+           }else{
+               university_list.get(position).topPickFlag=1
+           }
+           notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount(): Int {

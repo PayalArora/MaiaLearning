@@ -64,7 +64,7 @@
             android:background="@color/tint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/university" />
+            app:layout_constraintTop_toBottomOf="@id/image" />
 
         <ImageView
             android:id="@+id/location"

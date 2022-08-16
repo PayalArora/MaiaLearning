@@ -416,7 +416,9 @@
     <string name="fax">FAX</string>
     <string name="fsfa">FAFSA</string>
     <string name="transfer_req">Transfer Requirements</string>
-
+    <string name="no_data_found">No Data found</string>
+    <string name="na">N/A</string>
+    <string name="zero">0</string>
 
     <string-array name="decision_filter">
         <item>Accepted</item>

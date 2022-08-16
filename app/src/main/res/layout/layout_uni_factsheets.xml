@@ -8,8 +8,8 @@
     android:orientation="vertical"
     android:layout_gravity="top"
     android:paddingTop="20dp">
-    <include layout="@layout/layout_factsheet" />
 
+    <include layout="@layout/layout_factsheet" />
 
 
 </LinearLayout>

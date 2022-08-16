@@ -3,6 +3,7 @@ package com.maialearning.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.Consider
 import com.maialearning.model.NotesModel
@@ -19,7 +20,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
-class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
+class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
     // Coroutine's background job
     private val job = Job()
 
@@ -33,10 +34,11 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
     val showError = SingleLiveEvent<String>()
     val updateStudentPlanObserver = MutableLiveData<JsonObject>()
     val searchUniversityObserver = MutableLiveData<JsonObject>()
+    val likeObserver = MutableLiveData<JsonArray>()
+    val unlikeObserver = MutableLiveData<Unit>()
 
 
-
-    fun getConsiderList(id:String) {
+    fun getConsiderList(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -49,7 +51,8 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
-    fun getApplyList(id:String) {
+
+    fun getApplyList(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -62,7 +65,8 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
-    fun getNotes(id:String) {
+
+    fun getNotes(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -75,6 +79,7 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
     fun updateStudentPlan(updateStudentPlan: UpdateStudentPlan) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -98,6 +103,34 @@ class HomeViewModel (private val catRepository: LoginRepository) : ViewModel(), 
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> searchUniversityObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun hitlike(studentid: String, collegeId: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.hitLikeUniv(studentid, collegeId)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> likeObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun hitunlike(studentid: String, collegeId: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.hitUnlikeUniv(studentid, collegeId)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> unlikeObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
