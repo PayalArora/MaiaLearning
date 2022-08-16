@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.maialearning.R
 import com.maialearning.databinding.TransferFragmentBinding
 import com.maialearning.model.CollegeFactSheetModel
 import com.maialearning.ui.activity.UniversitiesActivity
@@ -104,7 +105,12 @@ class TransferFragment : Fragment() {
             } else {
                 mBinding.sumTxt.text = require.summer
             }
-            mBinding.reqTxt.text = model?.transfers?.transferReqirements?.collegeTranscripts?:"N/A"
+//            mBinding.reqTxt.text =
+//                model?.transfers?.transferReqirements?.collegeTranscripts ?: "N/A"
+            mBinding.reqTxt.text = getString(R.string.min_req)+"Minimum Requirements: "+
+            model?.transfers?.transferReqirements?.minimum+"\nCollege Transcript(s): "+ model?.transfers?.transferReqirements?.collegeTranscripts+
+                "\nEssay or personal test statement: "+ model?.transfers?.transferReqirements?.essayTest
+
         }
     }
 }

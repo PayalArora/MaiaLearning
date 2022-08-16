@@ -224,21 +224,13 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <FrameLayout
-                android:id="@+id/map_"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/map_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
                 android:background="@drawable/background_curve_rectangle_white_filled"
-                android:padding="@dimen/_5dp"
                 app:layout_constraintTop_toBottomOf="@id/layout">
-
-                <FrameLayout
-                    android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/location"
@@ -253,7 +245,42 @@
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-            </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/map_"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_200dp"
+
+                    android:padding="@dimen/_5dp"
+                    app:layout_constraintTop_toBottomOf="@id/location">
+
+                    <FrameLayout
+                        android:id="@+id/map"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/locTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginBottom="@dimen/_10dp"
+                    android:drawableStart="@drawable/loc"
+                    android:drawablePadding="@dimen/_5dp"
+                    android:fontFamily="@font/inter_medium"
+                    android:lineSpacingExtra="2sp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/map_" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:id="@+id/view"
@@ -261,9 +288,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
                 android:background="@color/tint"
-                app:layout_constraintTop_toBottomOf="@id/map_" />
+                app:layout_constraintTop_toBottomOf="@id/map_layout" />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/textVideo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -278,6 +306,7 @@
                 app:layout_constraintTop_toBottomOf="@id/view" />
 
             <androidx.recyclerview.widget.RecyclerView
+               android:visibility="gone"
                 android:id="@+id/recycler_View"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"

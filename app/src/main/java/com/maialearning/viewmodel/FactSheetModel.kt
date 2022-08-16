@@ -25,7 +25,7 @@ class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(),
     val showLoading = MutableLiveData<Boolean>()
     val idObserver = MutableLiveData<JsonObject>()
     val contactInfoObserver = MutableLiveData<CollegeContactModel>()
-//    val factSheetObserver = MutableLiveData<CollegeFactSheetModel>()
+    val noteObserver = MutableLiveData<JsonObject>()
     val factSheetObserver = MutableLiveData<JsonObject>()
     val showError = SingleLiveEvent<String>()
 
@@ -98,7 +98,7 @@ class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(),
             }
             // showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> contactInfoObserver.value = result.data
+                is UseCaseResult.Success -> noteObserver.value = result.data
                 is UseCaseResult.Error -> {
                     showLoading.value = false
                     showError.value = result.exception.response()?.errorBody()?.string()

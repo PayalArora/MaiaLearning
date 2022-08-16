@@ -234,7 +234,6 @@
                 android:id="@+id/lay_two"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="@dimen/_10dp"
                 android:background="@drawable/background_curve_rectangle_white_filled"
                 app:layout_constraintTop_toBottomOf="@id/lay_one">
@@ -541,7 +540,7 @@
                 android:layout_marginBottom="@dimen/_10dp"
                 android:background="@drawable/background_curve_rectangle_white_filled"
                 app:layout_constraintTop_toBottomOf="@id/lay_two"
-                app:layout_constraintBottom_toBottomOf="parent">
+       >
                 <TextView
                     android:id="@+id/head3"
                     android:layout_width="match_parent"
@@ -813,6 +812,92 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/school" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lay_four"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"
+            android:background="@drawable/background_curve_rectangle_white_filled"
+            app:layout_constraintTop_toBottomOf="@id/lay_three">
+            <TextView
+                android:id="@+id/head4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:fontFamily="@font/inter_bold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_18sp"
+                android:textStyle="bold"
+                android:text="Admission Contact"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <View
+                android:id="@+id/vie9w"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/tint"
+                app:layout_constraintTop_toBottomOf="@id/head4" />
+            <TextView
+                android:id="@+id/contact"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:textSize="@dimen/_14sp"
+                android:text="Application Fee"
+                android:fontFamily="@font/inter_medium"
+                android:textColor="@color/black_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vie9w" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_five"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginBottom="@dimen/_10dp"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                app:layout_constraintTop_toBottomOf="@id/lay_four"
+>
+                <TextView
+                    android:id="@+id/head5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_18sp"
+                    android:textStyle="bold"
+                    android:text="Quick Codes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:id="@+id/vie9"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/head5" />
+                <TextView
+                    android:id="@+id/codes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:textSize="@dimen/_14sp"
+                    android:text="Application Fee"
+                    android:fontFamily="@font/inter_medium"
+                    android:textColor="@color/black_1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vie9" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

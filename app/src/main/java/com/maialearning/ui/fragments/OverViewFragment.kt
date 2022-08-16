@@ -47,7 +47,7 @@ class OverViewFragment : Fragment() {
             .commit()
         mBinding.recyclerView.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         mBinding.recyclerView.adapter = VideoFactAdapter()
-//        observer()
+        observer()
         init()
     }
 
@@ -61,6 +61,7 @@ class OverViewFragment : Fragment() {
             mBinding.termTyp.text=" ${ model?.basicInfo?.termType}"
             mBinding.intsType.text=" ${ model?.basicInfo?.institutionType}"
             mBinding.degree.text=" ${ model?.basicInfo?.award?.joinToString(",")}"
+            mBinding.locTxt.text=" ${ model?.basicInfo?.city+","+ model?.basicInfo?.state+","+ model?.basicInfo?.zip}"
             mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
 
         }}

@@ -61,6 +61,11 @@ class AdmissionFragment : Fragment() {
             mBinding.act1.text = model?.admissions?.actComp?.per25.toString()
             mBinding.act2.text = model?.admissions?.actComp?.per.toString()
             mBinding.text.text = model?.admissions?.gpa
+            mBinding.contact.text =
+                model?.admissions?.contact?.admofficer + "\n" + model?.admissions?.contact?.admtitle + "\nP: " + model?.admissions?.contact?.admPhone + "\nP: " + model?.admissions?.contact?.admFax
+            mBinding.codes.text =
+                "SAT Number: " + model?.admissions?.sat + "\nACT Number: " + model?.admissions?.act + "\nFAFSA Number: " + model?.admissions?.fafsa + "\nFICE: " + model?.admissions?.fice
+
         }
 
 

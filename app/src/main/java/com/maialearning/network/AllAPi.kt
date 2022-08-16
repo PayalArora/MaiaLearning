@@ -174,12 +174,12 @@ interface AllAPi {
         @Header("Authorization") Authorization: String
     ): Deferred<CollegeContactModel>
 
-    @GET("counselor_college_notes/{id}/{CId}")
+    @GET("counselor_college_notes/{id}/{cid}")
     fun universityNotes(
         @Path("id") id: String,
-        @Path("id") CId: String,
+        @Path("cid") cid: String,
         @Header("Authorization") Authorization: String
-    ): Deferred<CollegeContactModel>
+    ): Deferred<JsonObject>
 
 
     @POST("edit_student_plan_college_application")

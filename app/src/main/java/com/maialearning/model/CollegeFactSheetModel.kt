@@ -3232,7 +3232,7 @@ data class CollegeFactSheetModel(
             @SerializedName("essay_test")
             var essayTest: String,
             @SerializedName("minimum")
-            var minimum: String
+            var minimum: String?
         )
 
         data class TranferCredits(

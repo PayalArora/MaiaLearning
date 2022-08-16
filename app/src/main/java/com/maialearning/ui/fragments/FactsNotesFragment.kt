@@ -1,6 +1,7 @@
 package com.maialearning.ui.fragments
 
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,11 +42,9 @@ class FactsNotesFragment : Fragment() {
     }
 
     private fun initObserver() {
-        mModel.idObserver.observe(requireActivity()) {
-            it
-//            SharedHelper(requireContext()).collegeNId = it.get("nid").toString()
-//            mModel.getUniversityContact("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,SharedHelper(requireContext()).collegeNId)
-
+        mModel.noteObserver.observe(requireActivity()) {
+            val note=it.getAsJsonObject("counselor_note").getAsJsonPrimitive("255").toString().replace("\"","")
+            mBinding.notesText.text="Note: "+Html.fromHtml(note)
         }
     }
 

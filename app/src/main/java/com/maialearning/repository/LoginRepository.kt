@@ -62,7 +62,7 @@ interface LoginRepository {
     suspend fun getColFactSheet(token:String,id: String): UseCaseResult<JsonObject>
     suspend fun getCollegeNid(token:String,id: String): UseCaseResult<JsonObject>
     suspend fun getUniversityContact(token:String,id: String): UseCaseResult<CollegeContactModel>
-    suspend fun getUniversityNotes(token:String,id: String,id2: String): UseCaseResult<CollegeContactModel>
+    suspend fun getUniversityNotes(token:String,id: String,id2: String): UseCaseResult<JsonObject>
   //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
     suspend fun updateStudentPlan(
@@ -366,7 +366,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getUniversityNotes(token: String, id: String,id2 :String): UseCaseResult<CollegeContactModel> {
+    override suspend fun getUniversityNotes(token: String, id: String,id2 :String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.universityNotes(id,id2,token).await()
             UseCaseResult.Success(result)
