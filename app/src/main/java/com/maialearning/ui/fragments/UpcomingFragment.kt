@@ -24,6 +24,7 @@ import com.maialearning.viewmodel.DashboardFragViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.notifyAll
 
 class UpcomingFragment(
     val dashboardViewModel: DashboardFragViewModel,
@@ -54,7 +55,6 @@ class UpcomingFragment(
     }
 
     private fun initview() {
-
         val fm: FragmentManager = requireActivity().supportFragmentManager
         val adapter = UpcomingBannerAdapter(fm, requireActivity().lifecycle, 5)
         mBinding.bannerViewpager.adapter = adapter
@@ -64,14 +64,13 @@ class UpcomingFragment(
         }.attach()
 
         mBinding.upcomingList.adapter = OverDueHeadAdapter(null, requireActivity(), this, this)
-        // dialog.show()
+        progress.show()
         lifecycleScope.launch(Dispatchers.Main) {
             // delay(100)
             setAdapter()
-            // delay(3300)
-            // dialog.dismiss()
+             delay(1000)
+             progress.dismiss()
         }
-
     }
 
     private fun setListeners() {
@@ -84,9 +83,11 @@ class UpcomingFragment(
 
      fun setAdapter(list:ArrayList<SortedDateModel>? = endList) {
         // mBinding.upcomingList.adapter = OverDueHeadAdapter(overdueList = , this)
-        ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).overdueList = endList
-        ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).notifyDataSetChanged()
-    }
+        ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).apply {
+            overdueList = list
+            notifyDataSetChanged()
+        }
+     }
 
     private val REQUEST_IMAGE_UPCOMING_DETAIL = 11
     private val REQUEST_CHOOSE_PHOTO_UPCOMING_DETAIL = 22

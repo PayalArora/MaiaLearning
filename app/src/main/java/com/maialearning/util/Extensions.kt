@@ -11,17 +11,11 @@ import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.maialearning.network.AllAPi
 import com.maialearning.network.AllMessageAPi
-import com.maialearning.network.BaseApplication
 import com.maialearning.repository.LoginRepository
 import com.maialearning.repository.LoginRepositoryImpl
 import com.maialearning.repository.MessageRepository
 import com.maialearning.repository.MessageRepositoryImpl
 import com.maialearning.ui.activity.LoginActivity
-import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.viewmodel.HomeViewModel
-import com.maialearning.viewmodel.LoginNewModel
-import com.maialearning.viewmodel.LoginViewModel
-import com.maialearning.viewmodel.ProfileViewModel
 import com.maialearning.viewmodel.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,6 +26,7 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -144,7 +139,7 @@ fun getDate(timestamp: Long, format: String): String {
 
 inline fun <reified T> createWebService(
     okHttpClient: OkHttpClient,
-    factory: CallAdapter.Factory, baseUrl: String
+    factory: CallAdapter.Factory, baseUrl: String,
 ): T {
     val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
@@ -171,3 +166,116 @@ fun String.replaceNextLine(): String {
 fun String.replaceInvertedComas():String {
     return this.replace("\"", "")
 }
+fun currentWeekDays():String{
+    val mCalendar = Calendar.getInstance()
+    val date = Date()
+    mCalendar.setTime(date)
+
+    // 1 = Sunday, 2 = Monday, etc.
+
+    // 1 = Sunday, 2 = Monday, etc.
+    val day_of_week: Int = mCalendar.get(Calendar.DAY_OF_WEEK)
+    val monday_offset: Int
+    monday_offset = if (day_of_week == 1) {
+        -6
+    } else 1 - day_of_week // need to minus back
+
+    mCalendar.add(Calendar.DAY_OF_YEAR, monday_offset)
+
+    val mDateMonday: Date = mCalendar.getTime()
+
+    // return 6 the next days of current day (object cal save current day)
+
+    // return 6 the next days of current day (object cal save current day)
+    mCalendar.add(Calendar.DAY_OF_YEAR, 6)
+    val mDateSunday: Date = mCalendar.getTime()
+
+    //Get format date
+
+    //Get format date
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+
+    var SUNDAY = sdf.format(mDateMonday)
+    val SATURDAY = sdf.format(mDateSunday)
+
+    return "$SUNDAY - $SATURDAY"
+
+}
+
+fun getNextWeek(): String {
+    val mCalendar = Calendar.getInstance()
+    val day_of_week: Int = mCalendar.get(Calendar.DAY_OF_WEEK)
+    // Monday
+    mCalendar.add(Calendar.DAY_OF_YEAR, 7 - day_of_week + 1)
+    val mDateMonday = mCalendar.time
+
+    // Sunday
+    mCalendar.add(Calendar.DAY_OF_YEAR, 6)
+    val Week_Sunday_Date = mCalendar.time
+
+    // Date format
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+    var MONDAY = sdf.format(mDateMonday)
+    val SUNDAY = sdf.format(Week_Sunday_Date)
+
+    return "$MONDAY - $SUNDAY"
+}
+
+fun getCurrentMonth(): String {
+    val c = Calendar.getInstance()
+    val year = c[Calendar.YEAR]
+    val month = c[Calendar.MONTH]
+    val day = 1
+    c[year, month] = day
+    val numOfDaysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH)
+    val first = c.time
+    c.add(Calendar.DAY_OF_MONTH, numOfDaysInMonth - 1)
+    val second = c.time
+
+    // Date format
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+    var MONDAY = sdf.format(first)
+    val SUNDAY = sdf.format(second)
+
+    return "$MONDAY - $SUNDAY"
+}
+
+ fun compareDateWeek(date: String?, date2:String, date3:String ): Boolean {
+    if (date != null) {
+        val sdf = SimpleDateFormat("dd-MMM-yyyy")
+        val sdf1 = SimpleDateFormat("E dd MMM, yyyy")
+        val strDate: Date = sdf1.parse(date)
+        val strDate1: Date = sdf.parse(date2)
+        val strDate2: Date = sdf.parse(date3)
+
+        if (strDate.after(strDate1) && strDate.before(strDate2)) {
+            return true
+        } else
+            return false
+    } else
+        return false
+}
+fun getNextMonth(): String {
+    val c = Calendar.getInstance()
+    val year = c[Calendar.YEAR]
+    val month = c[Calendar.MONTH] +1
+    val day = 1
+    c[year, month] = day
+    val numOfDaysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH)
+    val first = c.time
+    c.add(Calendar.DAY_OF_MONTH, numOfDaysInMonth - 1)
+    val second = c.time
+
+    // Date format
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+    var MONDAY = sdf.format(first)
+    val SUNDAY = sdf.format(second)
+
+    return "$MONDAY - $SUNDAY"
+}
+
+

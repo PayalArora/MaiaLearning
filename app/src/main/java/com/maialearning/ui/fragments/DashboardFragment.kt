@@ -9,9 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -24,10 +22,9 @@ import com.maialearning.databinding.ApplicationFilterBinding
 import com.maialearning.databinding.DashbordFragBinding
 import com.maialearning.databinding.DateFilterBinding
 import com.maialearning.model.*
-import com.maialearning.util.ML_URL
-import com.maialearning.util.getDate
+import com.maialearning.ui.adapter.ConsiderAdapter
+import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardFragViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,9 +46,11 @@ class DashboardFragment : Fragment() {
     var endCompletedList = arrayListOf<SortedDateModel>()
     var upcomingList = arrayListOf<SortedDateModel>()
     var surveyList = arrayListOf<SortedDateModel>()
-    private   var  upcomingFragment: UpcomingFragment? = null
-    private   var  surveyFragment: SurveyFragment? = null
-    private   var  overDueFragment: OverDueFragment? = null
+    private var upcomingFragment: UpcomingFragment? = null
+    private var surveyFragment: SurveyFragment? = null
+    private var overDueFragment: OverDueFragment? = null
+    private lateinit var toolbarBinding: Toolbar
+    private lateinit var applicationFilterBinding: ApplicationFilterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,28 +59,77 @@ class DashboardFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         mBinding = DashbordFragBinding.inflate(inflater, container, false)
 
-        val toolbarBinding: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+        toolbarBinding = requireActivity().findViewById<Toolbar>(R.id.toolbar)
         toolbarBinding.title = getString(R.string.dashboard)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: DateFilterBinding = DateFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        val appFilter = showApplicationFilter(dialog)
+
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).setOnClickListener {
-            val dialog = BottomSheetDialog(requireContext())
-            val sheetBinding: DateFilterBinding = DateFilterBinding.inflate(layoutInflater)
-            sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-            dialog.setContentView(sheetBinding.root)
-            dialog.show()
+            if (!dialog.isShowing)
+                dialog.show()
+            handleRadioButtonVisibility(sheetBinding)
             sheetBinding.close.setOnClickListener { dialog.dismiss() }
             sheetBinding.applictaion.setOnClickListener {
-                showApplicationFilter()
+                if (!appFilter.isShowing) {
+                    handleApplicationRadioButtons(applicationFilterBinding)
+                    appFilter.show()
+                }
             }
             sheetBinding.rbThisWeek.setOnClickListener {
-//                upcomingList.filter {  }
+                val new_list = upcomingList.filter {
+                    it.date != "No Due Date" && compareDateWeek(it.date,
+                        currentWeekDays().split(" - ")[0], currentWeekDays().split(" - ")[1])
+                } as ArrayList<SortedDateModel>
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
             }
+
+            sheetBinding.rbNextWeek.setOnClickListener {
+                val new_list = upcomingList.filter {
+                    it.date != "No Due Date" && compareDateWeek(it.date,
+                        getNextWeek().split(" - ")[0], getNextWeek().split(" - ")[1])
+                } as ArrayList<SortedDateModel>
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+            sheetBinding.rbThisMnth.setOnClickListener {
+                val new_list = upcomingList.filter {
+                    it.date != "No Due Date" && compareDateWeek(it.date,
+                        getCurrentMonth().split(" - ")[0], getCurrentMonth().split(" - ")[1])
+                } as ArrayList<SortedDateModel>
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+            sheetBinding.rbNextMonth.setOnClickListener {
+                println("nxt" + getNextMonth())
+                val new_list = upcomingList.filter {
+                    it.date != "No Due Date" && compareDateWeek(it.date,
+                        getNextMonth().split(" - ")[0], getNextMonth().split(" - ")[1])
+                } as ArrayList<SortedDateModel>
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+
+            sheetBinding.rbUpcoming.setOnClickListener {
+                upcomingFragment?.setAdapter(upcomingList)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+
         }
         // setAdapter()
 
@@ -89,24 +137,79 @@ class DashboardFragment : Fragment() {
         return mBinding.root
 
     }
-    private fun click(type:String) {
-        when(type){
-            COMPLETE ->{
-               listing()
-                          }
-            RESET->{
-               listing()
+
+    private fun handleRadioButtonVisibility(sheetBinding: DateFilterBinding) {
+        when (mBinding.tabs.selectedTabPosition) {
+            0 -> {
+                sheetBinding.radioGroupDate.visibility = View.VISIBLE
+            }
+            else ->
+                sheetBinding.radioGroupDate.visibility = View.GONE
+        }
+    }
+
+    private fun click(type: String) {
+        when (type) {
+            COMPLETE -> {
+                listing()
+            }
+            RESET -> {
+                listing()
             }
         }
     }
-    fun showApplicationFilter() {
+
+    fun showApplicationFilter(dialog1: BottomSheetDialog): BottomSheetDialog {
         val dialog = BottomSheetDialog(requireContext())
-        val sheetBinding: ApplicationFilterBinding =
+        applicationFilterBinding =
             ApplicationFilterBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
-        dialog.show()
-        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+        applicationFilterBinding.root.minimumHeight =
+            ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(applicationFilterBinding.root)
+        applicationFilterBinding.backBtn.setOnClickListener {
+            if (dialog.isShowing)
+                dialog.dismiss()
+        }
+
+        applicationFilterBinding.radioApplication.setOnCheckedChangeListener { group, checkedId ->
+            if (dialog.isShowing)
+                dialog.dismiss()
+            if (dialog1.isShowing)
+                dialog1.dismiss()
+        }
+        return dialog
+    }
+
+    private fun handleApplicationRadioButtons(sheetBinding: ApplicationFilterBinding) {
+        when (mBinding.tabs.selectedTabPosition) {
+            3 -> {
+                sheetBinding.rbFairs.visibility = View.GONE
+                sheetBinding.rbMeetings.visibility = View.GONE
+                sheetBinding.rbAssignments.visibility = View.GONE
+                sheetBinding.rbApp.visibility = View.GONE
+                sheetBinding.rbAllAssignments.visibility = View.VISIBLE
+                sheetBinding.rbSurveys.visibility = View.VISIBLE
+
+            }
+            2 -> {
+
+                sheetBinding.rbFairs.visibility = View.GONE
+                sheetBinding.rbMeetings.visibility = View.GONE
+                sheetBinding.rbSurveys.visibility = View.GONE
+                sheetBinding.rbApp.visibility = View.GONE
+                sheetBinding.rbAllAssignments.visibility = View.VISIBLE
+                sheetBinding.rbAssignments.visibility = View.VISIBLE
+            }
+            else -> {
+                sheetBinding.rbFairs.visibility = View.VISIBLE
+                sheetBinding.rbMeetings.visibility = View.VISIBLE
+                sheetBinding.rbSurveys.visibility = View.VISIBLE
+                sheetBinding.rbApp.visibility = View.VISIBLE
+                sheetBinding.rbAllAssignments.visibility = View.VISIBLE
+                sheetBinding.rbAssignments.visibility = View.VISIBLE
+            }
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -134,13 +237,12 @@ class DashboardFragment : Fragment() {
                 dataSet(it)
                 dashboardViewModel.showLoading.value = false
                 if (mBinding.tabs.selectedTabPosition == 0) {
-                   upcomingFragment?.setAdapter(upcomingList)
-                }
-               else if (mBinding.tabs.selectedTabPosition == 1)
+                    upcomingFragment?.setAdapter(upcomingList)
+                } else if (mBinding.tabs.selectedTabPosition == 1)
                     surveyFragment?.setAdapter(surveyList)
-              else  if (mBinding.tabs.selectedTabPosition == 2)
+                else if (mBinding.tabs.selectedTabPosition == 2)
                     overDueFragment?.setAdapter(endList)
-               else if (mBinding.tabs.selectedTabPosition == 3)
+                else if (mBinding.tabs.selectedTabPosition == 3)
                     overDueFragment?.setAdapter(endCompletedList)
 
             }
@@ -272,9 +374,10 @@ class DashboardFragment : Fragment() {
                 TODO("VERSION.SDK_INT < O")
             }
         //  var nodueList = assignmentList.filter { it.date.isNullOrEmpty() }
+//        it.status == 0 &&
         var upcoming =
             assignmentList.filter {
-                it.status == 0 && it.completed != 1 && (it.date == null || (it.date != null && compareDate(
+                it.completed != 1 && (it.date == null || (it.date != null && compareDate(
                     it.date?.toLong()
                         ?.let { it1 -> getDate(it1, "E dd MMM, yyyy") })))
             } as ArrayList<AssignmentItem>
@@ -311,9 +414,8 @@ class DashboardFragment : Fragment() {
                 noDueList.add(SortedDateModel("No Due Date", it.value))
             }
         }
-       // upcomingList.clear()
         upcomingList.addAll(noDueList)
-        Log.e("data ", "" + upcomingList.size)
+        Log.e("data upcoming", "" + upcomingList.size)
     }
 
     private fun compareDate(date: String?): Boolean {
@@ -325,7 +427,7 @@ class DashboardFragment : Fragment() {
             } else
                 return false
         } else
-            return true
+            return false
     }
 
     private fun completedListWork() {
@@ -435,19 +537,29 @@ class DashboardFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
                     0 -> {
-                        upcomingFragment = UpcomingFragment(dashboardViewModel, upcomingList, ::click)
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
+                            View.VISIBLE
+                        upcomingFragment =
+                            UpcomingFragment(dashboardViewModel, upcomingList, ::click)
                         loadFragment(upcomingFragment)
                     }
                     1 -> {
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
+                            View.GONE
                         surveyFragment = SurveyFragment(dashboardViewModel, surveyList, ::click)
                         loadFragment(surveyFragment)
                     }
                     2 -> {
-                        overDueFragment = OverDueFragment(dashboardViewModel, endList,::click)
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
+                            View.VISIBLE
+                        overDueFragment = OverDueFragment(dashboardViewModel, endList, ::click)
                         loadFragment(overDueFragment)
                     }
                     3 -> {
-                        overDueFragment = OverDueFragment(dashboardViewModel, endCompletedList,::click)
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
+                            View.VISIBLE
+                        overDueFragment =
+                            OverDueFragment(dashboardViewModel, endCompletedList, ::click)
                         loadFragment(overDueFragment)
                     }
                 }
@@ -498,7 +610,8 @@ class DashboardFragment : Fragment() {
     }
 
 
-companion object  {
-    const val COMPLETE = "complete"
-    const val RESET = "reset"
-}}
+    companion object {
+        const val COMPLETE = "complete"
+        const val RESET = "reset"
+    }
+}

@@ -20,6 +20,7 @@
                 android:id="@+id/simpleCalendarView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@color/white"
                 android:firstDayOfWeek="2" />
 
@@ -27,6 +28,7 @@
                android:layout_marginBottom="@dimen/_5dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="-10dp"
+                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/_15dp"
                 android:id="@+id/banner_viewpager"
                 android:layout_width="match_parent"
@@ -37,6 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white_1"
+                android:visibility="gone"
                 app:tabBackground="@drawable/tab_selector"
                 app:tabGravity="center"
                 app:tabIndicatorHeight="0dp"/>
