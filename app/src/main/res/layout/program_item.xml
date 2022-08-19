@@ -17,6 +17,7 @@
         android:paddingHorizontal="@dimen/_10dp"
         android:paddingVertical="5dp"
         android:hint="@string/program_name"
+        android:singleLine="true"
         android:textAllCaps="false"
         android:textColorHint="@color/hintColor"
         android:textColor="@color/grey"
@@ -26,6 +27,7 @@
 
     <EditText
         android:id="@+id/deadline"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_50dp"
         android:layout_marginHorizontal="@dimen/_15dp"

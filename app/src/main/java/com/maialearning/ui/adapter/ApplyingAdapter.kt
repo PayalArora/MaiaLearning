@@ -11,6 +11,8 @@ import com.maialearning.databinding.ConsideringItemLayBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 import com.maialearning.util.CommonClass
+import com.maialearning.util.UNIV_LOGO_URL
+import com.squareup.picasso.Picasso
 
 class ApplyingAdapter (val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>) :
 RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
@@ -57,6 +59,8 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
+            Picasso.with(viewHolder.binding.root.context).
+            load("$UNIV_LOGO_URL${array[position].country?.toLowerCase()}/${array[position].unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
 
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()

@@ -14,6 +14,8 @@ import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 import com.maialearning.util.CommonClass
+import com.maialearning.util.UNIV_LOGO_URL
+import com.squareup.picasso.Picasso
 
 class ConsiderAdapter(
     val onItemClickOption: OnItemClickOption,
@@ -75,6 +77,10 @@ class ConsiderAdapter(
             } else {
                 countTxt.setText(array[position].college_priority_choice)
             }
+
+            Picasso.with(viewHolder.binding.root.context).
+            load("${UNIV_LOGO_URL}${array[position].country?.toLowerCase()}/${array[position].unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
+
             //uniName.text=array[position].naviance_college_name
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()
@@ -91,7 +97,7 @@ class ConsiderAdapter(
                 onItemClickOption.onCommentClick()
             }
             addButton.setOnClickListener {
-                onItemClickOption.onAddClick()
+                onItemClickOption.onAddClick(position)
             }
             infoIcon.setOnClickListener {
                 onItemClickOption.onInfoClick(position)
@@ -107,6 +113,9 @@ class ConsiderAdapter(
             )
             allSystem.adapter = adapter
             commentImg.setOnClickListener { notesClick(array[position]) }
+            applyingLay.setOnClickListener({
+                onItemClickOption.onApplyingClick(position)
+            })
         }
 
     }

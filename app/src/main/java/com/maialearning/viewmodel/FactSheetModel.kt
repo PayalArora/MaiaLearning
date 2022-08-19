@@ -15,7 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
-class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
+class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
     // Coroutine's background job
     private val job = Job()
 
@@ -29,11 +29,11 @@ class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(),
     val factSheetObserver = MutableLiveData<JsonObject>()
     val showError = SingleLiveEvent<String>()
 
-    fun getColFactSheet(token:String,id:String) {
+    fun getColFactSheet(token: String, id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getColFactSheet(token,id)
+                catRepository.getColFactSheet(token, id)
             }
             // showLoading.value = false
             when (result) {
@@ -44,16 +44,18 @@ class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(),
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
     }
-    fun getCollegeNid(token:String,id:String) {
+
+    fun getCollegeNid(token: String, id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getCollegeNid(token,id)
+                catRepository.getCollegeNid(token, id)
             }
             // showLoading.value = false
             when (result) {
@@ -64,17 +66,18 @@ class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(),
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
     }
 
-    fun getUniversityContact(token:String,id:String) {
+    fun getUniversityContact(token: String, id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getUniversityContact(token,id)
+                catRepository.getUniversityContact(token, id)
             }
             // showLoading.value = false
             when (result) {
@@ -85,16 +88,18 @@ class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(),
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
     }
-    fun getUniversityNotes(token:String,id:String,id2:String) {
+
+    fun getUniversityNotes(token: String, id: String, id2: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getUniversityNotes(token,id,id2)
+                catRepository.getUniversityNotes(token, id, id2)
             }
             // showLoading.value = false
             when (result) {
@@ -105,11 +110,13 @@ class FactSheetModel (private val catRepository: LoginRepository) : ViewModel(),
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

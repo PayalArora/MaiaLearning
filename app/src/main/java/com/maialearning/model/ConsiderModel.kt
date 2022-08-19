@@ -28,6 +28,8 @@ class ConsiderModel {
         var college_priority_choice: String,
         @SerializedName("university_nid")
         var university_nid: String,
+        @SerializedName("unitid")
+        var unitid: String,
         @SerializedName("internal_deadline")
         var internal_deadline: String?,
         @SerializedName("app_by_program_data")

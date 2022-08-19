@@ -209,4 +209,26 @@ interface AllAPi {
         @Path("studentId") studentId: String,
         @Header("Authorization") Authorization: String
     ): Deferred<Unit>
+
+    @POST("college_list_applying")
+    @FormUrlEncoded
+    fun moveToApplying(
+        @Header("Authorization") Authorization: String,
+        @Field("student_uid") schoolId: String,
+        @Field("college_nid") collegeId: String,
+        @Field("apply_status") ext: String
+    ): Deferred<JsonArray>
+
+    @POST("ml-add-program-by-trans-nid")
+    fun addProgramToConsidering(
+        @Header("Authorization") Authorization: String,
+        @Body payload: AddProgramConsider
+    ): Deferred<JsonObject>
+
+    @DELETE("ml-fav-program/{id}")
+    fun deleteMlProgram(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String,
+    ): Deferred<JsonArray>
+
 }

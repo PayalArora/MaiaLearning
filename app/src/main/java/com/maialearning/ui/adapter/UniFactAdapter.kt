@@ -1,13 +1,17 @@
 package com.maialearning.ui.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.UniListItemBinding
 import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.ui.activity.UniversitiesActivity
+import com.maialearning.util.UNIV_LOGO_URL
+import com.squareup.picasso.Picasso
 
 class UniFactAdapter(
     var context: Context,
@@ -49,6 +53,9 @@ class UniFactAdapter(
         }else if(university_list.get(position).topPickFlag == 1){
             viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
         }
+//        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
+        Picasso.with(viewHolder.binding.root.context).
+        load("${UNIV_LOGO_URL}${university_list.get(position).countryCode?.toLowerCase()}/${university_list.get(position).unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(viewHolder.binding.image)
 
 
         viewHolder.binding.university.setOnClickListener {

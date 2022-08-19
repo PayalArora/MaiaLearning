@@ -11,6 +11,8 @@ import com.maialearning.model.CollegeFactSheetModel
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.AdmissionAdapter
 import com.maialearning.ui.model.CommunityModel
+import com.maialearning.util.parseNA
+import com.maialearning.util.parsePercentDollar
 
 class AdmissionFragment : Fragment() {
     private lateinit var mBinding: AdmisionLayoutBinding
@@ -42,13 +44,9 @@ class AdmissionFragment : Fragment() {
 
         mBinding.listView.adapter = AdmissionAdapter(requireContext())
         model = (context as UniversitiesActivity).getData()
+        mBinding.add2.text = parsePercentDollar(model?.admissions?.applicationFee)
+        mBinding.addm2.text = parseNA(model?.admissions?.appType)
         if (model != null) {
-            mBinding.add2.text = model?.admissions?.applicationFee
-            if (model?.admissions?.appType != null) {
-                mBinding.addm2.text = model?.admissions?.appType
-            } else {
-                mBinding.addm2.text = ""
-            }
             mBinding.addim2.text =
                 model?.admissions?.applicationDeadlineFinal
             mBinding.addi2.text = model?.admissions?.admissionInterview

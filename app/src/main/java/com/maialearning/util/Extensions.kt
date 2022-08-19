@@ -42,6 +42,7 @@ const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services
 //const val CAT_API_MSG_URL = "https://msg-staging.maialearning.com/v1/messaging/users/"
 const val CAT_API_MSG_URL = "https://maia2-msg.maialearning.com/"
 var BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
+var UNIV_LOGO_URL="https://college-images-staging.maialearning.com/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
@@ -193,7 +194,7 @@ fun parsePercentZero(string: String?): String {
     }
 
 }
-fun parsePercentDollar(string: Int?): String {
+fun parsePercentDollar(string: Any?): String {
 
     if (string == null || string.toString() == "null") {
         return "$${BaseApplication.applicationContext().getString(R.string.zero)}"

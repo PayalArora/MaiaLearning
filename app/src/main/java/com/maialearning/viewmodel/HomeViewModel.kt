@@ -5,10 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.model.Consider
-import com.maialearning.model.NotesModel
-import com.maialearning.model.UniversitySearchPayload
-import com.maialearning.model.UpdateStudentPlan
+import com.maialearning.model.*
 
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
@@ -36,6 +33,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val searchUniversityObserver = MutableLiveData<JsonObject>()
     val likeObserver = MutableLiveData<JsonArray>()
     val unlikeObserver = MutableLiveData<Unit>()
+    val applyingObserver = MutableLiveData<JsonArray>()
+    val addProgramObserver = MutableLiveData<JsonObject>()
+    val deleteProgramObserver = MutableLiveData<JsonArray>()
 
 
     fun getConsiderList(id: String) {
@@ -136,9 +136,54 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
+    fun moveToApplying(studentid: String, collegeId: String, status: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.moveToApplying(studentid, collegeId, status)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> applyingObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun addProgramToConsidering(addProgramConsider: AddProgramConsider) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.addProgramToConsidering(addProgramConsider)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> addProgramObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun deleteMlProgram(get: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.deleteProgramCOnsider(get)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> deleteProgramObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks
         job.cancel()
     }
+
+
+
+
 }

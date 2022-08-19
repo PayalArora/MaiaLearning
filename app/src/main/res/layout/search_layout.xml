@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+
     android:layout_height="match_parent">
 
     <FrameLayout
@@ -22,7 +23,6 @@
         android:background="@drawable/black_stroke_round"
         android:orientation="horizontal"
         android:padding="@dimen/_5sp"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
@@ -30,6 +30,7 @@
             android:layout_width="@dimen/_30dp"
             android:layout_height="@dimen/_30dp"
             android:layout_alignParentEnd="true"
+
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/_20dp"
@@ -55,7 +56,7 @@
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/ic_baseline_search_24"
             android:drawablePadding="@dimen/_5dp"
-            android:hint="Technology"
+            android:hint="@string/universities"
             android:imeOptions="actionSearch"
             android:inputType="textFilter"
             android:maxLines="1"
@@ -66,8 +67,8 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
+    android:layout_height="0dp"
+    app:layout_constraintTop_toBottomOf="@+id/search"
     app:layout_constraintBottom_toBottomOf="parent"    >
 
 
@@ -75,6 +76,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_univ"
             android:layout_width="match_parent"
+            android:paddingVertical="@dimen/_10dp"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/uni_list_item" />

@@ -9,11 +9,15 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
+import com.maialearning.model.AddProgramConsider
 import com.maialearning.model.ConsiderModel
 import com.maialearning.model.UpdateStudentPlan
+import com.maialearning.ui.adapter.CitizenshipAdapter
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
@@ -64,13 +68,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     private fun init() {
         dialogP = showLoadingDialog(requireContext())
-        dialogP.show()
         initObserver()
+        getConsideringList()
+
+    }
+
+    private fun getConsideringList() {
+        dialogP.show()
         SharedHelper(requireContext()).id?.let {
             userid = SharedHelper(requireContext()).id!!
             homeModel.getConsiderList(userid)
         }
-
     }
 
     private fun initObserver() {
@@ -88,7 +96,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 val array: ArrayList<ConsiderModel.Data> = ArrayList()
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
-                    val arrayProgram: ArrayList<ConsiderModel.ProgramData> = ArrayList()
+                    val arrayProgram: ArrayList<ConsiderModel.ProgramData> = arrayListOf()
                     var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
                         arrayListOf()
                     var programArray = object_.getJSONArray("app_by_program_data")
@@ -122,17 +130,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
                               }
                           }*/
-                    for (j in 0 until programArray.length()) {
-                        val objectProgram = programArray.getJSONObject(j)
-                        arrayProgram.add(
-                            ConsiderModel.ProgramData(
-                                objectProgram.getInt("program_id"),
-                                objectProgram.getString("program_name"),
-                                "",
-                                ""
-                            )
-                        )
-                    }
+
                     if (!countries.contains(object_.getString("country_name")))
                         countries.add(object_.getString("country_name"))
                     val model: ConsiderModel.Data = ConsiderModel.Data(
@@ -148,6 +146,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("created_date"),
                         object_.getString("college_priority_choice"),
                         object_.getString("university_nid"),
+                        object_.getString("unitid"),
                         object_.getString("internal_deadline"),
                         arrayProgram,
                         0,
@@ -182,6 +181,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 mBinding.consideringList.adapter = ConsiderAdapter(this, finalArray, ::notesClick)
             }
         }
+
     }
 
     private fun notesClick(data: ConsiderModel.Data) {
@@ -248,12 +248,29 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         bottomSheetComment()
     }
 
-    override fun onAddClick() {
-        bottomSheetProgram()
+    override fun onAddClick(position: Int) {
+        bottomSheetProgram(position)
     }
 
     override fun onInfoClick(postion: Int) {
         bottonSheetInfo(postion)
+    }
+
+    override fun onApplyingClick(postion: Int) {
+        SharedHelper(requireContext()).id?.let {
+            dialogP.show()
+            homeModel.moveToApplying(
+                it,
+                finalArray.get(postion).university_nid,
+                "1"
+            )
+        }
+        homeModel.applyingObserver.observe(requireActivity()) {
+            finalArray.removeAt(postion)
+            mBinding.consideringList.adapter?.notifyDataSetChanged()
+            mBinding.universitisCounte.text = finalArray.size.toString() + " Universities"
+            dialogP.dismiss()
+        }
     }
 
     private fun bottonSheetInfo(postion: Int) {
@@ -272,8 +289,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
             updateStudentPlan.college_nid = finalArray[postion].university_nid
             updateStudentPlan.school_within_university =
                 sheetBinding.schoolWithinUniv.text.toString()
-            updateStudentPlan.app_type="4"
-            updateStudentPlan.request_transcript="0"
+            updateStudentPlan.app_type = "4"
+            updateStudentPlan.request_transcript = "0"
             if (sheetBinding.rateSpinner.selectedItemPosition != 0) {
                 updateStudentPlan.college_interest =
                     sheetBinding.rateSpinner.selectedItemPosition.toString()
@@ -289,7 +306,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 updateStudentPlan.campus_tour = "0"
             }
 
-          //  dialogP.show()
+            //  dialogP.show()
             homeModel.updateStudentPlan(updateStudentPlan)
             homeModel.updateStudentPlanObserver.observe(requireActivity()) {
                 dialog.dismiss()
@@ -320,20 +337,68 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
-    private fun bottomSheetProgram() {
+    private fun bottomSheetProgram(postion: Int) {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutProgramsBinding = LayoutProgramsBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
-
-        sheetBinding.addMoreLayout.adapter = ProgramAdapter(this)
-        sheetBinding.addMore.setOnClickListener {
-            (sheetBinding.addMoreLayout.adapter as ProgramAdapter).setCount(
-                count++
-            )
+        var addedPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
+        for (i in finalArray[postion].program_data?.indices!!) {
+            var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+            programData.program_name =
+                finalArray[postion].program_data?.get(i)?.program_name.toString()
+            programData.program_id = finalArray[postion].program_data?.get(i)?.program_id
+            addedPrograms?.add(programData)
         }
-        sheetBinding.save.setOnClickListener { dialog.dismiss() }
+        var deletedPrograms: ArrayList<String> = ArrayList()
+        sheetBinding.addMoreLayout.adapter = ProgramAdapter(addedPrograms, deletedPrograms, this)
+        sheetBinding.addMore.setOnClickListener {
+//            (sheetBinding.addMoreLayout.adapter as ProgramAdapter).setCount(
+//                count++
+//            )
+            ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).addMore()
+
+        }
+        sheetBinding.save.setOnClickListener {
+
+            addedPrograms = ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).save()
+            dialogP.show()
+//            var newPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
+//
+//            for (i in addedPrograms!!.indices) {
+//                var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+//                programData.program_name = addedPrograms.get(i).toString()
+//                newPrograms?.add(programData)
+//            }
+            if (deletedPrograms.size > 0) {
+                for (i in deletedPrograms.indices) {
+                    homeModel.deleteMlProgram(deletedPrograms.get(i))
+                }
+            }
+
+            var newPrograms: ArrayList<AddProgramConsider.Programs?> = ArrayList()
+
+            if (addedPrograms != null) {
+                for (i in addedPrograms!!.indices) {
+                    if ((addedPrograms!![i]?.program_name ?: "").isEmpty()) {
+                        newPrograms.add(addedPrograms!![i])
+                    }
+                }
+                addedPrograms!!.removeAll(newPrograms)
+            }
+
+            var addProgramConsider = AddProgramConsider()
+            addProgramConsider.trans_req_nid = finalArray[postion].transcriptNid.toString()
+            addProgramConsider.program_data = addedPrograms
+            homeModel.addProgramToConsidering(addProgramConsider)
+
+            homeModel.addProgramObserver.observe(requireActivity()) {
+                dialogP.dismiss()
+                dialog.dismiss()
+                getConsideringList()
+            }
+        }
 
     }
 
@@ -349,6 +414,8 @@ interface OnItemClickOption {
     fun onTermClick()
     fun onPlanClick()
     fun onCommentClick()
-    fun onAddClick()
+    fun onAddClick(postion: Int)
     fun onInfoClick(postion: Int)
+    fun onApplyingClick(postion: Int)
+
 }

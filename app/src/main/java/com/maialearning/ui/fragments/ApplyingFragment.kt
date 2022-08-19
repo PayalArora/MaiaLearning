@@ -126,6 +126,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                         object_.getString("created_date"),
                         object_.getString("college_priority_choice"),
                         object_.getString("university_nid"),
+                        object_.getString("unitid"),
                         object_.getString("internal_deadline"),
                         arrayProgram,
                         0,
@@ -225,11 +226,15 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
-    override fun onAddClick() {
+    override fun onAddClick(postion: Int) {
 
     }
 
     override fun onInfoClick(postion: Int) {
+    }
+
+    override fun onApplyingClick(postion: Int) {
+        TODO("Not yet implemented")
     }
 
 }

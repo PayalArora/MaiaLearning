@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView.OnEditorActionListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,14 +18,11 @@ import com.maialearning.R
 import com.maialearning.databinding.SearchLayoutBinding
 import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.model.UniversitySearchPayload
-import com.maialearning.model.UniversitySearchResponse
 import com.maialearning.parser.SearchParser
 import com.maialearning.ui.adapter.UniFactAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
-import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
-import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -57,7 +56,7 @@ class SearchFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
             .commit()
-        hitAPI(page)
+        hitAPI(page, "")
 
         homeModel.searchUniversityObserver.observe(requireActivity()) {
             val univ = SearchParser(it).parseJson()
@@ -94,18 +93,35 @@ class SearchFragment : Fragment() {
             progress.dismiss()
 //            hitAPI(page)
         }
-        homeModel.showError.observe(requireActivity()){
+        homeModel.showError.observe(requireActivity()) {
             progress.dismiss()
-            Log.e("Error","err"+it)
+            Log.e("Error", "err" + it)
+        }
+
+        mBinding.searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                page = 1
+                hitAPI(page, mBinding.searchText.text.toString())
+                return@OnEditorActionListener true
+            }
+            false
+        })
+        mBinding.close.setOnClickListener {
+            mBinding.searchText.setText("")
+            page = 1
+            hitAPI(page, "")
         }
     }
 
-    private fun hitAPI(pageNo: Int) {
+    private fun hitAPI(pageNo: Int, search: String) {
         progress.show()
         var payload = UniversitySearchPayload()
         payload.student_uid = SharedHelper(requireContext()).id.toString()
         payload.country = "US"
         payload.pager = pageNo
+        payload.search = search
+        payload.sort_parameter = "college_name"
+        payload.sort_order = "asc"
         universityList?.clear()
         homeModel.searchUniversities(payload)
     }

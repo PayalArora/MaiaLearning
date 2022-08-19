@@ -31,10 +31,12 @@ import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
+import com.maialearning.util.UNIV_LOGO_URL
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
 import com.maialearning.viewmodel.HomeViewModel
+import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -248,6 +250,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val close = view.findViewById<ImageView>(R.id.close)
+        val imageUniv=view.findViewById<ImageView>(R.id.image)
         val tabArray = arrayOf(
             getString(R.string.overview),
             getString(R.string.community),
@@ -301,6 +304,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
             get.unitid.toString()
         )
+        Picasso.with(this).
+        load("${UNIV_LOGO_URL}${get.countryCode?.toLowerCase()}/${get.unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(imageUniv)
+
         //  val likePic = view.findViewById<ImageView>(R.id.like)
 
         if (get.topPickFlag == 1) {
