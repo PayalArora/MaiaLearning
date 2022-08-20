@@ -517,7 +517,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 val countries = arrayListOf<CountryData>()
                 var states = arrayListOf<CountryData>()
 
-                countries.add(CountryData("Select country", "Select country"))
+                countries.add(CountryData("Select country", "Select country",false))
                 //  states.add(CountryData("Select state", "Select state"))
                 val adapter = ArrayAdapter(
                     sheetBinding.root.context,
@@ -578,7 +578,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         val key = iter.next()
                         try {
                             val countryData =
-                                CountryData(key, it.get(key).toString().replace("\"", ""))
+                                CountryData(key, it.get(key).toString().replace("\"", ""),false)
                             countries.add(countryData)
                         } catch (e: JSONException) {
                             // Something went wrong!
@@ -605,7 +605,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                     val iter: Iterator<String> = it.keySet().iterator()
                     states = arrayListOf()
                     progress.dismiss()
-                    states.add(CountryData("Select state", "Select state"))
+                    states.add(CountryData("Select state", "Select state",false))
                     var i = 1
                     var pos = 0
                     while (iter.hasNext()) {
@@ -613,7 +613,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         try {
 
                             val countryData =
-                                CountryData(key, it.get(key).toString().replace("\"", ""))
+                                CountryData(key, it.get(key).toString().replace("\"", ""),false)
                             if (profileResponse?.info?.administrativeAreaCode == key) {
                                 pos = i
                             }
@@ -640,7 +640,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 }
                 viewModel.stateResidenceObserver.observe(viewLifecycleOwner) {
                     val iter: Iterator<String> = it.keySet().iterator()
-                    usStates.add(CountryData("Select state", "Select state"))
+                    usStates.add(CountryData("Select state", "Select state",false))
                     progress.dismiss()
                     var i = 1
                     var pos = 0
@@ -648,7 +648,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         val key = iter.next()
                         try {
                             val countryData =
-                                CountryData(key, it.get(key).toString().replace("\"", ""))
+                                CountryData(key, it.get(key).toString().replace("\"", ""),false)
                             if (profileResponse?.info?.stateOfResidency == key) {
                                 pos = i
                             }

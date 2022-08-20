@@ -54,10 +54,11 @@ class CampusFragment : Fragment() {
             conInner.add(model?.services?.counselingServices!!.x7)
             list.add(SetServices("Counseling Services",conInner))
             val listInner=ArrayList<String>()
+            if(model?.services?.remedialServices!=null){
             listInner.add(model?.services?.remedialServices!!.get(0))
             listInner.add(model?.services?.remedialServices!!.get(1))
             listInner.add(model?.services?.remedialServices!!.get(2))
-            list.add(SetServices("Remedial Services",listInner))
+            list.add(SetServices("Remedial Services",listInner))}
             val carInner=ArrayList<String>()
             carInner.add(model?.services?.careerServices!!.x0)
             carInner.add(model?.services?.careerServices!!.x1)

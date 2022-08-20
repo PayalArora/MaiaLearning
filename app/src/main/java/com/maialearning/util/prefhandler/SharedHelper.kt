@@ -52,12 +52,18 @@ class SharedHelper(var context: Context) {
         }
     var picture:String?
         get() = sharedPreference!!.getKey("picture")
-        set(authkey) {
+        set(picture) {
             sharedPreference!!.putKey("picture", picture)
         }
     var collegeNId:String
         get() = sharedPreference!!.getKey("collegenId")
-        set(authkey) {
-            sharedPreference!!.putKey("collegenId", authkey)
+        set(collegeId) {
+            sharedPreference!!.putKey("collegenId", collegeId)
         }
+    var country:String?
+        get() = sharedPreference!!.getKey("country")
+        set(country) {
+            sharedPreference!!.putKey("country", country)
+        }
+
 }

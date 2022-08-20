@@ -1,5 +1,6 @@
 package com.maialearning.ui.bottomsheets
 
+import android.content.Context
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
@@ -7,13 +8,15 @@ import android.widget.ArrayAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.databinding.UniversityFilterBinding
+import com.maialearning.model.CountryData
+import com.maialearning.model.UniersitiesListModel
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.*
 
 class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: LayoutInflater) {
 
-    fun showDialog() {
+    fun showDialog(list: ArrayList<CountryData>, context: Context) {
         val dialog = BottomSheetDialog(con)
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -21,10 +24,14 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         dialog.show()
         sheetBinding.search.visibility = View.GONE
         sheetBinding.filters.setText(con.resources.getString(R.string.country))
-        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
-        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+        sheetBinding.clearText.setOnClickListener {
+            con.refreshTab()
+            dialog.dismiss()
+        }
+        sheetBinding.backBtn.setOnClickListener {  con.refreshTab()
+            dialog.dismiss() }
         sheetBinding.reciepentList.adapter =
-            CountryAdapter(con.resources.getStringArray(R.array.Country), con as ClickFilters)
+            CountryAdapter(list, con as ClickFilters, context)
 
     }
 
@@ -41,13 +48,12 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
-        if (positiion == 1){
+        if (positiion == 1) {
             sheetBinding.reciepentList.adapter =
                 ReigonAdapter(con.resources.getStringArray(R.array.Region), con)
             sheetBinding.spinnerLay.visibility = View.GONE
 
-        }
-        else if (positiion == 2) {
+        } else if (positiion == 2) {
             sheetBinding.spinnerLay.visibility = View.GONE
             sheetBinding.reciepentList.adapter =
                 ItemListAdapter(con.resources.getStringArray(R.array.list), con)
@@ -55,9 +61,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
                 sheetBinding.searchText.setText("")
             }
 
-        }
-
-        else if (positiion == 6) {
+        } else if (positiion == 6) {
             sheetBinding.spinnerLay.visibility = View.VISIBLE
             sheetBinding.reciepentList.adapter =
                 SportsFilterAdapter(con.resources.getStringArray(R.array.sports))
@@ -70,8 +74,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
                 R.layout.spinner_text, others
             )
             sheetBinding.spinner.adapter = adapter
-        }
-        else if (positiion == 5) {
+        } else if (positiion == 5) {
             sheetBinding.reciepentList.adapter =
                 CustomRadioAdapter()
             sheetBinding.spinnerLay.visibility = View.GONE
@@ -89,4 +92,32 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
 
 
     }
+
+    fun selectRegionFilter(
+        visibility: Int,
+        title: String,
+        listUni: MutableList<UniersitiesListModel>,
+        visibility_spinner: Int = 0
+    ) {
+        val dialog = BottomSheetDialog(con)
+        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.search.visibility = visibility
+        sheetBinding.filters.setText(title)
+        dialog.show()
+
+        sheetBinding.spinnerLay.visibility = visibility_spinner
+        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+
+        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        sheetBinding.spinnerLay.visibility = View.GONE
+        sheetBinding.reciepentList.adapter =
+            UniversityListAdapter(listUni, con)
+        sheetBinding.close.setOnClickListener {
+            sheetBinding.searchText.setText("")
+        }
+
+    }
+
 }

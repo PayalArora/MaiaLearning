@@ -159,9 +159,12 @@ interface AllAPi {
     @GET
     fun getColFactSheet(
         @Url() url: String,
-
     ): Deferred<JsonObject>
-
+    @GET
+    fun getColFactSheetOther(
+        @Url() url: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<FactsheetModelOther>
     @GET("college_nid_by_unitid/{id}")
     fun getCollegeNid(
         @Path("id") id: String,
@@ -230,5 +233,9 @@ interface AllAPi {
         @Path("id") id: String,
         @Header("Authorization") Authorization: String,
     ): Deferred<JsonArray>
-
+    @GET
+    fun getUniversityList(
+        @Url url: String,
+        @Header("Authorization") Authorization: String
+        ): Deferred<JsonArray>
 }

@@ -49,10 +49,10 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         dashboardViewModel.getJwtToken()
-        dashboardViewModel.jwtObserver.observe(this, {
+        dashboardViewModel.jwtObserver.observe(this) {
             SharedHelper(this).jwtToken = it
 
-        })
+        }
         dashboardViewModel.showLoading.observe(this) {
             if (it == true) {
                 dialog = showLoadingDialog(this)

@@ -11,6 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.maialearning.R
 import com.maialearning.databinding.OverviewLayoutBinding
 import com.maialearning.model.CollegeFactSheetModel
+import com.maialearning.model.FactsheetModelOther
 import com.maialearning.network.BaseApplication
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.VideoFactAdapter
@@ -23,6 +24,7 @@ class OverViewFragment : Fragment() {
     private lateinit var mBinding:OverviewLayoutBinding
     private val mModel: FactSheetModel by viewModel()
     var model: CollegeFactSheetModel? = null
+    var modelOther: FactsheetModelOther? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,7 @@ class OverViewFragment : Fragment() {
     }
 
     private fun init() {
+        if((SharedHelper(context as UniversitiesActivity).country?: "US") == "US"){
         model = (context as UniversitiesActivity).getData()
         if (model != null) {
             mBinding.aboutdes.text=" ${ model?.basicInfo?.description}"
@@ -64,6 +67,20 @@ class OverViewFragment : Fragment() {
             mBinding.locTxt.text=" ${ model?.basicInfo?.city+","+ model?.basicInfo?.state+","+ model?.basicInfo?.zip}"
             mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
 
+        }}else{
+            modelOther = (context as UniversitiesActivity).getDataOther()
+            if (modelOther != null) {
+                mBinding.aboutdes.text=" ${ modelOther?.basicInfo?.basicInfo?.description}"
+                mBinding.phoneNo.text=" ${ modelOther?.basicInfo?.basicInfo?.phone}"
+                mBinding.webUrl.text=" ${ modelOther?.basicInfo?.basicInfo?.webAddr}"
+                mBinding.entType.text=" ${ modelOther?.basicInfo?.basicInfo?.environmentType}"
+                mBinding.termTyp.text=" ${ modelOther?.basicInfo?.basicInfo?.termType}"
+                mBinding.intsType.text=" ${ modelOther?.basicInfo?.basicInfo?.institutionType}"
+                mBinding.degree.text=" ${ modelOther?.basicInfo?.basicInfo?.award}"
+                mBinding.locTxt.text=" ${ modelOther?.basicInfo?.basicInfo?.city+","+ modelOther?.basicInfo?.basicInfo?.state+","+ modelOther?.basicInfo?.basicInfo?.zip}"
+                mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
+
+            }
         }}
     fun observer(){
         mModel.idObserver.observe(requireActivity()) {

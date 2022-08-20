@@ -25,19 +25,21 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.databinding.*
-import com.maialearning.model.CollegeFactSheetModel
+import com.maialearning.model.*
 import com.maialearning.network.BaseApplication
-import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
+import com.maialearning.ui.fragments.SearchFragment
 import com.maialearning.util.UNIV_LOGO_URL
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
 import com.maialearning.viewmodel.HomeViewModel
 import com.squareup.picasso.Picasso
+import okhttp3.internal.notify
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,12 +50,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var dialog: BottomSheetDialog? = null
     var dialogFacts: BottomSheetDialog? = null
     var model: CollegeFactSheetModel? = null
+    var modelOther: FactsheetModelOther? = null
     private val mModel: FactSheetModel by viewModel()
     private lateinit var dialogP: Dialog
     private lateinit var universityName: TextView
     private lateinit var noData: TextView
-
-
+    var listUni = ArrayList<UniersitiesListModel>()
+    val countries = arrayListOf<CountryData>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUniversitiesBinding.inflate(layoutInflater)
@@ -77,6 +80,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun observerInit() {
+        mModel.factSheetOtherObserver.observe(this) {
+            dialogP.dismiss()
+            loadDataOther(it)
+            dialogFacts?.show()
+        }
+
+
         mModel.factSheetObserver.observe(this) {
             dialogP.dismiss()
             val gson = GsonBuilder().create()
@@ -165,6 +175,63 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             dialogP.dismiss()
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
+        mModel.listObserver.observe(this) {
+            dialogP.dismiss()
+            for (i in 0 until it.size()) {
+                val objectProgram = it.get(i).asJsonObject
+                listUni.add(
+                    UniersitiesListModel(
+                        objectProgram.getAsJsonPrimitive("id").toString().replace("\"", ""),
+                        objectProgram.getAsJsonPrimitive("name").toString().replace("\"", ""),
+                        "",
+                        objectProgram.getAsJsonPrimitive("type").toString(),
+                        objectProgram.getAsJsonPrimitive("created").toString(),
+                        objectProgram.getAsJsonPrimitive("changed").toString(),
+                        "",
+                        objectProgram.getAsJsonPrimitive("status").toString(),
+                        "",
+                        objectProgram.getAsJsonPrimitive("district_scope").toString()
+                    )
+                )
+            }
+//            val sortedList: MutableList<UniersitiesListModel> =
+//               listUni.groupBy { it.name }
+//                    .values
+//                    .map {
+//                        it.reduce {
+//                                acc, item -> UniersitiesListModel(item.name)
+//                        }
+//                    }.sortedWith(compareBy { it.name }).toMutableList()
+            SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
+                View.VISIBLE,
+                resources.getString(R.string.list),
+                listUni, View.GONE
+            )
+        }
+        mModel.countryObserver.observe(this) {
+            Log.e("Response: ", " $it")
+            dialogP.dismiss()
+            val iter: Iterator<String> = it.keySet().iterator()
+            while (iter.hasNext()) {
+                val key = iter.next()
+                try {
+                    val countryData =
+                        CountryData(key, it.get(key).toString().replace("\"", ""), false)
+                    countries.add(countryData)
+                } catch (e: JSONException) {
+                    // Something went wrong!
+                }
+            }
+            if (countries.size > 0)
+                countryFilter()
+//            if (profileResponse.info?.country != null) {
+//                for (i in countries.indices) {
+//                    if (profileResponse.info?.country == countries.get(i).name) {
+//                        sheetBinding.spinner.setSelection(i)
+//                    }
+//                }
+//            }
+        }
     }
 
     private fun initView() {
@@ -214,7 +281,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                if (binding.tabs.selectedTabPosition == 0) {
+
+
+                }
+            }
         })
 
 //        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
@@ -250,18 +322,28 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         val close = view.findViewById<ImageView>(R.id.close)
-        val imageUniv=view.findViewById<ImageView>(R.id.image)
-        val tabArray = arrayOf(
-            getString(R.string.overview),
-            getString(R.string.community),
-            getString(R.string.admission),
-            getString(R.string.cost_),
-            getString(R.string.degree),
-            getString(R.string.var_sport),
-            getString(R.string.transfer),
-            getString(R.string.notes),
-            getString(R.string.campus_service)
-        )
+        val imageUniv = view.findViewById<ImageView>(R.id.image)
+        var tabArray: Array<String>
+        if ((SharedHelper(this).country ?: "US") == "US") {
+            tabArray = arrayOf(
+                getString(R.string.overview),
+                getString(R.string.community),
+                getString(R.string.admission),
+                getString(R.string.cost_),
+                getString(R.string.degree),
+                getString(R.string.var_sport),
+                getString(R.string.transfer),
+                getString(R.string.notes),
+                getString(R.string.campus_service)
+            )
+        } else {
+            tabArray = arrayOf(
+                getString(R.string.overview),
+                "Program List",
+                getString(R.string.admission),
+                getString(R.string.campus_service)
+            )
+        }
         for (item in tabArray) {
             factTabs.addTab(factTabs.newTab().setText(item))
         }
@@ -269,7 +351,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             dialogFacts?.dismiss()
         }
         val fm: FragmentManager = supportFragmentManager
-        val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size)
+        val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size, this)
         viewPager.adapter = adapter
         TabLayoutMediator(factTabs, viewPager) { tab, position ->
             tab.text = tabArray[position]
@@ -300,12 +382,20 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialogFacts?.setContentView(view)
         dialogP = showLoadingDialog(this)
         dialogP.show()
-        mModel.getColFactSheet(
-            "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-            get.unitid.toString()
-        )
-        Picasso.with(this).
-        load("${UNIV_LOGO_URL}${get.countryCode?.toLowerCase()}/${get.unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(imageUniv)
+        if ((SharedHelper(this).country ?: "US").equals("US")) {
+            mModel.getColFactSheet(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                get.unitid.toString()
+            )
+        } else {
+            mModel.getColFactSheetOther(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                get.nid.toString()
+            )
+        }
+        Picasso.with(this)
+            .load("${UNIV_LOGO_URL}${get.countryCode?.toLowerCase()}/${get.unitid}/logo_sm.jpg")
+            .error(R.drawable.static_coll).into(imageUniv)
 
         //  val likePic = view.findViewById<ImageView>(R.id.like)
 
@@ -367,12 +457,28 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
-        sheetBinding.close.setOnClickListener { dialog.dismiss() }
+        sheetBinding.close.setOnClickListener {
+            refreshTab()
+            dialog.dismiss()
+        }
 
         sheetBinding.reciepentList.adapter = AddUniversiityAdapter(this)
-        sheetBinding.save.setOnClickListener { dialog.dismiss() }
+        sheetBinding.save.setOnClickListener {
+            refreshTab()
+            dialog.dismiss()
+        }
         sheetBinding.country.setOnClickListener {
-            SheetUniversityFilter(this, layoutInflater).showDialog()
+            if (countries.size > 0) {
+                SheetUniversityFilter(this, layoutInflater).showDialog(countries, this)
+            } else {
+                dialogP = showLoadingDialog(this)
+                dialogP.show()
+                SharedHelper(BaseApplication.applicationContext()).authkey?.let {
+                    mModel.getCountries(
+                        "Bearer $it"
+                    )
+                }
+            }
         }
     }
 
@@ -393,13 +499,23 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun countryFilter() {
-        SheetUniversityFilter(this, layoutInflater).showDialog()
+        SheetUniversityFilter(this, layoutInflater).showDialog(countries, this)
     }
 
     override fun onClick(positiion: Int, type: Int) {
         if (type == 2) {
             if (positiion == 0) {
-                countryFilter()
+                if (countries.size > 0) {
+                    countryFilter()
+                } else {
+                    dialogP = showLoadingDialog(this)
+                    dialogP.show()
+                    SharedHelper(BaseApplication.applicationContext()).authkey?.let {
+                        mModel.getCountries(
+                            "Bearer $it"
+                        )
+                    }
+                }
             } else if (positiion == 1) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(
                     View.VISIBLE,
@@ -407,11 +523,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     positiion
                 )
             } else if (positiion == 2) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
-                    View.VISIBLE,
-                    resources.getString(R.string.list),
-                    positiion, View.GONE
-                )
+                if (listUni.size > 0) {
+                    SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
+                        View.VISIBLE,
+                        resources.getString(R.string.list),
+                        listUni, View.GONE
+                    )
+
+                } else {
+                    dialogP = showLoadingDialog(this)
+                    dialogP.show()
+                    mModel.getUniversityList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey)
+
+                }
             } else if (positiion == 3) {
                 typeFilter()
             } else if (positiion == 4) {
@@ -496,6 +620,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
+    fun refreshTab() {
+
+        binding.tabs.selectTab(binding.tabs.getTabAt(0))
+    }
+
     fun likeClick() {
         binding.tabs.selectTab(binding.tabs.getTabAt(1))
         dialogFacts?.let { it.dismiss() }
@@ -504,6 +633,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     fun loadData(model: CollegeFactSheetModel) {
         this.model = model
+    }
+
+    fun loadDataOther(model: FactsheetModelOther) {
+        this.modelOther = model
+    }
+
+    fun getDataOther(): FactsheetModelOther? {
+        return modelOther
     }
 
     fun getData(): CollegeFactSheetModel? {

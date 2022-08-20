@@ -69,6 +69,7 @@ interface LoginRepository {
     ): UseCaseResult<DashboardOverdueResponse>
 
     suspend fun getColFactSheet(token: String, id: String): UseCaseResult<JsonObject>
+    suspend fun getColFactSheetOther(token: String, id: String): UseCaseResult<FactsheetModelOther>
     suspend fun getCollegeNid(token: String, id: String): UseCaseResult<JsonObject>
     suspend fun getUniversityContact(token: String, id: String): UseCaseResult<CollegeContactModel>
     suspend fun getUniversityNotes(
@@ -76,6 +77,9 @@ interface LoginRepository {
         id: String,
         id2: String
     ): UseCaseResult<JsonObject>
+    suspend fun getUniversityList(
+        token: String
+    ): UseCaseResult<JsonArray>
     //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
     suspend fun updateStudentPlan(
@@ -402,6 +406,18 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+    override suspend fun getColFactSheetOther(token: String, id: String): UseCaseResult<FactsheetModelOther> {
+        return try {
+            val url =
+                "https://maia2-staging-backend.maialearning.com/ajs-services/all_international_factsheet_info/${id}"
+            val result = catApi.getColFactSheetOther(url,token).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
 
     override suspend fun getUniversityContact(
         token: String,
@@ -486,6 +502,21 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.hitUnlikeUniversity(
                 collegeId, studentId,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getUniversityList(
+        token: String
+    ): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getUniversityList(
+                "https://app-www-maia.maialearning.com/ajs-services/university-list?status=1&uid=9375",
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
             ).await()
             UseCaseResult.Success(result)

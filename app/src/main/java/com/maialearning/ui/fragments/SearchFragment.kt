@@ -115,9 +115,10 @@ class SearchFragment : Fragment() {
 
     private fun hitAPI(pageNo: Int, search: String) {
         progress.show()
-        var payload = UniversitySearchPayload()
+        val payload = UniversitySearchPayload()
+        val country = SharedHelper(requireContext()).country?: "US"
         payload.student_uid = SharedHelper(requireContext()).id.toString()
-        payload.country = "US"
+        payload.country = country
         payload.pager = pageNo
         payload.search = search
         payload.sort_parameter = "college_name"

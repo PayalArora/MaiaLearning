@@ -1,5 +1,6 @@
 package com.maialearning.ui.adapter
 
+import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,13 @@ import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ItemCountryFilterBinding
 import com.maialearning.databinding.ItemUnivFilterBinding
+import com.maialearning.model.CountryData
 import com.maialearning.ui.activity.ClickFilters
+import com.maialearning.util.prefhandler.SharedHelper
 import java.time.format.TextStyle
 
 
-class CountryAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
+class CountryAdapter(val arr:ArrayList<CountryData>, val onItemClick: ClickFilters,var context :Context) : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -37,10 +40,12 @@ class CountryAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : Rec
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
        // viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 1) }
         viewHolder.binding.apply {
-            filters.setText(arr.get(position))
-            if (checked.get(position)){
+
+            filters.setText(arr.get(position).name)
+            if (arr[position].select){
                 imgCheck.visibility = View.VISIBLE
                 filters.setTypeface(filters.typeface, Typeface.BOLD)
+                SharedHelper(context).country=arr[position].key
             } else {
                 imgCheck.visibility = View.GONE
                 filters.setTypeface(filters.typeface, Typeface.NORMAL)
@@ -49,10 +54,11 @@ class CountryAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : Rec
 
 
             root.setOnClickListener {
-                for (i in checked.indices) {
-                   checked[i] = false
+                for (i in arr.indices) {
+                    arr[i].select = false
                 }
-                checked[position] =true
+                arr[position].select=true
+
                 notifyDataSetChanged()
             }
 

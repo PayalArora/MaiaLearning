@@ -20,10 +20,8 @@ import kotlin.coroutines.CoroutineContext
 class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
     // Coroutine's background job
     private val job = Job()
-
     // Define default thread for Coroutine as Main and add job
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
-
     val showLoading = MutableLiveData<Boolean>()
     val listObserver = MutableLiveData<JsonObject>()
     val applyObserver = MutableLiveData<JsonObject>()
@@ -36,7 +34,6 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val applyingObserver = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
     val deleteProgramObserver = MutableLiveData<JsonArray>()
-
 
     fun getConsiderList(id: String) {
         showLoading.value = true
