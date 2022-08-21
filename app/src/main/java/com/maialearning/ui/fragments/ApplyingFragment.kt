@@ -16,10 +16,14 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.CommentsSheetBinding
 import com.maialearning.databinding.FragmentApplyingBinding
+import com.maialearning.databinding.LayoutProgramsBinding
+import com.maialearning.model.AddProgramConsider
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.adapter.ApplyingAdapter
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
+import com.maialearning.ui.adapter.ProgramAdapter
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
@@ -31,6 +35,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     private lateinit var mBinding: FragmentApplyingBinding
         private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
+    val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +63,10 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
         initObserver()
-        homeModel.getApplyList("")
-
-
+        SharedHelper(requireContext()).id?.let {
+            val  userid = SharedHelper(requireContext()).id!!
+            homeModel.getApplyList(userid)
+        }
     }
 
     private fun initObserver() {
@@ -135,7 +141,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                     )
                     array.add(model)
                 }
-                val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
+
                 var pos = 0
                 countries.sortBy { it }
                 for (j in 0 until countries.size) {
@@ -206,7 +212,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     }
 
     override fun onCommentClick() {
-        bottomSheetComment()
+   //     bottomSheetComment()
     }
 
     private fun bottomSheetComment() {
@@ -226,15 +232,79 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
-    override fun onAddClick(postion: Int) {
-
-    }
-
     override fun onInfoClick(postion: Int) {
     }
 
     override fun onApplyingClick(postion: Int) {
         TODO("Not yet implemented")
+    }
+
+    private fun bottomSheetProgram(postion: Int) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: LayoutProgramsBinding = LayoutProgramsBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        var addedPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
+        for (i in finalArray[postion].program_data?.indices!!) {
+            var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+            programData.program_name =
+                finalArray[postion].program_data?.get(i)?.program_name.toString()
+            programData.program_id = finalArray[postion].program_data?.get(i)?.program_id
+            addedPrograms?.add(programData)
+        }
+        var deletedPrograms: ArrayList<String> = ArrayList()
+        sheetBinding.addMoreLayout.adapter = ProgramAdapter(addedPrograms, deletedPrograms, this)
+        sheetBinding.addMore.setOnClickListener {
+            ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).addMore()
+        }
+        sheetBinding.save.setOnClickListener {
+
+            addedPrograms = ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).save()
+            dialogP.show()
+//            var newPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
+//
+//            for (i in addedPrograms!!.indices) {
+//                var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+//                programData.program_name = addedPrograms.get(i).toString()
+//                newPrograms?.add(programData)
+//            }
+            if (deletedPrograms.size > 0) {
+                for (i in deletedPrograms.indices) {
+                    homeModel.deleteMlProgram(deletedPrograms.get(i))
+                }
+            }
+
+            var newPrograms: ArrayList<AddProgramConsider.Programs?> = ArrayList()
+
+            if (addedPrograms != null) {
+                for (i in addedPrograms!!.indices) {
+                    if ((addedPrograms!![i]?.program_name ?: "").isEmpty()) {
+                        newPrograms.add(addedPrograms!![i])
+                    }
+                }
+                addedPrograms!!.removeAll(newPrograms)
+            }
+
+            var addProgramConsider = AddProgramConsider()
+            addProgramConsider.trans_req_nid = finalArray[postion].transcriptNid.toString()
+            addProgramConsider.program_data = addedPrograms
+            homeModel.addProgramToConsidering(addProgramConsider)
+
+            homeModel.addProgramObserver.observe(requireActivity()) {
+                dialogP.dismiss()
+                dialog.dismiss()
+                SharedHelper(requireContext()).id?.let {
+                  val  userid = SharedHelper(requireContext()).id!!
+                    homeModel.getApplyList(userid)
+                }
+
+            }
+        }
+
+    }
+    override fun onAddClick(position: Int) {
+        bottomSheetProgram(position)
     }
 
 }

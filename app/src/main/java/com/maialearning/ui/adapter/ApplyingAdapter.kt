@@ -70,6 +70,9 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
                 onItemClickOption.onTypeClick()
 
             }
+            addButton.setOnClickListener {
+                onItemClickOption.onAddClick(position)
+            }
             appPlan.setOnClickListener {
                 onItemClickOption.onPlanClick()
             }

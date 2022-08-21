@@ -18,13 +18,12 @@
 
         android:id="@+id/search"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50dp"
+        android:layout_height="@dimen/_40dp"
         android:layout_margin="@dimen/_10dp"
         android:background="@drawable/black_stroke_round"
         android:orientation="horizontal"
         android:padding="@dimen/_5sp"
         app:layout_constraintTop_toTopOf="parent">
-
         <RelativeLayout
             android:id="@+id/close"
             android:layout_width="@dimen/_30dp"
@@ -33,17 +32,18 @@
 
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/_20dp"
+            android:layout_marginStart="@dimen/_15dp"
+            android:layout_marginTop="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_15dp"
+            android:layout_marginBottom="@dimen/_15dp"
             android:background="@drawable/circle_lay">
 
             <ImageView
-                android:layout_width="@dimen/_20dp"
-                android:layout_height="@dimen/_20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="@dimen/_2dp"
-                android:src="@drawable/close" />
+                android:src="@drawable/cross" />
         </RelativeLayout>
-
 
         <EditText
             android:id="@+id/searchText"
@@ -56,13 +56,14 @@
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/ic_baseline_search_24"
             android:drawablePadding="@dimen/_5dp"
-            android:hint="@string/universities"
+            android:hint="@string/universities_search"
             android:imeOptions="actionSearch"
             android:inputType="textFilter"
             android:maxLines="1"
             android:paddingLeft="@dimen/_15dp"
             android:paddingRight="@dimen/_10dp"
-            android:textColorHint="@color/black_1" />
+            android:textColorHint="@color/black_1"
+            android:textSize="@dimen/_12sp" />
     </RelativeLayout>
 <LinearLayout
     android:layout_width="match_parent"

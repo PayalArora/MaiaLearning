@@ -354,11 +354,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         var deletedPrograms: ArrayList<String> = ArrayList()
         sheetBinding.addMoreLayout.adapter = ProgramAdapter(addedPrograms, deletedPrograms, this)
         sheetBinding.addMore.setOnClickListener {
-//            (sheetBinding.addMoreLayout.adapter as ProgramAdapter).setCount(
-//                count++
-//            )
             ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).addMore()
-
         }
         sheetBinding.save.setOnClickListener {
 
