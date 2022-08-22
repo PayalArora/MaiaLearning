@@ -454,6 +454,16 @@
         <item>Cricket</item>
     </string-array>
 
+    <string name="surveys">Surveys</string>
+    <string name="documents_attached">Documents Attached</string>
+    <string name="download">Download</string>
+    <string name="file_upload">File Upload</string>
+    <string name="select_tag">Select Tag</string>
+    <string name="write_to_conselor">Write to Counselor</string>
+    <string name="view">View</string>
+    <string name="upload_file">Upload File</string>
+    <string name="delete_coll">Delete College</string>
+
     <string-array name="rate_college">
         <item>How much do you like college?</item>
         <item>Love it</item>

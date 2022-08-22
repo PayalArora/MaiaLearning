@@ -75,8 +75,9 @@
             android:layout_marginEnd="@dimen/_10dp"
 
             android:contentDescription="@string/like"
-            android:padding="@dimen/_2dp"
-            android:src="@drawable/loc"
+
+            app:tint="@color/black_1"
+            android:src="@drawable/ic_outline_location_on_24"
             app:layout_constraintBottom_toBottomOf="@id/country"
             app:layout_constraintEnd_toEndOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"

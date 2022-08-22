@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.size
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -183,7 +184,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         }
         val fm: FragmentManager = supportFragmentManager
-        val adapter = ViewStateAdapter(fm, lifecycle, tabArray.size)
+        val adapter = ViewStateAdapter(fm, lifecycle, binding.tabs, tabArray.size)
 
         binding.viewPager.adapter = adapter
 

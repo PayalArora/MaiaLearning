@@ -9,4 +9,6 @@ data class SortedDateModel(
 
     @field:SerializedName("assignment")
     var assignment: List<AssignmentItem?>? = null
+
+
 )

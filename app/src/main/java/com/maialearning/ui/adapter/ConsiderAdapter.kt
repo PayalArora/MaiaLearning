@@ -1,5 +1,6 @@
 package com.maialearning.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,7 @@ class ConsiderAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
+            Log.e("countryname ${array[position].country_name}", " Size:--${array[position].count.toString()}")
             if (array[position].country_name == "") {
                 top.visibility = View.GONE
             } else {
@@ -89,6 +91,9 @@ class ConsiderAdapter(
             appType.setOnClickListener {
                 onItemClickOption.onTypeClick()
 
+            }
+            menuDots.setOnClickListener {
+                onItemClickOption.onMenuClick(position,it)
             }
             appPlan.setOnClickListener {
                 onItemClickOption.onPlanClick()

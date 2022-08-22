@@ -12,6 +12,7 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.tabs.TabLayout
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.CommentsSheetBinding
@@ -30,13 +31,13 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
+class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnItemClick {
     var selectedValue = ""
     private lateinit var mBinding: FragmentApplyingBinding
         private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
     val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
-
+    lateinit var userid: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,12 +49,22 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     ): View? {
         // Inflate the layout for this fragment
         mBinding = FragmentApplyingBinding.inflate(inflater, container, false)
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if (tabs.selectedTabPosition == 2) {
+                    init()
+                }
+            }
 
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         init()
         setAdapter()
 
@@ -64,7 +75,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
         dialogP.show()
         initObserver()
         SharedHelper(requireContext()).id?.let {
-            val  userid = SharedHelper(requireContext()).id!!
+            userid = SharedHelper(requireContext()).id!!
             homeModel.getApplyList(userid)
         }
     }
@@ -72,8 +83,10 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
     private fun initObserver() {
         homeModel.applyObserver.observe(requireActivity()) {
             it?.let {
+                finalArray.clear()
                 dialogP?.dismiss()
-                val json = JSONObject(it.toString()).getJSONObject("9375").getJSONObject("data")
+                val json = JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
+
                 val x = json.keys() as Iterator<String>
                 val jsonArray = JSONArray()
                 while (x.hasNext()) {
@@ -140,6 +153,7 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                         arrayCounselor
                     )
                     array.add(model)
+                    array.sortBy { it.naviance_college_name }
                 }
 
                 var pos = 0
@@ -162,10 +176,8 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
                     }
                     pos = finalArray.size
                 }
-                mBinding.applyingList.adapter = ApplyingAdapter(this, finalArray)
 
-
-
+                (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(finalArray)
             }
         }
         homeModel.showError.observe(requireActivity()) {
@@ -237,6 +249,10 @@ class ApplyingFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     override fun onApplyingClick(postion: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun onMenuClick(postion: Int, it: View?) {
+
     }
 
     private fun bottomSheetProgram(postion: Int) {

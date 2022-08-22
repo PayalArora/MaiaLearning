@@ -19,11 +19,6 @@ import com.maialearning.repository.LoginRepositoryImpl
 import com.maialearning.repository.MessageRepository
 import com.maialearning.repository.MessageRepositoryImpl
 import com.maialearning.ui.activity.LoginActivity
-import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.viewmodel.HomeViewModel
-import com.maialearning.viewmodel.LoginNewModel
-import com.maialearning.viewmodel.LoginViewModel
-import com.maialearning.viewmodel.ProfileViewModel
 import com.maialearning.viewmodel.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,6 +29,8 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -44,6 +41,8 @@ const val CAT_API_MSG_URL = "https://maia2-msg.maialearning.com/"
 var BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 var UNIV_LOGO_URL="https://college-images-staging.maialearning.com/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
+const val ML_URL = "https://ml-api-staging.maialearning.com/"
+const val ANTI_VIRUS = "https://api-gw-staging.maialearning.com/ml-s3-antivirus-status"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
 
@@ -157,7 +156,34 @@ inline fun <reified T> createWebService(
         .build()
     return retrofit.create(T::class.java)
 }
+fun getAbbreviatedFromDateTime(dateTime: String, dateFormat: String, field: String): String? {
+    val input = SimpleDateFormat(dateFormat)
+    val output = SimpleDateFormat(field)
+    try {
+        val getAbbreviate = input.parse(dateTime)    // parse input
+        return output.format(getAbbreviate)    // format output
+    } catch (e: ParseException) {
+        e.printStackTrace()
+    }
 
+    return null
+}
+fun formateDateFromstring(
+    inputFormat: String?,
+    outputFormat: String?,
+    inputDate: String?
+): String? {
+    var parsed: Date? = null
+    var outputDate = ""
+    val df_input = SimpleDateFormat(inputFormat)
+    val df_output = SimpleDateFormat(outputFormat)
+    try {
+        parsed = df_input.parse(inputDate)
+        outputDate = df_output.format(parsed)
+    } catch (e: ParseException) {
+    }
+    return outputDate
+}
 private fun checkToken(ex: HttpException, con: Context) {
     if (ex.code() == 401) {
         val intent = Intent(con, LoginActivity::class.java)
@@ -205,4 +231,12 @@ fun parsePercentDollar(string: Any?): String {
 }
 fun View.visible(isVisible: Boolean) {
     visibility = if (isVisible) View.VISIBLE else View.GONE
+}
+
+
+fun String.replaceNextLine(): String {
+    return this.replace("\n", " ").replace("\t", " ").replace("\r", " ")
+}
+fun String.replaceInvertedComas():String {
+    return this.replace("\"", "")
 }

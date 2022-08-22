@@ -2,6 +2,7 @@ package com.maialearning.model
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 class NotesModel : ArrayList<NotesModel.NotesModelItem>(){
     data class NotesModelItem(
@@ -18,12 +19,12 @@ class NotesModel : ArrayList<NotesModel.NotesModelItem>(){
         @SerializedName("file_id")
         var fileId: Any,
         @SerializedName("filename")
-        var filename: Any,
+        var filename: String,
         @SerializedName("author_uid")
         var authorUid: String,
         @SerializedName("author_name")
         var authorName: String,
         @SerializedName("marked_read")
         var markedRead: String
-    )
+    ):Serializable
 }
