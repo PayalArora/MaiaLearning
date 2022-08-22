@@ -40,6 +40,11 @@ class SharedHelper(var context: Context) {
         set(authkey) {
             sharedPreference!!.putKey("id", authkey)
         }
+    var uuid:String?
+        get() = sharedPreference!!.getKey("uuid")
+        set(authkey) {
+            sharedPreference!!.putKey("uuid", authkey)
+        }
     var ethnicityTarget:String?
         get() = sharedPreference!!.getKey("target_id")
         set(authkey) {
@@ -54,5 +59,10 @@ class SharedHelper(var context: Context) {
         get() = sharedPreference!!.getKey("picture")
         set(authkey) {
             sharedPreference!!.putKey("picture", picture)
+        }
+    var collegeNId:String
+        get() = sharedPreference!!.getKey("collegenId")
+        set(authkey) {
+            sharedPreference!!.putKey("collegenId", authkey)
         }
 }

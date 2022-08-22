@@ -1,18 +1,34 @@
 package com.maialearning.ui.adapter
 
+import android.app.Activity
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ItemCommentBinding
 import com.maialearning.databinding.ProgramItemBinding
 import com.maialearning.databinding.ReciepentItemBinding
+import com.maialearning.model.AddProgramConsider
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 
-class ProgramAdapter(val onItemClick: OnItemClick) :
+class ProgramAdapter(
+    private var programs: ArrayList<AddProgramConsider.Programs?>?,
+    var deletedPrograms: ArrayList<String>,
+    val onItemClick: OnItemClick
+) :
     RecyclerView.Adapter<ProgramAdapter.ViewHolder>() {
     var mCount = 0
+    var position1 = -1
+    var txt = ""
 
     /**
      * Provide a reference to the type of views that you are using
@@ -34,23 +50,81 @@ class ProgramAdapter(val onItemClick: OnItemClick) :
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        // position1=position
         viewHolder.binding.root.setOnClickListener { onItemClick.onClick(position) }
+
+        viewHolder.binding.program.setText(programs?.get(position)?.program_name)
         viewHolder.binding.apply {
             remove.setOnClickListener {
-                mCount = mCount - 1
+                deletedPrograms.add("" + programs?.get(position)?.program_id)
+                programs?.removeAt(position)
                 notifyDataSetChanged()
             }
         }
 
+        viewHolder.binding.program.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (event != null && event.keyCode === KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+                var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+                programData.program_name = viewHolder.binding.program.text.toString()
+                programData.program_id = programs?.get(position)?.program_id
+                programs?.set(position, programData)
+            }
+            false
+        })
+
+        viewHolder.binding.program.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                if (!TextUtils.isEmpty(viewHolder.binding.program.text.toString())) {
+                    position1 = position
+                    txt = viewHolder.binding.program.text.toString()
+                }
+            }
+        })
+        KeyboardVisibilityEvent.setEventListener(
+            viewHolder.binding.root.context as Activity,
+            {
+                if (!it) {
+                    if (programs?.size!! > position) {
+                        var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+                        programData.program_name = viewHolder.binding.program.text.toString()
+                        programData.program_id = programs?.get(position)?.program_id
+                        programs?.set(position, programData)
+                    }
+                } else {
+                }
+                // some code depending on keyboard visiblity status
+            })
     }
 
     override fun getItemCount(): Int {
-        return mCount
+        return programs?.size ?: 0
     }
 
-    fun setCount(count:Int){
-        mCount = count
+    fun addMore() {
+        if (position1 >= 0 && programs?.size!! > position1) {
+            var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+            programData.program_name = txt
+            programData.program_id = null
+            programs?.set(position1, programData)
+        }
+        var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+        programData.program_name = ""
+        programData.program_id = null
+        programs?.add(programData)
         notifyDataSetChanged()
     }
+
+    fun save(): ArrayList<AddProgramConsider.Programs?>? {
+        return programs
+    }
+
 }
 

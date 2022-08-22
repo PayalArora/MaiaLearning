@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ConnectionsItemRowBinding
 import com.maialearning.model.ParentItem
+import com.maialearning.util.getDate
 import java.util.*
 
 class ConnectionAdapter(
@@ -36,21 +37,21 @@ class ConnectionAdapter(
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.binding.nameTxt.setText("${connections?.get(position)?.lastName}, ${connections?.get(position)?.firstName}")
+        viewHolder.binding.nameTxt.setText(
+            "${connections?.get(position)?.lastName}, ${
+                connections?.get(
+                    position
+                )?.firstName
+            }"
+        )
         viewHolder.binding.emailTxt.setText(connections?.get(position)?.email)
         viewHolder.binding.dateTxt.setText(connections?.get(position)?.connectedDate?.toLong()
-            ?.let { getDate(it) })
+            ?.let { getDate(it, "MMM dd, yyyy") })
     }
 
 
-    fun getDate(timestamp: Long) :String {
-        val calendar = Calendar.getInstance(Locale.ENGLISH)
-        calendar.timeInMillis = timestamp * 1000L
-        val date = DateFormat.format("MMM dd, yyyy",calendar).toString()
-        return date
-    }
     override fun getItemCount(): Int {
-        return connections?.size?:0
+        return connections?.size ?: 0
     }
 
 

@@ -16,7 +16,7 @@
 
     <RelativeLayout
         android:id="@+id/address_lay"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_200dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/image"
         android:orientation="vertical">
@@ -24,7 +24,7 @@
         <TextView
             android:id="@+id/text_name"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_15dp"
             android:layout_marginTop="@dimen/_5dp"
             android:fontFamily="@font/inter_bold"

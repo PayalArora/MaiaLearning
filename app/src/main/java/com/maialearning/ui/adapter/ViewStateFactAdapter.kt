@@ -7,7 +7,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.maialearning.ui.fragments.*
 
 class ViewStateFactAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, size: Int) :
-    FragmentStateAdapter(fragmentManager, lifecycle) {
+    FragmentStateAdapter(fragmentManager, lifecycle)
+{
     var size = 0
     override fun createFragment(position: Int): Fragment {
         // Hardcoded in this order, you'll want to use lists and make sure the titles match
@@ -22,10 +23,12 @@ class ViewStateFactAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycl
         }else if (position == 4) {
             return DegreesFragment()
         }else if (position == 5) {
-            return TransferFragment()
+            return VarsityFragment()
         }else if (position == 6) {
-            return FactsNotesFragment()
+            return TransferFragment()
         }else if (position == 7) {
+            return FactsNotesFragment()
+        }else if (position == 8) {
             return CampusFragment()
         }
         return OverViewFragment()

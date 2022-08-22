@@ -11,8 +11,10 @@ import com.maialearning.databinding.ConsideringItemLayBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 import com.maialearning.util.CommonClass
+import com.maialearning.util.UNIV_LOGO_URL
+import com.squareup.picasso.Picasso
 
-class ApplyingAdapter (val onItemClickOption: OnItemClickOption,var array :ArrayList<ConsiderModel.Data>) :
+class ApplyingAdapter (val onItemClickOption: OnItemClickOption,var considerarray :ArrayList<ConsiderModel.Data>) :
 RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -41,19 +43,24 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
-            if(array[position].country_name==""){
+            if(considerarray[position].country_name==""){
                 top.visibility= View.GONE
             }else{
                 top.visibility= View.VISIBLE
-                countryTxt.text = array[position].country_name
-                count.text = array[position].count.toString()
+                countryTxt.text = considerarray[position].country_name
+                count.text = considerarray[position].count.toString()
             }
-            uniName.text=array[position].naviance_college_name
-            date.setText(CommonClass.getDate(array[position].created_date.toLong()))
-            name.setText(" by: "+array[position].created_name)
+            uniName.text=considerarray[position].naviance_college_name
+            date.setText(CommonClass.getDate(considerarray[position].created_date.toLong()))
+            if (considerarray[position].internal_deadline!=null && considerarray[position].internal_deadline!="null")
+                textInternalDate.setText(considerarray[position].internal_deadline?.toLong()
+                    ?.let { CommonClass.getDate(it) })
+            name.setText(" by: "+considerarray[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
+            Picasso.with(viewHolder.binding.root.context).
+            load("$UNIV_LOGO_URL${considerarray[position].country?.toLowerCase()}/${considerarray[position].unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
 
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()
@@ -63,17 +70,20 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
                 onItemClickOption.onTypeClick()
 
             }
+            addButton.setOnClickListener {
+                onItemClickOption.onAddClick(position)
+            }
             appPlan.setOnClickListener {
                 onItemClickOption.onPlanClick()
             }
             commentImg.setOnClickListener {
                 onItemClickOption.onCommentClick()
             }
-            val others= ArrayList<String>()
-            for (i in 0 until array[position].program_data?.size!!){
-                others.add(array[position].program_data?.get(i)?.program_name?:"")
+            var others= ArrayList<String>()
+            for (i in 0 until considerarray[position].program_data?.size!!){
+                others.add(considerarray[position].program_data?.get(i)?.program_name?:"")
             }
-//            val others: Array<out String> = root.context.resources.getStringArray(R.array.spinner_programs)
+//            val others: considerarray<out String> = root.context.resources.getStringconsiderarray(R.considerarray.spinner_programs)
             val adapter = ArrayAdapter(
                 root.context,
                 R.layout.spinner_text, others
@@ -84,7 +94,7 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return array.size
+        return considerarray.size
     }
 
     fun setValue(value: String, type: Int) {
@@ -96,6 +106,10 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             planVal = value
         notifyDataSetChanged()
     }
-
+    fun updateAdapter(consider :ArrayList<ConsiderModel.Data>)
+    {
+        considerarray = consider
+        notifyDataSetChanged()
+    }
 }
 

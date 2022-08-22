@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.AttachItemRowBinding
 import com.maialearning.databinding.CampusAdapterBinding
+import com.maialearning.model.WorksheetFileIdItem
 
-class AttachmentAdapter (val con: Context): RecyclerView.Adapter<AttachmentAdapter.ViewHolder>() {
+class AttachmentAdapter(val con: Context,val  worksheetFileId: List<WorksheetFileIdItem?>?): RecyclerView.Adapter<AttachmentAdapter.ViewHolder>() {
     var isSelected = false
 
     /**
@@ -34,19 +35,19 @@ class AttachmentAdapter (val con: Context): RecyclerView.Adapter<AttachmentAdapt
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position ==0 ){
+//        if (position ==0 ){
             viewHolder.binding.image.setImageDrawable( getDrawable(con,R.drawable.ic_documents))
-            viewHolder.binding.textName.setText(con.getString(R.string.attached_files))
-        }else{
-            viewHolder.binding.image.setImageDrawable(getDrawable(con,R.drawable.ic_excel))
-            viewHolder.binding.textName.setText("Spreadsheet File")
-        }
+            viewHolder.binding.textName.setText(worksheetFileId?.get(position)?.fileName)
+//        }else{
+//            viewHolder.binding.image.setImageDrawable(getDrawable(con,R.drawable.ic_excel))
+//            viewHolder.binding.textName.setText("Spreadsheet File")
+//        }
 
 
 
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return worksheetFileId!!.size
     }
 }

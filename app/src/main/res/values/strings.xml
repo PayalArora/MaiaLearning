@@ -40,6 +40,7 @@
     <string name="careers">Careers</string>
     <string name="events">Events</string>
     <string name="universities">Universities</string>
+    <string name="universities_search">Search for Any University</string>
     <string name="academics">Academics</string>
     <string name="calender">Calender</string>
     <string name="maiadrive">MaiaDrive</string>
@@ -54,7 +55,7 @@
     <string name="trash">Trash</string>
     <string name="upcomings">Upcoming</string>
     <string name="overdue">Overdue</string>
-    <string name="complete">Complete</string>
+    <string name="complete">Completed</string>
     <string name="new_message">New Message</string>
     <string name="add_file">+ Add Files</string>
     <string name="send_message">Send Message</string>
@@ -108,7 +109,7 @@
     <string name="university_of_calefornia">University of\nCalifornia, Berkeley</string>
     <string name="first">1st</string>
     <string name="date_by">25 May 2021, 01:20 AM \u0020 \u0020 by: Choudhary, Paul</string>
-    <string name="internal">Internal</string>
+    <string name="internal">Internal Deadline</string>
     <string name="cr_required">CR: Required</string>
     <string name="to_applying">To Applying</string>
     <string name="likely">Likely</string>
@@ -135,6 +136,7 @@
     <string name="community">Community</string>
     <string name="admission">Admission</string>
     <string name="cost_">Cost &amp; Aid</string>
+    <string name="var_sport">Varsity Sports</string>
     <string name="campus_service">Campus Services</string>
     <string name="about_uni">The University of California, Berkeley is a public land-grant research university in Berkeley, California. Established in 1868 as the University of California, it is the state\'s first land-grant university and the first campus of the University of California system.</string>
     <string name="web">Web :</string>
@@ -279,6 +281,7 @@
     <string name="ethincity">Ethnicity</string>
     <string name="no_gap">No gap year</string>
     <string name="gap_year">Gap Year Note</string>
+    <string name="gap_year_txt">Gap Year</string>
     <string name="my_school">My School</string>
     <string name="san_francisco">San Francisco, CA</string>
     <string name="district">School District</string>
@@ -403,6 +406,22 @@
     <string name="state_residence">State Of Residence</string>
     <string name="parent_connections">Parent Connections</string>
     <string name="counselors_connections">Counselors Connections</string>
+    <string name="select_application_plan">Select Application Plan</string>
+    <string name="school_within_uni">School within university,if applicable</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="did_you_take">Did you take the campus tour?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="institution_type">Institution Type : </string>
+    <string name="degree_type">Type of Degrees Offered:</string>
+    <string name="fax">FAX</string>
+    <string name="fsfa">FAFSA</string>
+    <string name="na">N/A</string>
+    <string name="no_data_found">No data found</string>
+    <string name="transfer_req">Transfer Requirements</string>
+    <string name="zero">0</string>
+    <string name="min_req">The maximum amount of credits that can be transferred varies from school to school, as does the minimum credits transferors must complete prior to transferring.\n\nThe two circles to the right represent relevant semester hours for this particular school.\n\n
+</string>
 
 
     <string-array name="decision_filter">
@@ -433,5 +452,29 @@
         <item>Vollyball</item>
         <item>Basketball</item>
         <item>Cricket</item>
+    </string-array>
+
+    <string name="surveys">Surveys</string>
+    <string name="documents_attached">Documents Attached</string>
+    <string name="download">Download</string>
+    <string name="file_upload">File Upload</string>
+    <string name="select_tag">Select Tag</string>
+    <string name="write_to_conselor">Write to Counselor</string>
+    <string name="view">View</string>
+    <string name="upload_file">Upload File</string>
+    <string name="delete_coll">Delete College</string>
+
+    <string-array name="rate_college">
+        <item>How much do you like college?</item>
+        <item>Love it</item>
+        <item>Like it a lot</item>
+        <item>Like it</item>
+        <item>Its okay</item>
+    </string-array>
+    <string-array name="have_interview">
+        <item>Do you have an interview?</item>
+        <item>Yes</item>
+        <item>I plan to</item>
+        <item>College doesnt offer interviews</item>
     </string-array>
 </resources>

@@ -29,9 +29,9 @@
         android:layout_height="@dimen/_50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:fontFamily="@font/inter_bold"
         android:gravity="center_vertical"
         android:text="@string/primary_email"
-        android:fontFamily="@font/inter_bold"
         android:textColor="@color/black"
         android:textSize="@dimen/_18sp"
         android:textStyle="bold" />
@@ -88,7 +88,20 @@
                 android:visibility="gone"
                 android:orientation="vertical"
                 android:padding="@dimen/_10dp">
-
+                <CheckBox
+                    android:id="@+id/gap_year_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_40dp"
+                    android:layout_alignParentTop="true"
+                    android:textColor="@color/blue"
+                    android:fontFamily="@font/inter"
+                    android:textStyle="bold"
+                    android:checked="true"
+                    android:button="@drawable/check_radio"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/_10dp"
+                    android:text="@string/gap_year_txt"
+                    android:textSize="@dimen/_14sp" />
                 <jp.wasabeef.richeditor.RichEditor
                     android:id="@+id/gap_edt"
                     android:layout_width="match_parent"
@@ -500,7 +513,6 @@
     <LinearLayout
         android:id="@+id/saveLayout"
         android:background="@color/white"
-
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

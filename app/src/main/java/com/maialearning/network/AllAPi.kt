@@ -4,9 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.http.*
 
 
@@ -150,4 +148,159 @@ interface AllAPi {
         @Header("Content-Type") content: String,
         @Body body:RequestBody): Deferred<Unit>
 
+    @GET("student-assignment-dashboard/{id}")
+    fun getOverDueCompleted(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<DashboardOverdueResponse>
+
+    @GET
+    fun getColFactSheet(
+        @Url() url: String,
+
+    ): Deferred<JsonObject>
+
+    @GET("college_nid_by_unitid/{id}")
+    fun getCollegeNid(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<JsonObject>
+
+    @GET("university-contact-student/{id}")
+    fun universityContacts(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<CollegeContactModel>
+
+    @GET("counselor_college_notes/{id}/{cid}")
+    fun universityNotes(
+        @Path("id") id: String,
+        @Path("cid") cid: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<JsonObject>
+
+
+    @POST("edit_student_plan_college_application")
+    fun editStudentPlan(
+        @Header("Authorization") Authorization: String,
+        @Body updateStudentPlan: UpdateStudentPlan
+    ): Deferred<JsonObject>
+
+    @POST("un_aws_cloud_search")
+    fun searchUniversties(
+        @Header("Authorization") Authorization: String,
+        @Body payload: UniversitySearchPayload
+    ): Deferred<JsonObject>
+
+    @POST("top-picks")
+    @FormUrlEncoded
+    fun hitLikeUniversity(
+        @Header("Authorization") Authorization: String,
+        @Field("student_id") schoolId: String,
+        @Field("college_id") collegeId: String,
+        @Field("applying_flag") ext: String
+    ): Deferred<JsonArray>
+
+    @DELETE("top-picks/{schoolId}/{studentId}")
+    fun hitUnlikeUniversity(
+        @Path("schoolId") schoolId: String,
+        @Path("studentId") studentId: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<Unit>
+
+  //  https://maia2-staging-backend.maialearning.com/ajs-services/top-picks/402359/9375?new_ui=1
+  @DELETE("top-picks/{schoolId}/{studentId}?new_ui=1")
+  fun hitDeleteUniversityConsidering(
+      @Path("schoolId") schoolId: String,
+      @Path("studentId") studentId: String,
+      @Header("Authorization") Authorization: String
+  ): Deferred<Unit>
+
+    @POST("college_list_applying")
+    @FormUrlEncoded
+    fun moveToApplying(
+        @Header("Authorization") Authorization: String,
+        @Field("student_uid") schoolId: String,
+        @Field("college_nid") collegeId: String,
+        @Field("apply_status") ext: String
+    ): Deferred<JsonArray>
+
+    @POST("ml-add-program-by-trans-nid")
+    fun addProgramToConsidering(
+        @Header("Authorization") Authorization: String,
+        @Body payload: AddProgramConsider
+    ): Deferred<JsonObject>
+
+    @DELETE("ml-fav-program/{id}")
+    fun deleteMlProgram(
+        @Path("id") id: String,
+        @Header("Authorization") Authorization: String,
+    ): Deferred<JsonArray>
+
+    @GET
+    fun getSurveys(
+        @Url() url: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<SurveysResponse>
+    @GET
+    fun getWebinars(
+        @Url() url: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<WebinarResponse>
+
+    @POST("get_documents_download_presigned_url")
+    @FormUrlEncoded
+    fun downloadWorkSheet( @Header("Authorization") AutToken: String,
+                           @Header("origin") origin: String,
+                           @Header("referer") referer: String,
+                           @Field("student_uid") uuid: String,
+                           @Field("file_id") fileid: String,
+                           @Field("document_type") docType: String): Deferred<JsonArray>
+
+    @POST("add-student-response-activity")
+    @FormUrlEncoded
+    fun writeToCounselor(
+        @Header("Authorization") AutToken: String,
+        @Field("nid") n_id: String,
+        @Field("response") ext: String,
+    ): Deferred<JsonArray>
+
+    @POST("fm_user_file/presigned_url")
+    @FormUrlEncoded
+    fun uploadAttachmentFile(
+        @Header("Authorization") AutToken: String,
+        @Field("filename") n_id: String,
+        @Field("fm_uid") ext: String
+    ): Deferred<JsonObject>
+
+    @POST("fm_user_file")
+    fun updateFileAttachData(
+        @Header("Authorization") AutToken: String,
+        @Body updateUserData: FileUploadData
+    ): Deferred<JsonObject>
+
+    @GET("fm_tag")
+    fun getTags(
+        @Header("Authorization") AutToken: String
+    ): Deferred<ArrayList<FmTagsResponseItem?>>
+
+    @POST
+    fun checkFileVirus(
+        @Url() url: String,
+        @Header("Authorization") AutToken: String,
+        @Body file: JsonObject
+    ): Deferred<JsonObject>
+
+    @PUT("itask/{itask_nid}/{student_uid}")
+    fun completeTask(
+        @Header("Authorization") AutToken: String,
+        @Path("itask_nid") nid: String,
+        @Path("student_uid") uid: String,
+    ): Deferred<JsonArray>
+
+    @GET("uncheck-itask-student/{student_uid}")
+    fun resetTaskCompleteion(
+        @Header("Authorization") AutToken: String,
+        @Path("student_uid") uid: String,
+    ): Deferred<JsonArray>
 }

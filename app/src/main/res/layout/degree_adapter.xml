@@ -16,6 +16,7 @@
        android:paddingBottom="@dimen/_10dp"
         android:gravity="center|start"
         android:paddingTop="@dimen/_10dp"
+        android:paddingEnd="@dimen/_10dp"
         android:fontFamily="@font/inter_bold"
         android:lineSpacingExtra="2sp"
         android:text="Acturial Science"

@@ -11,6 +11,7 @@ import com.maialearning.R
 import com.maialearning.databinding.ProgressAdapterBinding
 import com.maialearning.databinding.ReciepentItemBinding
 import com.maialearning.ui.model.CommunityModel
+import org.koin.ext.isInt
 
 class ProgressAdapter(private var context: Context,var listData:ArrayList<CommunityModel>) :
     RecyclerView.Adapter<ProgressAdapter.ViewHolder>() {
@@ -30,9 +31,14 @@ class ProgressAdapter(private var context: Context,var listData:ArrayList<Commun
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        if (listData[position].percent.isInt() &&  (listData[position].color!="null"))
             holder.binding.progress1bar.progress=listData[position].percent.replace("%","").toInt()
+        else{
+            holder.binding.progress1bar.progress=0
+        }
+        if (listData[position].color!="null")
             holder.binding.progress1bar.setIndicatorColor(Color.parseColor(listData[position].color))
+        if (listData[position].text!="null")
             holder.binding.name.setTextColor(Color.parseColor(listData[position].text))
         holder.binding.name.text = listData[position].name
 

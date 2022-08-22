@@ -10,11 +10,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.SupportMapFragment
 import com.maialearning.R
 import com.maialearning.databinding.OverviewLayoutBinding
+import com.maialearning.model.CollegeFactSheetModel
+import com.maialearning.network.BaseApplication
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.VideoFactAdapter
+import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.viewmodel.FactSheetModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class OverViewFragment : Fragment() {
     private lateinit var mBinding:OverviewLayoutBinding
+    private val mModel: FactSheetModel by viewModel()
+    var model: CollegeFactSheetModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -38,6 +47,30 @@ class OverViewFragment : Fragment() {
             .commit()
         mBinding.recyclerView.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         mBinding.recyclerView.adapter = VideoFactAdapter()
-
+        observer()
+        init()
     }
+
+    private fun init() {
+        model = (context as UniversitiesActivity).getData()
+        if (model != null) {
+            mBinding.aboutdes.text=" ${ model?.basicInfo?.description}"
+            mBinding.phoneNo.text=" ${ model?.basicInfo?.phone}"
+            mBinding.webUrl.text=" ${ model?.basicInfo?.webAddr}"
+            mBinding.entType.text=" ${ model?.basicInfo?.environmentType}"
+            mBinding.termTyp.text=" ${ model?.basicInfo?.termType}"
+            mBinding.intsType.text=" ${ model?.basicInfo?.institutionType}"
+            mBinding.degree.text=" ${ model?.basicInfo?.award?.joinToString(",")}"
+            mBinding.locTxt.text=" ${ model?.basicInfo?.city+","+ model?.basicInfo?.state+","+ model?.basicInfo?.zip}"
+            mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
+
+        }}
+    fun observer(){
+        mModel.idObserver.observe(requireActivity()) {
+            SharedHelper(requireContext()).collegeNId = it.get("nid").toString()
+            mModel.getUniversityContact("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,SharedHelper(requireContext()).collegeNId)
+
+        }
+    }
+
 }

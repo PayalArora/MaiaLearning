@@ -116,6 +116,7 @@
                 app:layout_constraintTop_toBottomOf="@id/view_cam" />
 
             <TextView
+                android:id="@+id/house"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10dp"
@@ -129,7 +130,7 @@
                 app:layout_constraintTop_toBottomOf="@id/view_cam" />
 
             <TextView
-                android:id="@+id/phone"
+                android:id="@+id/religious"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
@@ -142,14 +143,15 @@
                 app:layout_constraintTop_toBottomOf="@id/web" />
 
             <TextView
+                android:id="@+id/religTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
                 android:lineSpacingExtra="2sp"
-                android:text=" Not applicable"
+                android:text="@string/na"
                 android:textColor="@color/black_1"
                 android:textSize="14sp"
-                app:layout_constraintStart_toEndOf="@id/phone"
+                app:layout_constraintStart_toEndOf="@id/religious"
                 app:layout_constraintTop_toBottomOf="@id/web" />
 
             <TextView
@@ -163,19 +165,19 @@
                 android:textColor="@color/black_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/phone" />
+                app:layout_constraintTop_toBottomOf="@id/religious" />
 
             <TextView
-                android:id="@+id/yes"
+                android:id="@+id/govern"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
                 android:lineSpacingExtra="2sp"
-                android:text=" Yes"
+                android:text="@string/na"
                 android:textColor="@color/green_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/enviro"
-                app:layout_constraintTop_toBottomOf="@id/phone" />
+                app:layout_constraintTop_toBottomOf="@id/religious" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -184,9 +186,9 @@
                 android:textColor="@color/green_1"
                 android:textSize="14sp"
                 android:layout_marginStart="@dimen/_5sp"
-                app:layout_constraintStart_toEndOf="@id/yes"
-                app:layout_constraintTop_toTopOf="@id/yes"
-                app:layout_constraintBottom_toBottomOf="@id/yes" />
+                app:layout_constraintStart_toEndOf="@id/govern"
+                app:layout_constraintTop_toTopOf="@id/govern"
+                app:layout_constraintBottom_toBottomOf="@id/govern" />
 
             <TextView
 
@@ -218,7 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
                 android:lineSpacingExtra="2sp"
-                android:text=" Yes"
+                android:text="@string/na"
                 android:textColor="@color/green_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/public_type"
@@ -243,7 +245,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
                 android:lineSpacingExtra="2sp"
-                android:text=" Yes"
+                android:text="@string/na"
                 android:textColor="@color/green_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/types"
@@ -278,7 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
                 android:lineSpacingExtra="2sp"
-                android:text=" Yes"
+                android:text="@string/na"
                 android:textColor="@color/green_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/year"
@@ -314,7 +316,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
                 android:lineSpacingExtra="2sp"
-                android:text=" Yes"
+                android:text="@string/na"
                 android:textColor="@color/green_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/radio"
@@ -349,7 +351,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sp"
                 android:lineSpacingExtra="2sp"
-                android:text=" Yes"
+                android:text="@string/na"
                 android:textColor="@color/green_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/television"
@@ -445,7 +447,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sp"
                 android:lineSpacingExtra="2sp"
-                android:text="International Student Organization"
+                android:text="@string/na"
                 android:textColor="@color/black_1"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -471,7 +473,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sp"
                 android:lineSpacingExtra="2sp"
-                android:text="Campus Ministries"
+                android:text="@string/na"
                 android:textColor="@color/black_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/religous"
@@ -496,7 +498,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sp"
                 android:lineSpacingExtra="2sp"
-                android:text="Concert, jazz, and marching bands; choral groups, dance, drama/theatre, music ensembles, musical theatre, symphony orchestra"
+                android:text="@string/na"
                 android:textColor="@color/black_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/org_type"
@@ -516,11 +518,12 @@
                 app:layout_constraintTop_toBottomOf="@id/org_txt" />
 
             <TextView
+                android:id="@+id/learningTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_2sp"
                 android:lineSpacingExtra="2sp"
-                android:text="N/A"
+                android:text="@string/na"
                 android:textColor="@color/black_1"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/learning"

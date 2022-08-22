@@ -1,10 +1,7 @@
 package com.maialearning.viewmodel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.maialearning.model.ForgetModel
-import com.maialearning.model.LoginNewModel
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
@@ -12,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 import kotlin.coroutines.CoroutineContext
 
 class DashboardViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {

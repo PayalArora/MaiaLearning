@@ -33,7 +33,7 @@ import java.util.regex.Pattern
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var passVisible: Boolean = false
-    private var googleSignInAccount:GoogleSignInAccount?= null
+    private var googleSignInAccount: GoogleSignInAccount? = null
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -75,10 +75,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         binding.loginBtn.setOnClickListener {
-            if (isInputValid()){
+            if (isInputValid()) {
                 dialog.show()
-                loginModel.userLogin(this, binding.emailEdt.text.toString().trim(), binding.passwordEdt.text.toString().trim())
-               // loginWork()
+                loginModel.userLogin(
+                    this,
+                    binding.emailEdt.text.toString().trim(),
+                    binding.passwordEdt.text.toString().trim()
+                )
+                // loginWork()
             }
         }
         binding.forgotPass.setOnClickListener {
@@ -122,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.googleLogin.setOnClickListener {
-           viewModel.signIn()
+            viewModel.signIn()
         }
         binding.loginMicrosoft.setOnClickListener {
             // Microsoftt code refrance https://firebase.google.com/docs/auth/android/microsoft-oauth
@@ -133,23 +137,29 @@ class LoginActivity : AppCompatActivity() {
                 viewModel.signOut()
                 dialog.show()
 
-                googleSignInAccount.let { it1 -> loginModel.googleLogin(it1?.email!!,it1.id!!,it1.idToken!!) }
-              //  startActivity(Intent(this, DashboardActivity::class.java))
+                googleSignInAccount.let { it1 ->
+                    loginModel.googleLogin(
+                        it1?.email!!,
+                        it1.id!!,
+                        it1.idToken!!
+                    )
+                }
+                //  startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
         viewModel.microUser.observe(this) {
             it?.let {
                 viewModel.signOut()
                 dialog.show()
-              loginModel.microLogin(  it)
+                loginModel.microLogin(it)
                 //startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
-    loginModel.showLoading.observe(this){
-        if (!it){
-            dialog.dismiss()
+        loginModel.showLoading.observe(this) {
+            if (!it) {
+                dialog.dismiss()
+            }
         }
-    }
     }
 
     private fun bottomSheetWork() {
@@ -194,8 +204,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginWork() {
 //        if (isInputValid()) {
-            //  loginWithUserIdPassword()
-            startActivity(Intent(this, DashboardActivity::class.java))
+        //  loginWithUserIdPassword()
+        startActivity(Intent(this, DashboardActivity::class.java))
 //        }
     }
 
@@ -238,24 +248,25 @@ class LoginActivity : AppCompatActivity() {
         loginModel.loginObserver.observe(this) {
             it?.let {
                 dialog.dismiss()
-                println("Name "+it?.userName)
-                SharedHelper(this).authkey=it.accessToken
+                println("Name " + it?.userName)
+                SharedHelper(this).authkey = it.accessToken
                 it.user.let {
                     it?.messageId.let {
                         if (it != null) {
-                            SharedHelper(this).messageId= it
+                            SharedHelper(this).messageId = it
                         }
                     }
                 }
 
-                if(binding.rememberMe.isChecked)
-                SharedHelper(this).login = "1"
-                SharedHelper(this).id=it.user?.uid
-                SharedHelper(this).ethnicityTarget=it.user?.ogUserNode?.und?.get(0)?.targetId
-                if (it.mlSchoolConfigData?.gradeConvention?.usConvention == 1?:0){
-                    SharedHelper(this).convention= true
+                if (binding.rememberMe.isChecked)
+                    SharedHelper(this).login = "1"
+                SharedHelper(this).id = it.user?.uid
+                SharedHelper(this).uuid = it.user?.uuid?.replace("\"", "")
+                SharedHelper(this).ethnicityTarget = it.user?.ogUserNode?.und?.get(0)?.targetId
+                if (it.mlSchoolConfigData?.gradeConvention?.usConvention == 1 ?: 0) {
+                    SharedHelper(this).convention = true
                 } else {
-                    SharedHelper(this).convention= false
+                    SharedHelper(this).convention = false
                 }
 
                 loginWork()

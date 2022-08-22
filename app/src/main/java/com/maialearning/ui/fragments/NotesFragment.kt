@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
@@ -24,6 +25,7 @@ import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.NotesAdapter
 import com.maialearning.util.DESCRIPTION
 import com.maialearning.util.TITLE
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
@@ -53,7 +55,12 @@ class NotesFragment : Fragment(), OnItemClickType {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialogP = showLoadingDialog(requireContext())
-        homeModel.getNotes("")
+        dialogP.show()
+        SharedHelper(requireContext()).id?.let {
+            val userid = SharedHelper(requireContext()).id!!
+            homeModel.getNotes(userid)
+        }
+
         setAdapter()
         initObserver()
     }
@@ -82,6 +89,7 @@ class NotesFragment : Fragment(), OnItemClickType {
             var intent = Intent(requireActivity(), NotesDetailActivity::class.java)
             intent.putExtra(TITLE, notesModel?.get(positiion)?.noteTitle)
             intent.putExtra(DESCRIPTION, notesModel?.get(positiion)?.noteDescription )
+            intent.putExtra("DATA",notesModel?.get(positiion))
             startActivity(intent)
         }
     }

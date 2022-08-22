@@ -61,7 +61,7 @@
                 android:layout_gravity="end"
                 android:paddingHorizontal="@dimen/_8dp"
                 android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </androidx.appcompat.widget.Toolbar>
 

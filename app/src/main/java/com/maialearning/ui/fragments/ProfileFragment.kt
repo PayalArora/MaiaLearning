@@ -223,6 +223,15 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         sheetBinding.backTxt.setOnClickListener {
             dialog?.dismiss()
         }
+        sheetBinding.gapYearTxt.setOnClickListener {
+            if (sheetBinding.gapYearTxt.isChecked){
+                sheetBinding.gapEdt.visibility = View.VISIBLE
+                sheetBinding.richeditor.richEditorLay.visibility = View.VISIBLE
+            } else{
+                sheetBinding.gapEdt.visibility = View.GONE
+                sheetBinding.richeditor.richEditorLay.visibility = View.GONE
+            }
+        }
 
         val mEditor = sheetBinding.gapEdt
         sheetBinding.gapEdt.apply {
@@ -234,6 +243,15 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         }
 
         setEditor(mEditor, sheetBinding.richeditor)
+        if (profileResponse?.info?.gapYear == "1"){
+            sheetBinding.gapEdt.visibility = View.VISIBLE
+            sheetBinding.richeditor.richEditorLay.visibility = View.VISIBLE
+            sheetBinding.gapYearTxt.isChecked = true
+        } else{
+            sheetBinding.gapEdt.visibility = View.GONE
+            sheetBinding.richeditor.richEditorLay.visibility = View.GONE
+            sheetBinding.gapYearTxt.isChecked = false
+        }
 
         clickListener(s, sheetBinding, dialog!!)
     }
@@ -314,6 +332,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         richeditorBinding.actionInsertCheckbox.setOnClickListener(View.OnClickListener { mEditor.insertTodo() })
     }
 
+
     //    {"userdata":{"uid":"9375","first_name":"st1003(Test)","last_name":"last nametest","phone_number":{"phone_number":"16164336312","country_code":"1"},"mail":"st1003@mailinator.com","secondary_email":null,"gender":"F","country":"US","administrative_area":"ID","locality":"","postal_code":"","thoroughfare":"address1","premise":"","middle_name":null,"nick_name":null,"citizenship":[],"grad_year":2021,"application_year":"2022","grade":"12","gap_year":"0","gap_year_note":"","efc":null,"state_of_residency":null,"race":[],"ethnicity":["9"]}}
     @SuppressLint("NotifyDataSetChanged")
     private fun clickListener(
@@ -342,8 +361,10 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 sheetBinding.emailEdt.visibility = View.GONE
                 sheetBinding.filters.text = requireActivity().getString(R.string.primary_phone)
                 sheetBinding.phoneLay.visibility = View.VISIBLE
+                sheetBinding.ccp.setCountryForNameCode(profileResponse.info?.countryCode)
+
                 sheetBinding.ccp.registerCarrierNumberEditText(sheetBinding.editTextCarrierNumber)
-                sheetBinding.editTextCarrierNumber.setText(profileResponse.info?.primaryPhone)
+                sheetBinding.editTextCarrierNumber.setText(profileResponse.info?.primaryPhone?.replace(sheetBinding.ccp.selectedCountryCode,""))
             }
             "dob" -> {
                 sheetBinding.filters.text = requireActivity().getString(R.string.birthday)
@@ -360,7 +381,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
 
 
                 if (profileResponse.info?.citizenship != null && profileResponse.info?.citizenship!!.size > 0) {
-                    citizens = profileResponse.info?.citizenship
+                    citizens?.addAll(profileResponse.info?.citizenship!!)
                     sheetBinding.citizenShip.adapter =
                         CitizenshipAdapter(
                             citizens, this
@@ -372,9 +393,8 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                         )
                 }
                 sheetBinding.addMore.setOnClickListener {
-                    citizens?.add("")
-                    sheetBinding.citizenShip.adapter?.notifyDataSetChanged()
-                }
+                    ( (sheetBinding.citizenShip.adapter) as CitizenshipAdapter).addMore()
+                          }
             }
             "grad_year" -> {
                 sheetBinding.filters.text = requireActivity().getString(R.string.class_of)
@@ -388,6 +408,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 sheetBinding.filters.text = requireActivity().getString(R.string.gap_year)
                 //onTextChangeListener.onTextChange(profileResponse.info?.gapYearNote)
                 sheetBinding.gapEdt.html = profileResponse.info?.gapYearNote
+
                 //sheetBinding.gapEdt.setText(Html.fromHtml(profileResponse.info?.gapYearNote))
             }
             "application_year" -> {
@@ -743,7 +764,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 updateUserData.userdata.phone_number.phone_number =
                     "${sheetBinding.ccp.selectedCountryCodeAsInt}${sheetBinding.editTextCarrierNumber.text.toString()}"
                 updateUserData.userdata.phone_number.country_code =
-                    "" + sheetBinding.ccp.selectedCountryCodeAsInt
+                    "+" + sheetBinding.ccp.selectedCountryCodeAsInt
             } else if (key == "dob") {
                 if (sheetBinding.emailEdt.text.isBlank()
                 ) {
@@ -771,30 +792,35 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 updateUserData.userdata.grad_year =
                     sheetBinding.emailEdt.text.toString()
             } else if (key == ("gap_year")) {
-                if (gapText.isBlank()
-                ) {
-                    Toast.makeText(
-                        requireContext(),
-                        requireContext().getString(R.string.err_gapyear),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    return@setOnClickListener
-                } else {
-                    val encoder: Base64.Encoder =
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            Base64.getEncoder()
-                        } else {
-                            TODO("VERSION.SDK_INT < O")
-                        }
-                    val encoded: String = encoder.encodeToString(
-                        gapText.toByteArray()
-                    )
+                if(sheetBinding.gapYearTxt.isChecked) {
+                    updateUserData.userdata.gap_year = "1"
+                    if (gapText.isBlank()
+                    ) {
+                        Toast.makeText(
+                            requireContext(),
+                            requireContext().getString(R.string.err_gapyear),
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@setOnClickListener
+                    } else {
+                        val encoder: Base64.Encoder =
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                Base64.getEncoder()
+                            } else {
+                                   TODO()
+                            }
+                        val encoded: String = encoder.encodeToString(
+                            gapText.toByteArray()
+                        )
 
-                    updateUserData.userdata.gap_year_note =
-                        encoded
+                        updateUserData.userdata.gap_year_note =
+                            encoded
+                    }
                 }
-                updateUserData.userdata.gap_year =
-                    "1"
+                else {
+                    updateUserData.userdata.gap_year = "0"
+                }
+
             } else if (key == ("application_year")) {
                 if (sheetBinding.spinner.selectedItem == ("Select application year")) {
                     Toast.makeText(
