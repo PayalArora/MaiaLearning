@@ -303,4 +303,5 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("student_uid") uid: String,
     ): Deferred<JsonArray>
+
 }

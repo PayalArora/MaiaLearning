@@ -91,7 +91,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 dialogP?.dismiss()
                 finalArray.clear()
                 if (JSONObject(it.toString()).getJSONObject(userid).has("data")) {
-                    val json =JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
+                    val json = JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
                     val x = json.keys() as Iterator<String>
                     val jsonArray = JSONArray()
                     while (x.hasNext()) {
@@ -157,7 +157,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                             arrayProgram,
                             0,
                             object_.getString("notes"),
-                            arrayCounselor
+                            arrayCounselor, object_.getString("request_transcript"),
+                            object_.getString("application_type"),
+                            object_.getString("application_mode")
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -319,7 +321,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 updateStudentPlan.campus_tour = "0"
             }
 
-              dialogP.show()
+            dialogP.show()
             homeModel.updateStudentPlan(updateStudentPlan)
             homeModel.updateStudentPlanObserver.observe(requireActivity()) {
                 dialog.dismiss()
@@ -410,6 +412,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
+    override fun onTranscriptRequest(postion: Int, chcked: String) {
+    }
+
     override fun onMenuClick(postion: Int, it: View?) {
         menuPopUp(postion, it)
     }
@@ -476,5 +481,5 @@ interface OnItemClickOption {
     fun onInfoClick(postion: Int)
     fun onApplyingClick(postion: Int)
     fun onMenuClick(postion: Int, it: View?)
-
+    fun onTranscriptRequest(postion: Int, checked: String)
 }

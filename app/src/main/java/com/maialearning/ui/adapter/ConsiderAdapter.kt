@@ -82,7 +82,9 @@ class ConsiderAdapter(
 
             Picasso.with(viewHolder.binding.root.context).
             load("${UNIV_LOGO_URL}${array[position].country?.toLowerCase()}/${array[position].unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
-
+            Picasso.with(viewHolder.binding.root.context)
+                .load("https://countryflagsapi.com/png/${array[position].country}")
+                .into(viewHolder.binding.idIVCourse)
             //uniName.text=array[position].naviance_college_name
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()

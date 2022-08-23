@@ -27,6 +27,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
+                android:paddingHorizontal="@dimen/_3dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/us_flag" />
 
@@ -161,7 +162,7 @@
                     <ImageView
                         android:layout_width="@dimen/_20dp"
                         android:layout_height="@dimen/_20dp"
-                        android:visibility="gone"
+                        android:id="@+id/menu_click"
                         android:layout_marginStart="@dimen/_5dp"
                         android:src="@drawable/menu_dots" />
                 </LinearLayout>
@@ -590,7 +591,7 @@
                         android:id="@+id/transcript_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
+                        android:checked="false"
                         android:thumb="@drawable/thum_selector"
                         app:track="@drawable/track_selector" />
 
@@ -644,7 +645,7 @@
                         android:id="@+id/applied_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
+                        android:checked="false"
                         android:thumb="@drawable/thum_selector"
                         app:track="@drawable/track_selector" />
 

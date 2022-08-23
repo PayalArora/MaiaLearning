@@ -14,8 +14,11 @@ import com.maialearning.util.CommonClass
 import com.maialearning.util.UNIV_LOGO_URL
 import com.squareup.picasso.Picasso
 
-class ApplyingAdapter (val onItemClickOption: OnItemClickOption,var considerarray :ArrayList<ConsiderModel.Data>) :
-RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
+class ApplyingAdapter(
+    val onItemClickOption: OnItemClickOption,
+    var considerarray: ArrayList<ConsiderModel.Data>
+) :
+    RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -24,7 +27,7 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     var termVal = "Spring 2022"
     var planVal = "Early Action"
 
-    class ViewHolder(val binding: ApplyingItemLayBinding    ) :
+    class ViewHolder(val binding: ApplyingItemLayBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
@@ -43,24 +46,29 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
-            if(considerarray[position].country_name==""){
-                top.visibility= View.GONE
-            }else{
-                top.visibility= View.VISIBLE
+            if (considerarray[position].country_name == "") {
+                top.visibility = View.GONE
+            } else {
+                top.visibility = View.VISIBLE
                 countryTxt.text = considerarray[position].country_name
                 count.text = considerarray[position].count.toString()
             }
-            uniName.text=considerarray[position].naviance_college_name
+            uniName.text = considerarray[position].naviance_college_name
             date.setText(CommonClass.getDate(considerarray[position].created_date.toLong()))
-            if (considerarray[position].internal_deadline!=null && considerarray[position].internal_deadline!="null")
+            if (considerarray[position].internal_deadline != null && considerarray[position].internal_deadline != "null")
                 textInternalDate.setText(considerarray[position].internal_deadline?.toLong()
                     ?.let { CommonClass.getDate(it) })
-            name.setText(" by: "+considerarray[position].created_name)
+            name.setText(" by: " + considerarray[position].created_name)
             typeValue.setText(typeVal)
             termValue.setText(termVal)
             planValue.setText(planVal)
-            Picasso.with(viewHolder.binding.root.context).
-            load("$UNIV_LOGO_URL${considerarray[position].country?.toLowerCase()}/${considerarray[position].unitid}/logo_sm.jpg").error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
+            Picasso.with(viewHolder.binding.root.context)
+                .load("$UNIV_LOGO_URL${considerarray[position].country?.toLowerCase()}/${considerarray[position].unitid}/logo_sm.jpg")
+                .error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
+
+            Picasso.with(viewHolder.binding.root.context)
+                .load("https://countryflagsapi.com/png/${considerarray[position].country}")
+                .into(viewHolder.binding.idIVCourse)
 
             appTerm.setOnClickListener {
                 onItemClickOption.onTermClick()
@@ -76,12 +84,33 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             appPlan.setOnClickListener {
                 onItemClickOption.onPlanClick()
             }
+            menuClick.setOnClickListener {
+                onItemClickOption.onMenuClick(position,it)
+            }
             commentImg.setOnClickListener {
                 onItemClickOption.onCommentClick()
             }
-            var others= ArrayList<String>()
-            for (i in 0 until considerarray[position].program_data?.size!!){
-                others.add(considerarray[position].program_data?.get(i)?.program_name?:"")
+            /*          transcriptBtn.setOnCheckedChangeListener { compoundButton, b ->
+                          if (compoundButton.isChecked) {
+                              onItemClickOption.onTranscriptRequest(position)
+                          }
+                      }*/
+            transcriptBtn.setOnClickListener {
+                if (transcriptBtn.isChecked) {
+                    onItemClickOption.onTranscriptRequest(position, "1")
+                } else {
+                    onItemClickOption.onTranscriptRequest(position, "0")
+                }
+            }
+            if (considerarray[position].requestTranscript == "1") {
+                transcriptBtn.isChecked = true
+            } else {
+                transcriptBtn.isChecked = false
+            }
+
+            var others = ArrayList<String>()
+            for (i in 0 until considerarray[position].program_data?.size!!) {
+                others.add(considerarray[position].program_data?.get(i)?.program_name ?: "")
             }
 //            val others: considerarray<out String> = root.context.resources.getStringconsiderarray(R.considerarray.spinner_programs)
             val adapter = ArrayAdapter(
@@ -106,8 +135,8 @@ RecyclerView.Adapter<ApplyingAdapter.ViewHolder>() {
             planVal = value
         notifyDataSetChanged()
     }
-    fun updateAdapter(consider :ArrayList<ConsiderModel.Data>)
-    {
+
+    fun updateAdapter(consider: ArrayList<ConsiderModel.Data>) {
         considerarray = consider
         notifyDataSetChanged()
     }

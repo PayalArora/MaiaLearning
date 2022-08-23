@@ -40,6 +40,12 @@ class ConsiderModel {
         var notes: String,
         @SerializedName("counselor_notes")
         var counselorNotes: ArrayList<CounselorNotes>?,
+        @SerializedName("request_transcript")
+        var requestTranscript: String,
+        @SerializedName("application_type")
+        var applicationType: String,
+        @SerializedName("application_mode")
+        var applicationMode: String
     )
 
     data class ProgramData(

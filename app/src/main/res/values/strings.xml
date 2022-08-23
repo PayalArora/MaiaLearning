@@ -463,6 +463,7 @@
     <string name="view">View</string>
     <string name="upload_file">Upload File</string>
     <string name="delete_coll">Delete College</string>
+    <string name="move_to_applying">Do you want to move this university from applying to considering list?</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
@@ -476,5 +477,29 @@
         <item>Yes</item>
         <item>I plan to</item>
         <item>College doesnt offer interviews</item>
+    </string-array>
+
+    <string-array name="APPLICATION_TYPE">
+        <item>CSU Application</item>
+        <item>UC Application</item>
+        <item>Common App</item>
+        <item>Other Application</item>
+        <item>Coalition App</item>
+        <item>Online App / Mail</item>
+        <item>Mail Application</item>
+        <item>UCAS</item>
+        <item>California State App</item>
+        <item>Apply Texas Application</item>
+        <item>Universal App</item>
+    </string-array>
+
+    <string-array name="DECISION_PLAN">
+        <item>Early Action</item>
+        <item>Early Action II</item>
+        <item>Early Decision</item>
+        <item>Early Decision II</item>
+        <item>Priority Application</item>
+        <item>Regular Admission</item>
+        <item>Rolling Decision</item>
     </string-array>
 </resources>
