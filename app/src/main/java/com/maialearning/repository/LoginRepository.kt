@@ -85,6 +85,7 @@ interface LoginRepository {
     suspend fun searchUniversities(
         payload: UniversitySearchPayload
     ): UseCaseResult<JsonObject>
+
     suspend fun getSurveys(url: String, token: String): UseCaseResult<SurveysResponse>
     suspend fun getWebinar(url: String, token: String): UseCaseResult<WebinarResponse>
     suspend fun downloadWorkSheet(
@@ -126,6 +127,7 @@ interface LoginRepository {
     suspend fun resetTaskCompletion(
         uid: String
     ): UseCaseResult<JsonArray>
+
     suspend fun hitLikeUniv(studentId: String, collegeId: String): UseCaseResult<JsonArray>
     suspend fun hitUnlikeUniv(studentId: String, collegeId: String): UseCaseResult<Unit>
     suspend fun hitDelUnivCons(studentId: String, collegeId: String): UseCaseResult<Unit>
@@ -142,6 +144,9 @@ interface LoginRepository {
     suspend fun deleteProgramCOnsider(
         id: String
     ): UseCaseResult<JsonArray>
+
+    suspend fun getDecisionStatuses(
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -187,7 +192,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             print(ex.response()?.errorBody().toString())
             UseCaseResult.Error(ex)
         } catch (ex: Exception) {
-            print( ex.message)
+            print(ex.message)
             UseCaseResult.Exception(ex)
         }
     }
@@ -359,7 +364,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         bode: RequestBody
     ): UseCaseResult<Unit> {
         return try {
-            val result = catApi.uploadImage(url,content, bode).await()
+            val result = catApi.uploadImage(url, content, bode).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -742,5 +747,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Error(ex)
         } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
-        }    }
+        }
+    }
+
+    override suspend fun getDecisionStatuses(): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getDecsionStatuses(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
 }

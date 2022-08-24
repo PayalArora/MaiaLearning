@@ -49,8 +49,12 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
             Picasso.with(viewHolder.binding.root.context)
                 .load("$UNIV_LOGO_URL${data[position].country?.toLowerCase()}/${data[position].unitid}/logo_sm.jpg")
                 .error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
-            if(!data.get(position).applicationType.equals("null"))
-            decisionPlan.setText(viewHolder.binding.root.context.resources.getStringArray(R.array.DECISION_PLAN)[data.get(position).applicationType.toInt()])
+            if (!data.get(position).applicationType.equals("null"))
+                decisionPlan.setText(
+                    viewHolder.binding.root.context.resources.getStringArray(R.array.DECISION_PLAN)[data.get(
+                        position
+                    ).applicationType.toInt()]
+                )
 
 
             programList.layoutManager = LinearLayoutManager(
@@ -59,23 +63,46 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
                 false
             )
             programList.adapter = data[position].program_data?.let { DecisionProgramAdapter(it) }
-            if(data[position].program_data!=null && data[position].program_data!!.size>0){
-                view1.visibility= VISIBLE
-                view2.visibility= VISIBLE
-            }else{
-                view1.visibility= GONE
-                view2.visibility= GONE
+            if (data[position].program_data != null && data[position].program_data!!.size > 0) {
+                view1.visibility = VISIBLE
+                view2.visibility = VISIBLE
+            } else {
+                view1.visibility = GONE
+                view2.visibility = GONE
             }
 
-            if (position == 1 || position == 2) {
-                rbDecision.visibility = VISIBLE
+//            if (position == 1 || position == 2) {
+//                rbDecision.visibility = VISIBLE
+//                rbAccepted.visibility = GONE
+//            } else {
+//                rbAccepted.visibility = VISIBLE
+//                rbDecision.visibility = GONE
+//            }
+         /*   if(data[position].appByProgramSupported.equals("0")||data[position].applicationMode.equals("3"))
+            {
                 rbAccepted.visibility = GONE
-            } else {
+                rbDecision.visibility = VISIBLE
+            } else if(data[position].appByProgramSupported.equals("1")&&data[position].applicationMode.equals("3")){
+                if (!data[position].applicationStatusName.equals("null")) {
+                    rbAccepted.visibility = VISIBLE
+                    rbDecision.visibility = GONE
+                    rbAccepted.setText(data[position].applicationStatusName)
+                }
+            }else{
+                rbAccepted.visibility = GONE
+                rbDecision.visibility = GONE
+            }*/
+
+            if (!data[position].applicationStatusName.equals("null")) {
                 rbAccepted.visibility = VISIBLE
                 rbDecision.visibility = GONE
+                rbAccepted.setText(data[position].applicationStatusName)
+            } else {
+                rbAccepted.visibility = GONE
+                rbDecision.visibility = VISIBLE
             }
             rbDecision.setOnClickListener {
-                decisionClick.onDecisionClick()
+                decisionClick.onDecisionClick(position)
             }
         }
 
@@ -88,5 +115,5 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
 }
 
 interface DecisionClick {
-    fun onDecisionClick()
+    fun onDecisionClick(position: Int)
 }

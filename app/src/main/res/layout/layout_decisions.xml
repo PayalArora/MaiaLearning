@@ -182,7 +182,6 @@
                     android:fontFamily="@font/inter"
                     android:gravity="center_vertical"
                     android:text="@string/accepted"
-
                     android:textColor="@color/green_1"
                     android:textFontWeight="800"
                     android:textSize="@dimen/_12sp"

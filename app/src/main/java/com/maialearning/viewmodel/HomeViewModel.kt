@@ -37,6 +37,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val applyingObserver = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
     val deleteProgramObserver = MutableLiveData<JsonArray>()
+    val decisionStatusObserver = MutableLiveData<JsonObject>()
 
 
     fun getConsiderList(id: String) {
@@ -186,6 +187,20 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> deleteProgramObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getDecisionStatuses() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getDecisionStatuses()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> decisionStatusObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

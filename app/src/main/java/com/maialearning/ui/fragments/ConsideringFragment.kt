@@ -159,7 +159,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                             object_.getString("notes"),
                             arrayCounselor, object_.getString("request_transcript"),
                             object_.getString("application_type"),
-                            object_.getString("application_mode")
+                            object_.getString("application_mode"),
+                            object_.getString("application_status_name"),
+                            object_.getString("app_by_program_supported")
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }

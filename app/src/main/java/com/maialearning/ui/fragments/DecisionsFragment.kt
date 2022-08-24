@@ -4,20 +4,17 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
-import com.maialearning.calbacks.OnItemClickType
-import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.databinding.RadiobuttonFilterBinding
-import com.maialearning.databinding.UniversityFilterBinding
 import com.maialearning.model.ConsiderModel
-import com.maialearning.ui.activity.ClickFilters
+import com.maialearning.model.UpdateStudentPlan
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
@@ -67,21 +64,53 @@ class DecisionsFragment : Fragment(), DecisionClick {
 
     }
 
-    override fun onDecisionClick() {
-        showDialog(requireContext(), layoutInflater)
+    override fun onDecisionClick(position: Int) {
+        showDialog(requireContext(), layoutInflater, position)
     }
 
-    fun showDialog(con: Context, layoutInflater: LayoutInflater) {
+    fun showDialog(con: Context, layoutInflater: LayoutInflater, pos: Int) {
         val dialog = BottomSheetDialog(con)
         val sheetBinding: RadiobuttonFilterBinding =
             RadiobuttonFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
-        sheetBinding.filters.setText(con.resources.getString(R.string.select_decision1))
+        dialogP.show()
+        homeModel.getDecisionStatuses()
+        var statuses = ArrayList<String>()
+
+
+        homeModel.decisionStatusObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            val json = JSONObject(it.toString())
+            val iterator: Iterator<*> = json.keys()
+            while (iterator.hasNext()) {
+                val key = iterator.next() as String
+
+                statuses.add(json.getString(key))
+                //do what you want with the key.
+            }
+            val statusArray: Array<String> = statuses.toTypedArray()
+            sheetBinding.filters.setText(con.resources.getString(R.string.select_decision1))
+
+            sheetBinding.rvRadioGroup.adapter =
+                RadiobuttonFilterAdapter(statusArray)
+        }
         sheetBinding.close.setOnClickListener { dialog.dismiss() }
-        sheetBinding.rvRadioGroup.adapter =
-            RadiobuttonFilterAdapter(con.resources.getStringArray(R.array.decision_filter))
+        sheetBinding.saveBtn.setOnClickListener {
+            var updateStudentPlan = UpdateStudentPlan()
+            updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+            updateStudentPlan.college_nid = finalArray[pos].university_nid
+
+            updateStudentPlan.app_status = "" //Pending
+
+            dialogP.show()
+//Todo            homeModel.updateStudentPlan(updateStudentPlan)
+            homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+                dialog.dismiss()
+                dialogP.dismiss()
+            }
+        }
     }
 
     private fun getApplyingList() {
@@ -163,7 +192,9 @@ class DecisionsFragment : Fragment(), DecisionClick {
                         object_.getString("notes"),
                         arrayCounselor, object_.getString("request_transcript"),
                         object_.getString("application_type"),
-                        object_.getString("application_mode")
+                        object_.getString("application_mode"),
+                        object_.getString("application_status_name"),
+                        object_.getString("app_by_program_supported")
                     )
                     array.add(model)
                     array.sortBy { it.naviance_college_name }

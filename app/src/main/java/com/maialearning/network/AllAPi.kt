@@ -304,4 +304,8 @@ interface AllAPi {
         @Path("student_uid") uid: String,
     ): Deferred<JsonArray>
 
+    @GET("get_allowed_values_list/field_status")
+    fun getDecsionStatuses(
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonObject>
 }

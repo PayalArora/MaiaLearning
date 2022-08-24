@@ -45,7 +45,11 @@ class ConsiderModel {
         @SerializedName("application_type")
         var applicationType: String,
         @SerializedName("application_mode")
-        var applicationMode: String
+        var applicationMode: String,
+        @SerializedName("application_status_name")
+        var applicationStatusName: String,
+        @SerializedName("app_by_program_supported")
+        var appByProgramSupported: String
     )
 
     data class ProgramData(
