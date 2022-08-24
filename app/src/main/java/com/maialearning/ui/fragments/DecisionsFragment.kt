@@ -29,7 +29,7 @@ class DecisionsFragment : Fragment(), DecisionClick {
     private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
     val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
-
+    var statusArray: Array<String> = arrayOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -78,6 +78,7 @@ class DecisionsFragment : Fragment(), DecisionClick {
         dialogP.show()
         homeModel.getDecisionStatuses()
         var statuses = ArrayList<String>()
+        var statuskey = ArrayList<String>()
 
 
         homeModel.decisionStatusObserver.observe(requireActivity()) {
@@ -88,30 +89,50 @@ class DecisionsFragment : Fragment(), DecisionClick {
                 val key = iterator.next() as String
 
                 statuses.add(json.getString(key))
+                statuskey.add(key)
                 //do what you want with the key.
             }
-            val statusArray: Array<String> = statuses.toTypedArray()
+             statusArray = statuses.toTypedArray()
             sheetBinding.filters.setText(con.resources.getString(R.string.select_decision1))
 
             sheetBinding.rvRadioGroup.adapter =
-                RadiobuttonFilterAdapter(statusArray)
+                RadiobuttonFilterAdapter(statusArray,  finalArray[pos].applicationStatusName)
         }
         sheetBinding.close.setOnClickListener { dialog.dismiss() }
         sheetBinding.saveBtn.setOnClickListener {
             var updateStudentPlan = UpdateStudentPlan()
             updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
             updateStudentPlan.college_nid = finalArray[pos].university_nid
-
-            updateStudentPlan.app_status = "" //Pending
+            val selectedpos = (sheetBinding.rvRadioGroup.adapter as RadiobuttonFilterAdapter).onSave()
+            updateStudentPlan.app_status = statuses[selectedpos]
 
             dialogP.show()
-//Todo            homeModel.updateStudentPlan(updateStudentPlan)
+            homeModel.updateStudentPlan(updateStudentPlan)
             homeModel.updateStudentPlanObserver.observe(requireActivity()) {
                 dialog.dismiss()
                 dialogP.dismiss()
             }
         }
+
     }
+//    app_plan: null
+//    app_status: "waitlisted"
+//    app_type: "4"
+//    application_term: null
+//    campus_tour: "0"
+//    college_interest: "3"
+//    college_nid: "175684"
+//    college_priority_choice: null
+//    deadline_date: null
+//    interview_interest: "2"
+//    major_name: null
+//    mid_november: null
+//    multiple_decision_round: null
+//    old_app_status: null
+//    program_name: null
+//    request_transcript: "1"
+//    school_within_university: ""
+//    student_uid: "9375"
 
     private fun getApplyingList() {
         SharedHelper(requireContext()).id?.let {
@@ -194,14 +215,15 @@ class DecisionsFragment : Fragment(), DecisionClick {
                         object_.getString("application_type"),
                         object_.getString("application_mode"),
                         object_.getString("application_status_name"),
-                        object_.getString("app_by_program_supported")
+                        object_.getString("app_by_program_supported"),
+                        object_.getInt("confirm_applied")
+
                     )
                     array.add(model)
-                    array.sortBy { it.naviance_college_name }
                 }
 
                 var pos = 0
-//                countries.sortBy { it }
+               // countries.sortBy { it }
                 for (j in 0 until countries.size) {
                     var firstTime = true
                     var count = 0
@@ -220,6 +242,7 @@ class DecisionsFragment : Fragment(), DecisionClick {
                     }
                     pos = finalArray.size
                 }
+                finalArray.sortBy { it.naviance_college_name }
                 setAdapter()
 //                (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(finalArray)
             }

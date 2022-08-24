@@ -84,7 +84,7 @@ class ApplyingAdapter(
             appPlan.setOnClickListener {
                 onItemClickOption.onPlanClick()
             }
-            menuClick.setOnClickListener {
+            menuDots.setOnClickListener {
                 onItemClickOption.onMenuClick(position,it)
             }
             commentImg.setOnClickListener {

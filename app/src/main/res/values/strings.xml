@@ -464,6 +464,7 @@
     <string name="upload_file">Upload File</string>
     <string name="delete_coll">Delete College</string>
     <string name="move_to_applying">Do you want to move this university from applying to considering list?</string>
+    <string name="applied">Applied</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
@@ -501,5 +502,6 @@
         <item>Priority Application</item>
         <item>Regular Admission</item>
         <item>Rolling Decision</item>
+        <item>Restrictive Early Action</item>
     </string-array>
 </resources>

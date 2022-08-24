@@ -60,7 +60,7 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
                         )
                     )
                 }
-                setAdapter()
+             //   setAdapter()
             }
         }
         messageViewModel.showError.observe(viewLifecycleOwner) {
@@ -74,7 +74,7 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
         dialog.show()
         messageViewModel.getSent()
         observer()
-        setAdapter()
+      setAdapter()
 
     }
 

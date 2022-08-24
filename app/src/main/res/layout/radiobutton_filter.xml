@@ -22,7 +22,6 @@
         android:layout_alignParentTop="true"
         android:layout_height="@dimen/_30dp"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:layout_margin="@dimen/_15dp"
         android:background="@drawable/circle_lay">
 

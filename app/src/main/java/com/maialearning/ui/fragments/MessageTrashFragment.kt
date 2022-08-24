@@ -60,7 +60,7 @@ class MessageTrashFragment : Fragment(), OnItemClickDelete {
                         )
                     )
                 }
-                setAdapter()
+                //setAdapter()
             }
         }
         messageViewModel.showError.observe(viewLifecycleOwner) {
@@ -74,7 +74,7 @@ class MessageTrashFragment : Fragment(), OnItemClickDelete {
         dialog.show()
         messageViewModel.getTrash()
         observer()
-        setAdapter()
+        //setAdapter()
 
     }
 

@@ -153,16 +153,16 @@
                     <ImageView
                         android:layout_width="@dimen/_15dp"
                         android:layout_height="@dimen/_15dp"
-                        android:layout_marginStart="@dimen/_5dp"
+                        android:layout_marginStart="@dimen/_13dp"
                         android:id="@+id/info_icon"
                         android:layout_marginTop="@dimen/_3dp"
                         app:tint="@color/grey_4"
                         android:src="@drawable/info_icon" />
 
                     <ImageView
+                        android:id="@+id/menu_dots"
                         android:layout_width="@dimen/_20dp"
                         android:layout_height="@dimen/_20dp"
-                        android:id="@+id/menu_click"
                         android:layout_marginStart="@dimen/_5dp"
                         android:src="@drawable/menu_dots" />
                 </LinearLayout>
@@ -525,6 +525,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/add_button"
                     android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/_5dp"
                     android:background="@drawable/white_rect_15"
                     android:backgroundTint="@color/gray_2"
                     android:orientation="vertical">
@@ -543,7 +544,7 @@
                     <Spinner
                         android:id="@+id/all_system"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_30dp"
+                        android:layout_height="@dimen/_20dp"
                         android:layout_marginStart="@dimen/_5dp"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
