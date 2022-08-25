@@ -77,7 +77,7 @@
             android:contentDescription="@string/like"
 
             app:tint="@color/black_1"
-            android:src="@drawable/ic_outline_location_on_24"
+            android:src="@drawable/ic_edit"
             app:layout_constraintBottom_toBottomOf="@id/country"
             app:layout_constraintEnd_toEndOf="@id/image"
             app:layout_constraintStart_toStartOf="@id/image"

@@ -12,13 +12,10 @@ import com.maialearning.util.ORIGIN
 
 import retrofit2.HttpException
 
-import retrofit2.Response
+
 import com.maialearning.util.prefhandler.SharedHelper
-import kotlinx.serialization.json.Json
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONArray
-import org.json.JSONObject
+
 
 interface LoginRepository {
     // Suspend is used to await the result from Deferred
@@ -140,6 +137,9 @@ interface LoginRepository {
     ): UseCaseResult<JsonObject>
 
     suspend fun deleteProgramCOnsider(
+        id: String
+    ): UseCaseResult<JsonArray>
+    suspend fun teacherList(
         id: String
     ): UseCaseResult<JsonArray>
 }
@@ -594,6 +594,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.deleteMlProgram(
                 id,
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun teacherList(id: String): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getTeacherList(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

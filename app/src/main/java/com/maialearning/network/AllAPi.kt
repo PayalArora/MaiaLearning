@@ -303,4 +303,10 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("student_uid") uid: String,
     ): Deferred<JsonArray>
+
+    @GET("get-teacher-counselor-list/{id}?for_reco=1")
+    fun getTeacherList(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+    ): Deferred<JsonArray>
 }
