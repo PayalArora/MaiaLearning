@@ -31,6 +31,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val searchUniversityObserver = MutableLiveData<JsonObject>()
     val likeObserver = MutableLiveData<JsonArray>()
     val unlikeObserver = MutableLiveData<Unit>()
+    val delObserver = MutableLiveData<Unit>()
     val applyingObserver = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
     val deleteProgramObserver = MutableLiveData<JsonArray>()
@@ -67,7 +68,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getNotes("9375")
+                catRepository.getNotes(id)
             }
             showLoading.value = false
             when (result) {
@@ -132,7 +133,19 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
-
+    fun hidel(studentid: String, collegeId: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.hitDelUnivCons(studentid, collegeId)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> delObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
     fun moveToApplying(studentid: String, collegeId: String, status: String) {
         showLoading.value = true
         Coroutines.mainWorker {

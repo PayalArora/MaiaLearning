@@ -107,12 +107,14 @@ class ProgramAdapter(
     override fun getItemCount(): Int {
         return programs?.size ?: 0
     }
-//    fun setCount(count:Int){
-//        mCount = count
-//        notifyDataSetChanged()
-//    }
 
     fun addMore() {
+        if (position1 >= 0 && programs?.size!! > position1) {
+            var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+            programData.program_name = txt
+            programData.program_id = null
+            programs?.set(position1, programData)
+        }
         var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
         programData.program_name = ""
         programData.program_id = null

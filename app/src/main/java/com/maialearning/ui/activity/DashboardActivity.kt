@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.maialearning.R
 import com.maialearning.databinding.ActivityDashboardBinding
 import com.maialearning.ui.bottomsheets.ProfileFilter
+import com.maialearning.ui.bottomsheets.SelectAttachmentSheet
 import com.maialearning.ui.fragments.HomeFragment
 import com.maialearning.ui.fragments.MessageFragment
 import com.maialearning.ui.fragments.NotesFragment
@@ -123,6 +124,8 @@ class DashboardActivity : AppCompatActivity() {
 
     private val REQUEST_IMAGE_CAPTURE = 1
     private val REQUEST_CHOOSE_PHOTO = 2
+    private val REQUEST_IMAGE_UPCOMING_DETAIL = 11
+    private val REQUEST_CHOOSE_PHOTO_UPCOMING_DETAIL = 22
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -130,7 +133,10 @@ class DashboardActivity : AppCompatActivity() {
             profileFilter.setData(requestCode, data)
         } else if (requestCode == REQUEST_CHOOSE_PHOTO && resultCode == RESULT_OK) {
             profileFilter.setData(requestCode, data)
-        }
+        } /*else if ((requestCode == REQUEST_IMAGE_UPCOMING_DETAIL || requestCode == REQUEST_CHOOSE_PHOTO_UPCOMING_DETAIL) && resultCode == AppCompatActivity.RESULT_OK) {
+            SelectAttachmentSheet(this,layoutInflater,data,requestCode).showDialog()
+
+        }*/
     }
 
 }

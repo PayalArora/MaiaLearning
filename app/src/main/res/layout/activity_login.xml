@@ -35,6 +35,7 @@
             android:id="@+id/lang_selector"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_36dp"
+            android:visibility="invisible"
             android:layout_margin="@dimen/_20dp"
             android:background="@drawable/bg_curved"
             android:padding="@dimen/_5dp"

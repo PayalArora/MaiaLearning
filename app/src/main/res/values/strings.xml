@@ -40,6 +40,7 @@
     <string name="careers">Careers</string>
     <string name="events">Events</string>
     <string name="universities">Universities</string>
+    <string name="universities_search">Search for Any University</string>
     <string name="academics">Academics</string>
     <string name="calender">Calender</string>
     <string name="maiadrive">MaiaDrive</string>
@@ -108,7 +109,7 @@
     <string name="university_of_calefornia">University of\nCalifornia, Berkeley</string>
     <string name="first">1st</string>
     <string name="date_by">25 May 2021, 01:20 AM \u0020 \u0020 by: Choudhary, Paul</string>
-    <string name="internal">Internal</string>
+    <string name="internal">Internal Deadline</string>
     <string name="cr_required">CR: Required</string>
     <string name="to_applying">To Applying</string>
     <string name="likely">Likely</string>
@@ -452,6 +453,16 @@
         <item>Basketball</item>
         <item>Cricket</item>
     </string-array>
+
+    <string name="surveys">Surveys</string>
+    <string name="documents_attached">Documents Attached</string>
+    <string name="download">Download</string>
+    <string name="file_upload">File Upload</string>
+    <string name="select_tag">Select Tag</string>
+    <string name="write_to_conselor">Write to Counselor</string>
+    <string name="view">View</string>
+    <string name="upload_file">Upload File</string>
+    <string name="delete_coll">Delete College</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
