@@ -30,7 +30,7 @@ class ShortcutFragment : Fragment() {
 
 
     private fun setAdapter() {
-        mBinding.recyclerList.adapter = ShortcutAdapter()
+        mBinding.recyclerList.adapter = ShortcutAdapter(requireContext())
 
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
