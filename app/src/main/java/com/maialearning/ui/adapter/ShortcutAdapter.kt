@@ -44,14 +44,6 @@ class ShortcutAdapter(var context: Context) : RecyclerView.Adapter<ShortcutAdapt
                 intent.setPackage("com.google.android.youtube")
                 context.startActivity(intent)
             }else{
-//                val pdfUri = Uri.parse("file://sdcard/sdcard0/test.pdf")
-//                val shareIntent = ShareCompat.IntentBuilder.from(context)
-//                    .setText("Share PDF doc")
-//                    .setType("application/pdf")
-//                    .setStream(pdfUri)
-//                    .intent
-//                    .setPackage("com.google.android.apps.docs")
-//                context.startActivity(shareIntent)
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://drive.google.com/"))
                 intent.setPackage("com.google.android.apps.docs")
                 context.startActivity(intent)
