@@ -3,6 +3,8 @@ package com.maialearning.ui.fragments
 import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,7 @@ import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.model.UniversitySearchPayload
 import com.maialearning.parser.SearchParser
 import com.maialearning.ui.adapter.UniFactAdapter
+import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
@@ -31,8 +34,11 @@ class SearchFragment : Fragment() {
     private val homeModel: HomeViewModel by viewModel()
     private lateinit var progress: Dialog
     var page: Int = 1
-    var universityList: ArrayList<UniversitiesSearchModel>? = null
-
+    var universityListUpdate: ArrayList<UniversitiesSearchModel?>? = ArrayList()
+    var universityList: ArrayList<UniversitiesSearchModel?>? = ArrayList()
+    private var isLoading = false
+    var university_listNew = ArrayList<UniversitiesSearchModel?>()
+    lateinit var adapter: UniFactAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -57,41 +63,47 @@ class SearchFragment : Fragment() {
             .replace(R.id.map, mapFragment)
             .commit()
         hitAPI(page, "")
+        adapter = UniFactAdapter(requireContext(), university_listNew, ::click, mBinding.rvUniv)
+        mBinding.rvUniv.adapter = adapter
+        adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+            override fun onLoadMore() {
+                university_listNew.add(null)
+                isLoading = true
+                adapter.notifyItemInserted(university_listNew.size - 1)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    hitAPI(page, "")
+
+                }, 2000)
+            }
+        })
 
         homeModel.searchUniversityObserver.observe(requireActivity()) {
             val univ = SearchParser(it).parseJson()
+            page = (univ.pager!! + 1)
+            val totalPage = univ.totalRecords
+            val last = univ.last
             progress.dismiss()
-            //    mBinding.swipyrefreshlayout.isRefreshing=false
-            universityList = univ.university_list
-
-            mBinding.rvUniv.adapter =
-                univ.university_list?.let { it1 -> UniFactAdapter(requireContext(), it1, ::click) }
+            universityList?.addAll(univ.university_list!!)
+            universityListUpdate?.addAll(univ.university_list!!)
+            if (isLoading) {
+                isLoading = false
+                university_listNew.removeAt(university_listNew.size - 1)
+                adapter.notifyItemRemoved(university_listNew.size)
+            }
+            //for swipe refresh page
+            if (totalPage != null) {
+                if (last != null) {
+                    adapter.addAllLis(universityList!!, totalPage, last)
+                }
+            }
+            adapter.setLoaded()
         }
-//        mBinding.swipyrefreshlayout.setOnRefreshListener(object :
-//            SwipyRefreshLayout.OnRefreshListener {
-//            override fun onRefresh(direction: SwipyRefreshLayoutDirection?) {
-//                if (direction == SwipyRefreshLayoutDirection.BOTTOM) {
-//                    page = page + 1
-//                    hitAPI(page)
-//                }
-//                }else if(direction == SwipyRefreshLayoutDirection.TOP){
-//                    if(page!=1 && page>1){
-//                        page=page-1
-//                        hitAPI(page)
-//                    }
-//                }
-//            }
-//
-//        })
-        // bottomSheetList()
 
         homeModel.likeObserver.observe(requireActivity()) {
             progress.dismiss()
-//            hitAPI(page)
         }
         homeModel.unlikeObserver.observe(requireActivity()) {
             progress.dismiss()
-//            hitAPI(page)
         }
         homeModel.showError.observe(requireActivity()) {
             progress.dismiss()
@@ -114,7 +126,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun hitAPI(pageNo: Int, search: String) {
-        progress.show()
+        if (!isLoading)
+            progress.show()
         var payload = UniversitySearchPayload()
         payload.student_uid = SharedHelper(requireContext()).id.toString()
         payload.country = "US"
@@ -148,21 +161,21 @@ class SearchFragment : Fragment() {
     }
 
     fun click(position: Int) {
-        likeWork(universityList!!.get(position))
+        likeWork(universityListUpdate?.get(position))
     }
 
-    fun likeWork(get: UniversitiesSearchModel) {
-        if (get.topPickFlag == 0) {
+    fun likeWork(get: UniversitiesSearchModel?) {
+        if (get?.topPickFlag == 0) {
             hitLikeWork(get)
         } else {
             hitUnlikeWork(get)
         }
     }
 
-    private fun hitUnlikeWork(get: UniversitiesSearchModel) {
+    private fun hitUnlikeWork(get: UniversitiesSearchModel?) {
         progress.show()
         SharedHelper(requireContext()).id?.let {
-            get.nid?.let { it1 ->
+            get?.nid?.let { it1 ->
                 homeModel.hitunlike(
                     it,
                     it1

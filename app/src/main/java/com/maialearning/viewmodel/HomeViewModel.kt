@@ -10,6 +10,7 @@ import com.maialearning.model.*
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
+import com.maialearning.util.replaceCrossBracketsComas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -49,7 +50,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> listObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()?.replaceCrossBracketsComas()
+         
             }
         }
     }
@@ -63,7 +65,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> applyObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+         
             }
         }
     }
@@ -77,7 +80,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> notesObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+         
             }
         }
     }
@@ -91,7 +95,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> updateStudentPlanObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -105,7 +109,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> searchUniversityObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -119,7 +123,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> likeObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -133,7 +137,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> unlikeObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -146,7 +150,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> delObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -159,7 +163,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> applyingObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -173,7 +177,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> addProgramObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -187,21 +191,23 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> deleteProgramObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+         
             }
         }
     }
 
     fun getDecisionStatuses() {
-        showLoading.value = true
+       // showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
                 catRepository.getDecisionStatuses()
             }
-            showLoading.value = false
+           // showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> decisionStatusObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+         
             }
         }
     }

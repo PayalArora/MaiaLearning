@@ -237,3 +237,7 @@ fun String.replaceNextLine(): String {
 fun String.replaceInvertedComas():String {
     return this.replace("\"", "")
 }
+
+fun String.replaceCrossBracketsComas():String {
+    return this.replace("[", "").replace("]", "").replace("\"", "")
+}

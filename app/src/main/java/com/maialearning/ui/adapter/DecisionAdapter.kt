@@ -1,22 +1,15 @@
 package com.maialearning.ui.adapter
 
-import android.content.Context
-import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
-import com.maialearning.databinding.ItemMilestonesBinding
-import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.databinding.LayoutDecisionsBinding
-import com.maialearning.databinding.UniversityFilterBinding
 import com.maialearning.model.ConsiderModel
-import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.util.UNIV_LOGO_URL
 import com.squareup.picasso.Picasso
 
@@ -49,23 +42,28 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
             Picasso.with(viewHolder.binding.root.context)
                 .load("$UNIV_LOGO_URL${data[position].country?.toLowerCase()}/${data[position].unitid}/logo_sm.jpg")
                 .error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
-            if(!data.get(position).applicationType.equals("null"))
-            decisionPlan.setText(viewHolder.binding.root.context.resources.getStringArray(R.array.DECISION_PLAN)[data.get(position).applicationType.toInt()])
+            if (!data.get(position).applicationType.equals("null"))
+                decisionPlan.setText(viewHolder.binding.root.context.resources.getStringArray(R.array.DECISION_PLAN)[data.get(
+                    position).applicationType.toInt()])
             else
                 decisionPlan.setText("")
 
-            if(!data.get(position).applicationMode.equals("null"))
-                applicationMode.setText(viewHolder.binding.root.context.resources.getStringArray(R.array.APPLICATION_TYPE)[data.get(position).applicationMode.toInt()])
+            if (!data.get(position).applicationMode.equals("null"))
+                applicationMode.setText(viewHolder.binding.root.context.resources.getStringArray(R.array.APPLICATION_TYPE)[data.get(
+                    position).applicationMode.toInt()])
             else
                 applicationMode.setText("")
 
 
             programList.layoutManager = LinearLayoutManager(
                 viewHolder.binding.root.context,
-                LinearLayoutManager.HORIZONTAL,
+                LinearLayoutManager.VERTICAL,
                 false
             )
-            programList.adapter = data[position].program_data?.let { DecisionProgramAdapter(it) }
+            val isVisible = data[position].appByProgramSupported.equals("1") && !data[position].applicationMode.equals("3")
+            programList.adapter = data[position].program_data?.let {
+                DecisionProgramAdapter(it,
+                 isVisible, ::clickProgramDecision)}
             if (data[position].program_data != null && data[position].program_data!!.size > 0) {
                 view1.visibility = VISIBLE
                 view2.visibility = VISIBLE
@@ -75,36 +73,48 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
             }
 
 
-         /*   if(data[position].appByProgramSupported.equals("0")||data[position].applicationMode.equals("3"))
-            {
-                rbAccepted.visibility = GONE
-                rbDecision.visibility = VISIBLE
-            } else if(data[position].appByProgramSupported.equals("1")&&data[position].applicationMode.equals("3")){
-                if (!data[position].applicationStatusName.equals("null")) {
-                    rbAccepted.visibility = VISIBLE
-                    rbDecision.visibility = GONE
-                    rbAccepted.setText(data[position].applicationStatusName)
-                }
-            }else{
+            /*   if(data[position].appByProgramSupported.equals("0")||data[position].applicationMode.equals("3"))
+               {
+                   rbAccepted.visibility = GONE
+                   rbDecision.visibility = VISIBLE
+               } else if(data[position].appByProgramSupported.equals("1")&&data[position].applicationMode.equals("3")){
+                   if (!data[position].applicationStatusName.equals("null")) {
+                       rbAccepted.visibility = VISIBLE
+                       rbDecision.visibility = GONE
+                       rbAccepted.setText(data[position].applicationStatusName)
+                   }
+               }else{
+                   rbAccepted.visibility = GONE
+                   rbDecision.visibility = GONE
+               }*/
+            Log.e("Decision","appByProgramSupported ${data[position].appByProgramSupported}"+" , applicationMode ${data[position].applicationMode}, $isVisible  name ${data[position].naviance_college_name}")
+
+            if (data[position].appByProgramSupported.equals("1") && !data[position].applicationMode.equals("3")
+            ) {
                 rbAccepted.visibility = GONE
                 rbDecision.visibility = GONE
-            }*/
+            }
+           else if (data[position].appByProgramSupported.equals("0") && data[position].applicationMode.equals(
+                    "3")
+            ) {
+                rbDecision.visibility = VISIBLE
+                rbAccepted.visibility = GONE
+            } else{
+                rbAccepted.visibility = GONE
+                rbDecision.visibility = GONE
+            }
 
             if (!data[position].applicationStatusName.equals("null")) {
-                rbDecision.visibility = VISIBLE
-                rbAccepted.visibility = GONE
                 rbDecision.setText(data[position].applicationStatusName)
-            } else {
-                rbAccepted.visibility = GONE
-                rbDecision.visibility = VISIBLE
             }
+
             rbDecision.setOnClickListener {
                 decisionClick.onDecisionClick(position)
             }
-            if(data.get(position).confirmApplied ==1){
-                rbOtherApp.isChecked =true
+            if (data.get(position).confirmApplied == 1) {
+                rbOtherApp.isChecked = true
             } else
-                rbOtherApp.isChecked =false
+                rbOtherApp.isChecked = false
         }
 
     }
@@ -112,9 +122,12 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
     override fun getItemCount(): Int {
         return data.size
     }
-
+    fun clickProgramDecision(i: Int) {
+        decisionClick.onProgramDecisionClick(i)
+    }
 }
 
 interface DecisionClick {
     fun onDecisionClick(position: Int)
+    fun onProgramDecisionClick(position: Int)
 }
