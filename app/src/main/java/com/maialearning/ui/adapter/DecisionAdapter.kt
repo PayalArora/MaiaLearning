@@ -63,7 +63,7 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
             val isVisible = data[position].appByProgramSupported.equals("1") && !data[position].applicationMode.equals("3")
             programList.adapter = data[position].program_data?.let {
                 DecisionProgramAdapter(it,
-                 isVisible, ::clickProgramDecision)}
+                 isVisible,position, ::clickProgramDecision)}
             if (data[position].program_data != null && data[position].program_data!!.size > 0) {
                 view1.visibility = VISIBLE
                 view2.visibility = VISIBLE

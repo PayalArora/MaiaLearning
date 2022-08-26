@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso
 class DecisionProgramAdapter(
     var data: ArrayList<ConsiderModel.ProgramData>,
     var isVisible: Boolean,
+    var pos:Int,
     val decision: (position:Int) -> Unit
 ):
     RecyclerView.Adapter<DecisionProgramAdapter.ViewHolder>() {
@@ -53,7 +54,7 @@ class DecisionProgramAdapter(
             } else {
                 rbDecision.visibility = View.GONE
             }
-            rbDecision.setOnClickListener { decision(position) }
+            rbDecision.setOnClickListener { decision(pos) }
         }
 
     }

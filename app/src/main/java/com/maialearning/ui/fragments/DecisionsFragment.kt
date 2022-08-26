@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
+import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.databinding.RadiobuttonFilterBinding
 import com.maialearning.model.ConsiderModel
@@ -20,7 +22,6 @@ import com.maialearning.ui.adapter.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
-import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -72,7 +73,8 @@ class DecisionsFragment : Fragment(), DecisionClick {
     }
 
     override fun onProgramDecisionClick(position: Int) {
-       // showDialog(requireContext(), layoutInflater, position)
+        // showDialog(requireContext(), layoutInflater, position)
+        bottomSheetDecisionProgram(position)
     }
 
     fun showDialog(con: Context, layoutInflater: LayoutInflater, pos: Int) {
@@ -145,5 +147,24 @@ class DecisionsFragment : Fragment(), DecisionClick {
             dialogP.dismiss()
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun bottomSheetDecisionProgram(postion: Int) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: LayoutProgramsBinding = LayoutProgramsBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.addProgram.setText("Application Status")
+        sheetBinding.addMore.visibility = View.GONE
+        Log.e("Size"," "+finalArray[postion].program_data?.size)
+        sheetBinding.addMoreLayout.adapter =
+            DecisonProgramStatusAdapter(finalArray[postion].program_data,this)
+
+
+        sheetBinding.save.setOnClickListener {
+
+        }
+
     }
 }
