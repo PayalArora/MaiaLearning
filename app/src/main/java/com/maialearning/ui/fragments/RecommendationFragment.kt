@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.databinding.LayoutTeacherBinding
@@ -73,12 +74,13 @@ class RecommendationFragment : Fragment() {
     private fun listTeacher() {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutTeacherBinding = LayoutTeacherBinding.inflate(layoutInflater)
-//        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         sheetBinding.filters.setText(resources.getString(R.string.select_teachers))
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+        sheetBinding.recyclerView.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         sheetBinding.recyclerView.adapter =
             SelectTeacherAdapter(list, ::click)
 
@@ -92,7 +94,7 @@ class RecommendationFragment : Fragment() {
         }
         for (i in 0 until selectedList.size) {
             if (selectedList[i].isSelected)
-                mBinding.selectedTeachers.append(selectedList[i].firstName + ",")
+                mBinding.selectedTeachers.append(selectedList[i].lastName + ",")
         }
         mBinding.textCount.text = "from " + selectedList.size + " teachers"
     }

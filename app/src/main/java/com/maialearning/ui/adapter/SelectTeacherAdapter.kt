@@ -34,7 +34,7 @@ class SelectTeacherAdapter(
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.binding.root.setOnClickListener {
+        viewHolder.binding.notHisponic.setOnClickListener {
             if (arr[position].isSelected) {
                 arr[position].isSelected = false
             } else {
@@ -44,7 +44,8 @@ class SelectTeacherAdapter(
         }
         viewHolder.binding.apply {
             viewHolder.binding.notHisponic.text =
-                arr[position].firstName + " " + arr[position].lastName + "(" + arr[position].schoolName + ")"
+//                arr[position].firstName + " " + arr[position].lastName + "(" + arr[position].schoolName + ")"
+                arr[position].usersName  + "(" + arr[position].schoolName + ")"
         }
 
     }
