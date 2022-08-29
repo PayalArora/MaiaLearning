@@ -44,8 +44,8 @@ class SelectTeacherAdapter(
         }
         viewHolder.binding.apply {
             viewHolder.binding.notHisponic.text =
-//                arr[position].firstName + " " + arr[position].lastName + "(" + arr[position].schoolName + ")"
-                arr[position].usersName  + "(" + arr[position].schoolName + ")"
+                arr[position].firstName + " " + arr[position].lastName + "(" + arr[position].schoolName + ")"
+//                arr[position].usersName  + "(" + arr[position].schoolName + ")"
         }
 
     }

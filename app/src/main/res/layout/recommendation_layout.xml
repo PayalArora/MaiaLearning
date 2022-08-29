@@ -38,17 +38,18 @@
 
             <TextView
                 android:id="@+id/selected_teachers"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5dp"
                 android:drawablePadding="@dimen/_5dp"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="@dimen/_2sp"
-
+                android:maxLines="1"
+            app:layout_constraintEnd_toStartOf="@id/toolbar_arrow"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_teacher" />
 
             <ImageView
@@ -98,7 +99,6 @@
                     android:layout_marginLeft="@dimen/_10dp"
                     android:layout_marginTop="@dimen/_15dp"
                     android:lineSpacingExtra="@dimen/_2sp"
-                    android:text="@string/from_teachers"
                     android:textColor="@color/black_4"
                     android:textSize="@dimen/_16sp"
                     android:textStyle="bold"
@@ -166,6 +166,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:visibility="gone"
                         android:id="@+id/text_add_file"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -183,6 +184,7 @@
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:id="@+id/send"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50dp"
                     android:layout_marginTop="@dimen/_15dp"

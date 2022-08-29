@@ -463,6 +463,7 @@
     <string name="view">View</string>
     <string name="upload_file">Upload File</string>
     <string name="delete_coll">Delete College</string>
+    <string name="search_tea">Search Teacher</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

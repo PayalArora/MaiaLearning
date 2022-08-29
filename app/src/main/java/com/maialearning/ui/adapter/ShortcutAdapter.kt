@@ -40,7 +40,7 @@ class ShortcutAdapter(var context: Context) : RecyclerView.Adapter<ShortcutAdapt
         viewHolder.binding.textDescription.text = "N/A"
         viewHolder.binding.layout.setOnClickListener {
             if (position == 1) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/"))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/cricbuzz"))
                 intent.setPackage("com.google.android.youtube")
                 context.startActivity(intent)
             }else{

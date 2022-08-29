@@ -309,4 +309,15 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String,
     ): Deferred<JsonArray>
+
+
+    @POST("recommendation-request")
+    @FormUrlEncoded
+    fun sendRecomTeacher(
+        @Header("Authorization") AutToken: String,
+        @Field("notes") notes: String,
+        @Field("student_id") id: String,
+        @Field("due_date") date: String,
+        @Field("teacher_id") teacher: ArrayList<String>,
+    ): Deferred<JsonArray>
 }
