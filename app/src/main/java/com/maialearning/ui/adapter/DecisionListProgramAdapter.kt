@@ -7,12 +7,12 @@ import com.maialearning.databinding.RadiobuttonItemBinding
 import com.maialearning.model.StatusModel
 
 
-class RadiobuttonFilterAdapter(val array: ArrayList<StatusModel>, val selected:String) :
-    RecyclerView.Adapter<RadiobuttonFilterAdapter.ViewHolder>() {
+class DecisionListProgramAdapter(val array: ArrayList<StatusModel>, val selected:String,  val decisionStatusClick: (position:Int, statusPos:Int) -> Unit, val statusPos:Int) :
+    RecyclerView.Adapter<DecisionListProgramAdapter.ViewHolder>() {
     var selectCheck :ArrayList<Int> = arrayListOf()
     init {
         for (i in array){
-            if (i.equals(selected))
+            if (i.key.equals(selected))
                 selectCheck.add(1)
             else
             selectCheck.add(0)
@@ -68,14 +68,12 @@ class RadiobuttonFilterAdapter(val array: ArrayList<StatusModel>, val selected:S
                             selectCheck.set(i,0)
                         }
                     }
+                    decisionStatusClick(selectedPosition, statusPos)
                     notifyDataSetChanged();
                     }
 
         }
 
-    }
-    fun onSave():Int{
-        return selectedPosition
     }
 
     override fun getItemCount(): Int {

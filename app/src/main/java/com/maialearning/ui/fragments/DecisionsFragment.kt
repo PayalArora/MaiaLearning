@@ -15,7 +15,9 @@ import com.maialearning.R
 import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.databinding.RadiobuttonFilterBinding
+import com.maialearning.model.AddProgramConsider
 import com.maialearning.model.ConsiderModel
+import com.maialearning.model.StatusModel
 import com.maialearning.model.UpdateStudentPlan
 import com.maialearning.parser.ApplyingParser
 import com.maialearning.ui.adapter.*
@@ -31,9 +33,9 @@ class DecisionsFragment : Fragment(), DecisionClick {
     private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
     var finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
-    var statusArray: Array<String> = arrayOf()
-    var statuses = ArrayList<String>()
-    var statuskey = ArrayList<String>()
+    var statuses = ArrayList<StatusModel>()
+    var transcriptNid = 0
+    lateinit var decisionProgDialog: BottomSheetDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,6 +53,7 @@ class DecisionsFragment : Fragment(), DecisionClick {
 
     private fun setAdapter() {
         mBinding.recyclerList.adapter = DecisionAdapter(finalArray, this)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,9 +75,9 @@ class DecisionsFragment : Fragment(), DecisionClick {
         showDialog(requireContext(), layoutInflater, position)
     }
 
-    override fun onProgramDecisionClick(position: Int) {
-        // showDialog(requireContext(), layoutInflater, position)
-        bottomSheetDecisionProgram(position)
+    override fun onProgramDecisionClick(position: Int, positionDecision: Int) {
+
+        bottomSheetDecisionProgram(position, positionDecision)
     }
 
     fun showDialog(con: Context, layoutInflater: LayoutInflater, pos: Int) {
@@ -88,23 +91,9 @@ class DecisionsFragment : Fragment(), DecisionClick {
             dialogP.show()
             homeModel.getDecisionStatuses()
         }
-        homeModel.decisionStatusObserver.observe(requireActivity()) {
-            if (statuses.size == 0) {
-                dialogP.dismiss()
-            }
-            val json = JSONObject(it.toString())
-            val iterator: Iterator<*> = json.keys()
-            while (iterator.hasNext()) {
-                val key = iterator.next() as String
-                statuses.add(json.getString(key))
-                statuskey.add(key)
-                //do what you want with the key.
-            }
-            statusArray = statuses.toTypedArray()
-            sheetBinding.filters.setText(con.resources.getString(R.string.select_decision1))
-            sheetBinding.rvRadioGroup.adapter =
-                RadiobuttonFilterAdapter(statusArray, finalArray[pos].applicationStatusName)
-        }
+        sheetBinding.filters.setText(con.resources.getString(R.string.select_decision1))
+        sheetBinding.rvRadioGroup.adapter =
+            RadiobuttonFilterAdapter(statuses, finalArray[pos].applicationStatusName)
         sheetBinding.close.setOnClickListener { dialog.dismiss() }
         sheetBinding.saveBtn.setOnClickListener {
 
@@ -113,13 +102,12 @@ class DecisionsFragment : Fragment(), DecisionClick {
             updateStudentPlan.college_nid = finalArray[pos].university_nid
             val selectedpos =
                 (sheetBinding.rvRadioGroup.adapter as RadiobuttonFilterAdapter).onSave()
-            updateStudentPlan.app_status = statuskey[selectedpos]
+            updateStudentPlan.app_status = statuses.get(selectedpos).key
 
             dialogP.show()
             homeModel.updateStudentPlan(updateStudentPlan)
             homeModel.updateStudentPlanObserver.observe(requireActivity()) {
-                finalArray = ApplyingParser(it, userid).parseJson()
-                setAdapter()
+                getApplyingList()
                 dialog.dismiss()
                 dialogP.dismiss()
             }
@@ -139,7 +127,7 @@ class DecisionsFragment : Fragment(), DecisionClick {
             it?.let {
                 finalArray.clear()
                 dialogP?.dismiss()
-                finalArray = ApplyingParser(it, userid).parseJson()
+                finalArray = ApplyingParser(it, userid, statuses).parseJson()
                 setAdapter()
             }
         }
@@ -147,24 +135,60 @@ class DecisionsFragment : Fragment(), DecisionClick {
             dialogP.dismiss()
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
+        homeModel.decisionStatusObserver.observe(requireActivity()) {
+            if (statuses.size == 0) {
+                dialogP.dismiss()
+            }
+            val json = JSONObject(it.toString())
+            val iterator: Iterator<*> = json.keys()
+            while (iterator.hasNext()) {
+                val key = iterator.next() as String
+                statuses.add(StatusModel(key,json.getString(key)))
+            }}
+
+
+        homeModel.addProgramObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            getApplyingList()
+            decisionProgDialog.dismiss()
+        }
     }
 
-    private fun bottomSheetDecisionProgram(postion: Int) {
-        val dialog = BottomSheetDialog(requireContext())
+    // Change App Status in Programs
+    private fun bottomSheetDecisionProgram(postion: Int, positionDecision: Int) {
+         decisionProgDialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutProgramsBinding = LayoutProgramsBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
-        dialog.show()
+        decisionProgDialog.setContentView(sheetBinding.root)
+        decisionProgDialog.show()
         sheetBinding.addProgram.setText("Application Status")
         sheetBinding.addMore.visibility = View.GONE
         Log.e("Size"," "+finalArray[postion].program_data?.size)
         sheetBinding.addMoreLayout.adapter =
-            DecisonProgramStatusAdapter(finalArray[postion].program_data,this)
+            DecisonProgramStatusAdapter(finalArray[postion].program_data, statuses, positionDecision)
 
 
         sheetBinding.save.setOnClickListener {
+            dialogP.show()
+            var addProgramConsider = AddProgramConsider()
+            var prog :ArrayList<ConsiderModel.ProgramData>?= (sheetBinding.addMoreLayout.adapter as DecisonProgramStatusAdapter).save()
+            addProgramConsider.trans_req_nid = finalArray?.get(positionDecision)?.transcriptNid.toString()
+            var program_data: ArrayList<AddProgramConsider.Programs?> = arrayListOf()
+            if (prog != null) {
+                for (i in prog) {
+                    var program = AddProgramConsider.Programs()
+                    program.program_id = i.program_id
+                    program.program_name = i.program_name
+                    program.program_deadline = i.program_deadline
+                    program.program_status = i.program_status
+                    program_data?.add(program)
+                }
+            }
+            addProgramConsider.program_data = program_data
 
+            homeModel.addProgramToConsidering(addProgramConsider)
         }
 
     }
+
 }

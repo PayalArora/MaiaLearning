@@ -231,6 +231,8 @@
                     android:button="@drawable/radiobutton_done"
                     android:buttonTint="@color/green_1"
                     android:checked="false"
+                    android:enabled="false"
+                    android:clickable="false"
                     android:fontFamily="@font/inter"
                     android:layoutDirection="rtl"
                     android:paddingStart="@dimen/_10dp"

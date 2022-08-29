@@ -2,10 +2,11 @@ package com.maialearning.parser
 
 import com.google.gson.JsonObject
 import com.maialearning.model.ConsiderModel
+import com.maialearning.model.StatusModel
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ApplyingParser(val it:JsonObject, val userId:String) {
+class ApplyingParser(val it:JsonObject, val userId:String,  val statuses : ArrayList<StatusModel>) {
     val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
     fun parseJson(): ArrayList<ConsiderModel.Data> {
         val json = JSONObject(it.toString()).getJSONObject(userId).getJSONObject("data")
@@ -30,6 +31,7 @@ class ApplyingParser(val it:JsonObject, val userId:String) {
                         objectProgram.getString("program_name"),
                         objectProgram.getString("program_deadline"),
                         objectProgram.getString("program_status"),
+                        getStatus(objectProgram.getString("program_status"))
                     )
                 )
             }
@@ -78,8 +80,7 @@ class ApplyingParser(val it:JsonObject, val userId:String) {
                 object_.getString("application_mode"),
                 object_.getString("application_status_name"),
                 object_.getString("app_by_program_supported"),
-                object_.getInt("confirm_applied")
-
+                object_.getInt("confirm_applied"),
             )
             array.add(model)
         }
@@ -107,4 +108,14 @@ class ApplyingParser(val it:JsonObject, val userId:String) {
         finalArray.sortBy { it.naviance_college_name }
         return finalArray
     }
+
+    fun getStatus(program_status: String? ): String? {
+        for (i in statuses) {
+            if (i.key == program_status) {
+                return i.status
+            }
+        }
+        return program_status
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.maialearning.ui.adapter
 
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,7 @@ class DecisionProgramAdapter(
     var data: ArrayList<ConsiderModel.ProgramData>,
     var isVisible: Boolean,
     var pos:Int,
-    val decision: (position:Int) -> Unit
+    val decision: (position:Int, decisionPosition: Int) -> Unit
 ):
     RecyclerView.Adapter<DecisionProgramAdapter.ViewHolder>() {
     /**
@@ -44,8 +45,11 @@ class DecisionProgramAdapter(
 
 
             program.text=data.get(position).program_name
-            if (!data.get(position).program_status.equals("null"))
-            {
+            println("prognam ${ data.get(position).program_status}")
+            if (!data.get(position).program_status.equals("null") && !TextUtils.isEmpty(data.get(position).program_status))
+            {    if (!data.get(position).app_status_val.equals("null") && !TextUtils.isEmpty(data.get(position).app_status_val))
+                rbDecision.text = data.get(position).app_status_val
+                else
                 rbDecision.text = data.get(position).program_status
             }
             if (isVisible == true) {
@@ -54,7 +58,7 @@ class DecisionProgramAdapter(
             } else {
                 rbDecision.visibility = View.GONE
             }
-            rbDecision.setOnClickListener { decision(pos) }
+            rbDecision.setOnClickListener { decision(pos, position) }
         }
 
     }

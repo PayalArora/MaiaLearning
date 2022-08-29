@@ -60,7 +60,7 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
                         )
                     )
                 }
-             //   setAdapter()
+                setAdapter()
             }
         }
         messageViewModel.showError.observe(viewLifecycleOwner) {

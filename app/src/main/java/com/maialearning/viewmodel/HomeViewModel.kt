@@ -198,12 +198,12 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     }
 
     fun getDecisionStatuses() {
-       // showLoading.value = true
+        showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
                 catRepository.getDecisionStatuses()
             }
-           // showLoading.value = false
+           showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> decisionStatusObserver.value = result.data
                      is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()

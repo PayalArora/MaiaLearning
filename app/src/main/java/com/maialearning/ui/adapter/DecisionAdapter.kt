@@ -60,10 +60,13 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
                 LinearLayoutManager.VERTICAL,
                 false
             )
-            val isVisible = data[position].appByProgramSupported.equals("1") && !data[position].applicationMode.equals("3")
+            val isVisible =
+                data[position].appByProgramSupported.equals("1") && !data[position].applicationMode.equals(
+                    "3")
             programList.adapter = data[position].program_data?.let {
                 DecisionProgramAdapter(it,
-                 isVisible,position, ::clickProgramDecision)}
+                    isVisible, position, ::clickProgramDecision)
+            }
             if (data[position].program_data != null && data[position].program_data!!.size > 0) {
                 view1.visibility = VISIBLE
                 view2.visibility = VISIBLE
@@ -72,36 +75,19 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
                 view2.visibility = GONE
             }
 
+//            Log.e("Decision",
+//                "appByProgramSupported ${data[position].appByProgramSupported}" + " , applicationMode ${data[position].applicationMode}, $isVisible  name ${data[position].naviance_college_name}")
 
-            /*   if(data[position].appByProgramSupported.equals("0")||data[position].applicationMode.equals("3"))
-               {
-                   rbAccepted.visibility = GONE
-                   rbDecision.visibility = VISIBLE
-               } else if(data[position].appByProgramSupported.equals("1")&&data[position].applicationMode.equals("3")){
-                   if (!data[position].applicationStatusName.equals("null")) {
-                       rbAccepted.visibility = VISIBLE
-                       rbDecision.visibility = GONE
-                       rbAccepted.setText(data[position].applicationStatusName)
-                   }
-               }else{
-                   rbAccepted.visibility = GONE
-                   rbDecision.visibility = GONE
-               }*/
-            Log.e("Decision","appByProgramSupported ${data[position].appByProgramSupported}"+" , applicationMode ${data[position].applicationMode}, $isVisible  name ${data[position].naviance_college_name}")
-
-            if (data[position].appByProgramSupported.equals("1") && !data[position].applicationMode.equals("3")
-            ) {
-                rbAccepted.visibility = GONE
-                rbDecision.visibility = GONE
-            }
-           else if (data[position].appByProgramSupported.equals("0") && data[position].applicationMode.equals(
+            if (data[position].appByProgramSupported.equals("1") && !data[position].applicationMode.equals(
                     "3")
             ) {
-                rbDecision.visibility = VISIBLE
-                rbAccepted.visibility = GONE
-            } else{
                 rbAccepted.visibility = GONE
                 rbDecision.visibility = GONE
+            } else {
+//                 if (data[position].appByProgramSupported.equals("0") && data[position].applicationMode.equals(
+//                         "3")
+                rbDecision.visibility = VISIBLE
+                rbAccepted.visibility = GONE
             }
 
             if (!data[position].applicationStatusName.equals("null")) {
@@ -122,12 +108,13 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
     override fun getItemCount(): Int {
         return data.size
     }
-    fun clickProgramDecision(i: Int) {
-        decisionClick.onProgramDecisionClick(i)
+
+    fun clickProgramDecision(i: Int, decisionPosition: Int) {
+        decisionClick.onProgramDecisionClick(i, decisionPosition)
     }
 }
 
 interface DecisionClick {
     fun onDecisionClick(position: Int)
-    fun onProgramDecisionClick(position: Int)
+    fun onProgramDecisionClick(position: Int, decisionPosition: Int)
 }

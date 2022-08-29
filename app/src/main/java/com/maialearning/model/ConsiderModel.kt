@@ -51,7 +51,7 @@ class ConsiderModel {
         @SerializedName("app_by_program_supported")
         var appByProgramSupported: String,
         @SerializedName("confirm_applied")
-        var confirmApplied: Int,
+        var confirmApplied: Int
     )
 
     data class ProgramData(
@@ -63,6 +63,8 @@ class ConsiderModel {
         var program_deadline: String,
         @SerializedName("program_status")
         var program_status: String,
+        @SerializedName("app_status_val")
+        var app_status_val:String? = null
     )
 
     data class CounselorNotes(
