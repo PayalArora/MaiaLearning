@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.http.*
 
 
@@ -310,14 +311,23 @@ interface AllAPi {
         @Path("id") id: String,
     ): Deferred<JsonArray>
 
-
-    @POST("recommendation-request")
     @FormUrlEncoded
+    @POST("recommendation-request")
     fun sendRecomTeacher(
         @Header("Authorization") AutToken: String,
+        @Header("Content-Type") content: String,
         @Field("notes") notes: String,
         @Field("student_id") id: String,
         @Field("due_date") date: String,
-        @Field("teacher_id") teacher: ArrayList<String>,
+        @Field("teacher_id[]") teacher: ArrayList<String>,
     ): Deferred<JsonArray>
+
+    @POST("recommendation-request")
+    @FormUrlEncoded
+    fun sendRecomTeacher1(
+        @Header("Authorization") AutToken: String,
+        @Header("Content-Type") content: String,
+        @FieldMap map:HashMap<String,Any>,
+
+        ): Deferred<JsonArray>
 }

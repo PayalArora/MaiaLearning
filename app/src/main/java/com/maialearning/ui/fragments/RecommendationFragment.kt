@@ -56,16 +56,6 @@ class RecommendationFragment : Fragment() {
         SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
         mBinding.send.setOnClickListener {
             if(mBinding.textDescription.text.toString().trim() !=""){
-                val data =JSONObject ()
-                val data_ =HashMap<String,Any> ()
-                data.put("notes",mBinding.textDescription.text.toString())
-                data.put("student_id", SharedHelper(requireContext()).id)
-                data.put("due_date","1601490599")
-                data.put("teacher_id", teacherId)
-                data_.put("notes",mBinding.textDescription.text.toString())
-                data_.put("student_id", SharedHelper(requireContext()).id?:"")
-                data_.put("due_date","1601490599")
-                data_.put("teacher_id", teacherId)
                 homeModel.sendRecomTeachers(mBinding.textDescription.text.toString(),SharedHelper(requireContext()).id?:"",
                     "1601490599",teacherId)
                 }

@@ -15,6 +15,7 @@ import retrofit2.HttpException
 
 import com.maialearning.util.prefhandler.SharedHelper
 import okhttp3.RequestBody
+import org.json.JSONArray
 import org.json.JSONObject
 
 
@@ -763,8 +764,9 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun sendRecom(descrip: String,id: String ,date: String,list:ArrayList<String> ): UseCaseResult<JsonArray> {
         return try {
             val result = catApi.sendRecomTeacher(
-                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", descrip,id,date,list
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}","application/json", descrip,id,date,list
             ).await()
+
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
