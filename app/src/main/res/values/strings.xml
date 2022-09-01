@@ -62,7 +62,7 @@
     <string name="select_reciepents">Select recepients</string>
     <string name="search">Search</string>
     <string name="select_all">Select All</string>
-    <string name="select_reciepents_to">To: Select Recepients</string>
+    <string name="select_reciepents_to">Select Recepients</string>
     <string name="cc">CC: Parent</string>
     <string name="considering">Considering</string>
     <string name="applying">Applying</string>
@@ -466,6 +466,7 @@
     <string name="move_to_applying">Do you want to move this university from applying to considering list?</string>
     <string name="applied">Applied</string>
     <string name="status">status</string>
+    <string name="enter_your_new">Enter your new message \ndescription here!</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

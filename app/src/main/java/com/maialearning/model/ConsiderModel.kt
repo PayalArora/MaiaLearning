@@ -58,6 +58,8 @@ class ConsiderModel {
         @SerializedName("program_id")
         var program_id: Int,
         @SerializedName("program_name")
+
+
         var program_name: String,
         @SerializedName("program_deadline")
         var program_deadline: String,

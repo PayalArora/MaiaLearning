@@ -45,6 +45,9 @@ const val ANTI_VIRUS = "https://api-gw-staging.maialearning.com/ml-s3-antivirus-
 const val TITLE = "title"
 const val DESCRIPTION = "description"
 
+object URL{
+    var BASEURL = 0
+}
 
 fun Context.isNetworkConnected(): Boolean {
     val connectivityManager: ConnectivityManager? =
@@ -101,7 +104,7 @@ val appModules1 = module{
         )
     }
     factory<MessageRepository> { MessageRepositoryImpl(catApi = get()) }
-    viewModel { MessageViewModel(catRepository = get())}
+    viewModel { MessageViewModel(catRepository = get()) }
 }
 
 fun createHttpClient(): OkHttpClient {
@@ -117,10 +120,10 @@ fun createHttpClient(): OkHttpClient {
 //        return@addInterceptor it.proceed(request)
 //    }.build()
 
-    return if (BuildConfig.DEBUG) {
+   return if (BuildConfig.DEBUG){
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        client
+       client
             .addInterceptor(loggingInterceptor)
             .build()
     } else {
@@ -138,6 +141,16 @@ fun getDate(timestamp: Long, format: String): String {
     calendar.timeInMillis = timestamp * 1000L
     val date = DateFormat.format(format, calendar).toString()
     return date
+}
+
+ fun getDateTime(s: String, format: String): String? {
+    try {
+        val sdf = SimpleDateFormat(format)
+        val netDate = Date((s.toLong()))
+        return sdf.format(netDate)
+    } catch (e: Exception) {
+        return e.toString()
+    }
 }
 
 inline fun <reified T> createWebService(

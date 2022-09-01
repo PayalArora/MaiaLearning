@@ -35,10 +35,20 @@ class SharedHelper(var context: Context) {
         set(authkey) {
             sharedPreference!!.putKey("messageId", authkey)
         }
+    var auditId:String
+        get() = sharedPreference!!.getKey("auditId")
+        set(authkey) {
+            sharedPreference!!.putKey("auditId", authkey)
+        }
     var id:String?
         get() = sharedPreference!!.getKey("id")
         set(authkey) {
             sharedPreference!!.putKey("id", authkey)
+        }
+    var schoolId:String?
+        get() = sharedPreference!!.getKey("schoolId")
+        set(authkey) {
+            sharedPreference!!.putKey("schoolId", authkey)
         }
     var uuid:String?
         get() = sharedPreference!!.getKey("uuid")

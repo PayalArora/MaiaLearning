@@ -6,13 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickDelete
+import com.maialearning.calbacks.OnItemClickId
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.databinding.LayoutMessageBinding
 import com.maialearning.model.InboxResponse
 import com.maialearning.util.CommonClass
+import com.maialearning.util.getDateTime
 
-class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<InboxResponse.MessagesItem>) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
+class MessageAdapter(val onItemClick: OnItemClickId, val array:ArrayList<InboxResponse.MessagesItem>, val type:Int = 0) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: LayoutMessageBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
@@ -30,10 +32,13 @@ class MessageAdapter(val onItemClick: OnItemClickDelete, val array:ArrayList<Inb
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+        if (type == 1){
+            viewHolder. binding.textTitle.visibility = View.GONE
+        }
         viewHolder. binding.textTitle.text=array[position].senderName
-        viewHolder. binding.textDate.text=CommonClass.getTime(array[position].sentTimestamp!!.toLong())
+        viewHolder. binding.textDate.text= getDateTime(array[position].sentTimestamp!!,"MMM dd YYYY, hh:mm a")
         viewHolder. binding.textDescription.text=array[position].subject
-        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position) }
+        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position,array[position].messageId?:"") }
 
     }
 

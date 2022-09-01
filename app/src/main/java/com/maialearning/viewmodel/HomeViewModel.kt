@@ -1,6 +1,7 @@
 package com.maialearning.viewmodel
 
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonArray
@@ -15,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
@@ -29,6 +31,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val listObserver = MutableLiveData<JsonObject>()
     val applyObserver = MutableLiveData<JsonObject>()
     val notesObserver = MutableLiveData<NotesModel>()
+    val listArrayObserver = MutableLiveData<JsonArray>()
     val showError = SingleLiveEvent<String>()
     val updateStudentPlanObserver = MutableLiveData<JsonObject>()
     val searchUniversityObserver = MutableLiveData<JsonObject>()
@@ -110,6 +113,24 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             when (result) {
                 is UseCaseResult.Success -> searchUniversityObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+            }
+        }
+    }
+    fun getRecipients(context: Context, id: String, type: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getRecipients(
+                    id,
+                    type
+                )
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> listArrayObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
             }
         }
     }

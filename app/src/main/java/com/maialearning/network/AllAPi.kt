@@ -308,4 +308,12 @@ interface AllAPi {
     fun getDecsionStatuses(
         @Header("Authorization") AutToken: String
     ): Deferred<JsonObject>
+
+    @POST("get_message_center_recipients_for_students")
+    @FormUrlEncoded
+    fun getRecipients(
+        @Header("Authorization") AutToken: String,
+        @Field("school_id") n_id: String,
+        @Field("user_type") type: String): Deferred<JsonArray>
+
 }

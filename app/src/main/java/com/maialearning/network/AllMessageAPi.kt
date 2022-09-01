@@ -6,6 +6,7 @@ import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,30 +14,62 @@ import retrofit2.http.*
 interface AllMessageAPi {
 
     @GET
-    fun getInboxN(@Url url: String,
-                 @Header("x-access-token")  JwtToken:String,
-    ):  Deferred<JsonObject>
+    fun getInboxN(
+        @Url url: String,
+        @Header("x-access-token") JwtToken: String,
+    ): Deferred<JsonObject>
 
     @GET("v1/messaging/users/{id}/inbox")
-    fun getInbox(
-        @Header("x-access-token")  AutToken:String,
-        @Path("id") id:String
-    ):  Deferred<JsonObject>
+    fun getInboxAsync(
+        @Header("x-access-token") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 
     @GET("v1/messaging/users/{id}/sent")
-    fun getSent(
-        @Header("x-access-token")  AutToken:String,
-        @Path("id") id:String
-    ):  Deferred<JsonObject>
-    @GET("v1/messaging/users/{id}/trash")
-    fun getTrash(
-        @Header("x-access-token")  AutToken:String,
-        @Path("id") id:String
-    ):  Deferred<JsonObject>
+    fun getSentAsync(
+        @Header("x-access-token") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 
-    @GET("get_jwt_token")
-    fun getJWTToken(
-        @Header("Authorization")  AutToken:String
-    ):  Deferred<JsonArray>
+    @GET("v1/messaging/users/{id}/trash")
+    fun getTrashAsync(
+        @Header("x-access-token") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+    @GET("v1/messaging/messages/{id}")
+    fun getMessageAsync(
+        @Header("x-access-token") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+    @DELETE("v1/messaging/messages/{id}")
+    fun delMessageAsync(
+        @Header("x-access-token") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+    @POST("v1/messaging/messages")
+    fun createMessage(
+        @Header("x-access-token") AutToken: String,
+        @Body sendMessageModel: SendMessageModel
+    ): Deferred<JsonObject>
+
+    @POST("v1/messaging/messages/get-presigned-url")
+    @FormUrlEncoded
+    fun updateProfImage(
+        @Header("x-access-token") AutToken: String,
+        @Field("filename") filename: String,
+        @Field("fileType") fileType: String,
+        @Field("key") key: String,
+        @Field("type") type: String,
+        @Field("schoolnid") schoolId: String
+    ): Deferred<JsonObject>
+
+    @POST("v1/messaging/messages/get-presigned-url")
+    fun updateProfImage1(
+        @Header("x-access-token") AutToken: String,
+        @Body id: JSONObject
+    ): Deferred<JsonObject>
 
 }
