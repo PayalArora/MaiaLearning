@@ -44,6 +44,7 @@ const val ML_URL = "https://ml-api-staging.maialearning.com/"
 const val ANTI_VIRUS = "https://api-gw-staging.maialearning.com/ml-s3-antivirus-status"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
+const val LOGINRESPONSE = "login_response"
 
 
 fun Context.isNetworkConnected(): Boolean {

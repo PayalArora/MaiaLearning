@@ -250,6 +250,7 @@ class LoginActivity : AppCompatActivity() {
                 dialog.dismiss()
                 println("Name " + it?.userName)
                 SharedHelper(this).authkey = it.accessToken
+                SharedHelper(this).appResponse = it
                 it.user.let {
                     it?.messageId.let {
                         if (it != null) {

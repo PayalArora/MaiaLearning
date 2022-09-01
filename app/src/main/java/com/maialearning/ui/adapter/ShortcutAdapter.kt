@@ -5,13 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.app.ShareCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemShorcutsBinding
+import com.maialearning.model.ShortcutModel
 
 
-class ShortcutAdapter(var context: Context) : RecyclerView.Adapter<ShortcutAdapter.ViewHolder>() {
+class ShortcutAdapter(var context: Context, var array: ArrayList<ShortcutModel>) : RecyclerView.Adapter<ShortcutAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -32,27 +31,20 @@ class ShortcutAdapter(var context: Context) : RecyclerView.Adapter<ShortcutAdapt
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position == 0) {
-            viewHolder.binding.textUpcomingVisits.text = "My Drive"
-        } else {
-            viewHolder.binding.textUpcomingVisits.text = "Youtube "
-        }
+
+
+            viewHolder.binding.textUpcomingVisits.text = array.get(position).name
+
         viewHolder.binding.textDescription.text = "N/A"
         viewHolder.binding.layout.setOnClickListener {
-            if (position == 1) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/cricbuzz"))
-                intent.setPackage("com.google.android.youtube")
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse( array.get(position).link))
                 context.startActivity(intent)
-            }else{
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://drive.google.com/"))
-                intent.setPackage("com.google.android.apps.docs")
-                context.startActivity(intent)
-            }
+
         }
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return array.size
     }
 
 }
