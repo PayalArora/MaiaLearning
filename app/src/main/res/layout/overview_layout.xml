@@ -272,7 +272,7 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginBottom="@dimen/_10dp"
                     app:tint="@color/black_1"
-                    android:drawableStart="@drawable/ic_outline_location_on_24"
+                    android:drawableStart="@drawable/ic_edit"
                     android:drawablePadding="@dimen/_5dp"
                     android:fontFamily="@font/inter_medium"
                     android:lineSpacingExtra="2sp"

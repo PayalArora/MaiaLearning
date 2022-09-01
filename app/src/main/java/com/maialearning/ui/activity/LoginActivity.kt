@@ -33,7 +33,7 @@ import java.util.regex.Pattern
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var passVisible: Boolean = false
-    private var googleSignInAccount:GoogleSignInAccount?= null
+    private var googleSignInAccount: GoogleSignInAccount? = null
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         val application = requireNotNull(this).application
         val factory = LoginViewModelFactory(application, object : OnSignInStartedListener {
             override fun onSignInStarted(client: GoogleSignInClient?) {
@@ -136,23 +137,29 @@ class LoginActivity : AppCompatActivity() {
                 viewModel.signOut()
                 dialog.show()
 
-                googleSignInAccount.let { it1 -> loginModel.googleLogin(it1?.email!!,it1.id!!,it1.idToken!!) }
-              //  startActivity(Intent(this, DashboardActivity::class.java))
+                googleSignInAccount.let { it1 ->
+                    loginModel.googleLogin(
+                        it1?.email!!,
+                        it1.id!!,
+                        it1.idToken!!
+                    )
+                }
+                //  startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
         viewModel.microUser.observe(this) {
             it?.let {
                 viewModel.signOut()
                 dialog.show()
-              loginModel.microLogin(  it)
+                loginModel.microLogin(it)
                 //startActivity(Intent(this, DashboardActivity::class.java))
             }
         }
-    loginModel.showLoading.observe(this){
-        if (!it){
-            dialog.dismiss()
+        loginModel.showLoading.observe(this) {
+            if (!it) {
+                dialog.dismiss()
+            }
         }
-    }
     }
 
     private fun bottomSheetWork() {
@@ -197,8 +204,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginWork() {
 //        if (isInputValid()) {
-            //  loginWithUserIdPassword()
-            startActivity(Intent(this, DashboardActivity::class.java))
+        //  loginWithUserIdPassword()
+        startActivity(Intent(this, DashboardActivity::class.java))
 //        }
     }
 
@@ -241,12 +248,13 @@ class LoginActivity : AppCompatActivity() {
         loginModel.loginObserver.observe(this) {
             it?.let {
                 dialog.dismiss()
-                println("Name "+it?.userName)
-                SharedHelper(this).authkey=it.accessToken
+                println("Name " + it?.userName)
+                SharedHelper(this).authkey = it.accessToken
+                SharedHelper(this).appResponse = it
                 it.user.let {
                     it?.messageId.let {
                         if (it != null) {
-                            SharedHelper(this).messageId= it
+                            SharedHelper(this).messageId = it
                         }
                     }
                     it?.uuid.let {

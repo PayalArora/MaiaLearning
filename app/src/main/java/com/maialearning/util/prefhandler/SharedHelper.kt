@@ -1,10 +1,13 @@
 package com.maialearning.util.prefhandler
 
 import android.content.Context
-import com.maialearning.util.prefhandler.SharedPreference
+import com.google.gson.Gson
+import com.maialearning.model.LoginNewModel
+import com.maialearning.util.LOGINRESPONSE
 
 class SharedHelper(var context: Context) {
     var sharedPreference: SharedPreference? = null
+    val gson = Gson()
     init {
         sharedPreference=SharedPreference(context)
     }
@@ -75,4 +78,10 @@ class SharedHelper(var context: Context) {
         set(authkey) {
             sharedPreference!!.putKey("collegenId", authkey)
         }
-}
+    var appResponse: LoginNewModel?
+        get() = gson.fromJson(sharedPreference!!.getKey(LOGINRESPONSE).toString(),
+            LoginNewModel::class.java)
+        set(value) = sharedPreference!!.putKey (
+           LOGINRESPONSE, gson.toJson(value))
+        }
+

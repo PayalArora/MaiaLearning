@@ -12,12 +12,14 @@ import com.maialearning.util.ORIGIN
 
 import retrofit2.HttpException
 
-import retrofit2.Response
+
 import com.maialearning.util.prefhandler.SharedHelper
+import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+
 
 interface LoginRepository {
     // Suspend is used to await the result from Deferred
@@ -45,11 +47,15 @@ interface LoginRepository {
         sms: String
     ): UseCaseResult<String>
 
-  suspend  fun updateEmail(token: String, userData: UpdateUserData) :UseCaseResult<String>
-   suspend fun getCountries(token: String)  :UseCaseResult<JsonObject>
-    suspend fun getStates(token: String,id: String)  :UseCaseResult<JsonObject>
-    suspend fun getEthnicities(token: String,id: String)  :UseCaseResult<ArrayList<EthnicityResponseItem?>>
-    suspend fun getRaces(token: String,id: String)  :UseCaseResult<ArrayList<RaceItem?>>
+    suspend fun updateEmail(token: String, userData: UpdateUserData): UseCaseResult<String>
+    suspend fun getCountries(token: String): UseCaseResult<JsonObject>
+    suspend fun getStates(token: String, id: String): UseCaseResult<JsonObject>
+    suspend fun getEthnicities(
+        token: String,
+        id: String
+    ): UseCaseResult<ArrayList<EthnicityResponseItem?>>
+
+    suspend fun getRaces(token: String, id: String): UseCaseResult<ArrayList<RaceItem?>>
     suspend fun getImageURL(
         token: String,
         id: String,
@@ -81,7 +87,6 @@ interface LoginRepository {
     suspend fun searchUniversities(
         payload: UniversitySearchPayload
     ): UseCaseResult<JsonObject>
-
     suspend fun getSurveys(url: String, token: String): UseCaseResult<SurveysResponse>
     suspend fun getWebinar(url: String, token: String): UseCaseResult<WebinarResponse>
     suspend fun downloadWorkSheet(
@@ -123,7 +128,6 @@ interface LoginRepository {
     suspend fun resetTaskCompletion(
         uid: String
     ): UseCaseResult<JsonArray>
-
     suspend fun hitLikeUniv(studentId: String, collegeId: String): UseCaseResult<JsonArray>
     suspend fun hitUnlikeUniv(studentId: String, collegeId: String): UseCaseResult<Unit>
     suspend fun hitDelUnivCons(studentId: String, collegeId: String): UseCaseResult<Unit>
@@ -139,6 +143,12 @@ interface LoginRepository {
 
     suspend fun deleteProgramCOnsider(
         id: String
+    ): UseCaseResult<JsonArray>
+    suspend fun teacherList(
+        id: String
+    ): UseCaseResult<JsonArray>
+    suspend fun sendRecom(
+        descrip: String,id: String ,date: String,list:ArrayList<String>
     ): UseCaseResult<JsonArray>
 
     suspend fun getDecisionStatuses(
@@ -618,6 +628,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
+    override suspend fun teacherList(id: String): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getTeacherList(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
     override suspend fun getSurveys(url: String, token: String): UseCaseResult<SurveysResponse> {
         return try {
             val result = catApi.getSurveys(url, token).await()
@@ -752,6 +775,18 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.resetTaskCompleteion(
                 "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", uid
             ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }    }
+    override suspend fun sendRecom(descrip: String,id: String ,date: String,list:ArrayList<String> ): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.sendRecomTeacher(
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}","application/json", descrip,id,date,list
+            ).await()
+
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

@@ -424,24 +424,24 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     private fun menuPopUp(position: Int, it: View?) {
 
-        val popupMenu = PopupMenu(requireContext(), it)
-        popupMenu.inflate(R.menu.consider_popup)
-        popupMenu.show()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            popupMenu.setForceShowIcon(true)
-        };
-
-        popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
-
-            when (item!!.itemId) {
-                R.id.del_coll -> {
-                    confirmPopup(position)
-                }
-            }
-
-            true
-
-        })
+//        val popupMenu = PopupMenu(requireContext(), it)
+//        popupMenu.inflate(R.menu.consider_popup)
+//        popupMenu.show()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            popupMenu.setForceShowIcon(true)
+//        };
+//
+//        popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+//
+//            when (item!!.itemId) {
+//                R.id.del_coll -> {
+//                    confirmPopup(position)
+//                }
+//            }
+//
+//            true
+//
+//        })
     }
 
     private fun confirmPopup(position: Int) {
