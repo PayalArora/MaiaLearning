@@ -1,18 +1,16 @@
 package com.maialearning.ui.adapter
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.AttachItemRowBinding
-import com.maialearning.databinding.CampusAdapterBinding
-import com.maialearning.model.WorksheetFileIdItem
+import com.maialearning.model.DashboardOverdueResponse
 
-class AttachmentAdapter(val con: Context,val  worksheetFileId: List<WorksheetFileIdItem?>?): RecyclerView.Adapter<AttachmentAdapter.ViewHolder>() {
+
+class AttachmentAdapter(val con: Context,val  worksheetFileId: List<DashboardOverdueResponse.AssignmentItem.WorksheetFileIdItem?>?): RecyclerView.Adapter<AttachmentAdapter.ViewHolder>() {
     var isSelected = false
 
     /**

@@ -4,9 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.EthnicityItemBinding
-import com.maialearning.databinding.SportsInnerBinding
-import com.maialearning.model.EthnicityResponseItem
-import com.maialearning.model.ProfileResponse
 import com.maialearning.model.RaceItem
 
 class RaceAdapter(

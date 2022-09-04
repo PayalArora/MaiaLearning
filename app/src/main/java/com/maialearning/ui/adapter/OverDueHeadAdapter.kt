@@ -9,9 +9,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.OverdueItemRowBinding
-import com.maialearning.model.AssignmentItem
+import com.maialearning.model.DashboardOverdueResponse
 import com.maialearning.model.SortedDateModel
-import com.maialearning.util.getDate
 import com.maialearning.viewmodel.DashboardFragViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -49,7 +48,7 @@ class OverDueHeadAdapter(
         viewHolder.binding.dateTxt.setText(overdueList?.get(position)?.date)
         overdueList?.get(position)?.assignment?.let { viewHolder.binding.countTxt.setText("" + it.size) }
         viewHolder.binding.assignmentRow.adapter = OverDueAdapter(
-            overdueList?.get(position)?.assignment as ArrayList<AssignmentItem>,
+            overdueList?.get(position)?.assignment as ArrayList<DashboardOverdueResponse.AssignmentItem>,
             con,
             fragment
         )

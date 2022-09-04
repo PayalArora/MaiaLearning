@@ -18,11 +18,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.databinding.SearchLayoutBinding
-import com.maialearning.model.GermanUniversitiesResponse
-import com.maialearning.model.UniversitiesSearchModel
-import com.maialearning.model.UniversitySearchPayload
+import com.maialearning.model.*
 import com.maialearning.parser.SearchParser
+import com.maialearning.ui.adapter.EuropeanFactAdapter
 import com.maialearning.ui.adapter.GermanFactAdapter
+import com.maialearning.ui.adapter.UkFactAdapter
 import com.maialearning.ui.adapter.UniFactAdapter
 import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.prefhandler.SharedHelper
@@ -36,17 +36,34 @@ class SearchFragment : Fragment() {
     private val homeModel: HomeViewModel by viewModel()
     private lateinit var progress: Dialog
     var page: Int = 1
-    var universityListUpdate: ArrayList<UniversitiesSearchModel?>? = ArrayList()
-    var universityList: ArrayList<UniversitiesSearchModel?>? = ArrayList()
-    var university_listNew = ArrayList<UniversitiesSearchModel?>()
+    private var universityListUpdate: ArrayList<UniversitiesSearchModel?>? = null
+    private var universityList: ArrayList<UniversitiesSearchModel?>? = null
+    private lateinit var universityListNew: ArrayList<UniversitiesSearchModel?>
 
-    var germanListUpdate: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>? = ArrayList()
-    var germanList: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>? = ArrayList()
-    var german_listNew = ArrayList<GermanUniversitiesResponse.Data.CollegeData?>()
+    private var germanListUpdate: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>? = null
+    private var germanList: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>? = null
+    private lateinit var germanListNew: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>
+
+    private var euroListUpdate: ArrayList<EuropeanUniList.CollegeList?>? = null
+    private var euroList: ArrayList<EuropeanUniList.CollegeList?>? = null
+    private lateinit var euroListNew : ArrayList<EuropeanUniList.CollegeList?>
+
+    private var ukListUpdate: ArrayList<UkResponseModel.Data.CollegeData?>? = null
+    private var ukList: ArrayList<UkResponseModel.Data.CollegeData?>? = null
+    private lateinit var ukListNew : ArrayList<UkResponseModel.Data.CollegeData?>
+    private var euCountries = arrayOf(
+        "BE", "EL", "LT", "PT", "BG", "ES", "LU", "RO", "CZ", "FR", "HU", "SI", "DK", "HR",
+        "MT", "SK", "DE", "IT", "NL", "FI", "EE", "CY", "AT", "SE", "IE", "LV", "PL", "UK",
+        "CH", "NO", "IS", "LI"
+    )
+
     private var isLoading = false
-
+    private var isEuropean = false
     lateinit var adapter: UniFactAdapter
     lateinit var germanAdapter: GermanFactAdapter
+    lateinit var euroAdapter: EuropeanFactAdapter
+    lateinit var ukAdapter: UkFactAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -69,20 +86,68 @@ class SearchFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
             .commit()
-        hitAPI(page, "")
-        if (!(SharedHelper(requireContext()).country ?: "US").equals("DE")) {
-            adapter = UniFactAdapter(
+        if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
+            germanListUpdate = ArrayList()
+            germanList = ArrayList()
+            germanListNew = ArrayList<GermanUniversitiesResponse.Data.CollegeData?>()
+            isEuropean = false
+            germanAdapter = GermanFactAdapter(
                 requireContext(),
-                university_listNew,
+                germanListNew,
                 ::click,
                 mBinding.rvUniv
             )
-            mBinding.rvUniv.adapter = adapter
-            adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+            mBinding.rvUniv.adapter = germanAdapter
+            germanAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
-                    university_listNew.add(null)
+                    germanListNew.add(null)
                     isLoading = true
-                    adapter.notifyItemInserted(university_listNew.size - 1)
+                    germanAdapter.notifyItemInserted(germanListNew.size - 1)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        hitAPI(page, "")
+
+                    }, 2000)
+                }
+            })
+        } else if ((SharedHelper(requireContext()).country ?: "US").equals("GB")) {
+            ukListUpdate= ArrayList()
+            ukList = ArrayList()
+            ukListNew = ArrayList<UkResponseModel.Data.CollegeData?>()
+            ukAdapter = UkFactAdapter(
+                requireContext(),
+                ukListNew,
+                ::click,
+                mBinding.rvUniv
+            )
+            mBinding.rvUniv.adapter = ukAdapter
+            ukAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+                override fun onLoadMore() {
+                    ukListNew.add(null)
+                    isLoading = true
+                    ukAdapter.notifyItemInserted(ukListNew.size - 1)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        hitAPI(page, "")
+
+                    }, 2000)
+                }
+            })
+        } else if (euCountries.contains(SharedHelper(requireContext()).country ?: "US")) {
+            euroListUpdate = ArrayList()
+            euroList = ArrayList()
+            euroListNew = ArrayList()
+            isEuropean = true
+            euroAdapter = EuropeanFactAdapter(
+                requireContext(),
+                euroListNew,
+                ::click,
+                mBinding.rvUniv
+            )
+            mBinding.rvUniv.adapter = euroAdapter
+            euroAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+                override fun onLoadMore() {
+                    euroListNew.add(null)
+                    isLoading = true
+                    euroAdapter.notifyItemInserted(euroListNew.size - 1)
                     Handler(Looper.getMainLooper()).postDelayed({
                         hitAPI(page, "")
 
@@ -90,18 +155,22 @@ class SearchFragment : Fragment() {
                 }
             })
         } else {
-            germanAdapter = GermanFactAdapter(
+            universityListUpdate = ArrayList()
+            universityList = ArrayList()
+            universityListNew = ArrayList()
+            isEuropean = false
+            adapter = UniFactAdapter(
                 requireContext(),
-                german_listNew,
+                universityListNew,
                 ::click,
                 mBinding.rvUniv
             )
-            mBinding.rvUniv.adapter = germanAdapter
-            germanAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+            mBinding.rvUniv.adapter = adapter
+            adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
-                    german_listNew.add(null)
+                    universityListNew.add(null)
                     isLoading = true
-                    germanAdapter.notifyItemInserted(german_listNew.size - 1)
+                    adapter.notifyItemInserted(universityListNew.size - 1)
                     Handler(Looper.getMainLooper()).postDelayed({
                         hitAPI(page, "")
 
@@ -109,11 +178,9 @@ class SearchFragment : Fragment() {
                 }
             })
         }
-
-
-
+        hitAPI(page, "")
         homeModel.searchUniversityObserver.observe(requireActivity()) {
-            if ((SharedHelper(requireContext()).country ?: "US").equals("DE")) {
+            if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
                 val univ = SearchParser(it).parseGermanJson()
                 page = (univ.pager!!.current!! + 1)
                 val totalPage = univ.pager?.total
@@ -123,8 +190,8 @@ class SearchFragment : Fragment() {
                 germanListUpdate?.addAll(univ.data?.collegeData!!)
                 if (isLoading) {
                     isLoading = false
-                    german_listNew.removeAt(german_listNew.size - 1)
-                    germanAdapter.notifyItemRemoved(german_listNew.size)
+                    germanListNew.removeAt(germanListNew.size - 1)
+                    germanAdapter.notifyItemRemoved(germanListNew.size)
                 }
                 //for swipe refresh page
                 if (totalPage != null) {
@@ -133,6 +200,47 @@ class SearchFragment : Fragment() {
                     }
                 }
                 germanAdapter.setLoaded()
+            } else if ((SharedHelper(requireContext()).country ?: "US") == "GB") {
+                val univ = SearchParser(it).parseUkJson()
+                page = (univ.pager!!.current!! + 1)
+                val totalPage = univ.pager?.total
+                val last = univ.pager?.last
+                progress.dismiss()
+                ukList?.addAll(univ.data?.collegeData!!)
+                ukListUpdate?.addAll(univ.data?.collegeData!!)
+                if (isLoading) {
+                    isLoading = false
+                    ukListNew.removeAt(ukListNew.size - 1)
+                    ukAdapter.notifyItemRemoved(ukListNew.size)
+                }
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        ukAdapter.addAllLis(ukList!!, totalPage.toInt(), last)
+                    }
+                }
+                ukAdapter.setLoaded()
+
+            } else if (isEuropean) {
+                val univ = SearchParser(it).parseEuropeanJson()
+                page = (univ.pager!! + 1)
+                val totalPage = univ.totalRecords
+                val last = univ.last
+                progress.dismiss()
+                euroList?.addAll(univ.collegeList)
+                euroListUpdate?.addAll(univ.collegeList)
+                if (isLoading) {
+                    isLoading = false
+                    euroListNew.removeAt(euroListNew.size - 1)
+                    euroAdapter.notifyItemRemoved(euroListNew.size)
+                }
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
+                    }
+                }
+                euroAdapter.setLoaded()
             } else {
                 val univ = SearchParser(it).parseJson()
                 page = (univ.pager!! + 1)
@@ -143,8 +251,8 @@ class SearchFragment : Fragment() {
                 universityListUpdate?.addAll(univ.university_list!!)
                 if (isLoading) {
                     isLoading = false
-                    university_listNew.removeAt(university_listNew.size - 1)
-                    adapter.notifyItemRemoved(university_listNew.size)
+                    universityListNew.removeAt(universityListNew.size - 1)
+                    adapter.notifyItemRemoved(universityListNew.size)
                 }
                 //for swipe refresh page
                 if (totalPage != null) {
@@ -197,7 +305,13 @@ class SearchFragment : Fragment() {
         payload.sort_order = "asc"
         universityList?.clear()
         germanList?.clear()
-        homeModel.searchUniversities(payload)
+        euroList?.clear()
+        ukList?.clear()
+        if (isEuropean) {
+            homeModel.euroUniversities(payload)
+        } else {
+            homeModel.searchUniversities(payload)
+        }
     }
 
     private fun bottomSheetList() {

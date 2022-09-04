@@ -341,7 +341,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         dialog: BottomSheetDialog,
     ) {
         var citizens: ArrayList<String?>? = ArrayList()
-        var ethinicitiesList = arrayListOf<EthnicityResponseItem?>()
+        var ethinicitiesList = arrayListOf<EthnicityResponse.EthnicityResponseItem?>()
         var racesList = arrayListOf<RaceItem?>()
 
         var country = "Select country"

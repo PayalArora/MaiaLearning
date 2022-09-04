@@ -8,7 +8,7 @@ data class SortedDateModel(
     var date: String? = null,
 
     @field:SerializedName("assignment")
-    var assignment: List<AssignmentItem?>? = null
+    var assignment: List<DashboardOverdueResponse.AssignmentItem?>? = null
 
 
 )

@@ -44,7 +44,7 @@ class DashboardFragment : Fragment() {
     private lateinit var mBinding: DashbordFragBinding
     private val dashboardViewModel: DashboardFragViewModel by viewModel()
     private lateinit var dialog: Dialog
-    var assignmentList = arrayListOf<AssignmentItem>()
+    var assignmentList = arrayListOf<DashboardOverdueResponse.AssignmentItem>()
     var endList = arrayListOf<SortedDateModel>()
     var endCompletedList = arrayListOf<SortedDateModel>()
     var upcomingList = arrayListOf<SortedDateModel>()
@@ -180,13 +180,13 @@ class DashboardFragment : Fragment() {
     }
 
     private fun surveySet(data: List<SurveyDataItem?>?, survey: JsonObject?) {
-        var assignment = ArrayList<AssignmentItem>()
+        var assignment = ArrayList<DashboardOverdueResponse.AssignmentItem>()
         // var noDueList = arrayListOf<SortedDateModel>()
         if (data != null) {
             for (i in data.indices) {
                 if ((data.get(i)?.endTime == null || data.get(i)?.endTime.equals("0"))) {
                     if (data.get(i)?.status == "active") {
-                        var assignmentItem = AssignmentItem()
+                        var assignmentItem = DashboardOverdueResponse.AssignmentItem()
                         assignmentItem.date = null
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
@@ -199,7 +199,7 @@ class DashboardFragment : Fragment() {
                 ) {
                     val jobj: JsonObject? = survey?.get(data.get(i)?.uuid) as JsonObject?
                     if (jobj?.get("response_status").toString()?.replace("\"", "") == "completed") {
-                        var assignmentItem = AssignmentItem()
+                        var assignmentItem = DashboardOverdueResponse.AssignmentItem()
                         assignmentItem.date = data.get(i)?.endTime
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
@@ -257,7 +257,7 @@ class DashboardFragment : Fragment() {
 
 
     private fun dataSet(dashboardOverdueResponse: DashboardOverdueResponse) {
-        assignmentList = dashboardOverdueResponse.assignment as ArrayList<AssignmentItem>
+        assignmentList = dashboardOverdueResponse.assignment as ArrayList<DashboardOverdueResponse.AssignmentItem>
         upcomingListWork()
         overDueListWork()
         completedListWork()
@@ -277,7 +277,7 @@ class DashboardFragment : Fragment() {
                 it.status == 0 && it.completed != 1 && (it.date == null || (it.date != null && compareDate(
                     it.date?.toLong()
                         ?.let { it1 -> getDate(it1, "E dd MMM, yyyy") })))
-            } as ArrayList<AssignmentItem>
+            } as ArrayList<DashboardOverdueResponse.AssignmentItem>
 
         Log.e("upcoming list size", " " + upcoming.size)
         upcoming.sortBy {
@@ -329,7 +329,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun completedListWork() {
-        var completedList = assignmentList.filter { it.completed == 1 } as ArrayList<AssignmentItem>
+        var completedList = assignmentList.filter { it.completed == 1 } as ArrayList<DashboardOverdueResponse.AssignmentItem>
 
         val dateTimeFormatter: DateTimeFormatter =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -373,7 +373,7 @@ class DashboardFragment : Fragment() {
     }
 
     private fun overDueListWork() {
-        var overdueList = assignmentList.filter { it.overdue == 1 } as ArrayList<AssignmentItem>
+        var overdueList = assignmentList.filter { it.overdue == 1 } as ArrayList<DashboardOverdueResponse.AssignmentItem>
 
         val dateTimeFormatter: DateTimeFormatter =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

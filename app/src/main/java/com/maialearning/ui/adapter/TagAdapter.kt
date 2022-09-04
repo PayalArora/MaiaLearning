@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.EthnicityItemBinding
-import com.maialearning.model.EthnicityResponseItem
 import com.maialearning.model.FmTagsResponseItem
 
 class TagAdapter(

@@ -27,7 +27,7 @@ class ProfileViewModel(private val catRepository: LoginRepository) : ViewModel()
     val countryObserver = MutableLiveData<JsonObject>()
     val stateObserver = MutableLiveData<JsonObject>()
     val stateResidenceObserver = MutableLiveData<JsonObject>()
-    val ethnicityObserver = MutableLiveData< ArrayList<EthnicityResponseItem?>?>()
+    val ethnicityObserver = MutableLiveData< ArrayList<EthnicityResponse.EthnicityResponseItem?>?>()
     val imageUrlObserver = MutableLiveData<JsonArray>()
     val uploadImageObserver = MutableLiveData<String>()
 

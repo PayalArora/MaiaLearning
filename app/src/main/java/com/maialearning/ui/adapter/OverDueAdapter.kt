@@ -27,7 +27,7 @@ import com.maialearning.R
 import com.maialearning.databinding.PrimaryEmailSheetBinding
 import com.maialearning.databinding.RicheditorBinding
 import com.maialearning.databinding.UpcomingItemRowBinding
-import com.maialearning.model.AssignmentItem
+import com.maialearning.model.DashboardOverdueResponse
 import com.maialearning.ui.bottomsheets.UpcomingItemDetails
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.replaceNextLine
@@ -40,7 +40,7 @@ import kotlin.collections.ArrayList
 
 
 class OverDueAdapter(
-    var overdueList: ArrayList<AssignmentItem>, val con: FragmentActivity, val fragment: Fragment
+    var overdueList: ArrayList<DashboardOverdueResponse.AssignmentItem>, val con: FragmentActivity, val fragment: Fragment
 ) :
     RecyclerView.Adapter<OverDueAdapter.ViewHolder>(), RichEditor.OnTextChangeListener {
     var isSelected = false

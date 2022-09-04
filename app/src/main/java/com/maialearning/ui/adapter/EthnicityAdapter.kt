@@ -4,12 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.EthnicityItemBinding
-import com.maialearning.databinding.SportsInnerBinding
-import com.maialearning.model.EthnicityResponseItem
-import com.maialearning.model.ProfileResponse
+import com.maialearning.model.EthnicityResponse
+
 
 class EthnicityAdapter(
-    val arr: ArrayList<EthnicityResponseItem?>,
+    val arr: ArrayList<EthnicityResponse.EthnicityResponseItem?>,
     var ethinicityList: ArrayList<String> = arrayListOf<String>(),
     var click: (position: String, check: Boolean) -> Unit
 ) : RecyclerView.Adapter<EthnicityAdapter.ViewHolder>() {

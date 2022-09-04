@@ -105,6 +105,19 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+    fun euroUniversities(payload: UniversitySearchPayload) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.euroUniversities(payload)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> searchUniversityObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
 
     fun hitlike(studentid: String, collegeId: String) {
         showLoading.value = true

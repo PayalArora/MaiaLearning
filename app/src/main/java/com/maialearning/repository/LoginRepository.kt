@@ -12,13 +12,8 @@ import com.maialearning.util.ORIGIN
 
 import retrofit2.HttpException
 
-import retrofit2.Response
 import com.maialearning.util.prefhandler.SharedHelper
-import kotlinx.serialization.json.Json
-import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONArray
-import org.json.JSONObject
 
 interface LoginRepository {
     // Suspend is used to await the result from Deferred
@@ -52,7 +47,7 @@ interface LoginRepository {
     suspend fun getEthnicities(
         token: String,
         id: String
-    ): UseCaseResult<ArrayList<EthnicityResponseItem?>>
+    ): UseCaseResult<ArrayList<EthnicityResponse.EthnicityResponseItem?>>
 
     suspend fun getRaces(token: String, id: String): UseCaseResult<ArrayList<RaceItem?>>
     suspend fun getImageURL(
@@ -77,6 +72,7 @@ interface LoginRepository {
         id: String,
         id2: String
     ): UseCaseResult<JsonObject>
+
     suspend fun getUniversityList(
         token: String
     ): UseCaseResult<JsonArray>
@@ -89,6 +85,11 @@ interface LoginRepository {
     suspend fun searchUniversities(
         payload: UniversitySearchPayload
     ): UseCaseResult<JsonObject>
+
+    suspend fun euroUniversities(
+        payload: UniversitySearchPayload
+    ): UseCaseResult<JsonObject>
+
     suspend fun getSurveys(url: String, token: String): UseCaseResult<SurveysResponse>
     suspend fun getWebinar(url: String, token: String): UseCaseResult<WebinarResponse>
     suspend fun downloadWorkSheet(
@@ -130,6 +131,7 @@ interface LoginRepository {
     suspend fun resetTaskCompletion(
         uid: String
     ): UseCaseResult<JsonArray>
+
     suspend fun hitLikeUniv(studentId: String, collegeId: String): UseCaseResult<JsonArray>
     suspend fun hitUnlikeUniv(studentId: String, collegeId: String): UseCaseResult<Unit>
     suspend fun hitDelUnivCons(studentId: String, collegeId: String): UseCaseResult<Unit>
@@ -191,7 +193,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             print(ex.response()?.errorBody().toString())
             UseCaseResult.Error(ex)
         } catch (ex: Exception) {
-            print( ex.message)
+            print(ex.message)
             UseCaseResult.Exception(ex)
         }
     }
@@ -212,7 +214,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         id: String,
     ): UseCaseResult<ProfileResponse> {
         return try {
-            val result = catApi.getProfile(id_token, id).await()
+            val result = catApi.getProfileAsync(id_token, id).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -237,7 +239,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getNotes(id: String): UseCaseResult<NotesModel> {
         return try {
-            val result = catApi.getNotes(
+            val result = catApi.getNotesAsync(
                 id,
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
             ).await()
@@ -271,7 +273,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         sms: String
     ): UseCaseResult<String> {
         return try {
-            val result = catApi.updateSMSSetting(token, id, ph, code, sms).await()
+            val result = catApi.updateSMSSettingAsync(token, id, ph, code, sms).await()
             UseCaseResult.Success(result.toString())
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -285,7 +287,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         updateUserData: UpdateUserData
     ): UseCaseResult<String> {
         return try {
-            val result = catApi.updateEmail(token, updateUserData).await()
+            val result = catApi.updateEmailAsync(token, updateUserData).await()
             UseCaseResult.Success(result.toString())
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -296,7 +298,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getCountries(token: String): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.getCountries(token).await()
+            val result = catApi.getCountriesAsync(token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -307,7 +309,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getStates(token: String, id: String): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.getStates(id, token).await()
+            val result = catApi.getStatesAsync(id, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -319,9 +321,9 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getEthnicities(
         token: String,
         id: String
-    ): UseCaseResult<ArrayList<EthnicityResponseItem?>> {
+    ): UseCaseResult<ArrayList<EthnicityResponse.EthnicityResponseItem?>> {
         return try {
-            val result = catApi.getEthnicities(id, token).await()
+            val result = catApi.getEthnicitiesAsync(id, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -332,7 +334,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getRaces(token: String, id: String): UseCaseResult<ArrayList<RaceItem?>> {
         return try {
-            val result = catApi.getRaces(id, token).await()
+            val result = catApi.getRacesAsync(id, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -348,7 +350,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         schoolId: String
     ): UseCaseResult<JsonArray> {
         return try {
-            val result = catApi.updateProfImage(token, id, ext, schoolId).await()
+            val result = catApi.updateProfImageAsync(token, id, ext, schoolId).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -363,7 +365,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         bode: RequestBody
     ): UseCaseResult<Unit> {
         return try {
-            val result = catApi.uploadImage(url,content, bode).await()
+            val result = catApi.uploadImageAsync(url, content, bode).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -375,7 +377,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getJWTToken(): UseCaseResult<String> {
         return try {
             val result =
-                catApi.getJWTToken("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey)
+                catApi.getJWTTokenAsync("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey)
                     .await()
             UseCaseResult.Success(result.get(0).toString().replace("\"", ""))
         } catch (ex: HttpException) {
@@ -392,7 +394,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 //                CAT_API_MSG_URL + "${SharedHelper(BaseApplication.applicationContext()).messageId}/inbox",
 //                "Bearer " +SharedHelper(BaseApplication.applicationContext()).jwtToken
 //            ).await()
-            val result = catApi.getInboxN(
+            val result = catApi.getInboxNAsync(
                 CAT_API_MSG_URL + "96c607b0-9a6c-4928-bd8c-8f332525fbe7/inbox",
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).jwtToken
             ).await()
@@ -414,7 +416,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         id: String
     ): UseCaseResult<DashboardOverdueResponse> {
         return try {
-            val result = catApi.getOverDueCompleted(id, token).await()
+            val result = catApi.getOverDueCompletedAsync(id, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -425,7 +427,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getCollegeNid(token: String, id: String): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.getCollegeNid(id, token).await()
+            val result = catApi.getCollegeNidAsync(id, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -438,7 +440,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val url =
                 "https://maia2-staging.maialearning.com/v2/atlas-static-data/college-factsheet/${id}.json"
-            val result = catApi.getColFactSheet(url).await()
+            val result = catApi.getColFactSheetAsync(url).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -446,11 +448,15 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getColFactSheetOther(token: String, id: String): UseCaseResult<FactsheetModelOther> {
+
+    override suspend fun getColFactSheetOther(
+        token: String,
+        id: String
+    ): UseCaseResult<FactsheetModelOther> {
         return try {
             val url =
                 "https://maia2-staging-backend.maialearning.com/ajs-services/all_international_factsheet_info/${id}"
-            val result = catApi.getColFactSheetOther(url,token).await()
+            val result = catApi.getColFactSheetOtherAsync(url, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -464,7 +470,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         id: String
     ): UseCaseResult<CollegeContactModel> {
         return try {
-            val result = catApi.universityContacts(id, token).await()
+            val result = catApi.universityContactsAsync(id, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -479,7 +485,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         id2: String
     ): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.universityNotes(id, id2, token).await()
+            val result = catApi.universityNotesAsync(id, id2, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -492,7 +498,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         updateStudentPlan: UpdateStudentPlan
     ): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.editStudentPlan(
+            val result = catApi.editStudentPlanAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 updateStudentPlan
             ).await()
@@ -506,17 +512,36 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun searchUniversities(payload: UniversitySearchPayload): UseCaseResult<JsonObject> {
         return try {
-            var result = if(payload.country == "DE"){
-                catApi.germanUniversties(
+            val result = if (payload.country == "DE") {
+                catApi.germanUniverstiesAsync(
                     "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                     payload
                 ).await()
-            }else{
-                catApi.searchUniversties(
+            } else if (payload.country == "GB") {
+                catApi.ukUniversitiesAsync(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    payload
+                ).await()
+            } else {
+                catApi.searchUniverstiesAsync(
                     "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                     payload
                 ).await()
             }
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun euroUniversities(payload: UniversitySearchPayload): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.euroUniverstiesAsync(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                payload
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -530,7 +555,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         collegeId: String
     ): UseCaseResult<JsonArray> {
         return try {
-            val result = catApi.hitLikeUniversity(
+            val result = catApi.hitLikeUniversityAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 studentId, collegeId, ""
             ).await()
@@ -547,7 +572,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         collegeId: String
     ): UseCaseResult<Unit> {
         return try {
-            val result = catApi.hitUnlikeUniversity(
+            val result = catApi.hitUnlikeUniversityAsync(
                 collegeId, studentId,
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
             ).await()
@@ -558,11 +583,12 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun getUniversityList(
         token: String
     ): UseCaseResult<JsonArray> {
         return try {
-            val result = catApi.getUniversityList(
+            val result = catApi.getUniversityListAsync(
                 "https://app-www-maia.maialearning.com/ajs-services/university-list?status=1&uid=9375",
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
             ).await()
@@ -579,7 +605,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         collegeId: String
     ): UseCaseResult<Unit> {
         return try {
-            val result = catApi.hitDeleteUniversityConsidering(
+            val result = catApi.hitDeleteUniversityConsideringAsync(
                 collegeId, studentId,
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
             ).await()
@@ -598,7 +624,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         status: String
     ): UseCaseResult<JsonArray> {
         return try {
-            val result = catApi.moveToApplying(
+            val result = catApi.moveToApplyingAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 studentId,
                 collegeId,
@@ -616,7 +642,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         payload: AddProgramConsider
     ): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.addProgramToConsidering(
+            val result = catApi.addProgramToConsideringAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, payload
             ).await()
             UseCaseResult.Success(result)
@@ -629,7 +655,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun deleteProgramCOnsider(id: String): UseCaseResult<JsonArray> {
         return try {
-            val result = catApi.deleteMlProgram(
+            val result = catApi.deleteMlProgramAsync(
                 id,
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
             ).await()
@@ -643,7 +669,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getSurveys(url: String, token: String): UseCaseResult<SurveysResponse> {
         return try {
-            val result = catApi.getSurveys(url, token).await()
+            val result = catApi.getSurveysAsync(url, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -654,7 +680,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getWebinar(url: String, token: String): UseCaseResult<WebinarResponse> {
         return try {
-            val result = catApi.getWebinars(url, token).await()
+            val result = catApi.getWebinarsAsync(url, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -780,5 +806,6 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Error(ex)
         } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
-        }    }
+        }
+    }
 }

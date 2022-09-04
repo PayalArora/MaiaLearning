@@ -28,7 +28,7 @@ import com.maialearning.R
 import com.maialearning.databinding.PrimaryEmailSheetBinding
 import com.maialearning.databinding.RicheditorBinding
 import com.maialearning.databinding.UpcomingItemDetailBinding
-import com.maialearning.model.AssignmentItem
+import com.maialearning.model.DashboardOverdueResponse
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.getDate
 import com.maialearning.util.prefhandler.SharedHelper
@@ -44,7 +44,7 @@ import java.util.*
 class UpcomingItemDetails(
     val con: Fragment,
     val layoutInflater: LayoutInflater,
-    val data: AssignmentItem,    var clickType: (type: String, dialog: BottomSheetDialog, progress: Dialog, nid:String?) -> Unit
+    val data: DashboardOverdueResponse.AssignmentItem, var clickType: (type: String, dialog: BottomSheetDialog, progress: Dialog, nid:String?) -> Unit
 ) : RichEditor.OnTextChangeListener {
     private val chooseClick: ChooseClick = con as ChooseClick
     private val dashboardViewModel: DashboardFragViewModel by con.viewModel()
