@@ -195,6 +195,12 @@ interface AllAPi {
         @Body payload: UniversitySearchPayload
     ): Deferred<JsonObject>
 
+    @POST("german_data_search")
+    fun germanUniversties(
+        @Header("Authorization") Authorization: String,
+        @Body payload: UniversitySearchPayload
+    ): Deferred<JsonObject>
+
     @POST("top-picks")
     @FormUrlEncoded
     fun hitLikeUniversity(

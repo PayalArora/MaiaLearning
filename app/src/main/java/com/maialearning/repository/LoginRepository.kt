@@ -506,10 +506,17 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun searchUniversities(payload: UniversitySearchPayload): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.searchUniversties(
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-                payload
-            ).await()
+            var result = if(payload.country == "DE"){
+                catApi.germanUniversties(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    payload
+                ).await()
+            }else{
+                catApi.searchUniversties(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    payload
+                ).await()
+            }
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

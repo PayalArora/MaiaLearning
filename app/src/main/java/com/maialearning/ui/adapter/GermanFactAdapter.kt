@@ -5,20 +5,17 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.UniListItemBinding
-import com.maialearning.model.UniversitiesSearchModel
-import com.maialearning.ui.activity.UniversitiesActivity
+import com.maialearning.model.GermanUniversitiesResponse
 import com.maialearning.util.OnLoadMoreListener
-import com.maialearning.util.UNIV_LOGO_URL
-import com.squareup.picasso.Picasso
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-class UniFactAdapter(
+class GermanFactAdapter (
     var context: Context,
-    var university_list: ArrayList<UniversitiesSearchModel?>,
+    var university_list: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>,
     var click: (position: Int) -> Unit,
     recycler: RecyclerView
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -90,14 +87,14 @@ class UniFactAdapter(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
             viewHolder.binding.university.setText(university_list.get(position)?.collegeName)
-            viewHolder.binding.name.setText(university_list.get(position)?.cityState)
-            viewHolder.binding.country.setText(university_list.get(position)?.country)
-            viewHolder.binding.profit.setText(university_list.get(position)?.collegeType)
-            viewHolder.binding.typeValue.setText("SAT Scores")
-            viewHolder.binding.type.setText(university_list.get(position)?.satScores)
-            viewHolder.binding.term.setText(university_list.get(position)?.actScores)
-            viewHolder.binding.termValue.setText("ACT Scores")
-            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
+//            viewHolder.binding.name.setText(university_list.get(position)?.cityState)
+//            viewHolder.binding.country.setText(university_list.get(position)?.country)
+//            viewHolder.binding.profit.setText(university_list.get(position)?.collegeType)
+//            viewHolder.binding.typeValue.setText("SAT Scores")
+//            viewHolder.binding.type.setText(university_list.get(position)?.satScores)
+//            viewHolder.binding.term.setText(university_list.get(position)?.actScores)
+//            viewHolder.binding.termValue.setText("ACT Scores")
+//            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
             viewHolder.binding.planValue.setText("Acceptance Rate")
             if (university_list.get(position)?.topPickFlag == 0) {
                 viewHolder.binding.like.setImageResource(R.drawable.like)
@@ -105,20 +102,20 @@ class UniFactAdapter(
                 viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
             }
 //        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
-            Picasso.with(viewHolder.binding.root.context).load(
-                "${UNIV_LOGO_URL}${university_list.get(position)?.countryCode?.toLowerCase()}/${
-                    university_list.get(position)?.unitid
-                }/logo_sm.jpg"
-            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
+//            Picasso.with(viewHolder.binding.root.context).load(
+//                "$UNIV_LOGO_URL${university_list.get(position)?.countryCode?.toLowerCase()}/${
+//                    university_list.get(position)?.unitid
+//                }/logo_sm.jpg"
+//            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
 
 
             viewHolder.binding.university.setOnClickListener {
                 // click
-                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
             }
             viewHolder.binding.image.setOnClickListener {
                 // click
-                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
             }
             viewHolder.binding.like.setOnClickListener {
                 click(position)
@@ -157,7 +154,7 @@ class UniFactAdapter(
         isLoading = false
     }
 
-    fun addAllLis(list: ArrayList<UniversitiesSearchModel?>, total: Int, current: Int) {
+    fun addAllLis(list: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>, total: Int, current: Int) {
         this.university_list.addAll(list)
         this.totalPages = total
         this.currentPages = current
