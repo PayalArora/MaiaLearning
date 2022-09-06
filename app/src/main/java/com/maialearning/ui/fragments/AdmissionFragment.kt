@@ -10,7 +10,6 @@ import com.maialearning.databinding.AdmisionLayoutBinding
 import com.maialearning.model.CollegeFactSheetModel
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.AdmissionAdapter
-import com.maialearning.ui.model.CommunityModel
 import com.maialearning.util.parseNA
 import com.maialearning.util.parsePercentDollar
 

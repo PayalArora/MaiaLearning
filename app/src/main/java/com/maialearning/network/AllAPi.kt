@@ -341,4 +341,13 @@ interface AllAPi {
     fun getRecDeadline(
         @Header("Authorization") AutToken: String,
         ): Deferred<JsonArray>
+
+    @GET("wc-recommendation-for-student/{id}/{page}")
+    fun getRecomders(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        @Path("page") page: String,
+        ): Deferred<RecomdersModel>
+
+
 }

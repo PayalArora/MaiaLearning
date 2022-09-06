@@ -156,6 +156,7 @@ interface LoginRepository {
 
     suspend fun recDeadline() :UseCaseResult<JsonArray>
     suspend fun sendUcasRec(recModel: RecModel) :UseCaseResult<JsonArray>
+    suspend fun getRecomders(id: String,page:String) :UseCaseResult<RecomdersModel>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -837,4 +838,17 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+    override suspend fun getRecomders(id: String,page:String) : UseCaseResult<RecomdersModel> {
+        return try {
+            val result = catApi.getRecomders(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,id,page
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
 }

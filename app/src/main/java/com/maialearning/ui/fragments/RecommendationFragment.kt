@@ -3,6 +3,8 @@ package com.maialearning.ui.fragments
 import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -21,8 +23,14 @@ import com.maialearning.R
 import com.maialearning.databinding.LayoutTeacherBinding
 import com.maialearning.databinding.RecommendationLayoutBinding
 import com.maialearning.model.RecModel
+import com.maialearning.model.RecomdersModel
 import com.maialearning.model.TeacherListModelItem
+import com.maialearning.model.UniversitiesSearchModel
+import com.maialearning.parser.SearchParser
+import com.maialearning.ui.adapter.RecommenderAdapter
 import com.maialearning.ui.adapter.SelectTeacherAdapter
+import com.maialearning.ui.adapter.UniFactAdapter
+import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.getDate
 import com.maialearning.util.getDateTime
 import com.maialearning.util.prefhandler.SharedHelper
@@ -40,7 +48,13 @@ class RecommendationFragment : Fragment() {
     var selectedList: ArrayList<TeacherListModelItem> = ArrayList()
     var selectedUcasList: ArrayList<TeacherListModelItem> = ArrayList()
     var jsonDeadline: JsonArray = JsonArray()
+    lateinit var  adapter :RecommenderAdapter
     var type_recs = REC_TYPE_RECOMENDATION
+    var page: Int = 1
+    var requestListUpdate: ArrayList<RecomdersModel.Data?>? = ArrayList()
+    var requestList: ArrayList<RecomdersModel.Data?>? = ArrayList()
+    private var isLoading = false
+    var requestlistNew = ArrayList<RecomdersModel.Data?>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -83,8 +97,27 @@ class RecommendationFragment : Fragment() {
             selectedUcasList.clear()
             listTeacher(REC_TYPE_UCAS)
         }
+        progress.show()
+
+        adapter = RecommenderAdapter(requireContext(), requestlistNew,   mBinding.requestList)
+        mBinding.requestList.adapter = adapter
+        adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+            override fun onLoadMore() {
+                requestlistNew.add(null)
+                isLoading = true
+                adapter.notifyItemInserted(requestlistNew.size - 1)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    hitAPI(page.toString())
+
+                }, 2000)
+            }
+        })
+        hitAPI(page.toString())
     }
 
+    fun hitAPI(page:String){
+        homeModel.getRecommenders(SharedHelper(requireContext()).id ?: "",page)
+    }
     private fun sendUCASRecomendation() {
         val teacherId = arrayListOf<String>()
         for (i in selectedUcasList) {
@@ -176,14 +209,36 @@ class RecommendationFragment : Fragment() {
             mBinding.typeValue.adapter = adapter
 
         }
-        homeModel.recSendObserver.observe(requireActivity(), {
+        homeModel.recommdersObserver.observe(requireActivity()) {
+            progress.dismiss()
+            page = ((it.pager!!.current?.toInt()?:0 ) + 1)
+            val totalPage = it.pager!!.last
+            val last = it.pager!!.last
+            progress.dismiss()
+            requestList?.addAll(it.data)
+            requestListUpdate?.addAll(it.data)
+            if (isLoading) {
+                isLoading = false
+                requestlistNew.removeAt(requestlistNew.size - 1)
+                adapter.notifyItemRemoved(requestlistNew.size)
+            }
+            //for swipe refresh page
+            if (totalPage != null) {
+                if (last != null) {
+                    adapter.addAllLis(requestList!!, totalPage, last)
+                }
+            }
+            adapter.setLoaded()
+
+        }
+        homeModel.recSendObserver.observe(requireActivity()) {
             progress.dismiss()
             Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
-        })
-        homeModel.recUCASObserver.observe(requireActivity(), {
+        }
+        homeModel.recUCASObserver.observe(requireActivity()) {
             progress.dismiss()
             Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
-        })
+        }
     }
 
     private fun listTeacher( type: Int) {

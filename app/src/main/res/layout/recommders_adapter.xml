@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/_10dp"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/_5dp"
+        android:text="@string/select_term"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/created"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name"
+        android:padding="@dimen/_5dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/_5dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13dp" />
+
+    <TextView
+        android:id="@+id/statusD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/status"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/_5dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+    <TextView
+        android:id="@+id/brag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/statusD"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/_5dp"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/_12sp" />
+    <TextView
+        android:id="@+id/letterR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/created"
+        android:padding="@dimen/_5dp"
+        android:text="Reference Letter :-"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+    <TextView
+        android:id="@+id/letter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/created"
+        android:layout_toEndOf="@id/letterR"
+        android:padding="@dimen/_5dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sp" />
+
+</RelativeLayout>

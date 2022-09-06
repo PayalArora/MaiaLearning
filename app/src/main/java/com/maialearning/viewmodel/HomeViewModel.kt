@@ -41,6 +41,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val applyingObserver = MutableLiveData<JsonArray>()
     val recSendObserver = MutableLiveData<JsonArray>()
     val recUCASObserver = MutableLiveData<JsonArray>()
+    val recommdersObserver = MutableLiveData<RecomdersModel>()
     val recDeadline = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
     val deleteProgramObserver = MutableLiveData<JsonArray>()
@@ -288,6 +289,21 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> recUCASObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getRecommenders(id:String,page:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.getRecomders(id,page)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> recommdersObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

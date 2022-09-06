@@ -43,21 +43,21 @@ class UniFactAdapter(
     var currentPages = 0
     lateinit var mOnLoadMoreListener: OnLoadMoreListener
 
-    init {
-        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val visibleItemCount = linearLayoutManager.childCount
-                totalItemCount = linearLayoutManager.itemCount
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
-                if (!isLoading && totalItemCount <= lastVisibleItem + visibleItemCount) {
-                    if (totalPages != currentPages) {
-                        mOnLoadMoreListener.onLoadMore()
-                        isLoading = true
+        init {
+            recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val visibleItemCount = linearLayoutManager.childCount
+                    totalItemCount = linearLayoutManager.itemCount
+                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
+                    if (!isLoading && totalItemCount <= lastVisibleItem + visibleItemCount) {
+                        if (totalPages != currentPages) {
+                            mOnLoadMoreListener.onLoadMore()
+                            isLoading = true
+                        }
                     }
                 }
-            }
-        })
-    }
+            })
+        }
 
     class ViewHolder(val binding: UniListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
@@ -68,9 +68,6 @@ class UniFactAdapter(
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
-//        val binding = UniListItemBinding.inflate(inflater, viewGroup, false)
-//
-//        return ViewHolder(binding)
         val viewHolder: RecyclerView.ViewHolder?
         return when (viewType) {
             viewTypeItem -> {
