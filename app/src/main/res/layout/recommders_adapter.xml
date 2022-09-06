@@ -53,12 +53,15 @@
         android:padding="@dimen/_5dp"
         android:textColor="@color/blue"
         android:textSize="@dimen/_12sp" />
+
     <TextView
         android:id="@+id/letterR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/created"
-        android:padding="@dimen/_5dp"
+        android:paddingTop="@dimen/_5dp"
+        android:paddingBottom="@dimen/_5dp"
+        android:paddingStart="5dp"
         android:text="Reference Letter :-"
         android:textColor="@color/black"
         android:textSize="@dimen/_12sp" />
@@ -69,7 +72,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/created"
         android:layout_toEndOf="@id/letterR"
-        android:padding="@dimen/_5dp"
+        android:paddingTop="@dimen/_5dp"
+        android:paddingBottom="@dimen/_5dp"
         android:textColor="@color/black"
         android:textSize="@dimen/_12sp" />
 
