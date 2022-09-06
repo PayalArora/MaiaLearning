@@ -39,6 +39,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val unlikeObserver = MutableLiveData<Unit>()
     val delObserver = MutableLiveData<Unit>()
     val applyingObserver = MutableLiveData<JsonArray>()
+    val recSendObserver = MutableLiveData<JsonArray>()
+    val recUCASObserver = MutableLiveData<JsonArray>()
+    val recDeadline = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
     val deleteProgramObserver = MutableLiveData<JsonArray>()
     val decisionStatusObserver = MutableLiveData<JsonObject>()
@@ -246,16 +249,45 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
-//    fun sendRecomTeachers(id: JSONObject) {
-    fun sendRecomTeachers(descrip: String,id: String ,date: String,list:ArrayList<String>) {
+
+    fun getRecDeadline() {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.sendRecom(descrip,id,date,list)
+                catRepository.recDeadline()
             }
             showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> applyingObserver.value = result.data
+                is UseCaseResult.Success -> recDeadline.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+//    fun sendRecomTeachers(id: JSONObject) {
+    fun sendRecomTeachers(model:RecModel) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.sendRecom(model)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> recSendObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+    fun sendRecomUCAS(model:RecModel) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.sendUcasRec(model)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> recUCASObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

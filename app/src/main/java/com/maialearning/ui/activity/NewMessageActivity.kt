@@ -80,7 +80,13 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         mBinding.filesList.adapter = FilesAdapter(this, attachedArray)
         mBinding.toolbar.backBtn.setOnClickListener { finish() }
         mBinding.toolbar.textTitle.setText(getString(R.string.new_message))
-        mBinding.textReciepent.setOnClickListener { bottomSheetWork() }
+        mBinding.textReciepent.setOnClickListener {
+            for (i in list){
+                i.isSelected = false
+            }
+            selectedList.clear()
+            bottomSheetWork()
+        }
         init()
         observer()
     }
@@ -182,7 +188,8 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         val selectAll = view.findViewById<CheckBox>(R.id.select_all)
         selectAll.setOnClickListener {
             if (selectAll.isChecked) {
-                selectedList = list
+                selectedList .addAll(list)
+                mBinding.textReciepent.text = "(${selectedList.size} selected)"
             } else {
                 selectedList = ArrayList()
             }
@@ -194,7 +201,11 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         dialog.setContentView(view)
         dialog.show()
         view.findViewById<RelativeLayout>(R.id.close).setOnClickListener {
+
             dialog.dismiss()
+        }
+        dialog.setOnDismissListener {
+            mBinding.textReciepent.text = "(${selectedList.size} selected)"
         }
     }
 
@@ -205,10 +216,10 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     override fun onClick(positiion: Int) {
         if (list[positiion].isSelected) {
             selectedList.add(list[positiion])
-            mBinding.textReciepent.text = list[positiion].name
         } else {
             selectedList.remove(list[positiion])
         }
+        mBinding.textReciepent.text = "(${selectedList.size} selected)"
 
     }
 

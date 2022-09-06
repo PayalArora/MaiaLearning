@@ -122,7 +122,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10dp"
-        android:text="gdgdgdgdg"
         android:textColor="@color/black"
         android:textSize="@dimen/_16sp"
         app:layout_constraintBottom_toBottomOf="@id/text_add_file"

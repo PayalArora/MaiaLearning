@@ -67,7 +67,14 @@ class MessageDetailActivity : AppCompatActivity(), OnItemClickId {
                 dialog.dismiss()
                 val json = JSONObject(it.toString()).getJSONObject("Item")
                 mBinding.subject.text = "Subject: " + json.getString("subject")
-                mBinding.textDescription.text = Html.fromHtml(json.getString("messageBody"))
+                mBinding.textDescription.loadDataWithBaseURL(
+                    "",
+                    json.getString("messageBody"),
+                    "text/html",
+                    "utf-8",
+                    ""
+                )
+              //  mBinding.textDescription.text = Html.fromHtml(json.getString("messageBody"))
                 mBinding.textDate.text= "Sent on : "+ getDateTime(json.getString("sentTimestamp"), "MMM dd YYYY, hh:mm a")
                 val array = json.getJSONArray("attachment_urls")
                 for (j in 0 until array.length()) {

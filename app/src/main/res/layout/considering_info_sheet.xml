@@ -160,11 +160,11 @@
                 android:layout_height="@dimen/_45dp"
                 android:background="@android:color/transparent"
                 android:dropDownVerticalOffset="20dp"
+                android:entries="@array/have_interview"
                 android:fontFamily="@font/inter_regular"
                 android:gravity="center_vertical"
                 android:overlapAnchor="false"
                 android:spinnerMode="dropdown"
-                android:entries="@array/have_interview"
                 android:theme="@style/MatchSpinnerTheme" />
 
             <ImageView

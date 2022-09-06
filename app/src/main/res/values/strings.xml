@@ -468,6 +468,11 @@
     <string name="applied">Applied</string>
     <string name="status">status</string>
     <string name="enter_your_new">Enter your new message \ndescription here!</string>
+    <string name="rec_letter">Recommendation Letter</string>
+    <string name="ucas_letter">UCAS Ref</string>
+    <string name="select_teachers_recs">Select Teachers for Recommendation</string>
+    <string name="select_teachers_ucas">Select Teachers for UCAS Ref</string>
+    <string name="requests">Requests</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

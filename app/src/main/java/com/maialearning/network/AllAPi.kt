@@ -324,23 +324,21 @@ interface AllAPi {
         @Path("id") id: String,
     ): Deferred<JsonArray>
 
-    @FormUrlEncoded
     @POST("recommendation-request")
     fun sendRecomTeacher(
         @Header("Authorization") AutToken: String,
-        @Header("Content-Type") content: String,
-        @Field("notes") notes: String,
-        @Field("student_id") id: String,
-        @Field("due_date") date: String,
-        @Field("teacher_id[]") teacher: ArrayList<String>,
+        @Body recModel: RecModel
+
     ): Deferred<JsonArray>
 
-    @POST("recommendation-request")
-    @FormUrlEncoded
-    fun sendRecomTeacher1(
+    @POST("req-ucas-ref-letter")
+    fun sendUcasRec(
         @Header("Authorization") AutToken: String,
-        @Header("Content-Type") content: String,
-        @FieldMap map:HashMap<String,Any>,
+        @Body recModel: RecModel
+        ): Deferred<JsonArray>
 
+    @GET("get_recommendation_deadline")
+    fun getRecDeadline(
+        @Header("Authorization") AutToken: String,
         ): Deferred<JsonArray>
 }

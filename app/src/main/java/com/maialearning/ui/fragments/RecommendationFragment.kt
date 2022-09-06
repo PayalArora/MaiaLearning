@@ -9,16 +9,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.databinding.LayoutTeacherBinding
 import com.maialearning.databinding.RecommendationLayoutBinding
+import com.maialearning.model.RecModel
 import com.maialearning.model.TeacherListModelItem
 import com.maialearning.ui.adapter.SelectTeacherAdapter
+import com.maialearning.util.getDate
+import com.maialearning.util.getDateTime
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
@@ -32,7 +38,9 @@ class RecommendationFragment : Fragment() {
     private lateinit var progress: Dialog
     var list: ArrayList<TeacherListModelItem> = ArrayList()
     var selectedList: ArrayList<TeacherListModelItem> = ArrayList()
-    var teacherId: ArrayList<String> = ArrayList()
+    var selectedUcasList: ArrayList<TeacherListModelItem> = ArrayList()
+    var jsonDeadline: JsonArray = JsonArray()
+    var type_recs = REC_TYPE_RECOMENDATION
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,7 +48,7 @@ class RecommendationFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
         mBinding = RecommendationLayoutBinding.inflate(inflater, container, false)
@@ -54,14 +62,80 @@ class RecommendationFragment : Fragment() {
         progress = showLoadingDialog(requireContext())
         progress.show()
         SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
+        showRecs()
+        homeModel.getRecDeadline()
         mBinding.send.setOnClickListener {
-            if(mBinding.textDescription.text.toString().trim() !=""){
-                homeModel.sendRecomTeachers(mBinding.textDescription.text.toString(),SharedHelper(requireContext()).id?:"",
-                    "1601490599",teacherId)
-                }
+            if (type_recs == REC_TYPE_RECOMENDATION) {
+                sendRecomendation(type_recs)
+            } else {
+                sendRecomendation(type_recs)
+                sendUCASRecomendation()
+            }
         }
         mBinding.recipent.setOnClickListener {
-            listTeacher()
+            selectedList.clear()
+            listTeacher(REC_TYPE_RECOMENDATION)
+        }
+        mBinding.ucasLetter.setOnClickListener {
+            showRecs()
+        }
+        mBinding.recipentUcas.setOnClickListener {
+            selectedUcasList.clear()
+            listTeacher(REC_TYPE_UCAS)
+        }
+    }
+
+    private fun sendUCASRecomendation() {
+        val teacherId = arrayListOf<String>()
+        for (i in selectedUcasList) {
+            i.uid?.let { it1 -> teacherId.add(it1) }
+        }
+        if (mBinding.textDescription.text.toString().trim() != "" && teacherId.size
+            > 0
+        ) {
+            progress.show()
+
+            val recmodel = RecModel(mBinding.textDescription.text.toString(),
+                SharedHelper(requireContext()).id ?: "",
+                jsonDeadline.get(mBinding.typeValue.selectedItemPosition).asString,
+                teacherId)
+            homeModel.sendRecomUCAS(recmodel)
+        }
+    }
+
+    private fun sendRecomendation(type: Int) {
+        if (type == REC_TYPE_UCAS) {
+            if (mBinding.textDescription.text.toString().trim() == "" || selectedUcasList.size
+                == 0 || selectedList.size == 0
+            ) {
+                return
+            }
+        }
+        val teacherId = arrayListOf<String>()
+        for (i in selectedList) {
+            i.uid?.let { it1 -> teacherId.add(it1) }
+        }
+        if (mBinding.textDescription.text.toString().trim() != "" && teacherId.size
+            > 0
+        ) {
+            progress.show()
+
+            val recmodel = RecModel(mBinding.textDescription.text.toString(),
+                SharedHelper(requireContext()).id ?: "",
+                jsonDeadline.get(mBinding.typeValue.selectedItemPosition).asString,
+                teacherId)
+            homeModel.sendRecomTeachers(recmodel)
+        }
+
+    }
+
+    private fun showRecs() {
+        if (mBinding.ucasLetter.isChecked) {
+            type_recs = REC_TYPE_UCAS
+            mBinding.recipentUcas.visibility = View.VISIBLE
+        } else {
+            type_recs = REC_TYPE_RECOMENDATION
+            mBinding.recipentUcas.visibility = View.GONE
         }
     }
 
@@ -80,15 +154,43 @@ class RecommendationFragment : Fragment() {
                     data.getString("first_name"),
                 )
                 list.add(model)
+                val id = SharedHelper(requireContext()).schoolId
+                list = list.filter { it.schoolNid == id } as ArrayList<TeacherListModelItem>
+                list.sortBy { it.firstName?.capitalize() + " " + it.lastName?.capitalize() }
+
             }
 
         }
+        homeModel.recDeadline.observe(requireActivity()) {
+            jsonDeadline = it
+
+            val array = arrayOfNulls<String>(it.size())
+
+            for (i in 0 until it.size()) {
+                array[i] = getDate(it[i].asLong, "MMM dd,yyyy")
+            }
+            val adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.spinner_text, array
+            )
+            mBinding.typeValue.adapter = adapter
+
+        }
+        homeModel.recSendObserver.observe(requireActivity(), {
+            progress.dismiss()
+            Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
+        })
+        homeModel.recUCASObserver.observe(requireActivity(), {
+            progress.dismiss()
+            Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
+        })
     }
 
-    private fun listTeacher() {
+    private fun listTeacher( type: Int) {
+
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutTeacherBinding = LayoutTeacherBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        //  sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         sheetBinding.filters.text = resources.getString(R.string.select_teachers)
         dialog.show()
@@ -97,7 +199,7 @@ class RecommendationFragment : Fragment() {
         sheetBinding.recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         sheetBinding.recyclerView.adapter =
-            SelectTeacherAdapter(list, ::click)
+            SelectTeacherAdapter(list, ::click, type)
         sheetBinding.searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -109,15 +211,17 @@ class RecommendationFragment : Fragment() {
 
             override fun afterTextChanged(p0: Editable?) {
                 if (sheetBinding.searchText.text.toString().trim() != "") {
-                  val filterList=  findMemberByName(sheetBinding.searchText.text.toString().trim())
+                    val filterList =
+                        findMemberByName(sheetBinding.searchText.text.toString().trim())
                     sheetBinding.recyclerView.adapter =
-                        SelectTeacherAdapter(filterList, ::click)
+                        SelectTeacherAdapter(filterList, ::click, type)
                 } else {
                     sheetBinding.recyclerView.adapter =
-                        SelectTeacherAdapter(list, ::click)
+                        SelectTeacherAdapter(list, ::click, type)
                 }
 
             }
+
 
         })
         sheetBinding.searchText.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
@@ -127,6 +231,12 @@ class RecommendationFragment : Fragment() {
             }
             false
         })
+        dialog.setOnDismissListener {
+            if (type == REC_TYPE_RECOMENDATION)
+                setSelection(selectedList, type)
+            else
+                setSelection(selectedUcasList, type)
+        }
 
     }
 
@@ -134,27 +244,50 @@ class RecommendationFragment : Fragment() {
         // go through list of members and compare name with given name
         var filterList: ArrayList<TeacherListModelItem> = ArrayList()
         for (member in list) {
-            if ((member.firstName + member.lastName).contains(name ?: "")) {
+            if ((member.firstName?.lowercase()?.contains(name?.lowercase() ?: "")
+                    ?: false) || member.lastName?.lowercase()
+                    ?.contains(name?.lowercase() ?: "") ?: false
+            ) {
                 filterList.add(member)
                 // return member when name found
             }
         }
-
         return filterList
     }
 
-    private fun click(data: TeacherListModelItem) {
-        if (data.isSelected) {
-            selectedList.add(data)
-            teacherId.add(data.uid?:"")
-        } else {
-            selectedList.remove(data)
-            teacherId.remove(data.nid)
+    private fun click(data: TeacherListModelItem, type: Int) {
+        if (type == REC_TYPE_RECOMENDATION)
+            if (data.isSelected) {
+                selectedList.add(data)
+            } else {
+                selectedList.remove(data)
+
+            } else {
+            if (data.isSelected) {
+                selectedUcasList.add(data)
+            } else {
+                selectedUcasList.remove(data)
+            }
         }
-        for (i in 0 until selectedList.size) {
-            if (selectedList[i].isSelected)
-                mBinding.selectedTeachers.append(selectedList[i].lastName + ",")
-        }
-        mBinding.textCount.text = "from " + selectedList.size + " teachers"
+    }
+
+    private fun setSelection(selectedList: ArrayList<TeacherListModelItem>, type: Int) {
+        val separator = ", "
+
+        val sb = StringBuilder()
+        selectedList.forEach { sb.append(it.lastName).append(separator) }
+        val string = sb.removeSuffix(separator).toString()
+
+        if (type == REC_TYPE_RECOMENDATION)
+        mBinding.selectedTeachers.text = string
+        else
+            mBinding.selectedTeachersUcas.text = string
+
+      //  mBinding.textCount.text = "from " + selectedList.size + " teachers"
+    }
+
+    companion object {
+        const val REC_TYPE_RECOMENDATION = 1
+        const val REC_TYPE_UCAS = 2
     }
 }

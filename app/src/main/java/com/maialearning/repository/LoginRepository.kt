@@ -148,11 +148,14 @@ interface LoginRepository {
         id: String
     ): UseCaseResult<JsonArray>
     suspend fun sendRecom(
-        descrip: String,id: String ,date: String,list:ArrayList<String>
+       recModel: RecModel
     ): UseCaseResult<JsonArray>
 
     suspend fun getDecisionStatuses(
     ): UseCaseResult<JsonObject>
+
+    suspend fun recDeadline() :UseCaseResult<JsonArray>
+    suspend fun sendUcasRec(recModel: RecModel) :UseCaseResult<JsonArray>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -781,10 +784,10 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
         }    }
-    override suspend fun sendRecom(descrip: String,id: String ,date: String,list:ArrayList<String> ): UseCaseResult<JsonArray> {
+    override suspend fun sendRecom(recModel: RecModel): UseCaseResult<JsonArray> {
         return try {
             val result = catApi.sendRecomTeacher(
-                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}","application/json", descrip,id,date,list
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", recModel
             ).await()
 
             UseCaseResult.Success(result)
@@ -800,6 +803,33 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.getDecsionStatuses(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
             ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun recDeadline(): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getRecDeadline(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun sendUcasRec(recModel: RecModel): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.sendUcasRec(
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", recModel
+            ).await()
+
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

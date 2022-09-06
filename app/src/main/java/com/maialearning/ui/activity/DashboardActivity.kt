@@ -101,7 +101,7 @@ class DashboardActivity : AppCompatActivity() {
                     binding.toolbar.title = getString(R.string.messanger)
                     toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
                     toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
-                        View.VISIBLE
+                        View.GONE
                     loadFragment(MessageFragment())
 
                 }
