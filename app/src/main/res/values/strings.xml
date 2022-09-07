@@ -473,6 +473,8 @@
     <string name="select_teachers_recs">Select Teachers for Recommendation</string>
     <string name="select_teachers_ucas">Select Teachers for UCAS Ref</string>
     <string name="requests">Requests</string>
+    <string name="cancel_request">Cancel Request</string>
+    <string name="cancel_req_msg">Are you sure you\'d like to cancel  request?</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

@@ -40,7 +40,7 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.http.Field
 
-class RecommendationFragment : Fragment() {
+class RecommendationFragment : Fragment(), onClick {
     private lateinit var mBinding: RecommendationLayoutBinding
     private val homeModel: HomeViewModel by viewModel()
     private lateinit var progress: Dialog
@@ -48,7 +48,7 @@ class RecommendationFragment : Fragment() {
     var selectedList: ArrayList<TeacherListModelItem> = ArrayList()
     var selectedUcasList: ArrayList<TeacherListModelItem> = ArrayList()
     var jsonDeadline: JsonArray = JsonArray()
-    lateinit var  adapter :RecommenderAdapter
+    lateinit var adapter: RecommenderAdapter
     var type_recs = REC_TYPE_RECOMENDATION
     var page: Int = 1
     var requestListUpdate: ArrayList<RecomdersModel.Data?>? = ArrayList()
@@ -99,7 +99,7 @@ class RecommendationFragment : Fragment() {
         }
         progress.show()
 
-        adapter = RecommenderAdapter(requireContext(), requestlistNew,   mBinding.requestList)
+        adapter = RecommenderAdapter(requireContext(), requestlistNew, this, mBinding.requestList)
         mBinding.requestList.adapter = adapter
         adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
             override fun onLoadMore() {
@@ -115,9 +115,10 @@ class RecommendationFragment : Fragment() {
         hitAPI(page.toString())
     }
 
-    fun hitAPI(page:String){
-        homeModel.getRecommenders(SharedHelper(requireContext()).id ?: "",page)
+    fun hitAPI(page: String) {
+        homeModel.getRecommenders(SharedHelper(requireContext()).id ?: "", page)
     }
+
     private fun sendUCASRecomendation() {
         val teacherId = arrayListOf<String>()
         for (i in selectedUcasList) {
@@ -128,10 +129,12 @@ class RecommendationFragment : Fragment() {
         ) {
             progress.show()
 
-            val recmodel = RecModel(mBinding.textDescription.text.toString(),
+            val recmodel = RecModel(
+                mBinding.textDescription.text.toString(),
                 SharedHelper(requireContext()).id ?: "",
                 jsonDeadline.get(mBinding.typeValue.selectedItemPosition).asString,
-                teacherId)
+                teacherId
+            )
             homeModel.sendRecomUCAS(recmodel)
         }
     }
@@ -153,10 +156,12 @@ class RecommendationFragment : Fragment() {
         ) {
             progress.show()
 
-            val recmodel = RecModel(mBinding.textDescription.text.toString(),
+            val recmodel = RecModel(
+                mBinding.textDescription.text.toString(),
                 SharedHelper(requireContext()).id ?: "",
                 jsonDeadline.get(mBinding.typeValue.selectedItemPosition).asString,
-                teacherId)
+                teacherId
+            )
             homeModel.sendRecomTeachers(recmodel)
         }
 
@@ -211,7 +216,7 @@ class RecommendationFragment : Fragment() {
         }
         homeModel.recommdersObserver.observe(requireActivity()) {
             progress.dismiss()
-            page = ((it.pager!!.current?.toInt()?:0 ) + 1)
+            page = ((it.pager!!.current?.toInt() ?: 0) + 1)
             val totalPage = it.pager!!.last
             val last = it.pager!!.last
             progress.dismiss()
@@ -241,7 +246,7 @@ class RecommendationFragment : Fragment() {
         }
     }
 
-    private fun listTeacher( type: Int) {
+    private fun listTeacher(type: Int) {
 
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutTeacherBinding = LayoutTeacherBinding.inflate(layoutInflater)
@@ -334,15 +339,28 @@ class RecommendationFragment : Fragment() {
         val string = sb.removeSuffix(separator).toString()
 
         if (type == REC_TYPE_RECOMENDATION)
-        mBinding.selectedTeachers.text = string
+            mBinding.selectedTeachers.text = string
         else
             mBinding.selectedTeachersUcas.text = string
 
-      //  mBinding.textCount.text = "from " + selectedList.size + " teachers"
+        //  mBinding.textCount.text = "from " + selectedList.size + " teachers"
     }
 
     companion object {
         const val REC_TYPE_RECOMENDATION = 1
         const val REC_TYPE_UCAS = 2
     }
+
+    override fun onCancelClick(data: RecomdersModel.Data?) {
+        progress.show()
+        homeModel.cancelRecommendRequest(data?.nid.toString())
+        homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
+            progress.dismiss()
+        }
+    }
+
+}
+
+interface onClick {
+    fun onCancelClick(data: RecomdersModel.Data?)
 }

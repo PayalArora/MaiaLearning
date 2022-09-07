@@ -46,6 +46,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val addProgramObserver = MutableLiveData<JsonObject>()
     val deleteProgramObserver = MutableLiveData<JsonArray>()
     val decisionStatusObserver = MutableLiveData<JsonObject>()
+    val cancelRecommendRequestObserver = MutableLiveData<Unit>()
 
 
     fun getConsiderList(id: String) {
@@ -304,6 +305,21 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> recommdersObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun cancelRecommendRequest(id:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.cancelRecommedationRequest(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> cancelRecommendRequestObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
