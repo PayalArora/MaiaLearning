@@ -361,4 +361,30 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<Unit>
 
+    @POST("get_documents_presigned_url")
+    @FormUrlEncoded
+    fun getDocumetPresignedURl(
+        @Header("Authorization") AutToken: String,
+        @Field("filename") name: String,
+        @Field("student_uid") uID: String,
+        @Field("document_type") doctype: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<JsonObject>
+
+    @PUT
+    fun uploadDoc(
+        @Url() url: String
+    ): Deferred<Unit>
+
+    @POST("student-brag-sheet")
+    @FormUrlEncoded
+    fun saveDocumentBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Field("student_uid") id: String,
+        @Field("filename") name: String,
+        @Field("path") path: String,
+        @Field("exist") exist: Int,
+        @Field("s3_url") url: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<Unit>
 }

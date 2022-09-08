@@ -1,45 +1,51 @@
 package com.maialearning.ui.fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.content.res.Resources
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
+import android.os.*
+import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.databinding.LayoutTeacherBinding
 import com.maialearning.databinding.RecommendationLayoutBinding
 import com.maialearning.model.RecModel
 import com.maialearning.model.RecomdersModel
 import com.maialearning.model.TeacherListModelItem
-import com.maialearning.model.UniversitiesSearchModel
-import com.maialearning.parser.SearchParser
 import com.maialearning.ui.adapter.RecommenderAdapter
 import com.maialearning.ui.adapter.SelectTeacherAdapter
-import com.maialearning.ui.adapter.UniFactAdapter
-import com.maialearning.util.OnLoadMoreListener
-import com.maialearning.util.getDate
-import com.maialearning.util.getDateTime
+import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import retrofit2.http.Field
+import java.io.*
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+
 
 class RecommendationFragment : Fragment(), onClick {
     private lateinit var mBinding: RecommendationLayoutBinding
@@ -80,7 +86,7 @@ class RecommendationFragment : Fragment(), onClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isAttached)
-        setListeners()
+            setListeners()
         progress = showLoadingDialog(requireContext())
         progress.show()
         SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
@@ -105,6 +111,9 @@ class RecommendationFragment : Fragment(), onClick {
             selectedUcasList.clear()
             listTeacher(REC_TYPE_UCAS)
         }
+        mBinding.textAddFile.setOnClickListener {
+            checkStoragePermissionAndOpenImageSelection()
+        }
         progress.show()
 
         adapter = RecommenderAdapter(requireContext(), requestlistNew, this, mBinding.requestList)
@@ -126,6 +135,7 @@ class RecommendationFragment : Fragment(), onClick {
     fun hitAPI(page: String) {
         homeModel.getRecommenders(SharedHelper(requireContext()).id ?: "", page)
     }
+
 
     private fun sendUCASRecomendation() {
         val teacherId = arrayListOf<String>()
@@ -367,6 +377,209 @@ class RecommendationFragment : Fragment(), onClick {
         homeModel.cancelRecommendRequest(data?.nid.toString())
     }
 
+    private var fileUri: Uri? = null
+    var imagePath: String? = null
+
+
+    private fun checkStoragePermissionAndOpenImageSelection() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            showDialog()
+        } else {
+            //changed here
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_FILE_ACCESS
+                )
+            }
+        }
+    }
+
+    lateinit var body: TextView
+    lateinit var yesBtn: Button
+    lateinit var pdfDialog: Dialog
+
+    private fun showDialog() {
+        pdfDialog = Dialog(requireContext())
+        pdfDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        pdfDialog.setCancelable(false)
+        pdfDialog.setContentView(R.layout.file_upload_dialog)
+        body = pdfDialog.findViewById(R.id.tvBody) as TextView
+        yesBtn = pdfDialog.findViewById(R.id.btn_yes) as Button
+        yesBtn.setText("Upload")
+        val noBtn = pdfDialog.findViewById(R.id.btn_cancel) as TextView
+        yesBtn.setOnClickListener {
+            if (yesBtn.text.equals("Upload"))
+                selectDoc()
+            else
+                uploadFileWork()
+        }
+        noBtn.setOnClickListener { pdfDialog.dismiss() }
+        pdfDialog.show()
+
+    }
+
+    private fun uploadFileWork() {
+        val imgFile = File(imagePath)
+        if (imgFile.exists() && imgFile.length() > 0) {
+            progress.show()
+
+            var hash = getBase64FromPath(imagePath)?.let { getMd5Hash(it) }
+            val tsLong = System.currentTimeMillis() / 1000
+            var filename = "bragsheet_" + SharedHelper(requireContext()).id + "_" + tsLong + ".pdf"
+            SharedHelper(requireContext()).id?.let {
+                hash?.let { it1 ->
+                    homeModel.getPresignedURL(
+                        filename,
+                        it, "recommendation_request", it1
+                    )
+                }
+            }
+        }
+        var url: String? = null
+        var json: JSONObject? = null
+
+        homeModel.getDocumentPresignedObserver.observe(requireActivity()) {
+//            progress.dismiss()
+            json = JSONObject(it.toString())
+            if (json?.optInt("exist") == 0) {
+                url = json?.optString("s3_url")
+                url?.let { it1 -> homeModel.uploadDoc(it1) }
+            } else if (json?.optInt("exist") == 1) {
+                saveWork(1, json, "")
+            }
+
+        }
+        homeModel.uploadImageObserver.observe(requireActivity()) {
+            url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
+        }
+        homeModel.fileVirusObserver.observe(requireActivity()) {
+            var obj = JSONObject(it.toString())
+            if (obj?.get("file_status").toString() == "clean") {
+                url?.let { it1 -> saveWork(0, json, it1) }
+            } else {
+                Toast.makeText(requireContext(), "Please check your File", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        homeModel.showError.observe(requireActivity()){
+            progress.dismiss()
+        }
+    }
+
+    private fun saveWork(exist: Int, json: JSONObject?, url: String) {
+        if (json != null) {
+            SharedHelper(requireContext()).id?.let {
+                homeModel.saveDocumentBragsheet(
+                    it,
+                    json.optString("filename"),
+                    json.optString("path"),
+                    exist,
+                    url,
+                    json.optString("hash")
+                )
+            }
+        }
+        homeModel.saveDocumentBragsheetObserver.observe(requireActivity()) {
+            progress.dismiss()
+            pdfDialog.dismiss()
+        }
+    }
+
+    private fun selectDoc() {
+        val mimeTypes = arrayOf(
+            "application/pdf"
+        )
+        val intent = Intent()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.type = if (mimeTypes.size == 1) mimeTypes[0] else "*/*"
+            if (mimeTypes.size > 0) {
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+            }
+        } else {
+            var mimeTypesStr = ""
+            for (mimeType in mimeTypes) {
+                mimeTypesStr += "$mimeType|"
+            }
+            intent.type = mimeTypesStr.substring(0, mimeTypesStr.length - 1)
+        }
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(
+            Intent.createChooser(intent, "Select Doc"),
+            REQUEST_CHOOSE_PDF_UPCOMING_DETAIL
+        )
+    }
+
+    private val REQUEST_FILE_ACCESS = 3
+    private val REQUEST_CHOOSE_PDF_UPCOMING_DETAIL = 23
+    var pdfName: String = ""
+
+
+    fun getBase64FromPath(path: String?): String? {
+        var byteArray: ByteArray? = null
+        try {
+            val file = File(path)
+            val inputStream: InputStream = FileInputStream(file)
+            val bos = ByteArrayOutputStream()
+            val b = ByteArray(1024 * 11)
+            var bytesRead = 0
+            while (inputStream.read(b).also { bytesRead = it } != -1) {
+                bos.write(b, 0, bytesRead)
+            }
+            byteArray = bos.toByteArray()
+            Log.e("Byte array", ">$byteArray")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP)
+    }
+
+    @SuppressLint("Range")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CHOOSE_PDF_UPCOMING_DETAIL) {
+
+            fileUri = data?.data!!
+            val uri: Uri = data?.data!!
+            val uriString: String = uri.toString()
+            if (uriString.startsWith("content://")) {
+                var myCursor: Cursor? = null
+                try {
+                    // Setting the PDF to the TextView
+                    myCursor = requireContext()!!.contentResolver.query(uri, null, null, null, null)
+                    if (myCursor != null && myCursor.moveToFirst()) {
+                        pdfName =
+                            myCursor.getString(myCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                        body.setText("Selected File: " + pdfName)
+                        yesBtn.setText("Save")
+                    }
+                } finally {
+                    myCursor?.close()
+                }
+            }
+
+            imagePath = PathUtil.getDriveFilePath(requireContext(), uri);
+//            imagePath=getRealPathFromURI(fileUri)
+        }
+    }
+
+    @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
+    fun getMd5Hash(str: String): String? {
+        val md: MessageDigest = MessageDigest.getInstance("MD5")
+        val thedigest: ByteArray = md.digest(str.toByteArray(charset("UTF-8")))
+        val hexString = java.lang.StringBuilder()
+        for (i in thedigest.indices) {
+            val hex = Integer.toHexString(0xFF and thedigest[i].toInt())
+            if (hex.length == 1) hexString.append('0')
+            hexString.append(hex)
+        }
+        return hexString.toString().toUpperCase()
+    }
 }
 
 interface onClick {
