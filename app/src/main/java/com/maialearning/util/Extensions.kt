@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.viewbinding.BuildConfig
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -254,4 +255,10 @@ fun String.replaceInvertedComas():String {
 
 fun String.replaceCrossBracketsComas():String {
     return this.replace("[", "").replace("]", "").replace("\"", "")
+}
+
+fun Context.showToast(it:String){
+    this.let {it1->
+        Toast.makeText(it1, it, Toast.LENGTH_SHORT).show()
+    }
 }
