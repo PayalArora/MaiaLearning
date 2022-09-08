@@ -23,8 +23,8 @@ class RecommenderAdapter(
     var context: Context,
     var list: ArrayList<RecomdersModel.Data?>,
     var onClick: onClick,
-    recycler: RecyclerView
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    recycler: RecyclerView,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var selectedPostion = 0
     private val linearLayoutManager: LinearLayoutManager =
         recycler.layoutManager as LinearLayoutManager
@@ -91,37 +91,51 @@ class RecommenderAdapter(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
             viewHolder.binding.name.text = list[position]?.name?.trim()
-            if (list[position]?.recoCreated != null && list[position]?.recoCreated != "null" && list[position]?.recoCreated != "")
+            if (list[position]?.recoCreated != null && list[position]?.recoCreated != "null" && list[position]?.recoCreated != "") {
                 viewHolder.binding.created.text =
                     "Rec: " + getDate(list[position]?.recoCreated!!.toLong(), "MMM dd, yyyy")
-            if (list[position]?.done != 0) {
-                viewHolder.binding.status.text = "Complete"
+                viewHolder.binding.created.visibility = View.VISIBLE
+                viewHolder.binding.status.visibility = View.VISIBLE
+                if (list[position]?.done != 0) {
+                    viewHolder.binding.status.text = "Completed"
+                    viewHolder.binding.cancelLay.visibility = View.GONE
+                    viewHolder.binding.status.setTextColor(context.getColor(R.color.green_1))
+                } else {
+                    viewHolder.binding.status.text = "Pending..."
+                    viewHolder.binding.cancelLay.visibility = View.VISIBLE
+                    viewHolder.binding.status.setTextColor(context.getColor(R.color.red_1))
+                }
             } else {
-                viewHolder.binding.status.text = "Incomplete"
+                viewHolder.binding.created.visibility = View.GONE
+                viewHolder.binding.status.visibility = View.GONE
+                viewHolder.binding.cancelLay.visibility = View.GONE
             }
+
             if (list[position]?.dueDate != null && list[position]?.dueDate != "null" && list[position]?.dueDate != "")
                 viewHolder.binding.statusD.text =
                     getDate(list[position]?.dueDate!!.toLong(), "MM/dd/yyyy")
             if (list[position]?.isRefLetterCompleted != 0) {
                 if (list[position]?.ucasRefLetterCompleted != null && list[position]?.ucasRefLetterCompleted != "null" && list[position]?.ucasRefLetterCompleted != "")
                     viewHolder.binding.letter.text =
-                        "Complete , " + getDate(
+                        "Completed , " + getDate(
                             list[position]?.ucasRefLetterCompleted!!.toLong(),
                             "MM/dd/yyyy"
                         )
+                viewHolder.binding.letter.setTextColor(context.getColor(R.color.green_1))
             } else {
                 if (list[position]?.ucasRefLetterdue != null && list[position]?.ucasRefLetterdue != "null" && list[position]?.ucasRefLetterdue != "")
                     viewHolder.binding.letter.text =
-                        "Incomplete , " + getDate(
+                        "Pending... , " + getDate(
                             list[position]?.ucasRefLetterdue!!.toLong(),
                             "MM/dd/yyyy"
                         )
+                viewHolder.binding.letter.setTextColor(context.getColor(R.color.red_1))
             }
             if (list[position]?.reqFilename == null || list[position]?.reqFilename == "null" || list[position]?.reqFilename == "") {
                 viewHolder.binding.brag.text = "Update Brag Sheet"
-                viewHolder.binding.cancelLay.visibility = View.VISIBLE
+                viewHolder.binding.brag.visibility = View.VISIBLE
             } else {
-                viewHolder.binding.cancelLay.visibility = View.GONE
+                viewHolder.binding.brag.visibility = View.GONE
             }
             viewHolder.binding.cancel.setOnClickListener {
                 cancelPopup(position)

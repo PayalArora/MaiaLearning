@@ -2,6 +2,7 @@ package com.maialearning.repository
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.maialearning.model.MessageReqAttachModel
 import com.maialearning.model.SendMessageModel
 import com.maialearning.network.AllMessageAPi
 import com.maialearning.network.BaseApplication
@@ -126,15 +127,9 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
         schoolId: String
     ): UseCaseResult<JsonObject> {
         return try {
-            var object_ = JsonObject()
-                object_.addProperty("filename",filename)
-                object_.addProperty("fileType",fileTypeExt)
-                object_.addProperty("Key",key)
-                object_.addProperty("type","Message Attachment")
-                object_.addProperty("schoolnid",schoolId)
-
-            val result = catApi.updateProfImage(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
-//            val result = catApi.updateProfImage1(token, object_).await()
+            var object_ = MessageReqAttachModel(filename, fileTypeExt, key, schoolId,"Message Attachment")
+            //val result = catApi.updateMessageAttachment(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
+            val result = catApi.updateProfImage1(token, object_).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

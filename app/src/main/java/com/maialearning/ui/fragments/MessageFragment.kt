@@ -46,10 +46,6 @@ class MessageFragment : Fragment(), OnItemClick {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        dialog = showLoadingDialog(requireContext())
-//        dialog.show()
-//        messageViewModel.getInbox()
-//        observer()
         setAdapter()
 
     }
@@ -65,19 +61,49 @@ class MessageFragment : Fragment(), OnItemClick {
             mBinding.tabs.addTab(mBinding.tabs.newTab().setText(item))
 
         }
-        val fm: FragmentManager = requireActivity().supportFragmentManager
-        val adapter = ViewMessageAdapter(fm, lifecycle,
-            tabArray.size)
-        mBinding.viewPager.adapter = adapter
-        mBinding.viewPager.isUserInputEnabled = false
-        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
-            tab.setText(tabArray[position])
-        }.attach()
+        loadFragment(MessageListFragment())
+        //val fm: FragmentManager = requireActivity().supportFragmentManager
+//        val adapter = ViewMessageAdapter(fm, lifecycle,
+//            tabArray.size)
+        //mBinding.viewPager.adapter = adapter
+      //  mBinding.viewPager.isUserInputEnabled = false
+//        TabLayoutMediator(mBinding.tabs, mBinding.viewPager) { tab, position ->
+//            tab.setText(tabArray[position])
+//        }.attach()
+        mBinding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> {
+                        loadFragment(MessageListFragment())
+                    }
+                    1 -> {
+                        loadFragment(MessageSentFragment())
+                    }
+                    2 -> {
+                        loadFragment(MessageTrashFragment())
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
 
         mBinding.tabs.tabGravity = TabLayout.GRAVITY_FILL
 
         mBinding.addFab.setOnClickListener { startActivity(Intent(requireActivity(), NewMessageActivity::class.java)) }
    
+    }
+
+    private fun loadFragment(fragment: Fragment?) {
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        fragment?.let { transaction.add(R.id.host_nav, it) }
+        transaction.commit()
     }
 
     override fun onClick(positiion: Int) {

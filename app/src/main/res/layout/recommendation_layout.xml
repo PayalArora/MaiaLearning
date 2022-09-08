@@ -21,7 +21,7 @@
             android:id="@+id/recomendation_selection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/_5dp"
+
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -174,14 +174,13 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:padding="@dimen/_20dp">
+                android:paddingVertical="@dimen/_15dp"
+                android:paddingHorizontal="@dimen/_10dp">
 
                 <TextView
                     android:id="@+id/text_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_15dp"
                     android:lineSpacingExtra="@dimen/_2sp"
                     android:text="@string/request_rec"
                     android:textColor="@color/black"

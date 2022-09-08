@@ -1,6 +1,7 @@
 package com.maialearning.ui.fragments
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
@@ -55,6 +56,7 @@ class RecommendationFragment : Fragment(), onClick {
     var requestList: ArrayList<RecomdersModel.Data?>? = ArrayList()
     private var isLoading = false
     var requestlistNew = ArrayList<RecomdersModel.Data?>()
+    var isAttached = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,9 +71,15 @@ class RecommendationFragment : Fragment(), onClick {
         return mBinding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        isAttached = true
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (isAttached)
         setListeners()
         progress = showLoadingDialog(requireContext())
         progress.show()
@@ -244,6 +252,9 @@ class RecommendationFragment : Fragment(), onClick {
             progress.dismiss()
             Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
         }
+        homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
+            progress.dismiss()
+        }
     }
 
     private fun listTeacher(type: Int) {
@@ -354,9 +365,6 @@ class RecommendationFragment : Fragment(), onClick {
     override fun onCancelClick(data: RecomdersModel.Data?) {
         progress.show()
         homeModel.cancelRecommendRequest(data?.nid.toString())
-        homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
-            progress.dismiss()
-        }
     }
 
 }

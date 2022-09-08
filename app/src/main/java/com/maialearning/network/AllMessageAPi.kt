@@ -55,21 +55,21 @@ interface AllMessageAPi {
         @Body sendMessageModel: SendMessageModel
     ): Deferred<JsonObject>
 
-    @POST("v1/messaging/messages/get-presigned-url")
-    @FormUrlEncoded
-    fun updateProfImage(
+    @PUT("v1/messaging/messages/presigned")
+    fun updateMessageAttachment(
         @Header("x-access-token") AutToken: String,
-        @Field("filename") filename: String,
-        @Field("fileType") fileType: String,
-        @Field("key") key: String,
-        @Field("type") type: String,
-        @Field("schoolnid") schoolId: String
+//        @Field("filename") filename: String,
+//        @Field("fileType") fileType: String,
+//        @Field("key") key: String,
+//        @Field("type") type: String,
+//        @Field("schoolnid") schoolId: String
+        @Body id: JSONObject
     ): Deferred<JsonObject>
 
-    @POST("v1/messaging/messages/get-presigned-url")
+    @PUT("v1/messaging/messages/presigned")
     fun updateProfImage1(
         @Header("x-access-token") AutToken: String,
-        @Body id: JSONObject
+        @Body id: MessageReqAttachModel
     ): Deferred<JsonObject>
 
 }
