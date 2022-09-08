@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
@@ -47,6 +48,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val deleteProgramObserver = MutableLiveData<JsonArray>()
     val decisionStatusObserver = MutableLiveData<JsonObject>()
     val cancelRecommendRequestObserver = MutableLiveData<Unit>()
+    val getDocumentPresignedObserver = MutableLiveData<JsonObject>()
+    val uploadImageObserver = MutableLiveData<String>()
+    val saveDocumentBragsheetObserver = MutableLiveData<Unit>()
 
 
     fun getConsiderList(id: String) {
@@ -324,6 +328,71 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+    fun getPresignedURL(name:String,uID:String,docType:String,hash:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.getDocumentPresignedURl(name,uID,docType,hash)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getDocumentPresignedObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun uploadDoc(url: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.uploadDoc(url)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> uploadImageObserver.value = result.toString()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    val fileVirusObserver = MutableLiveData<JsonObject>()
+
+    fun checkFileVirus(url: String, putUrl: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.checkFileVirus(url, putUrl)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> fileVirusObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+
+    fun saveDocumentBragsheet(id:String,name:String,path:String,exist:Int,url:String,hash:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.uploadDocSaveBragsheet(id,name,url,exist,path,hash)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> saveDocumentBragsheetObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

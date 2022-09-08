@@ -163,6 +163,25 @@ interface LoginRepository {
     suspend fun getRecomders(id: String, page: String): UseCaseResult<RecomdersModel>
     suspend fun cancelRecommedationRequest(id: String): UseCaseResult<Unit>
 
+    suspend fun getDocumentPresignedURl(
+        name: String,
+        uid: String,
+        docType: String,
+        hash: String
+    ): UseCaseResult<JsonObject>
+
+    suspend fun uploadDoc(url: String): UseCaseResult<Unit>
+
+    suspend fun uploadDocSaveBragsheet(
+        id: String,
+        name: String,
+        url: String,
+        exist: Int,
+        path: String,
+        hash: String
+    ): UseCaseResult<Unit>
+
+
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -868,6 +887,65 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.cancelRecommendationRequest(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getDocumentPresignedURl(
+        name: String,
+        uid: String,
+        docType: String,
+        hash: String
+    ): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getDocumetPresignedURl(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                name,
+                uid,
+                docType,
+                hash
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun uploadDoc(url: String): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.uploadDoc(
+                url
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun uploadDocSaveBragsheet(
+        id: String,
+        name: String,
+        url: String,
+        exist: Int,
+        path: String,
+        hash: String
+    ): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.saveDocumentBragSheet(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,id,
+                name,
+                path,
+                exist, url,
+                hash
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
