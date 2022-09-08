@@ -348,6 +348,11 @@ interface AllAPi {
         @Path("id") id: String,
         @Path("page") page: String,
         ): Deferred<RecomdersModel>
+    @GET("recommendation_without_college/{id}")
+    fun getRecomType(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        ): Deferred<JsonArray>
 
 
 }

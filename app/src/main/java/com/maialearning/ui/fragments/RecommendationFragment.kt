@@ -112,7 +112,12 @@ class RecommendationFragment : Fragment() {
                 }, 2000)
             }
         })
-        hitAPI(page.toString())
+
+        checkRecomType()
+    }
+
+    private fun checkRecomType() {
+        homeModel.getRecomType(SharedHelper(requireContext()).schoolId ?: "")
     }
 
     fun hitAPI(page:String){
@@ -173,6 +178,16 @@ class RecommendationFragment : Fragment() {
     }
 
     private fun setListeners() {
+        homeModel.typeObserver.observe(requireActivity()){
+            progress.dismiss()
+            if((it.get(0).toString()) == "0"){
+                Toast.makeText(context,"0",Toast.LENGTH_LONG).show()
+            }else{
+                hitAPI(page.toString())
+            }
+
+
+        }
         homeModel.applyingObserver.observe(requireActivity()) {
             progress.dismiss()
             for (i in 0 until it.size()) {
