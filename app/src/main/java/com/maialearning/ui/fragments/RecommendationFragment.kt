@@ -35,11 +35,14 @@ import com.maialearning.databinding.RecommendationLayoutBinding
 import com.maialearning.model.RecModel
 import com.maialearning.model.RecomdersModel
 import com.maialearning.model.TeacherListModelItem
+import com.maialearning.model.UniversitiesModel
 import com.maialearning.ui.adapter.RecommenderAdapter
 import com.maialearning.ui.adapter.SelectTeacherAdapter
+import com.maialearning.ui.adapter.SelectUniversityAdapter
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
+import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
@@ -52,7 +55,9 @@ class RecommendationFragment : Fragment(), onClick {
     private val homeModel: HomeViewModel by viewModel()
     private lateinit var progress: Dialog
     var list: ArrayList<TeacherListModelItem> = ArrayList()
+    var univlist: ArrayList<UniversitiesModel> = ArrayList()
     var selectedList: ArrayList<TeacherListModelItem> = ArrayList()
+    var selectedUnivList: ArrayList<UniversitiesModel> = ArrayList()
     var selectedUcasList: ArrayList<TeacherListModelItem> = ArrayList()
     var jsonDeadline: JsonArray = JsonArray()
     lateinit var adapter: RecommenderAdapter
@@ -113,6 +118,10 @@ class RecommendationFragment : Fragment(), onClick {
             selectedUcasList.clear()
             listTeacher(REC_TYPE_UCAS)
         }
+        mBinding.recipentUniversity.setOnClickListener {
+            progress.show()
+            listUniversities()
+        }
         mBinding.textAddFile.setOnClickListener {
             checkStoragePermissionAndOpenImageSelection()
         }
@@ -131,7 +140,16 @@ class RecommendationFragment : Fragment(), onClick {
                 }, 2000)
             }
         })
-        hitAPI(page.toString())
+
+        checkRecomType()
+    }
+
+    private fun listUniversities() {
+        homeModel.getUniversities(SharedHelper(requireContext()).id ?: "")
+    }
+
+    private fun checkRecomType() {
+        homeModel.getRecomType(SharedHelper(requireContext()).schoolId ?: "")
     }
 
     fun hitAPI(page: String) {
@@ -198,6 +216,21 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     private fun setListeners() {
+        homeModel.typeObserver.observe(requireActivity()) {
+            progress.dismiss()
+            if ((it.get(0).toString()) == "0") {
+                Toast.makeText(context, "0", Toast.LENGTH_LONG).show()
+                mBinding.recipentUcas.visibility = View.GONE
+                mBinding.recipentUniversity.visibility = View.VISIBLE
+                mBinding.recomendationSelection.visibility = View.GONE
+            } else {
+                mBinding.recipentUcas.visibility = View.VISIBLE
+                mBinding.recipentUniversity.visibility = View.GONE
+                mBinding.recomendationSelection.visibility = View.VISIBLE
+
+                hitAPI(page.toString())
+            }
+        }
         homeModel.applyingObserver.observe(requireActivity()) {
             progress.dismiss()
             for (i in 0 until it.size()) {
@@ -298,6 +331,75 @@ class RecommendationFragment : Fragment(), onClick {
             progress.dismiss()
             pdfDialog.dismiss()
         }
+
+        homeModel.getUniversitiesObserver.observe(requireActivity()) {
+            val json = JSONObject(it.toString())
+            val x = json.keys() as Iterator<String>
+            while (x.hasNext()) {
+                val key: String = x.next().toString()
+                var universityModel=UniversitiesModel()
+                universityModel.id=json.get(key).toString()
+                universityModel.name=json.optString(key)
+                univlist.add(universityModel)
+            }
+            Log.e("University size ",">> "+ univlist.size)
+            univlist.sortBy { it.name?.capitalize() }
+            universititesBottomSheet()
+            progress.dismiss()
+        }
+    }
+
+    private fun universititesBottomSheet() {
+        selectedUnivList.clear()
+        var type=REC_TYPE_RECOMENDATION
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: LayoutTeacherBinding = LayoutTeacherBinding.inflate(layoutInflater)
+        //  sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.filters.text = resources.getString(R.string.select_university)
+        dialog.show()
+        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+        sheetBinding.recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        sheetBinding.recyclerView.adapter =
+            SelectUniversityAdapter(univlist, ::clickUniversity, type)
+        sheetBinding.searchText.hint="Search University"
+        sheetBinding.searchText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                if (sheetBinding.searchText.text.toString().trim() != "") {
+                    val filterList =
+                        findUnivByName(sheetBinding.searchText.text.toString().trim())
+                    sheetBinding.recyclerView.adapter =
+                        SelectUniversityAdapter(filterList, ::clickUniversity, type)
+                } else {
+                    sheetBinding.recyclerView.adapter =
+                        SelectUniversityAdapter(univlist, ::clickUniversity, type)
+                }
+
+            }
+
+
+        })
+        sheetBinding.searchText.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                findUnivByName(sheetBinding.searchText.text.toString().trim())
+                return@OnEditorActionListener true
+            }
+            false
+        })
+        dialog.setOnDismissListener {
+                setUniversitySelection(selectedUnivList, type)
+        }
+
     }
 
     private fun listTeacher(type: Int) {
@@ -369,6 +471,21 @@ class RecommendationFragment : Fragment(), onClick {
         return filterList
     }
 
+    fun findUnivByName(name: String?): ArrayList<UniversitiesModel> {
+        // go through list of members and compare name with given name
+        var filterList: ArrayList<UniversitiesModel> = ArrayList()
+        for (member in univlist) {
+            if ((member.name?.lowercase()?.contains(name?.lowercase() ?: "")
+                    ?: false) ?: false
+            ) {
+                filterList.add(member)
+                // return member when name found
+            }
+        }
+        return filterList
+    }
+
+
     private fun click(data: TeacherListModelItem, type: Int) {
         if (type == REC_TYPE_RECOMENDATION)
             if (data.isSelected) {
@@ -385,6 +502,16 @@ class RecommendationFragment : Fragment(), onClick {
         }
     }
 
+    private fun clickUniversity(data: UniversitiesModel, type: Int) {
+            if (data.isSelected) {
+                selectedUnivList.add(data)
+            } else {
+                selectedUnivList.remove(data)
+            }
+        }
+
+
+
     private fun setSelection(selectedList: ArrayList<TeacherListModelItem>, type: Int) {
         val separator = ", "
 
@@ -400,6 +527,14 @@ class RecommendationFragment : Fragment(), onClick {
         //  mBinding.textCount.text = "from " + selectedList.size + " teachers"
     }
 
+    private fun setUniversitySelection(selectedList: ArrayList<UniversitiesModel>, type: Int) {
+        val separator = ", "
+        val sb = StringBuilder()
+        selectedList.forEach { sb.append(it.name).append(separator) }
+        val string = sb.removeSuffix(separator).toString()
+         mBinding.selectedUniversity.text = string
+        //  mBinding.textCount.text = "from " + selectedList.size + " teachers"
+    }
     companion object {
         const val REC_TYPE_RECOMENDATION = 1
         const val REC_TYPE_UCAS = 2
@@ -474,9 +609,35 @@ class RecommendationFragment : Fragment(), onClick {
                 }
             }
         }
+        var url: String? = null
+        var json: JSONObject? = null
 
+        homeModel.getDocumentPresignedObserver.observe(requireActivity()) {
+//            progress.dismiss()
+            json = JSONObject(it.toString())
+            if (json?.optInt("exist") == 0) {
+                url = json?.optString("s3_url")
+                url?.let { it1 -> homeModel.uploadDoc(it1) }
+            } else if (json?.optInt("exist") == 1) {
+                saveWork(1, json, "")
+            }
 
-
+        }
+        homeModel.uploadImageObserver.observe(requireActivity()) {
+            url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
+        }
+        homeModel.fileVirusObserver.observe(requireActivity()) {
+            var obj = JSONObject(it.toString())
+            if (obj?.get("file_status").toString() == "clean") {
+                url?.let { it1 -> saveWork(0, json, it1) }
+            } else {
+                Toast.makeText(requireContext(), "Please check your File", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        homeModel.showError.observe(requireActivity()){
+            progress.dismiss()
+        }
     }
 
     private fun saveWork(exist: Int, json: JSONObject?, url: String) {
@@ -492,7 +653,10 @@ class RecommendationFragment : Fragment(), onClick {
                 )
             }
         }
-
+        homeModel.saveDocumentBragsheetObserver.observe(requireActivity()) {
+            progress.dismiss()
+            pdfDialog.dismiss()
+        }
     }
 
     private fun selectDoc() {
@@ -572,6 +736,18 @@ class RecommendationFragment : Fragment(), onClick {
         }
     }
 
+    @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
+    fun getMd5Hash(str: String): String? {
+        val md: MessageDigest = MessageDigest.getInstance("MD5")
+        val thedigest: ByteArray = md.digest(str.toByteArray(charset("UTF-8")))
+        val hexString = java.lang.StringBuilder()
+        for (i in thedigest.indices) {
+            val hex = Integer.toHexString(0xFF and thedigest[i].toInt())
+            if (hex.length == 1) hexString.append('0')
+            hexString.append(hex)
+        }
+        return hexString.toString().toUpperCase()
+    }
 }
 
 interface onClick {

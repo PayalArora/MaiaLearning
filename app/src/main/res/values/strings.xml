@@ -477,6 +477,7 @@
     <string name="cancel_req_msg">Are you sure you\'d like to cancel  request?</string>
     <string name="reload_brag_sheet">Reload Brag Sheet</string>
     <string name="select_file">Please select PDF to upload</string>
+    <string name="select_university">Select Universities</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

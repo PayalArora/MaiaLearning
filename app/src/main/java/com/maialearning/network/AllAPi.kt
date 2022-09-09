@@ -361,6 +361,12 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<Unit>
 
+    @GET("recommendation_without_college/{id}")
+    fun getRecomType(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+    ): Deferred<JsonArray>
+
     @POST("get_documents_presigned_url")
     @FormUrlEncoded
     fun getDocumetPresignedURl(
@@ -387,4 +393,10 @@ interface AllAPi {
         @Field("s3_url") url: String,
         @Field("filehash") fileHash: String
     ): Deferred<Unit>
+
+    @GET("get-student-colleges/{id}?for_reco=1")
+    fun getUniversities(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 }

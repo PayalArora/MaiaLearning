@@ -162,7 +162,7 @@ interface LoginRepository {
     suspend fun sendUcasRec(recModel: RecModel): UseCaseResult<JsonArray>
     suspend fun getRecomders(id: String, page: String): UseCaseResult<RecomdersModel>
     suspend fun cancelRecommedationRequest(id: String): UseCaseResult<Unit>
-
+    suspend fun getRecomType(id: String): UseCaseResult<JsonArray>
     suspend fun getDocumentPresignedURl(
         name: String,
         uid: String,
@@ -181,6 +181,9 @@ interface LoginRepository {
         hash: String
     ): UseCaseResult<Unit>
 
+    suspend fun getUniversities(
+        id: String
+    ): UseCaseResult<JsonObject>
 
 }
 
@@ -896,6 +899,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
+    override suspend fun getRecomType(id: String): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getRecomType(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
     override suspend fun getDocumentPresignedURl(
         name: String,
         uid: String,
@@ -941,11 +957,24 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     ): UseCaseResult<Unit> {
         return try {
             val result = catApi.saveDocumentBragSheet(
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,id,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id,
                 name,
                 path,
                 exist, url,
                 hash
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getUniversities(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getUniversities(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

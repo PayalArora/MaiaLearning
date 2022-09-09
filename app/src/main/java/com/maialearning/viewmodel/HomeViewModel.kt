@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.descriptors.PrimitiveKind
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
@@ -43,6 +44,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val recSendObserver = MutableLiveData<JsonArray>()
     val recUCASObserver = MutableLiveData<JsonArray>()
     val recommdersObserver = MutableLiveData<RecomdersModel>()
+    val typeObserver = MutableLiveData<JsonArray>()
     val recDeadline = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
     val deleteProgramObserver = MutableLiveData<JsonArray>()
@@ -51,6 +53,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val getDocumentPresignedObserver = MutableLiveData<JsonObject>()
     val uploadImageObserver = MutableLiveData<String>()
     val saveDocumentBragsheetObserver = MutableLiveData<Unit>()
+    val getUniversitiesObserver = MutableLiveData<JsonObject>()
 
 
     fun getConsiderList(id: String) {
@@ -62,8 +65,10 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> listObserver.value = result.data
-                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()?.replaceCrossBracketsComas()
-         
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
             }
         }
     }
@@ -77,8 +82,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> applyObserver.value = result.data
-                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
-         
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+
             }
         }
     }
@@ -92,8 +98,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> notesObserver.value = result.data
-                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
-         
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+
             }
         }
     }
@@ -107,7 +114,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> updateStudentPlanObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -121,10 +129,12 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> searchUniversityObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
+
     fun getRecipients(context: Context, id: String, type: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -137,7 +147,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> listArrayObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
 
             }
@@ -153,7 +164,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> likeObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -167,10 +179,12 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> unlikeObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
+
     fun hidel(studentid: String, collegeId: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -180,10 +194,12 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> delObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
+
     fun moveToApplying(studentid: String, collegeId: String, status: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -193,7 +209,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> applyingObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -207,7 +224,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> addProgramObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
             }
         }
     }
@@ -221,8 +239,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> deleteProgramObserver.value = result.data
-                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
-         
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+
             }
         }
     }
@@ -233,11 +252,12 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             val result = withContext(Dispatchers.Main) {
                 catRepository.getDecisionStatuses()
             }
-           showLoading.value = false
+            showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> decisionStatusObserver.value = result.data
-                     is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
-         
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+
             }
         }
     }
@@ -269,8 +289,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
-//    fun sendRecomTeachers(id: JSONObject) {
-    fun sendRecomTeachers(model:RecModel) {
+
+    //    fun sendRecomTeachers(id: JSONObject) {
+    fun sendRecomTeachers(model: RecModel) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -284,7 +305,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
-    fun sendRecomUCAS(model:RecModel) {
+
+    fun sendRecomUCAS(model: RecModel) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -299,12 +321,27 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
-    fun getRecommenders(id:String,page:String) {
+    fun getRecomType(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
 
-                catRepository.getRecomders(id,page)
+                catRepository.getRecomType(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> typeObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getRecommenders(id: String, page: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.getRecomders(id, page)
             }
             showLoading.value = false
             when (result) {
@@ -314,7 +351,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
-    fun cancelRecommendRequest(id:String) {
+    fun cancelRecommendRequest(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -328,12 +365,13 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
-    fun getPresignedURL(name:String,uID:String,docType:String,hash:String) {
+
+    fun getPresignedURL(name: String, uID: String, docType: String, hash: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
 
-                catRepository.getDocumentPresignedURl(name,uID,docType,hash)
+                catRepository.getDocumentPresignedURl(name, uID, docType, hash)
             }
             showLoading.value = false
             when (result) {
@@ -359,6 +397,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     val fileVirusObserver = MutableLiveData<JsonObject>()
 
     fun checkFileVirus(url: String, putUrl: String) {
@@ -378,12 +417,19 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
-    fun saveDocumentBragsheet(id:String,name:String,path:String,exist:Int,url:String,hash:String) {
+    fun saveDocumentBragsheet(
+        id: String,
+        name: String,
+        path: String,
+        exist: Int,
+        url: String,
+        hash: String
+    ) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
 
-                catRepository.uploadDocSaveBragsheet(id,name,url,exist,path,hash)
+                catRepository.uploadDocSaveBragsheet(id, name, url, exist, path, hash)
             }
             showLoading.value = false
             when (result) {
@@ -392,7 +438,20 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+    fun getUniversities(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
 
+                catRepository.getUniversities(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getUniversitiesObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks
