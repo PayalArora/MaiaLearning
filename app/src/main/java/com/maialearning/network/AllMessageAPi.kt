@@ -72,4 +72,17 @@ interface AllMessageAPi {
         @Body id: MessageReqAttachModel
     ): Deferred<JsonObject>
 
+    @PUT
+    fun uploadImage(
+        @Url() url: String,
+        @Header("Content-Type") content: String,
+        @Body body: RequestBody
+    ): Deferred<Unit>
+
+    @POST
+    fun checkFileVirus(
+        @Url() url: String,
+        @Header("Authorization") AutToken: String,
+        @Body file: JsonObject
+    ): Deferred<JsonObject>
 }

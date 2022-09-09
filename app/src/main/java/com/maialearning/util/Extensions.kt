@@ -30,6 +30,9 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.UnsupportedEncodingException
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -261,4 +264,18 @@ fun Context.showToast(it:String){
     this.let {it1->
         Toast.makeText(it1, it, Toast.LENGTH_SHORT).show()
     }
+}
+
+
+@Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
+fun String.getMd5Hash(): String? {
+    val md: MessageDigest = MessageDigest.getInstance("MD5")
+    val thedigest: ByteArray = md.digest(this.toByteArray(charset("UTF-8")))
+    val hexString = java.lang.StringBuilder()
+    for (i in thedigest.indices) {
+        val hex = Integer.toHexString(0xFF and thedigest[i].toInt())
+        if (hex.length == 1) hexString.append('0')
+        hexString.append(hex)
+    }
+    return hexString.toString().toUpperCase()
 }

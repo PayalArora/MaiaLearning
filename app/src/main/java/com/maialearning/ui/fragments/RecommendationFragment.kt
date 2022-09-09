@@ -63,6 +63,8 @@ class RecommendationFragment : Fragment(), onClick {
     private var isLoading = false
     var requestlistNew = ArrayList<RecomdersModel.Data?>()
     var isAttached = false
+    var url: String? = null
+    var json: JSONObject? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -265,6 +267,37 @@ class RecommendationFragment : Fragment(), onClick {
         homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
             progress.dismiss()
         }
+        homeModel.getDocumentPresignedObserver.observe(requireActivity()) {
+//            progress.dismiss()
+            json = JSONObject(it.toString())
+            if (json?.optInt("exist") == 0) {
+                url = json?.optString("s3_url")
+                url?.let { it1 -> homeModel.uploadDoc(it1) }
+            } else if (json?.optInt("exist") == 1) {
+                saveWork(1, json, "")
+            }
+
+        }
+        homeModel.uploadImageObserver.observe(requireActivity()) {
+            url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
+        }
+        homeModel.fileVirusObserver.observe(requireActivity()) {
+            var obj = JSONObject(it.toString())
+            if (obj?.get("file_status").toString() == "clean") {
+                url?.let { it1 -> saveWork(0, json, it1) }
+            } else {
+                Toast.makeText(requireContext(), "Please check your File", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        homeModel.showError.observe(requireActivity()){
+            progress.dismiss()
+            context?.showToast(it)
+        }
+        homeModel.saveDocumentBragsheetObserver.observe(requireActivity()) {
+            progress.dismiss()
+            pdfDialog.dismiss()
+        }
     }
 
     private fun listTeacher(type: Int) {
@@ -429,7 +462,7 @@ class RecommendationFragment : Fragment(), onClick {
         if (imgFile.exists() && imgFile.length() > 0) {
             progress.show()
 
-            var hash = getBase64FromPath(imagePath)?.let { getMd5Hash(it) }
+            var hash = getBase64FromPath(imagePath)?.let { it.getMd5Hash() }
             val tsLong = System.currentTimeMillis() / 1000
             var filename = "bragsheet_" + SharedHelper(requireContext()).id + "_" + tsLong + ".pdf"
             SharedHelper(requireContext()).id?.let {
@@ -441,35 +474,9 @@ class RecommendationFragment : Fragment(), onClick {
                 }
             }
         }
-        var url: String? = null
-        var json: JSONObject? = null
 
-        homeModel.getDocumentPresignedObserver.observe(requireActivity()) {
-//            progress.dismiss()
-            json = JSONObject(it.toString())
-            if (json?.optInt("exist") == 0) {
-                url = json?.optString("s3_url")
-                url?.let { it1 -> homeModel.uploadDoc(it1) }
-            } else if (json?.optInt("exist") == 1) {
-                saveWork(1, json, "")
-            }
 
-        }
-        homeModel.uploadImageObserver.observe(requireActivity()) {
-            url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
-        }
-        homeModel.fileVirusObserver.observe(requireActivity()) {
-            var obj = JSONObject(it.toString())
-            if (obj?.get("file_status").toString() == "clean") {
-                url?.let { it1 -> saveWork(0, json, it1) }
-            } else {
-                Toast.makeText(requireContext(), "Please check your File", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-        homeModel.showError.observe(requireActivity()){
-            progress.dismiss()
-        }
+
     }
 
     private fun saveWork(exist: Int, json: JSONObject?, url: String) {
@@ -485,10 +492,7 @@ class RecommendationFragment : Fragment(), onClick {
                 )
             }
         }
-        homeModel.saveDocumentBragsheetObserver.observe(requireActivity()) {
-            progress.dismiss()
-            pdfDialog.dismiss()
-        }
+
     }
 
     private fun selectDoc() {
@@ -568,18 +572,6 @@ class RecommendationFragment : Fragment(), onClick {
         }
     }
 
-    @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
-    fun getMd5Hash(str: String): String? {
-        val md: MessageDigest = MessageDigest.getInstance("MD5")
-        val thedigest: ByteArray = md.digest(str.toByteArray(charset("UTF-8")))
-        val hexString = java.lang.StringBuilder()
-        for (i in thedigest.indices) {
-            val hex = Integer.toHexString(0xFF and thedigest[i].toInt())
-            if (hex.length == 1) hexString.append('0')
-            hexString.append(hex)
-        }
-        return hexString.toString().toUpperCase()
-    }
 }
 
 interface onClick {

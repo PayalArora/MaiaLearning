@@ -11,6 +11,7 @@ import com.maialearning.network.UseCaseResult
 import retrofit2.HttpException
 
 import com.maialearning.util.prefhandler.SharedHelper
+import okhttp3.RequestBody
 import org.json.JSONObject
 
 interface MessageRepository {
@@ -28,6 +29,11 @@ interface MessageRepository {
         fileTypeExt: String,
         key: String,
         schoolId: String
+    ): UseCaseResult<JsonObject>
+    suspend fun uploadImage(content: String, url: String, bode: RequestBody): UseCaseResult<Unit>
+    suspend fun checkFileVirus(
+        url: String,
+        putUrl: String
     ): UseCaseResult<JsonObject>
    }
 
@@ -138,5 +144,36 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
         }
     }
 
-
+    override suspend fun uploadImage(
+        content: String,
+        url: String,
+        bode: RequestBody
+    ): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.uploadImage(url, content, bode).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun checkFileVirus(
+        url: String,
+        putUrl: String
+    ): UseCaseResult<JsonObject> {
+        return try {
+            val obj = JsonObject()
+            obj.addProperty("presigned", putUrl)
+            val result = catApi.checkFileVirus(
+                url,
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", obj
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
 }
