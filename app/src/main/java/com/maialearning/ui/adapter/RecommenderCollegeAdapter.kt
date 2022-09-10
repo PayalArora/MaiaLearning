@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.RecomendationCollegeItemBinding
+import com.maialearning.model.RecCollegeModel
 import com.maialearning.model.RecomdersModel
 import com.maialearning.util.OnLoadMoreListener
 
-class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecomdersModel.Data?>, recycler: RecyclerView,
+class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecCollegeModel.CollegeDetails?>, recycler: RecyclerView,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var selectedPostion = 0
     private val linearLayoutManager: LinearLayoutManager = recycler.layoutManager as LinearLayoutManager
@@ -79,7 +80,8 @@ class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<Recomd
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
-
+            viewHolder.binding.uniName.text = list[position]?.collegeName
+            viewHolder.binding.recyclerView.adapter=RecommenderSubAdapter(context, list[position]?.recoName)
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2
             loadingViewHolder.binding.layout.setBackgroundColor(
@@ -108,7 +110,7 @@ class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<Recomd
         isLoading = false
     }
 
-    fun addAllLis(list: ArrayList<RecomdersModel.Data?>, total: Int, current: Int) {
+    fun addAllLis(list: ArrayList<RecCollegeModel.CollegeDetails?>, total: Int, current: Int) {
         this.list.addAll(list)
         this.totalPages = total
         this.currentPages = current

@@ -34,50 +34,48 @@ import com.maialearning.databinding.LayoutTeacherBinding
 import com.maialearning.databinding.RecommendationLayoutBinding
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.RecommenderAdapter
+import com.maialearning.ui.adapter.RecommenderCollegeAdapter
 import com.maialearning.ui.adapter.SelectTeacherAdapter
 import com.maialearning.ui.adapter.SelectUniversityAdapter
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
-import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 
 class RecommendationFragment : Fragment(), onClick {
     private lateinit var mBinding: RecommendationLayoutBinding
     private val homeModel: HomeViewModel by viewModel()
     private lateinit var progress: Dialog
-    var list: ArrayList<TeacherListModelItem> = ArrayList()
-    var univlist: ArrayList<UniversitiesModel> = ArrayList()
-    var recCollegeList: ArrayList<RecCollegeModel> = ArrayList()
-    var selectedList: ArrayList<TeacherListModelItem> = ArrayList()
-    var selectedUnivList: ArrayList<UniversitiesModel> = ArrayList()
-    var selectedUcasList: ArrayList<TeacherListModelItem> = ArrayList()
-    var jsonDeadline: JsonArray = JsonArray()
-    lateinit var adapter: RecommenderAdapter
-    var type_recs = REC_TYPE_RECOMENDATION
-    var type_college = TYPE_COLLEGE_WITHOUT
-    var page: Int = 1
-    var requestListUpdate: ArrayList<RecomdersModel.Data?>? = ArrayList()
-    var requestList: ArrayList<RecomdersModel.Data?>? = ArrayList()
+    private var list: ArrayList<TeacherListModelItem> = ArrayList()
+    private var univlist: ArrayList<UniversitiesModel> = ArrayList()
+    private var recCollegeList: ArrayList<RecCollegeModel.CollegeDetails?> = ArrayList()
+    private var selectedList: ArrayList<TeacherListModelItem> = ArrayList()
+    private var selectedUnivList: ArrayList<UniversitiesModel> = ArrayList()
+    private var selectedUcasList: ArrayList<TeacherListModelItem> = ArrayList()
+    private var jsonDeadline: JsonArray = JsonArray()
+    private lateinit var adapter: RecommenderAdapter
+    private lateinit var adapterStudent: RecommenderCollegeAdapter
+    private var typeRecs = REC_TYPE_RECOMENDATION
+    private var typeCollege = TYPE_COLLEGE_WITHOUT
+    private var page: Int = 1
+    private var requestListUpdate: ArrayList<RecomdersModel.Data?>? = ArrayList()
+    private var requestList: ArrayList<RecomdersModel.Data?>? = ArrayList()
     private var isLoading = false
-    var requestlistNew = ArrayList<RecomdersModel.Data?>()
-    var isAttached = false
-    var url: String? = null
-    var json: JSONObject? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private var requestListNew = ArrayList<RecomdersModel.Data?>()
+    private var requestSListNew = ArrayList<RecCollegeModel.CollegeDetails?>()
+    private var requestSListUpdate: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
+    private var requestSList: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
+    private var isAttached = false
+    private var url: String? = null
+    private var json: JSONObject? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         mBinding = RecommendationLayoutBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -92,17 +90,17 @@ class RecommendationFragment : Fragment(), onClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isAttached)
-            setListeners()
+        setListeners()
         progress = showLoadingDialog(requireContext())
         progress.show()
         SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
         listUniversities()
         homeModel.getRecDeadline()
         mBinding.send.setOnClickListener {
-            if (type_recs == REC_TYPE_RECOMENDATION) {
-                sendRecomendation(type_recs)
-            } else if (type_recs == BOTH) {
-                sendRecomendation(type_recs)
+            if (typeRecs == REC_TYPE_RECOMENDATION) {
+                sendRecomendation(typeRecs)
+            } else if (typeRecs == BOTH) {
+                sendRecomendation(typeRecs)
                 sendUCASRecomendation()
             } else {
                 sendUCASRecomendation()
@@ -127,13 +125,14 @@ class RecommendationFragment : Fragment(), onClick {
         }
         progress.show()
 
-        adapter = RecommenderAdapter(requireContext(), requestlistNew, this, mBinding.requestList)
+
+        adapter = RecommenderAdapter(requireContext(), requestListNew, this, mBinding.requestList)
         mBinding.requestList.adapter = adapter
         adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
             override fun onLoadMore() {
-                requestlistNew.add(null)
+                requestListNew.add(null)
                 isLoading = true
-                adapter.notifyItemInserted(requestlistNew.size - 1)
+                adapter.notifyItemInserted(requestListNew.size - 1)
                 Handler(Looper.getMainLooper()).postDelayed({
                     hitAPI(page.toString())
 
@@ -153,10 +152,12 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     fun hitAPI(page: String) {
+        progress.show()
         homeModel.getRecommenders(SharedHelper(requireContext()).id ?: "", page)
     }
 
     fun hitAPISchoolRecomenders(page: String) {
+        progress.show()
         homeModel.getRecommendersCollege(SharedHelper(requireContext()).id ?: "", page)
     }
 
@@ -181,7 +182,7 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     private fun sendRecomendation(type: Int) {
-        if (type == BOTH && type_college == TYPE_COLLEGE_WITHOUT) {
+        if (type == BOTH && typeCollege == TYPE_COLLEGE_WITHOUT) {
             if (mBinding.textDescription.text.toString().trim() == "" || selectedUcasList.size
                 == 0 || selectedList.size == 0
             ) {
@@ -192,10 +193,10 @@ class RecommendationFragment : Fragment(), onClick {
         for (i in selectedList) {
             i.uid?.let { it1 -> teacherId.add(it1) }
         }
-        if (type_college == TYPE_COLLEGE) {
+        if (typeCollege == TYPE_COLLEGE) {
             val collegeId = arrayListOf<String>()
             for (i in selectedUnivList) {
-                i.id?.let { collegeId.add(it) }
+                i.id.let { collegeId.add(it) }
             }
             if (mBinding.textDescription.text.toString().trim() != "" && teacherId.size
                 > 0 && collegeId.size > 0
@@ -241,14 +242,14 @@ class RecommendationFragment : Fragment(), onClick {
                 } else {
                     mBinding.recipentUcas.visibility = View.GONE
                 }
-                type_recs = BOTH
+                typeRecs = BOTH
             } else {
                 if (recommendationLetterRequests == 1) {
-                    type_recs = REC_TYPE_UCAS
+                    typeRecs = REC_TYPE_UCAS
                     mBinding.recipentUcas.visibility = View.GONE
                     mBinding.recipent.visibility = View.VISIBLE
                 } else {
-                    type_recs = REC_TYPE_RECOMENDATION
+                    typeRecs = REC_TYPE_RECOMENDATION
                     mBinding.recipentUcas.visibility = View.VISIBLE
                     mBinding.recipent.visibility = View.GONE
                 }
@@ -259,18 +260,35 @@ class RecommendationFragment : Fragment(), onClick {
 
     }
 
+    private fun initRecyclerView() {
+        adapterStudent =
+            RecommenderCollegeAdapter(requireContext(), requestSListNew, mBinding.requestList)
+        mBinding.requestList.adapter = adapterStudent
+        adapterStudent.setOnLoadMoreListener(object : OnLoadMoreListener {
+            override fun onLoadMore() {
+                requestSListNew.add(null)
+                isLoading = true
+                adapter.notifyItemInserted(requestSListNew.size - 1)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    hitAPISchoolRecomenders(page.toString())
+
+                }, 2000)
+            }
+        })
+    }
+
     private fun setListeners() {
         homeModel.typeObserver.observe(requireActivity()) {
-            progress.dismiss()
             if ((it.get(0).toString()) == "0") {
                 Toast.makeText(context, "0", Toast.LENGTH_LONG).show()
-                type_college = TYPE_COLLEGE
+                typeCollege = TYPE_COLLEGE
                 mBinding.recipentUcas.visibility = View.GONE
                 mBinding.recipentUniversity.visibility = View.VISIBLE
                 mBinding.recomendationSelection.visibility = View.GONE
+                initRecyclerView()
                 hitAPISchoolRecomenders(page.toString())
             } else {
-                type_college = TYPE_COLLEGE_WITHOUT
+                typeCollege = TYPE_COLLEGE_WITHOUT
                 showRecs()
                 hitAPI(page.toString())
             }
@@ -321,13 +339,13 @@ class RecommendationFragment : Fragment(), onClick {
             requestListUpdate?.addAll(it.data)
             if (isLoading) {
                 isLoading = false
-                requestlistNew.removeAt(requestlistNew.size - 1)
-                adapter.notifyItemRemoved(requestlistNew.size)
+                requestListNew.removeAt(requestListNew.size - 1)
+                adapter.notifyItemRemoved(requestListNew.size)
             }
             //for swipe refresh page
             if (totalPage != null) {
-                if (last != null) {
-                    adapter.addAllLis(requestList!!, totalPage, last)
+                if (page != null) {
+                    adapter.addAllLis(requestList!!, totalPage, page)
                 }
             }
             adapter.setLoaded()
@@ -367,8 +385,8 @@ class RecommendationFragment : Fragment(), onClick {
             url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
         }
         homeModel.fileVirusObserver.observe(requireActivity()) {
-            var obj = JSONObject(it.toString())
-            if (obj?.get("file_status").toString() == "clean") {
+            val obj = JSONObject(it.toString())
+            if (obj.get("file_status").toString() == "clean") {
                 url?.let { it1 -> saveWork(0, json, it1) }
             } else {
                 Toast.makeText(requireContext(), "Please check your File", Toast.LENGTH_SHORT)
@@ -389,7 +407,7 @@ class RecommendationFragment : Fragment(), onClick {
             val x = json.keys() as Iterator<String>
             while (x.hasNext()) {
                 val key: String = x.next()
-                var universityModel = UniversitiesModel()
+                val universityModel = UniversitiesModel()
                 universityModel.id = key
                 universityModel.name = json.optString(key)
                 univlist.add(universityModel)
@@ -401,26 +419,66 @@ class RecommendationFragment : Fragment(), onClick {
         homeModel.recommdersCollegeObserver.observe(requireActivity()) {
             val json = JSONObject(it.toString())
             val x = json.keys() as Iterator<String>
+            val current = json.getJSONObject("pager").getString("current")
+            val last = json.getJSONObject("pager").getString("current")
             while (x.hasNext()) {
                 val key: String = x.next()
-                var recModel = RecCollegeModel()
+                val recModel = RecCollegeModel()
                 recModel.id = key
                 val jsonObj = json.optJSONObject(key)
-                recModel.collegeDetails = RecCollegeModel.CollegeDetails(academicYear = jsonObj.optString("academic_year"),
-                    applicationMode = jsonObj.optString("applicationMode"), collegeName = jsonObj.optString("college_name"),
-                    collegeUnitId =jsonObj.optString("college_unit_id"), notes =jsonObj.optString("notes"),
-                    completed =jsonObj.optInt("completed") , dueDate = jsonObj.optString("due_date"))
+                val recommenderName = ArrayList<RecCollegeModel.RecomenderName>()
+                if(jsonObj.has("recommenders_name")) {
+                    val y = jsonObj.getJSONObject("recommenders_name").keys() as Iterator<String>
+                    while (y.hasNext()) {
+                        val keyY: String = y.next()
+                        val jsonObjY =
+                            jsonObj.getJSONObject("recommenders_name").optJSONObject(keyY)
+                        recommenderName.add(
+                            RecCollegeModel.RecomenderName(
+                                jsonObjY.optString("done"),
+                                jsonObjY.optString("preserved_data"),
+                                jsonObjY.optString("cancel"),
+                                jsonObjY.optString("reco_created"),
+                                jsonObjY.optString("req_fileid"),
+                                jsonObjY.optString("req_filename")
+                            )
+                        )
+                    }
+                }
+                recModel.collegeDetails = RecCollegeModel.CollegeDetails(
+                    academicYear = jsonObj.optString("academic_year"),
+                    applicationMode = jsonObj.optString("applicationMode"),
+                    collegeName = jsonObj.optString("college_name"),
+                    collegeUnitId = jsonObj.optString("college_unit_id"),
+                    notes = jsonObj.optString("notes"),
+                    completed = jsonObj.optInt("completed"),
+                    dueDate = jsonObj.optString("due_date"),
+                    recoName = recommenderName
+                )
 
-                recCollegeList.add(recModel)
-
-
+                recCollegeList.add(recModel.collegeDetails)
             }
+            requestSList?.addAll(recCollegeList)
+            requestSListUpdate?.addAll(recCollegeList)
+            adapterStudent.addAllLis(recCollegeList, last.toInt(), current.toInt())
+            if (isLoading) {
+                isLoading = false
+                requestSListNew.removeAt(requestSListNew.size - 1)
+                adapterStudent.notifyItemRemoved(requestSListNew.size)
+            }
+            //for swipe refresh page
+
+            if (last != null) {
+                adapterStudent.addAllLis(requestSList!!, last.toInt(), current.toInt())
+            }
+            adapterStudent.setLoaded()
+            progress.dismiss()
         }
     }
 
     private fun universititesBottomSheet() {
         selectedUnivList.clear()
-        var type = REC_TYPE_RECOMENDATION
+        val type = REC_TYPE_RECOMENDATION
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutTeacherBinding = LayoutTeacherBinding.inflate(layoutInflater)
         //  sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -527,7 +585,7 @@ class RecommendationFragment : Fragment(), onClick {
 
     fun findMemberByName(name: String?): ArrayList<TeacherListModelItem> {
         // go through list of members and compare name with given name
-        var filterList: ArrayList<TeacherListModelItem> = ArrayList()
+        val filterList: ArrayList<TeacherListModelItem> = ArrayList()
         for (member in list) {
             if ((member.firstName?.lowercase()?.contains(name?.lowercase() ?: "")
                     ?: false) || member.lastName?.lowercase()
@@ -542,9 +600,9 @@ class RecommendationFragment : Fragment(), onClick {
 
     fun findUnivByName(name: String?): ArrayList<UniversitiesModel> {
         // go through list of members and compare name with given name
-        var filterList: ArrayList<UniversitiesModel> = ArrayList()
+        val filterList: ArrayList<UniversitiesModel> = ArrayList()
         for (member in univlist) {
-            if ((member.name?.lowercase()?.contains(name?.lowercase() ?: "")
+            if ((member.name.lowercase().contains(name?.lowercase() ?: "")
                     ?: false) ?: false
             ) {
                 filterList.add(member)
@@ -699,7 +757,7 @@ class RecommendationFragment : Fragment(), onClick {
             url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
         }
         homeModel.fileVirusObserver.observe(requireActivity()) {
-            var obj = JSONObject(it.toString())
+            val obj = JSONObject(it.toString())
             if (obj?.get("file_status").toString() == "clean") {
                 url?.let { it1 -> saveWork(0, json, it1) }
             } else {
@@ -785,13 +843,13 @@ class RecommendationFragment : Fragment(), onClick {
         if (requestCode == REQUEST_CHOOSE_PDF_UPCOMING_DETAIL) {
 
             fileUri = data?.data!!
-            val uri: Uri = data?.data!!
+            val uri: Uri = data.data!!
             val uriString: String = uri.toString()
             if (uriString.startsWith("content://")) {
                 var myCursor: Cursor? = null
                 try {
                     // Setting the PDF to the TextView
-                    myCursor = requireContext()!!.contentResolver.query(uri, null, null, null, null)
+                    myCursor = requireContext().contentResolver.query(uri, null, null, null, null)
                     if (myCursor != null && myCursor.moveToFirst()) {
                         pdfName =
                             myCursor.getString(myCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
@@ -803,23 +861,12 @@ class RecommendationFragment : Fragment(), onClick {
                 }
             }
 
-            imagePath = PathUtil.getDriveFilePath(requireContext(), uri);
+            imagePath = PathUtil.getDriveFilePath(requireContext(), uri)
 //            imagePath=getRealPathFromURI(fileUri)
         }
     }
 
-    @Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
-    fun getMd5Hash(str: String): String? {
-        val md: MessageDigest = MessageDigest.getInstance("MD5")
-        val thedigest: ByteArray = md.digest(str.toByteArray(charset("UTF-8")))
-        val hexString = java.lang.StringBuilder()
-        for (i in thedigest.indices) {
-            val hex = Integer.toHexString(0xFF and thedigest[i].toInt())
-            if (hex.length == 1) hexString.append('0')
-            hexString.append(hex)
-        }
-        return hexString.toString().toUpperCase()
-    }
+
 }
 
 interface onClick {

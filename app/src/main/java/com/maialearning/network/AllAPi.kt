@@ -360,7 +360,7 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String,
         @Path("page") page: String,
-    ): Deferred<RecomdersModel>
+    ): Deferred<JsonObject>
     @DELETE("recommendation-request/{id}")
     fun cancelRecommendationRequest(
         @Header("Authorization") AutToken: String,

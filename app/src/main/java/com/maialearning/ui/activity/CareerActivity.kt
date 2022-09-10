@@ -23,7 +23,7 @@ import com.maialearning.databinding.ActivityCareerBinding
 import com.maialearning.ui.adapter.CareerCompareAdapter
 import com.maialearning.ui.adapter.CareerStateAdapter
 
-class CareerActivity : Fragment(){
+class CareerActivity : Fragment() {
     var dialog: BottomSheetDialog? = null
     private lateinit var binding: ActivityCareerBinding
     private lateinit var toolbarBinding: Toolbar
@@ -34,7 +34,12 @@ class CareerActivity : Fragment(){
         binding = ActivityCareerBinding.inflate(inflater, container, false)
         toolbarBinding = binding.toolbar
         binding.toolbar.contentInsetStartWithNavigation = 0
-        binding.toolbar.setNavigationIcon(getDrawable(requireContext(),R.drawable.ic_baseline_keyboard_arrow_left_24))
+        binding.toolbar.setNavigationIcon(
+            getDrawable(
+                requireContext(),
+                R.drawable.ic_baseline_keyboard_arrow_left_24
+            )
+        )
         binding.toolbar.title = getString(R.string.careers)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
 //        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
@@ -44,12 +49,13 @@ class CareerActivity : Fragment(){
         }
         initView()
 
-binding.addFab.setOnClickListener {
-    bottomSheetList()
-}
+        binding.addFab.setOnClickListener {
+            bottomSheetList()
+        }
 
         return binding.root
     }
+
     private fun bottomSheetList() {
         dialog = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.compare_careers, null)
@@ -60,7 +66,8 @@ binding.addFab.setOnClickListener {
         val close = view.findViewById<RelativeLayout>(R.id.close)
         DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
 
-        listing.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        listing.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         listing.adapter = CareerCompareAdapter(requireContext())
         close.setOnClickListener {
             dialog?.dismiss()
@@ -71,10 +78,12 @@ binding.addFab.setOnClickListener {
     }
 
     private fun initView() {
-        val tabArray = arrayOf(getString(R.string.search),
+        val tabArray = arrayOf(
+            getString(R.string.search),
             getString(R.string.list),
             getString(R.string.plan),
-            getString(R.string.nys_career))
+            getString(R.string.nys_career)
+        )
         for (item in tabArray) {
             binding.tabs.addTab(binding.tabs.newTab().setText(item))
 
@@ -91,7 +100,7 @@ binding.addFab.setOnClickListener {
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (binding.tabs.selectedTabPosition != 0 && binding.tabs.selectedTabPosition != 1){
+                if (binding.tabs.selectedTabPosition != 0 && binding.tabs.selectedTabPosition != 1) {
                     binding.addFab.visibility = View.GONE
                 } else
                     binding.addFab.visibility = View.VISIBLE

@@ -58,10 +58,10 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
-        childFragmentManager.beginTransaction()
-            .replace(R.id.map, mapFragment)
-            .commit()
+//        val mapFragment: SupportMapFragment = SupportMapFragment.newInstance()
+//        childFragmentManager.beginTransaction()
+//            .replace(R.id.map, mapFragment)
+//            .commit()
         hitAPI(page, "")
         adapter = UniFactAdapter(requireContext(), university_listNew, ::click, mBinding.rvUniv)
         mBinding.rvUniv.adapter = adapter

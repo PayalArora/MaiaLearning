@@ -44,7 +44,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val recSendObserver = MutableLiveData<JsonArray>()
     val recUCASObserver = MutableLiveData<JsonArray>()
     val recommdersObserver = MutableLiveData<RecomdersModel>()
-    val recommdersCollegeObserver = MutableLiveData<RecomdersModel>()
+    val recommdersCollegeObserver = MutableLiveData<JsonObject>()
     val typeObserver = MutableLiveData<JsonArray>()
     val recDeadline = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
