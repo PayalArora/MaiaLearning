@@ -32,10 +32,7 @@ import com.google.gson.JsonArray
 import com.maialearning.R
 import com.maialearning.databinding.LayoutTeacherBinding
 import com.maialearning.databinding.RecommendationLayoutBinding
-import com.maialearning.model.RecModel
-import com.maialearning.model.RecomdersModel
-import com.maialearning.model.TeacherListModelItem
-import com.maialearning.model.UniversitiesModel
+import com.maialearning.model.*
 import com.maialearning.ui.adapter.RecommenderAdapter
 import com.maialearning.ui.adapter.SelectTeacherAdapter
 import com.maialearning.ui.adapter.SelectUniversityAdapter
@@ -56,12 +53,14 @@ class RecommendationFragment : Fragment(), onClick {
     private lateinit var progress: Dialog
     var list: ArrayList<TeacherListModelItem> = ArrayList()
     var univlist: ArrayList<UniversitiesModel> = ArrayList()
+    var recCollegeList: ArrayList<RecCollegeModel> = ArrayList()
     var selectedList: ArrayList<TeacherListModelItem> = ArrayList()
     var selectedUnivList: ArrayList<UniversitiesModel> = ArrayList()
     var selectedUcasList: ArrayList<TeacherListModelItem> = ArrayList()
     var jsonDeadline: JsonArray = JsonArray()
     lateinit var adapter: RecommenderAdapter
     var type_recs = REC_TYPE_RECOMENDATION
+    var type_college = TYPE_COLLEGE_WITHOUT
     var page: Int = 1
     var requestListUpdate: ArrayList<RecomdersModel.Data?>? = ArrayList()
     var requestList: ArrayList<RecomdersModel.Data?>? = ArrayList()
@@ -97,13 +96,15 @@ class RecommendationFragment : Fragment(), onClick {
         progress = showLoadingDialog(requireContext())
         progress.show()
         SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
-        showRecs()
+        listUniversities()
         homeModel.getRecDeadline()
         mBinding.send.setOnClickListener {
             if (type_recs == REC_TYPE_RECOMENDATION) {
                 sendRecomendation(type_recs)
-            } else {
+            } else if (type_recs == BOTH) {
                 sendRecomendation(type_recs)
+                sendUCASRecomendation()
+            } else {
                 sendUCASRecomendation()
             }
         }
@@ -119,8 +120,7 @@ class RecommendationFragment : Fragment(), onClick {
             listTeacher(REC_TYPE_UCAS)
         }
         mBinding.recipentUniversity.setOnClickListener {
-            progress.show()
-            listUniversities()
+            universititesBottomSheet()
         }
         mBinding.textAddFile.setOnClickListener {
             checkStoragePermissionAndOpenImageSelection()
@@ -156,6 +156,9 @@ class RecommendationFragment : Fragment(), onClick {
         homeModel.getRecommenders(SharedHelper(requireContext()).id ?: "", page)
     }
 
+    fun hitAPISchoolRecomenders(page: String) {
+        homeModel.getRecommendersCollege(SharedHelper(requireContext()).id ?: "", page)
+    }
 
     private fun sendUCASRecomendation() {
         val teacherId = arrayListOf<String>()
@@ -178,7 +181,7 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     private fun sendRecomendation(type: Int) {
-        if (type == REC_TYPE_UCAS) {
+        if (type == BOTH && type_college == TYPE_COLLEGE_WITHOUT) {
             if (mBinding.textDescription.text.toString().trim() == "" || selectedUcasList.size
                 == 0 || selectedList.size == 0
             ) {
@@ -189,30 +192,71 @@ class RecommendationFragment : Fragment(), onClick {
         for (i in selectedList) {
             i.uid?.let { it1 -> teacherId.add(it1) }
         }
-        if (mBinding.textDescription.text.toString().trim() != "" && teacherId.size
-            > 0
-        ) {
-            progress.show()
+        if (type_college == TYPE_COLLEGE) {
+            val collegeId = arrayListOf<String>()
+            for (i in selectedUnivList) {
+                i.id?.let { collegeId.add(it) }
+            }
+            if (mBinding.textDescription.text.toString().trim() != "" && teacherId.size
+                > 0 && collegeId.size > 0
+            ) {
+                progress.show()
 
-            val recmodel = RecModel(
-                mBinding.textDescription.text.toString(),
-                SharedHelper(requireContext()).id ?: "",
-                jsonDeadline.get(mBinding.typeValue.selectedItemPosition).asString,
-                teacherId
-            )
-            homeModel.sendRecomTeachers(recmodel)
+                val recmodel = RecModel(
+                    mBinding.textDescription.text.toString(),
+                    SharedHelper(requireContext()).id ?: "",
+                    jsonDeadline.get(mBinding.typeValue.selectedItemPosition).asString,
+                    teacherId, collegeId
+                )
+                homeModel.sendRecomTeachers(recmodel)
+            }
+        } else {
+            if (mBinding.textDescription.text.toString().trim() != "" && teacherId.size
+                > 0
+            ) {
+                progress.show()
+
+                val recmodel = RecModel(
+                    mBinding.textDescription.text.toString(),
+                    SharedHelper(requireContext()).id ?: "",
+                    jsonDeadline.get(mBinding.typeValue.selectedItemPosition).asString,
+                    teacherId
+                )
+                homeModel.sendRecomTeachers(recmodel)
+            }
         }
 
     }
 
     private fun showRecs() {
-        if (mBinding.ucasLetter.isChecked) {
-            type_recs = REC_TYPE_UCAS
-            mBinding.recipentUcas.visibility = View.VISIBLE
-        } else {
-            type_recs = REC_TYPE_RECOMENDATION
-            mBinding.recipentUcas.visibility = View.GONE
+        context?.let {
+            val both =
+                SharedHelper(it).appResponse?.mlSchoolConfigData?.recommendation?.defaultListing?.both
+            val recommendationLetterRequests =
+                SharedHelper(it).appResponse?.mlSchoolConfigData?.recommendation?.defaultListing?.recommendationLetterRequests
+            if (both == 1) {
+                mBinding.recomendationSelection.visibility = View.VISIBLE
+                if (mBinding.ucasLetter.isChecked) {
+                    mBinding.recipentUcas.visibility = View.VISIBLE
+                } else {
+                    mBinding.recipentUcas.visibility = View.GONE
+                }
+                type_recs = BOTH
+            } else {
+                if (recommendationLetterRequests == 1) {
+                    type_recs = REC_TYPE_UCAS
+                    mBinding.recipentUcas.visibility = View.GONE
+                    mBinding.recipent.visibility = View.VISIBLE
+                } else {
+                    type_recs = REC_TYPE_RECOMENDATION
+                    mBinding.recipentUcas.visibility = View.VISIBLE
+                    mBinding.recipent.visibility = View.GONE
+                }
+                mBinding.recomendationSelection.visibility = View.GONE
+            }
+
         }
+
     }
 
     private fun setListeners() {
@@ -220,14 +264,14 @@ class RecommendationFragment : Fragment(), onClick {
             progress.dismiss()
             if ((it.get(0).toString()) == "0") {
                 Toast.makeText(context, "0", Toast.LENGTH_LONG).show()
+                type_college = TYPE_COLLEGE
                 mBinding.recipentUcas.visibility = View.GONE
                 mBinding.recipentUniversity.visibility = View.VISIBLE
                 mBinding.recomendationSelection.visibility = View.GONE
+                hitAPISchoolRecomenders(page.toString())
             } else {
-                mBinding.recipentUcas.visibility = View.VISIBLE
-                mBinding.recipentUniversity.visibility = View.GONE
-                mBinding.recomendationSelection.visibility = View.VISIBLE
-
+                type_college = TYPE_COLLEGE_WITHOUT
+                showRecs()
                 hitAPI(page.toString())
             }
         }
@@ -292,9 +336,17 @@ class RecommendationFragment : Fragment(), onClick {
         homeModel.recSendObserver.observe(requireActivity()) {
             progress.dismiss()
             Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
+            selectedUnivList.clear()
+            selectedList.clear()
+            mBinding.textDescription.setText("")
+            mBinding.selectedTeachers.setText("")
+            mBinding.selectedUniversity.setText("")
         }
         homeModel.recUCASObserver.observe(requireActivity()) {
             progress.dismiss()
+            selectedUcasList.clear()
+            mBinding.textDescription.setText("")
+            mBinding.selectedTeachersUcas.setText("")
             Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
         }
         homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
@@ -323,7 +375,7 @@ class RecommendationFragment : Fragment(), onClick {
                     .show()
             }
         }
-        homeModel.showError.observe(requireActivity()){
+        homeModel.showError.observe(requireActivity()) {
             progress.dismiss()
             context?.showToast(it)
         }
@@ -336,22 +388,39 @@ class RecommendationFragment : Fragment(), onClick {
             val json = JSONObject(it.toString())
             val x = json.keys() as Iterator<String>
             while (x.hasNext()) {
-                val key: String = x.next().toString()
-                var universityModel=UniversitiesModel()
-                universityModel.id=json.get(key).toString()
-                universityModel.name=json.optString(key)
+                val key: String = x.next()
+                var universityModel = UniversitiesModel()
+                universityModel.id = key
+                universityModel.name = json.optString(key)
                 univlist.add(universityModel)
             }
-            Log.e("University size ",">> "+ univlist.size)
+            Log.e("University size ", ">> " + univlist.size)
             univlist.sortBy { it.name?.capitalize() }
-            universititesBottomSheet()
             progress.dismiss()
+        }
+        homeModel.recommdersCollegeObserver.observe(requireActivity()) {
+            val json = JSONObject(it.toString())
+            val x = json.keys() as Iterator<String>
+            while (x.hasNext()) {
+                val key: String = x.next()
+                var recModel = RecCollegeModel()
+                recModel.id = key
+                val jsonObj = json.optJSONObject(key)
+                recModel.collegeDetails = RecCollegeModel.CollegeDetails(academicYear = jsonObj.optString("academic_year"),
+                    applicationMode = jsonObj.optString("applicationMode"), collegeName = jsonObj.optString("college_name"),
+                    collegeUnitId =jsonObj.optString("college_unit_id"), notes =jsonObj.optString("notes"),
+                    completed =jsonObj.optInt("completed") , dueDate = jsonObj.optString("due_date"))
+
+                recCollegeList.add(recModel)
+
+
+            }
         }
     }
 
     private fun universititesBottomSheet() {
         selectedUnivList.clear()
-        var type=REC_TYPE_RECOMENDATION
+        var type = REC_TYPE_RECOMENDATION
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutTeacherBinding = LayoutTeacherBinding.inflate(layoutInflater)
         //  sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -364,7 +433,7 @@ class RecommendationFragment : Fragment(), onClick {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         sheetBinding.recyclerView.adapter =
             SelectUniversityAdapter(univlist, ::clickUniversity, type)
-        sheetBinding.searchText.hint="Search University"
+        sheetBinding.searchText.hint = "Search University"
         sheetBinding.searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -397,7 +466,7 @@ class RecommendationFragment : Fragment(), onClick {
             false
         })
         dialog.setOnDismissListener {
-                setUniversitySelection(selectedUnivList, type)
+            setUniversitySelection(selectedUnivList, type)
         }
 
     }
@@ -503,13 +572,12 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     private fun clickUniversity(data: UniversitiesModel, type: Int) {
-            if (data.isSelected) {
-                selectedUnivList.add(data)
-            } else {
-                selectedUnivList.remove(data)
-            }
+        if (data.isSelected) {
+            selectedUnivList.add(data)
+        } else {
+            selectedUnivList.remove(data)
         }
-
+    }
 
 
     private fun setSelection(selectedList: ArrayList<TeacherListModelItem>, type: Int) {
@@ -532,12 +600,16 @@ class RecommendationFragment : Fragment(), onClick {
         val sb = StringBuilder()
         selectedList.forEach { sb.append(it.name).append(separator) }
         val string = sb.removeSuffix(separator).toString()
-         mBinding.selectedUniversity.text = string
+        mBinding.selectedUniversity.text = string
         //  mBinding.textCount.text = "from " + selectedList.size + " teachers"
     }
+
     companion object {
         const val REC_TYPE_RECOMENDATION = 1
+        const val TYPE_COLLEGE = 0
+        const val TYPE_COLLEGE_WITHOUT = 1
         const val REC_TYPE_UCAS = 2
+        const val BOTH = 1
     }
 
     override fun onCancelClick(data: RecomdersModel.Data?) {
@@ -635,7 +707,7 @@ class RecommendationFragment : Fragment(), onClick {
                     .show()
             }
         }
-        homeModel.showError.observe(requireActivity()){
+        homeModel.showError.observe(requireActivity()) {
             progress.dismiss()
         }
     }

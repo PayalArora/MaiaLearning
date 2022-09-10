@@ -355,6 +355,12 @@ interface AllAPi {
         @Path("page") page: String,
     ): Deferred<RecomdersModel>
 
+    @GET("recommendation-for-student/{id}/{page}")
+    fun getRecomdersCollege(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        @Path("page") page: String,
+    ): Deferred<RecomdersModel>
     @DELETE("recommendation-request/{id}")
     fun cancelRecommendationRequest(
         @Header("Authorization") AutToken: String,

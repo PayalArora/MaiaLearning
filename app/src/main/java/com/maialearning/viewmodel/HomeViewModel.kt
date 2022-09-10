@@ -44,6 +44,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val recSendObserver = MutableLiveData<JsonArray>()
     val recUCASObserver = MutableLiveData<JsonArray>()
     val recommdersObserver = MutableLiveData<RecomdersModel>()
+    val recommdersCollegeObserver = MutableLiveData<RecomdersModel>()
     val typeObserver = MutableLiveData<JsonArray>()
     val recDeadline = MutableLiveData<JsonArray>()
     val addProgramObserver = MutableLiveData<JsonObject>()
@@ -350,7 +351,20 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+    fun getRecommendersCollege(id: String, page: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
 
+                catRepository.getRecomdersCollege(id, page)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> recommdersCollegeObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
     fun cancelRecommendRequest(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {

@@ -161,6 +161,7 @@ interface LoginRepository {
     suspend fun recDeadline(): UseCaseResult<JsonArray>
     suspend fun sendUcasRec(recModel: RecModel): UseCaseResult<JsonArray>
     suspend fun getRecomders(id: String, page: String): UseCaseResult<RecomdersModel>
+    suspend fun getRecomdersCollege(id: String, page: String): UseCaseResult<RecomdersModel>
     suspend fun cancelRecommedationRequest(id: String): UseCaseResult<Unit>
     suspend fun getRecomType(id: String): UseCaseResult<JsonArray>
     suspend fun getDocumentPresignedURl(
@@ -885,7 +886,18 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-
+    override suspend fun getRecomdersCollege(id: String, page: String): UseCaseResult<RecomdersModel> {
+        return try {
+            val result = catApi.getRecomdersCollege(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id, page
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
     override suspend fun cancelRecommedationRequest(id: String): UseCaseResult<Unit> {
         return try {
             val result = catApi.cancelRecommendationRequest(
