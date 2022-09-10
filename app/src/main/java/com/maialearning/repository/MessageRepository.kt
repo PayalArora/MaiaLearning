@@ -2,7 +2,6 @@ package com.maialearning.repository
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.model.MessageReqAttachModel
 import com.maialearning.model.SendMessageModel
 import com.maialearning.network.AllMessageAPi
 import com.maialearning.network.BaseApplication
@@ -11,7 +10,6 @@ import com.maialearning.network.UseCaseResult
 import retrofit2.HttpException
 
 import com.maialearning.util.prefhandler.SharedHelper
-import okhttp3.RequestBody
 import org.json.JSONObject
 
 interface MessageRepository {
@@ -29,11 +27,6 @@ interface MessageRepository {
         fileTypeExt: String,
         key: String,
         schoolId: String
-    ): UseCaseResult<JsonObject>
-    suspend fun uploadImage(content: String, url: String, bode: RequestBody): UseCaseResult<Unit>
-    suspend fun checkFileVirus(
-        url: String,
-        putUrl: String
     ): UseCaseResult<JsonObject>
    }
 
@@ -133,9 +126,15 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
         schoolId: String
     ): UseCaseResult<JsonObject> {
         return try {
-            var object_ = MessageReqAttachModel(filename, fileTypeExt, key, schoolId,"Message Attachment")
-            //val result = catApi.updateMessageAttachment(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
-            val result = catApi.updateProfImage1(token, object_).await()
+            var object_ = JsonObject()
+                object_.addProperty("filename",filename)
+                object_.addProperty("fileType",fileTypeExt)
+                object_.addProperty("Key",key)
+                object_.addProperty("type","Message Attachment")
+                object_.addProperty("schoolnid",schoolId)
+
+            val result = catApi.updateProfImage(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
+//            val result = catApi.updateProfImage1(token, object_).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -144,36 +143,5 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
         }
     }
 
-    override suspend fun uploadImage(
-        content: String,
-        url: String,
-        bode: RequestBody
-    ): UseCaseResult<Unit> {
-        return try {
-            val result = catApi.uploadImage(url, content, bode).await()
-            UseCaseResult.Success(result)
-        } catch (ex: HttpException) {
-            UseCaseResult.Error(ex)
-        } catch (ex: Exception) {
-            UseCaseResult.Exception(ex)
-        }
-    }
-    override suspend fun checkFileVirus(
-        url: String,
-        putUrl: String
-    ): UseCaseResult<JsonObject> {
-        return try {
-            val obj = JsonObject()
-            obj.addProperty("presigned", putUrl)
-            val result = catApi.checkFileVirus(
-                url,
-                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", obj
-            ).await()
-            UseCaseResult.Success(result)
-        } catch (ex: HttpException) {
-            UseCaseResult.Error(ex)
-        } catch (ex: Exception) {
-            UseCaseResult.Exception(ex)
-        }
-    }
+
 }

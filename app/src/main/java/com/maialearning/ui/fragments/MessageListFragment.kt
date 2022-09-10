@@ -76,11 +76,19 @@ class MessageListFragment : Fragment(), OnItemClickDelete {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         dialog = showLoadingDialog(requireContext())
         dialog.show()
         messageViewModel.getInbox()
         observer()
+        setAdapter()
     }
+
 
     private fun setAdapter() {
         mBinding.recyclerList.adapter = MessageAdapter(this, recyclerDataArrayList)

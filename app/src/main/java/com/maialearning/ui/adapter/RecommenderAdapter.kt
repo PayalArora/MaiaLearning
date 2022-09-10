@@ -1,9 +1,7 @@
 package com.maialearning.ui.adapter
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
@@ -13,17 +11,13 @@ import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.RecommdersAdapterBinding
 import com.maialearning.model.RecomdersModel
-import com.maialearning.ui.fragments.OnItemClickOption
-import com.maialearning.ui.fragments.RecommendationFragment
-import com.maialearning.ui.fragments.onClick
 import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.getDate
 
 class RecommenderAdapter(
     var context: Context,
     var list: ArrayList<RecomdersModel.Data?>,
-    var onClick: onClick,
-    recycler: RecyclerView,
+    recycler: RecyclerView
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var selectedPostion = 0
     private val linearLayoutManager: LinearLayoutManager =
@@ -90,56 +84,35 @@ class RecommenderAdapter(
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
-            viewHolder.binding.name.text = list[position]?.name?.trim()
-            if (list[position]?.recoCreated != null && list[position]?.recoCreated != "null" && list[position]?.recoCreated != "") {
+            viewHolder.binding.name.text = list[position]?.name
+            if (list[position]?.recoCreated != null && list[position]?.recoCreated != "null" && list[position]?.recoCreated != "")
                 viewHolder.binding.created.text =
-                    "Rec: " + getDate(list[position]?.recoCreated!!.toLong(), "MMM dd, yyyy")
-                viewHolder.binding.created.visibility = View.VISIBLE
-                viewHolder.binding.status.visibility = View.VISIBLE
-                if (list[position]?.done != 0) {
-                    viewHolder.binding.status.text = "Completed"
-                    viewHolder.binding.cancelLay.visibility = View.GONE
-                    viewHolder.binding.status.setTextColor(context.getColor(R.color.green_1))
-                } else {
-                    viewHolder.binding.status.text = "Pending..."
-                    viewHolder.binding.cancelLay.visibility = View.VISIBLE
-                    viewHolder.binding.status.setTextColor(context.getColor(R.color.red_1))
-                }
+                    getDate(list[position]?.recoCreated!!.toLong(), "MMM dd, yyyy")
+            if (list[position]?.done != 0) {
+                viewHolder.binding.status.text = "Complete"
             } else {
-                viewHolder.binding.created.visibility = View.GONE
-                viewHolder.binding.status.visibility = View.GONE
-                viewHolder.binding.cancelLay.visibility = View.GONE
+                viewHolder.binding.status.text = "Incomplete"
             }
-
             if (list[position]?.dueDate != null && list[position]?.dueDate != "null" && list[position]?.dueDate != "")
                 viewHolder.binding.statusD.text =
                     getDate(list[position]?.dueDate!!.toLong(), "MM/dd/yyyy")
             if (list[position]?.isRefLetterCompleted != 0) {
                 if (list[position]?.ucasRefLetterCompleted != null && list[position]?.ucasRefLetterCompleted != "null" && list[position]?.ucasRefLetterCompleted != "")
                     viewHolder.binding.letter.text =
-                        "Completed , " + getDate(
+                        "Complete , " + getDate(
                             list[position]?.ucasRefLetterCompleted!!.toLong(),
                             "MM/dd/yyyy"
                         )
-                viewHolder.binding.letter.setTextColor(context.getColor(R.color.green_1))
             } else {
                 if (list[position]?.ucasRefLetterdue != null && list[position]?.ucasRefLetterdue != "null" && list[position]?.ucasRefLetterdue != "")
-                    viewHolder.binding.letter.text =
-                        "Pending... , " + getDate(
-                            list[position]?.ucasRefLetterdue!!.toLong(),
-                            "MM/dd/yyyy"
-                        )
-                viewHolder.binding.letter.setTextColor(context.getColor(R.color.red_1))
+                viewHolder.binding.letter.text =
+                    "Incomplete , " + getDate(
+                        list[position]?.ucasRefLetterdue!!.toLong(),
+                        "MM/dd/yyyy"
+                    )
             }
-            if (list[position]?.reqFilename == null || list[position]?.reqFilename == "null" || list[position]?.reqFilename == "") {
+            if (list[position]?.reqFilename == null || list[position]?.reqFilename == "null" || list[position]?.reqFilename == "")
                 viewHolder.binding.brag.text = "Update Brag Sheet"
-                viewHolder.binding.brag.visibility = View.VISIBLE
-            } else {
-                viewHolder.binding.brag.visibility = View.GONE
-            }
-            viewHolder.binding.cancel.setOnClickListener {
-                cancelPopup(position)
-            }
 
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2
@@ -151,21 +124,6 @@ class RecommenderAdapter(
             )
             loadingViewHolder.binding.progressBar
         }
-    }
-
-    private fun cancelPopup(position: Int) {
-        AlertDialog.Builder(context)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setMessage(context.getString(R.string.cancel_req_msg))
-            .setPositiveButton(
-                "Yes"
-            ) { dialog, _ ->
-                (onClick.onCancelClick(list.get(position)))
-                list.removeAt(position)
-                notifyDataSetChanged()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 
     override fun getItemViewType(position: Int): Int {

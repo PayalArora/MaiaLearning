@@ -628,8 +628,8 @@ data class LoginNewModel(
 //        @field:SerializedName("show_new_home_page")
 //        val showNewHomePage: List<Int?>? = null,
 
-        @field:SerializedName("recommendation")
-        val recommendation: Recommendation? = null,
+//        @field:SerializedName("recommendation")
+//        val recommendation: Recommendation? = null,
 //
 //        @field:SerializedName("internal_application_deadline")
 //        val internalApplicationDeadline: InternalApplicationDeadline? = null,

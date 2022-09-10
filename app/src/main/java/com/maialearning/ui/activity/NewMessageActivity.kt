@@ -37,8 +37,8 @@ import com.maialearning.model.SendMessageModel
 import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.FilesAdapter
 import com.maialearning.ui.adapter.RecipentAdapter
-import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import com.maialearning.viewmodel.MessageViewModel
 import com.maialearning.viewmodel.ProfileViewModel
@@ -60,6 +60,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private lateinit var dialog: Dialog
     private val homeModel: HomeViewModel by viewModel()
     private val msgModel: MessageViewModel by viewModel()
+    private val profileModel: ProfileViewModel by viewModel()
     var attachedArray = ArrayList<AttachMessages>()
     var list = ArrayList<ReceipentModel>()
     var selectedList = ArrayList<ReceipentModel>()
@@ -70,7 +71,6 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private var bitmap: Bitmap? = null
     private var imageExt: String? = null
     private var fileName: String? = null
-    private  var  url:String? = null
     var arrayList = ArrayList<HashMap<String, String>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -176,21 +176,6 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
             Toast.makeText(this, "Message Sent Successfully", Toast.LENGTH_LONG).show()
             dialog.dismiss()
             finish()
-        }
-        msgModel.uploadImageObserver.observe(this) {
-            Log.e("Response: ", " $it")
-            dialog.dismiss()
-            showToast( "Checking File")
-            url?.let { it1 -> msgModel.checkFileVirus(ANTI_VIRUS, it1) }
-            //profileWork()
-        }
-        msgModel.fileVirusObserver.observe(this) {
-            var obj = JSONObject(it.toString())
-            if (obj?.get("file_status").toString() == "clean") {
-               showToast("File Status: " + obj?.get("file_status").toString())
-            }else{
-              showToast("Please check your File")
-            }
         }
     }
 
@@ -439,15 +424,12 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private fun uploadImageWork() {
         dialog.show()
         mBinding.fileName.text = fileName
-
         SharedHelper(this).id?.let {
             imageExt?.let { it1 ->
                 SharedHelper(this).ethnicityTarget?.let { it2 ->
-                    val keyhash = "${it2}/${SharedHelper(this).messageId}/${SimpleDateFormat("yyyyMMddHHmmss").format(Date())}_$fileName"
-                    println("keyhash: "+keyhash)
-                        msgModel.getImageURl(
+                    msgModel.getImageURl(
                         SharedHelper(this).jwtToken, fileName ?: "", it1,
-                        keyhash, it2
+                        SimpleDateFormat("yyyyMMddHHmmss").format(Date()) + "_" + fileName, it2
                     )
                 }
             }
@@ -455,19 +437,25 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     }
 
     private fun upload(it: JsonObject?) {
+
+    }
+
+    private fun upload(it: JsonArray?) {
         val file = File(imagePath)
         val requestBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
-         url = it?.get("url").toString().replaceInvertedComas()
+        val url = it?.get(0)?.toString()?.replace("\"", "")
         url.let { it1 ->
-            it1?.let { it2 ->
-                msgModel.uploadImage(
-                    "image/${imageExt}",
-                    it2,
-                    requestBody
-                )
-            }
+            profileModel.uploadImage(
+                "image/${imageExt}",
+                it1.toString(),
+                requestBody
+            )
         }
-
+        profileModel.uploadImageObserver.observe(this) {
+            Log.e("Response: ", " $it")
+            dialog.dismiss()
+            //profileWork()
+        }
 
 
     }

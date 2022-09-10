@@ -27,7 +27,6 @@ import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
-import com.maialearning.util.showToast
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
@@ -193,7 +192,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
-            context?.showToast(it)
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 

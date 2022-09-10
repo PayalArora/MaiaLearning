@@ -67,9 +67,6 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
         messageViewModel.showError.observe(viewLifecycleOwner) {
             dialog?.dismiss()
         }
-        messageViewModel.delObserver.observe(viewLifecycleOwner) {
-            dialog?.dismiss()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,6 +75,7 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
         dialog.show()
         messageViewModel.getSent()
         observer()
+      setAdapter()
 
     }
 
@@ -109,14 +107,9 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
     }
 
     override fun onDelete(position: Int) {
-//        recyclerDataArrayList.removeAt(position)
-//        (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)
-        dialog.show()
-        messageViewModel.delMessage(recyclerDataArrayList[position].messageId?:"")
         recyclerDataArrayList.removeAt(position)
-
-        // below line is to notify our item is removed from adapter.
         (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)
+
     }
 
 
