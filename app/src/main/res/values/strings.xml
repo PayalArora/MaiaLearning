@@ -156,6 +156,12 @@
     <string name="country">Country</string>
     <string name="reigon">Reigon</string>
     <string name="list">List</string>
+    <string name="cancel_request">Cancel Request</string>
+    <string name="cancel_req_msg">Are you sure you\'d like to cancel  request?</string>
+    <string name="reload_brag_sheet">Reload Brag Sheet</string>
+    <string name="select_file">Please select PDF to upload</string>
+    <string name="select_university">Select Universities</string>
+    <string name="update_brag">Update Brag Sheet</string>
 
     <string-array name="UnivFilters">
         <item>Country</item>

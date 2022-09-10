@@ -13,10 +13,12 @@ import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.repository.MessageRepository
 import com.maialearning.util.Coroutines
+import com.maialearning.util.replaceInvertedComas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
@@ -34,6 +36,8 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
     val createObserver = MutableLiveData<JsonObject>()
     val showError = SingleLiveEvent<String>()
     val imageUrlObserver = MutableLiveData<JsonObject>()
+    val uploadImageObserver = MutableLiveData<String>()
+    val fileVirusObserver = MutableLiveData<JsonObject>()
 
     fun getInbox() {
         showLoading.value = true
@@ -80,7 +84,7 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             }
         }
     }
- fun getMessage(id:String) {
+    fun getMessage(id:String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -95,6 +99,7 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             }
         }
     }
+
     fun delMessage(id:String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -111,10 +116,10 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
         }
     }
     fun createMessage(context: Context, id: SendMessageModel) {
-                showLoading.value = true
-                Coroutines.mainWorker {
-                    val result = withContext(Dispatchers.Main) {
-                        catRepository.createMessage(
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.createMessage(
                     id
 
                 )
@@ -137,6 +142,38 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> imageUrlObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun uploadImage(content:String,url: String, body: RequestBody) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.uploadImage(content,url, body)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> uploadImageObserver.value = result.toString().replaceInvertedComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun checkFileVirus(url: String, putUrl: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.checkFileVirus(url, putUrl)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> fileVirusObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message

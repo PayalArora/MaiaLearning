@@ -74,20 +74,22 @@ class MessageDetailActivity : AppCompatActivity(), OnItemClickId {
                     "utf-8",
                     ""
                 )
-              //  mBinding.textDescription.text = Html.fromHtml(json.getString("messageBody"))
+                //  mBinding.textDescription.text = Html.fromHtml(json.getString("messageBody"))
                 mBinding.textDate.text= "Sent on : "+ getDateTime(json.getString("sentTimestamp"), "MMM dd YYYY, hh:mm a")
-                val array = json.getJSONArray("attachment_urls")
-                for (j in 0 until array.length()) {
-                    mBinding.textFiles.visibility = View.VISIBLE
-                    val objectProgram = array.getJSONObject(j)
-                    attachedArray.add(
-                        AttachMessages(
-                            objectProgram.getString("name"),
-                            objectProgram.getString("url")
+                val array = json.optJSONArray("attachment_urls")
+                if (array!=null) {
+                    for (j in 0 until array.length()) {
+                        mBinding.textFiles.visibility = View.VISIBLE
+                        val objectProgram = array.optJSONObject(j)
+                        attachedArray.add(
+                            AttachMessages(
+                                objectProgram.getString("name"),
+                                objectProgram.getString("url")
+                            )
                         )
-                    )
+                    }
+                    mBinding.filesList.adapter = FilesAdapter(this, attachedArray)
                 }
-                mBinding.filesList.adapter = FilesAdapter(this, attachedArray)
             }
             messageViewModel.showError.observe(this) {
                 dialog.dismiss()

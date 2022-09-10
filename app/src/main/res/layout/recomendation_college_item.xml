@@ -47,10 +47,11 @@
         android:textColor="@color/black_1"
         android:textSize="@dimen/_12sp"
         android:textStyle="bold" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/uni_name"
         android:paddingVertical="@dimen/_10dp"
-        tools:listitem="@layout/recomendation_sub_college_item"
-        android:layout_height="wrap_content"/>
+        tools:listitem="@layout/recomendation_sub_college_item" />
 </RelativeLayout>

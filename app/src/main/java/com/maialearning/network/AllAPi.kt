@@ -26,27 +26,27 @@ interface AllAPi {
         @Field("email") email: String,
         @Field("id") id: String,
         @Field("id_token") id_token: String
-    ):  Deferred<LoginNewModel>
+    ): Deferred<LoginNewModel>
 
     @POST("azure_ad_oauth_login")
     @FormUrlEncoded
     fun microLoginAsync(
-        @Header("origin") origin:String,
+        @Header("origin") origin: String,
         @Field("token") token: String
-    ):  Deferred<LoginNewModel>
+    ): Deferred<LoginNewModel>
 
- @GET("user_my_account_info/{id}")
+    @GET("user_my_account_info/{id}")
     fun getProfile(
-     @Header("Authorization") Authorization: String,
-     @Path("id") id: String
-    ):  Deferred<ProfileResponse>
+        @Header("Authorization") Authorization: String,
+        @Path("id") id: String
+    ): Deferred<ProfileResponse>
 
     @POST("forgot_password")
     @FormUrlEncoded
     fun forgetPassAsync(
         @Field("email") email: String,
         @Field("type") type: String
-    ):  Deferred<ForgetModel>
+    ): Deferred<ForgetModel>
 
 //    @GET("counselor_college/{id}?status={status}")
 //    fun considerListAsync(
@@ -56,15 +56,15 @@ interface AllAPi {
 
     @GET("counselor_college/{id}?status=considering")
     fun considerListAsync(
-        @Header("Authorization")  AutToken:String,
-        @Path("id") id:String
-    ):  Deferred<JsonObject>
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 
     @GET("counselor_college/{id}?status=applying")
     fun applyListAsync(
-        @Path("id")  id:String,
-        @Header("Authorization")  AutToken:String
-    ):  Deferred<JsonObject>
+        @Path("id") id: String,
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonObject>
 
     @GET("get_notes_for_student/{id}")
     fun getNotes(
@@ -101,8 +101,8 @@ interface AllAPi {
 
     @GET("get_jwt_token")
     fun getJWTToken(
-        @Header("Authorization")  AutToken:String
-    ):  Deferred<JsonArray>
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonArray>
 
 //    @GET("{id}/inbox")
 //    fun getInbox(
@@ -111,28 +111,29 @@ interface AllAPi {
 //    ):  Deferred<InboxResponse>
 
     @GET
-    fun getInboxN(@Url url: String,
-                 @Header("x-access-token")  JwtToken:String,
-    ):  Deferred<JsonObject>
+    fun getInboxN(
+        @Url url: String,
+        @Header("x-access-token") JwtToken: String,
+    ): Deferred<JsonObject>
 
     @GET("{id}/inbox")
     fun getInbox(
-        @Header("x-access-token")  AutToken:String,
-        @Path("id") id:String
-    ):  Deferred<JsonObject>
+        @Header("x-access-token") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 
 
     @GET("school_wide_configuration/field_ethnicity_config/{id}")
     fun getEthnicities(
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
-    ): Deferred< ArrayList<EthnicityResponseItem?>>
+    ): Deferred<ArrayList<EthnicityResponseItem?>>
 
     @GET("school_wide_configuration/field_race_config/{id}")
     fun getRaces(
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
-    ): Deferred< ArrayList<RaceItem?>>
+    ): Deferred<ArrayList<RaceItem?>>
 
     @POST("get_profile_picure_update_presigned_url")
     @FormUrlEncoded
@@ -147,7 +148,8 @@ interface AllAPi {
     fun uploadImage(
         @Url() url: String,
         @Header("Content-Type") content: String,
-        @Body body:RequestBody): Deferred<Unit>
+        @Body body: RequestBody
+    ): Deferred<Unit>
 
     @GET("student-assignment-dashboard/{id}")
     fun getOverDueCompleted(
@@ -159,7 +161,7 @@ interface AllAPi {
     fun getColFactSheet(
         @Url() url: String,
 
-    ): Deferred<JsonObject>
+        ): Deferred<JsonObject>
 
     @GET("college_nid_by_unitid/{id}")
     fun getCollegeNid(
@@ -209,13 +211,13 @@ interface AllAPi {
         @Header("Authorization") Authorization: String
     ): Deferred<Unit>
 
-  //  https://maia2-staging-backend.maialearning.com/ajs-services/top-picks/402359/9375?new_ui=1
-  @DELETE("top-picks/{schoolId}/{studentId}?new_ui=1")
-  fun hitDeleteUniversityConsidering(
-      @Path("schoolId") schoolId: String,
-      @Path("studentId") studentId: String,
-      @Header("Authorization") Authorization: String
-  ): Deferred<Unit>
+    //  https://maia2-staging-backend.maialearning.com/ajs-services/top-picks/402359/9375?new_ui=1
+    @DELETE("top-picks/{schoolId}/{studentId}?new_ui=1")
+    fun hitDeleteUniversityConsidering(
+        @Path("schoolId") schoolId: String,
+        @Path("studentId") studentId: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<Unit>
 
     @POST("college_list_applying")
     @FormUrlEncoded
@@ -243,6 +245,7 @@ interface AllAPi {
         @Url() url: String,
         @Header("Authorization") Authorization: String
     ): Deferred<SurveysResponse>
+
     @GET
     fun getWebinars(
         @Url() url: String,
@@ -251,12 +254,14 @@ interface AllAPi {
 
     @POST("get_documents_download_presigned_url")
     @FormUrlEncoded
-    fun downloadWorkSheet( @Header("Authorization") AutToken: String,
-                           @Header("origin") origin: String,
-                           @Header("referer") referer: String,
-                           @Field("student_uid") uuid: String,
-                           @Field("file_id") fileid: String,
-                           @Field("document_type") docType: String): Deferred<JsonArray>
+    fun downloadWorkSheet(
+        @Header("Authorization") AutToken: String,
+        @Header("origin") origin: String,
+        @Header("referer") referer: String,
+        @Field("student_uid") uuid: String,
+        @Field("file_id") fileid: String,
+        @Field("document_type") docType: String
+    ): Deferred<JsonArray>
 
     @POST("add-student-response-activity")
     @FormUrlEncoded
@@ -315,7 +320,8 @@ interface AllAPi {
     fun getRecipients(
         @Header("Authorization") AutToken: String,
         @Field("school_id") n_id: String,
-        @Field("user_type") type: String): Deferred<JsonArray>
+        @Field("user_type") type: String
+    ): Deferred<JsonArray>
 
 
     @GET("get-teacher-counselor-list/{id}?for_reco=1")
@@ -335,24 +341,68 @@ interface AllAPi {
     fun sendUcasRec(
         @Header("Authorization") AutToken: String,
         @Body recModel: RecModel
-        ): Deferred<JsonArray>
+    ): Deferred<JsonArray>
 
     @GET("get_recommendation_deadline")
     fun getRecDeadline(
         @Header("Authorization") AutToken: String,
-        ): Deferred<JsonArray>
+    ): Deferred<JsonArray>
 
     @GET("wc-recommendation-for-student/{id}/{page}")
     fun getRecomders(
         @Header("Authorization") AutToken: String,
         @Path("id") id: String,
         @Path("page") page: String,
-        ): Deferred<RecomdersModel>
+    ): Deferred<RecomdersModel>
+
+    @GET("recommendation-for-student/{id}/{page}")
+    fun getRecomdersCollege(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        @Path("page") page: String,
+    ): Deferred<RecomdersModel>
+    @DELETE("recommendation-request/{id}")
+    fun cancelRecommendationRequest(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<Unit>
+
     @GET("recommendation_without_college/{id}")
     fun getRecomType(
         @Header("Authorization") AutToken: String,
         @Path("id") id: String,
-        ): Deferred<JsonArray>
+    ): Deferred<JsonArray>
 
+    @POST("get_documents_presigned_url")
+    @FormUrlEncoded
+    fun getDocumetPresignedURl(
+        @Header("Authorization") AutToken: String,
+        @Field("filename") name: String,
+        @Field("student_uid") uID: String,
+        @Field("document_type") doctype: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<JsonObject>
 
+    @PUT
+    fun uploadDoc(
+        @Url() url: String
+    ): Deferred<Unit>
+
+    @POST("student-brag-sheet")
+    @FormUrlEncoded
+    fun saveDocumentBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Field("student_uid") id: String,
+        @Field("filename") name: String,
+        @Field("path") path: String,
+        @Field("exist") exist: Int,
+        @Field("s3_url") url: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<Unit>
+
+    @GET("get-student-colleges/{id}?for_reco=1")
+    fun getUniversities(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 }

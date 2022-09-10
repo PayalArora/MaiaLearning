@@ -27,6 +27,7 @@ import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
+import com.maialearning.util.showToast
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
@@ -160,7 +161,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.getString("application_mode"),
                         object_.getString("application_status_name"),
                         object_.getString("app_by_program_supported"),
-                                object_.getInt("confirm_applied")
+                        object_.getInt("confirm_applied")
                     )
                     array.add(model)
                     array.sortBy { it.naviance_college_name }
@@ -192,7 +193,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            context?.showToast(it)
         }
     }
 
