@@ -2,6 +2,7 @@ package com.maialearning.viewmodel
 
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonArray
@@ -55,6 +56,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val uploadImageObserver = MutableLiveData<String>()
     val saveDocumentBragsheetObserver = MutableLiveData<Unit>()
     val getUniversitiesObserver = MutableLiveData<JsonObject>()
+    val getMilestoneIDObserver = MutableLiveData<JsonObject>()
+    val getMilestonesObserver = MutableLiveData<MilestoneResponse>()
 
 
     fun getConsiderList(id: String) {
@@ -462,6 +465,33 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> getUniversitiesObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+    fun getMilestonesID() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getMilestonesID()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getMilestoneIDObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getMilestones(id:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getMilestones(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getMilestonesObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

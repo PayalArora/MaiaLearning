@@ -280,7 +280,7 @@ class RecommendationFragment : Fragment(), onClick {
     private fun setListeners() {
         homeModel.typeObserver.observe(requireActivity()) {
             if ((it.get(0).toString()) == "0") {
-                Toast.makeText(context, "0", Toast.LENGTH_LONG).show()
+//                Toast.makeText(context, "0", Toast.LENGTH_LONG).show()
                 typeCollege = TYPE_COLLEGE
                 mBinding.recipentUcas.visibility = View.GONE
                 mBinding.recipentUniversity.visibility = View.VISIBLE
@@ -412,7 +412,6 @@ class RecommendationFragment : Fragment(), onClick {
                 universityModel.name = json.optString(key)
                 univlist.add(universityModel)
             }
-            Log.e("University size ", ">> " + univlist.size)
             univlist.sortBy { it.name?.capitalize() }
             progress.dismiss()
         }

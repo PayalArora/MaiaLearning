@@ -405,4 +405,16 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String
     ): Deferred<JsonObject>
+
+    @GET("get-itask-category/1/")
+    fun getMilestonesID(
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonObject>
+
+    @GET("get_category_wise_itask/1/{studentId}/{milestoneID}")
+    fun getMilestones(
+        @Header("Authorization") AutToken: String,
+        @Path("studentId") studentId: String,
+        @Path("milestoneID") milestoneID: String
+    ): Deferred<MilestoneResponse>
 }
