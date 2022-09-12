@@ -90,7 +90,7 @@ class RecommendationFragment : Fragment(), onClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (isAttached)
-        setListeners()
+            setListeners()
         progress = showLoadingDialog(requireContext())
         progress.show()
         SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
@@ -196,7 +196,7 @@ class RecommendationFragment : Fragment(), onClick {
         if (typeCollege == TYPE_COLLEGE) {
             val collegeId = arrayListOf<String>()
             for (i in selectedUnivList) {
-                i.id.let { collegeId.add(it) }
+                i.id?.let { collegeId.add(it) }
             }
             if (mBinding.textDescription.text.toString().trim() != "" && teacherId.size
                 > 0 && collegeId.size > 0
@@ -478,7 +478,7 @@ class RecommendationFragment : Fragment(), onClick {
 
     private fun universititesBottomSheet() {
         selectedUnivList.clear()
-        val type = REC_TYPE_RECOMENDATION
+        var type = REC_TYPE_RECOMENDATION
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: LayoutTeacherBinding = LayoutTeacherBinding.inflate(layoutInflater)
         //  sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -585,7 +585,7 @@ class RecommendationFragment : Fragment(), onClick {
 
     fun findMemberByName(name: String?): ArrayList<TeacherListModelItem> {
         // go through list of members and compare name with given name
-        val filterList: ArrayList<TeacherListModelItem> = ArrayList()
+        var filterList: ArrayList<TeacherListModelItem> = ArrayList()
         for (member in list) {
             if ((member.firstName?.lowercase()?.contains(name?.lowercase() ?: "")
                     ?: false) || member.lastName?.lowercase()
@@ -843,7 +843,7 @@ class RecommendationFragment : Fragment(), onClick {
         if (requestCode == REQUEST_CHOOSE_PDF_UPCOMING_DETAIL) {
 
             fileUri = data?.data!!
-            val uri: Uri = data.data!!
+            val uri: Uri = data?.data!!
             val uriString: String = uri.toString()
             if (uriString.startsWith("content://")) {
                 var myCursor: Cursor? = null
