@@ -66,8 +66,8 @@ class RecommendationFragment : Fragment(), onClick {
     private var isLoading = false
     private var requestListNew = ArrayList<RecomdersModel.Data?>()
     private var requestSListNew = ArrayList<RecCollegeModel.CollegeDetails?>()
-    private var requestSListUpdate: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
-    private var requestSList: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
+//    private var requestSListUpdate: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
+//    private var requestSList: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
     private var isAttached = false
     private var url: String? = null
     private var json: JSONObject? = null
@@ -157,7 +157,6 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     fun hitAPISchoolRecomenders(page: String) {
-        progress.show()
         homeModel.getRecommendersCollege(SharedHelper(requireContext()).id ?: "", page)
     }
 
@@ -286,6 +285,7 @@ class RecommendationFragment : Fragment(), onClick {
                 mBinding.recipentUniversity.visibility = View.VISIBLE
                 mBinding.recomendationSelection.visibility = View.GONE
                 initRecyclerView()
+                progress.show()
                 hitAPISchoolRecomenders(page.toString())
             } else {
                 typeCollege = TYPE_COLLEGE_WITHOUT
@@ -419,15 +419,16 @@ class RecommendationFragment : Fragment(), onClick {
             val json = JSONObject(it.toString())
             val x = json.keys() as Iterator<String>
             val current = json.getJSONObject("pager").getString("current")
-            this.page=current.toInt()+1
+            page = current.toInt() + 1
             val last = json.getJSONObject("pager").getString("last")
+            recCollegeList.clear()
             while (x.hasNext()) {
                 val key: String = x.next()
                 val recModel = RecCollegeModel()
                 recModel.id = key
                 val jsonObj = json.optJSONObject(key)
                 val recommenderName = ArrayList<RecCollegeModel.RecomenderName>()
-                if(jsonObj.has("recommenders_name")) {
+                if (jsonObj.has("recommenders_name")) {
                     val y = jsonObj.getJSONObject("recommenders_name").keys() as Iterator<String>
                     while (y.hasNext()) {
                         val keyY: String = y.next()
@@ -460,20 +461,15 @@ class RecommendationFragment : Fragment(), onClick {
                     dueDate = jsonObj.optString("due_date"),
                     recoName = recommenderName
                 )
-
                 recCollegeList.add(recModel.collegeDetails)
             }
-            requestSList?.addAll(recCollegeList)
-            requestSListUpdate?.addAll(recCollegeList)
-//            adapterStudent.addAllLis(recCollegeList, last.toInt(), current.toInt())
             if (isLoading) {
                 isLoading = false
                 requestSListNew.removeAt(requestSListNew.size - 1)
                 adapterStudent.notifyItemRemoved(requestSListNew.size)
             }
             //for swipe refresh page
-
-            adapterStudent.addAllLis(requestSList!!, last.toInt(), current.toInt())
+            adapterStudent.addAllLis(recCollegeList!!, last.toInt(), current.toInt())
             adapterStudent.setLoaded()
             progress.dismiss()
         }
