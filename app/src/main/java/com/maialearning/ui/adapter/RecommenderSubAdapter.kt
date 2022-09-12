@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.RecomendationSubCollegeItemBinding
 import com.maialearning.model.RecCollegeModel
+import com.maialearning.util.getDate
 
 
-class RecommenderSubAdapter (var context: Context, var list: ArrayList<RecCollegeModel.RecomenderName>?
+class RecommenderSubAdapter(
+    var context: Context, var list: ArrayList<RecCollegeModel.RecomenderName>?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     /**
@@ -29,9 +31,9 @@ class RecommenderSubAdapter (var context: Context, var list: ArrayList<RecColleg
         val inflater = LayoutInflater.from(viewGroup.context)
         val viewHolder: RecyclerView.ViewHolder?
 
-                val bindingView = RecomendationSubCollegeItemBinding.inflate(inflater, viewGroup, false)
-                viewHolder = ViewHolder(bindingView)
-             return   viewHolder
+        val bindingView = RecomendationSubCollegeItemBinding.inflate(inflater, viewGroup, false)
+        viewHolder = ViewHolder(bindingView)
+        return viewHolder
 
 
     }
@@ -44,14 +46,23 @@ class RecommenderSubAdapter (var context: Context, var list: ArrayList<RecColleg
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
             viewHolder.binding.recName.text = list?.get(position)?.done
-            if(list?.get(position)?.cancel.equals("1")){
-                viewHolder.binding.cancel.visibility=View.VISIBLE
-            }else{
-                viewHolder.binding.cancel.visibility=View.GONE
+            viewHolder.binding.date.text =
+                "Req on: " + getDate(list?.get(position)?.reco_created!!.toLong(), "MMM dd, yyyy")
+            if (list?.get(position)?.req_filename != "" && list?.get(position)?.req_filename != null && list?.get(
+                    position
+                )?.req_filename != "null"
+            ) {
+                viewHolder.binding.brag.visibility=View.VISIBLE
+            } else {
+                viewHolder.binding.brag.visibility=View.GONE
+            }
+            if (list?.get(position)?.cancel.equals("1")) {
+                viewHolder.binding.cancel.visibility = View.VISIBLE
+            } else {
+                viewHolder.binding.cancel.visibility = View.GONE
             }
         }
     }
-
 
 
     override fun getItemCount(): Int {

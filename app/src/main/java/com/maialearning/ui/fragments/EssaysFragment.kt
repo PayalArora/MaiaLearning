@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.ui.adapter.EssayAdapter
-import com.maialearning.ui.adapter.MilestonesAdapter
 
 class EssaysFragment : Fragment() {
 

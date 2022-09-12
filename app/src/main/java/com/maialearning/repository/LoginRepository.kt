@@ -186,6 +186,13 @@ interface LoginRepository {
         id: String
     ): UseCaseResult<JsonObject>
 
+    suspend fun getMilestonesID(
+    ): UseCaseResult<JsonObject>
+
+    suspend fun getMilestones(
+         milestoneId: String
+    ): UseCaseResult<MilestoneResponse>
+
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -886,6 +893,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun getRecomdersCollege(id: String, page: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.getRecomdersCollege(
@@ -898,6 +906,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun cancelRecommedationRequest(id: String): UseCaseResult<Unit> {
         return try {
             val result = catApi.cancelRecommendationRequest(
@@ -995,5 +1004,32 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
+    override suspend fun getMilestonesID(): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getMilestonesID(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getMilestones(milestoneId: String): UseCaseResult<MilestoneResponse> {
+        return try {
+            val result = catApi.getMilestones(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+               ""+ SharedHelper(BaseApplication.applicationContext()).id,milestoneId
+
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }    }
 
 }

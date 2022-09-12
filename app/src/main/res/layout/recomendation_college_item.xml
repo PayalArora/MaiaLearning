@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/_10dp"
-    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/_5dp"
     android:layout_marginTop="@dimen/_10dp"
-    android:layout_height="wrap_content">
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/_10dp">
 
     <TextView
         android:id="@+id/uni_name"
@@ -29,33 +30,42 @@
         android:id="@+id/completed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_black"
-        android:layout_gravity="top"
-        android:paddingHorizontal="@dimen/_5dp"
         android:layout_alignParentRight="true"
+        android:layout_gravity="top"
+        android:fontFamily="@font/inter_black"
+        android:paddingHorizontal="@dimen/_5dp"
         android:text="@string/completed"
         android:textColor="@color/green_1"
         android:textSize="@dimen/_12sp"
         android:textStyle="bold" />
+
     <TextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
-        android:layout_below="@+id/completed"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_regular"
-        android:layout_gravity="top"
-        android:paddingHorizontal="@dimen/_5dp"
+        android:layout_below="@+id/completed"
         android:layout_alignParentRight="true"
+        android:layout_gravity="top"
+        android:fontFamily="@font/inter_regular"
+        android:paddingHorizontal="@dimen/_5dp"
         android:text="@string/date"
         android:textColor="@color/black_1"
         android:textSize="@dimen/_12sp"
         android:textStyle="bold" />
 
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/date"
+        android:layout_marginTop="@dimen/_5dp"
+        android:background="@color/grey" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/uni_name"
+        android:layout_below="@+id/view"
         android:paddingVertical="@dimen/_10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/recomendation_sub_college_item" />

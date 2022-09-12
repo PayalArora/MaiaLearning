@@ -268,7 +268,7 @@ class RecommendationFragment : Fragment(), onClick {
             override fun onLoadMore() {
                 requestSListNew.add(null)
                 isLoading = true
-                adapter.notifyItemInserted(requestSListNew.size - 1)
+                adapterStudent.notifyItemInserted(requestSListNew.size - 1)
                 Handler(Looper.getMainLooper()).postDelayed({
                     hitAPISchoolRecomenders(page.toString())
 
@@ -280,7 +280,7 @@ class RecommendationFragment : Fragment(), onClick {
     private fun setListeners() {
         homeModel.typeObserver.observe(requireActivity()) {
             if ((it.get(0).toString()) == "0") {
-                Toast.makeText(context, "0", Toast.LENGTH_LONG).show()
+//                Toast.makeText(context, "0", Toast.LENGTH_LONG).show()
                 typeCollege = TYPE_COLLEGE
                 mBinding.recipentUcas.visibility = View.GONE
                 mBinding.recipentUniversity.visibility = View.VISIBLE
@@ -357,14 +357,14 @@ class RecommendationFragment : Fragment(), onClick {
             selectedUnivList.clear()
             selectedList.clear()
             mBinding.textDescription.setText("")
-            mBinding.selectedTeachers.setText("")
-            mBinding.selectedUniversity.setText("")
+            mBinding.selectedTeachers.text = ""
+            mBinding.selectedUniversity.text = ""
         }
         homeModel.recUCASObserver.observe(requireActivity()) {
             progress.dismiss()
             selectedUcasList.clear()
             mBinding.textDescription.setText("")
-            mBinding.selectedTeachersUcas.setText("")
+            mBinding.selectedTeachersUcas.text = ""
             Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
         }
         homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
@@ -412,7 +412,6 @@ class RecommendationFragment : Fragment(), onClick {
                 universityModel.name = json.optString(key)
                 univlist.add(universityModel)
             }
-            Log.e("University size ", ">> " + univlist.size)
             univlist.sortBy { it.name?.capitalize() }
             progress.dismiss()
         }
@@ -420,7 +419,8 @@ class RecommendationFragment : Fragment(), onClick {
             val json = JSONObject(it.toString())
             val x = json.keys() as Iterator<String>
             val current = json.getJSONObject("pager").getString("current")
-            val last = json.getJSONObject("pager").getString("current")
+            this.page=current.toInt()+1
+            val last = json.getJSONObject("pager").getString("last")
             while (x.hasNext()) {
                 val key: String = x.next()
                 val recModel = RecCollegeModel()
@@ -460,7 +460,7 @@ class RecommendationFragment : Fragment(), onClick {
             }
             requestSList?.addAll(recCollegeList)
             requestSListUpdate?.addAll(recCollegeList)
-            adapterStudent.addAllLis(recCollegeList, last.toInt(), current.toInt())
+//            adapterStudent.addAllLis(recCollegeList, last.toInt(), current.toInt())
             if (isLoading) {
                 isLoading = false
                 requestSListNew.removeAt(requestSListNew.size - 1)
@@ -468,9 +468,7 @@ class RecommendationFragment : Fragment(), onClick {
             }
             //for swipe refresh page
 
-            if (last != null) {
-                adapterStudent.addAllLis(requestSList!!, last.toInt(), current.toInt())
-            }
+            adapterStudent.addAllLis(requestSList!!, last.toInt(), current.toInt())
             adapterStudent.setLoaded()
             progress.dismiss()
         }

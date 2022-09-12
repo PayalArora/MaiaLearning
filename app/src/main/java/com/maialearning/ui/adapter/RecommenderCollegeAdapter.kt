@@ -13,6 +13,7 @@ import com.maialearning.databinding.RecomendationCollegeItemBinding
 import com.maialearning.model.RecCollegeModel
 import com.maialearning.model.RecomdersModel
 import com.maialearning.util.OnLoadMoreListener
+import com.maialearning.util.getDate
 
 class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecCollegeModel.CollegeDetails?>, recycler: RecyclerView,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -81,6 +82,9 @@ class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecCol
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
             viewHolder.binding.uniName.text = list[position]?.collegeName
+            if(list[position]?.dueDate!! !="")
+            viewHolder.binding.date.text = getDate(list[position]?.dueDate!!.toLong(), "MMM dd, yyyy")
+            viewHolder.binding.completed.text = list[position]?.completed.toString() +" Completed"
             viewHolder.binding.recyclerView.adapter=RecommenderSubAdapter(context, list[position]?.recoName)
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2
