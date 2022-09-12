@@ -433,9 +433,14 @@ class RecommendationFragment : Fragment(), onClick {
                         val keyY: String = y.next()
                         val jsonObjY =
                             jsonObj.getJSONObject("recommenders_name").optJSONObject(keyY)
+                        var recName = ""
+                        if (jsonObjY.has("done"))
+                         recName =  jsonObjY.optString("done")
+                        else if (jsonObjY.has("pending"))
+                            recName = jsonObjY.optString("pending")
                         recommenderName.add(
                             RecCollegeModel.RecomenderName(
-                                jsonObjY.optString("done"),
+                                recName,
                                 jsonObjY.optString("preserved_data"),
                                 jsonObjY.optString("cancel"),
                                 jsonObjY.optString("reco_created"),
