@@ -3,12 +3,16 @@ package com.maialearning.ui.fragments
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -66,11 +71,13 @@ class RecommendationFragment : Fragment(), onClick {
     private var isLoading = false
     private var requestListNew = ArrayList<RecomdersModel.Data?>()
     private var requestSListNew = ArrayList<RecCollegeModel.CollegeDetails?>()
-//    private var requestSListUpdate: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
+
+    //    private var requestSListUpdate: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
 //    private var requestSList: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
     private var isAttached = false
     private var url: String? = null
     private var json: JSONObject? = null
+    private var fileId: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -122,6 +129,9 @@ class RecommendationFragment : Fragment(), onClick {
         }
         mBinding.textAddFile.setOnClickListener {
             checkStoragePermissionAndOpenImageSelection()
+        }
+        mBinding.downloadSheet.setOnClickListener {
+            homeModel.getBragSheet(SharedHelper(requireContext()).id ?: "")
         }
         progress.show()
 
@@ -277,6 +287,26 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     private fun setListeners() {
+        homeModel.bragSheetObserver.observe(requireActivity()) {
+            val json = JSONObject(it.toString())
+            fileId = json.getString("file_id")
+            homeModel.downloadBragSheet(fileId, SharedHelper(requireContext()).id ?: "")
+        }
+        homeModel.downloadObserver.observe(requireActivity()) {
+            progress.dismiss()
+            var url = ""
+            if (it.get(0).toString() != "") {
+                url = it.get(0).toString()
+                val manager =
+                    requireActivity().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                val uri = Uri.parse(url.substring(0, url.indexOf("?")).replace("\"", ""))
+                val request = DownloadManager.Request(uri)
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                manager.enqueue(request)
+            }
+        }
+
+
         homeModel.typeObserver.observe(requireActivity()) {
             if ((it.get(0).toString()) == "0") {
 //                Toast.makeText(context, "0", Toast.LENGTH_LONG).show()

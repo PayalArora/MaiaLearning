@@ -227,6 +227,18 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/download_sheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="@dimen/_2sp"
+                android:text="Download Brag Sheet"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_16sp"
+                android:padding="@dimen/_10dp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/receipient_univ_uacs" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/req_recs_card"
@@ -234,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/receipient_univ_uacs">
+                app:layout_constraintTop_toBottomOf="@+id/download_sheet">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
