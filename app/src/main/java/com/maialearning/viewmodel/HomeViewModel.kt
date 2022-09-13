@@ -58,6 +58,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val getUniversitiesObserver = MutableLiveData<JsonObject>()
     val getMilestoneIDObserver = MutableLiveData<JsonObject>()
     val getMilestonesObserver = MutableLiveData<MilestoneResponse>()
+    val downloadObserver = MutableLiveData<JsonArray>()
+    val bragSheetObserver = MutableLiveData<JsonObject>()
 
 
     fun getConsiderList(id: String) {
@@ -493,6 +495,47 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             when (result) {
                 is UseCaseResult.Success -> getMilestonesObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+    fun downloadBragSheet(file_id:String, uuid:String){
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.downloadBragSheet(file_id, uuid )
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> downloadObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message}
+
+            }
+        }
+    }
+
+    fun getBragSheet(id:String){
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getBragSheet(id)
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> bragSheetObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message}
+
             }
         }
     }

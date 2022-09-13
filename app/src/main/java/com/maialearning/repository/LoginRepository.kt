@@ -96,6 +96,15 @@ interface LoginRepository {
         doc_type: String
     ): UseCaseResult<JsonArray>
 
+    suspend fun downloadBragSheet(
+        file_id: String,
+        uuid: String
+    ): UseCaseResult<JsonArray>
+
+    suspend fun getBragSheet(
+        id: String
+    ): UseCaseResult<JsonObject>
+
     suspend fun writeToCounselor(
         token: String,
         nid: String,
@@ -190,7 +199,7 @@ interface LoginRepository {
     ): UseCaseResult<JsonObject>
 
     suspend fun getMilestones(
-         milestoneId: String
+        milestoneId: String
     ): UseCaseResult<MilestoneResponse>
 
 }
@@ -1022,7 +1031,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getMilestones(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-               ""+ SharedHelper(BaseApplication.applicationContext()).id,milestoneId
+                "" + SharedHelper(BaseApplication.applicationContext()).id, milestoneId
 
             ).await()
             UseCaseResult.Success(result)
@@ -1030,6 +1039,38 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Error(ex)
         } catch (ex: Exception) {
             UseCaseResult.Exception(ex)
-        }    }
+        }
+    }
 
+    override suspend fun downloadBragSheet(
+        file_id: String,
+        uuid: String
+    ): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.downloadBragSheet(
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}",
+                uuid, file_id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getBragSheet(
+        id: String
+    ): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getBragSheet(
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
 }

@@ -417,4 +417,18 @@ interface AllAPi {
         @Path("studentId") studentId: String,
         @Path("milestoneID") milestoneID: String
     ): Deferred<MilestoneResponse>
+
+    @POST("get_documents_download_presigned_url")
+    @FormUrlEncoded
+    fun downloadBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Field("student_uid") uuid: String,
+        @Field("file_id") fileid: String
+    ): Deferred<JsonArray>
+
+    @GET("student-brag-sheet/{id}")
+    fun getBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 }
