@@ -92,7 +92,7 @@ data class ItaskItem(
 	val assignedStudent: String? = null,
 
 	@field:SerializedName("status")
-	val status: Int? = null,
+	var status: Int? = null,
 
 	@field:SerializedName("verified_status")
 	val verifiedStatus: Any? = null,

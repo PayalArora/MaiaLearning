@@ -14,6 +14,7 @@ import retrofit2.HttpException
 
 
 import com.maialearning.util.prefhandler.SharedHelper
+import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.json.Json
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -201,6 +202,14 @@ interface LoginRepository {
     suspend fun getMilestones(
         milestoneId: String
     ): UseCaseResult<MilestoneResponse>
+
+    suspend fun checkItask(
+        iTaskId: String, studentID: String
+    ): UseCaseResult<Unit>
+
+    suspend fun unCheckItask(
+        iTaskId: String
+    ): UseCaseResult<Unit>
 
 }
 
@@ -1065,6 +1074,35 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getBragSheet(
                 "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun checkItask(iTaskId: String, studentID: String): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.checkItask(
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}",
+                iTaskId,
+                studentID
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun unCheckItask(iTaskId: String): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.uncheckItask(
+                "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}",
+                iTaskId
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

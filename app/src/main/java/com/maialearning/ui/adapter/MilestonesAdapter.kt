@@ -10,7 +10,7 @@ import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.model.ItaskItem
 import com.maialearning.util.getDate
 
-class MilestonesAdapter(var itask: List<ItaskItem?>?,  val dotsClick: (id:Int) -> Unit,) :
+class MilestonesAdapter(var itask: List<ItaskItem?>?, val dotsClick: (id: Int,it:View) -> Unit) :
     RecyclerView.Adapter<MilestonesAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -42,7 +42,7 @@ class MilestonesAdapter(var itask: List<ItaskItem?>?,  val dotsClick: (id:Int) -
             viewHolder.binding.rbOtherApp.visibility = View.GONE
         }
         viewHolder.binding.menuDots.setOnClickListener {
-
+            dotsClick(position,it)
         }
 
     }

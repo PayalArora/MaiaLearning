@@ -60,6 +60,9 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val getMilestonesObserver = MutableLiveData<MilestoneResponse>()
     val downloadObserver = MutableLiveData<JsonArray>()
     val bragSheetObserver = MutableLiveData<JsonObject>()
+    val checkItaskObserver = MutableLiveData<Unit>()
+    val uncheckItaskObserver = MutableLiveData<Unit>()
+
 
 
     fun getConsiderList(id: String) {
@@ -539,6 +542,49 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
+    fun checkItask(id:String,studentId:String){
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.checkItask(id,studentId)
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> checkItaskObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message}
+
+            }
+        }
+    }
+
+    fun uncheckItask(id:String){
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.unCheckItask(id)
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> uncheckItaskObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message}
+
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

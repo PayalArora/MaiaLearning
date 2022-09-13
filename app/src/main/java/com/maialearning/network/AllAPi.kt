@@ -361,6 +361,7 @@ interface AllAPi {
         @Path("id") id: String,
         @Path("page") page: String,
     ): Deferred<JsonObject>
+
     @DELETE("recommendation-request/{id}")
     fun cancelRecommendationRequest(
         @Header("Authorization") AutToken: String,
@@ -431,4 +432,16 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String
     ): Deferred<JsonObject>
+
+    @PUT("itask/{id}/{studentId}")
+    fun checkItask(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        @Path("studentId") studentId: String
+    ): Deferred<Unit>
+
+    @GET("uncheck-itask-student/{id}")
+    fun uncheckItask(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String):Deferred<Unit>
 }
