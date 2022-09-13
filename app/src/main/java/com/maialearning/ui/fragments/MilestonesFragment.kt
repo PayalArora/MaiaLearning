@@ -37,7 +37,10 @@ class MilestonesFragment : Fragment() {
 
 
     private fun setAdapter(itask: List<ItaskItem?>?) {
-        mBinding.recyclerList.adapter = MilestonesAdapter(itask)
+        mBinding.recyclerList.adapter = MilestonesAdapter(itask,::dotsClick)
+
+    }
+    private fun dotsClick(id :Int) {
 
     }
 

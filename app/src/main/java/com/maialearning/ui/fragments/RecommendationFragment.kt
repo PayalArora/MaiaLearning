@@ -42,6 +42,7 @@ import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.ext.isInt
 import java.io.*
 
 
@@ -66,8 +67,6 @@ class RecommendationFragment : Fragment(), onClick {
     private var isLoading = false
     private var requestListNew = ArrayList<RecomdersModel.Data?>()
     private var requestSListNew = ArrayList<RecCollegeModel.CollegeDetails?>()
-//    private var requestSListUpdate: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
-//    private var requestSList: ArrayList<RecCollegeModel.CollegeDetails?>? = ArrayList()
     private var isAttached = false
     private var url: String? = null
     private var json: JSONObject? = null
@@ -427,41 +426,52 @@ class RecommendationFragment : Fragment(), onClick {
                 val recModel = RecCollegeModel()
                 recModel.id = key
                 val jsonObj = json.optJSONObject(key)
-                val recommenderName = ArrayList<RecCollegeModel.RecomenderName>()
-                if (jsonObj.has("recommenders_name")) {
-                    val y = jsonObj.getJSONObject("recommenders_name").keys() as Iterator<String>
-                    while (y.hasNext()) {
-                        val keyY: String = y.next()
-                        val jsonObjY =
-                            jsonObj.getJSONObject("recommenders_name").optJSONObject(keyY)
-                        var recName = ""
-                        if (jsonObjY.has("done"))
-                         recName =  jsonObjY.optString("done")
-                        else if (jsonObjY.has("pending"))
-                            recName = jsonObjY.optString("pending")
-                        recommenderName.add(
-                            RecCollegeModel.RecomenderName(
-                                recName,
-                                jsonObjY.optString("preserved_data"),
-                                jsonObjY.optString("cancel"),
-                                jsonObjY.optString("reco_created"),
-                                jsonObjY.optString("req_fileid"),
-                                jsonObjY.optString("req_filename")
+                var id:String? = null
+                if (key.isInt()) {
+                    id = key
+                    val recommenderName = ArrayList<RecCollegeModel.RecomenderName>()
+                    if (jsonObj.has("recommenders_name")) {
+                        val y =
+                            jsonObj.getJSONObject("recommenders_name").keys() as Iterator<String>
+                        while (y.hasNext()) {
+                            val keyY: String = y.next()
+                            val jsonObjY =
+                                jsonObj.getJSONObject("recommenders_name").optJSONObject(keyY)
+                            var recName = ""
+                            if (jsonObjY.has("done"))
+                                recName = jsonObjY.optString("done")
+                            else if (jsonObjY.has("pending"))
+                                recName = jsonObjY.optString("pending")
+                            recommenderName.add(
+                                RecCollegeModel.RecomenderName(
+                                    keyY,
+                                    recName,
+                                    jsonObjY.optString("preserved_data"),
+                                    jsonObjY.optString("cancel"),
+                                    jsonObjY.optString("reco_created"),
+                                    jsonObjY.optString("req_fileid"),
+                                    jsonObjY.optString("req_filename")
+                                )
                             )
-                        )
+                        }
+                    }
+                    recModel.collegeDetails = RecCollegeModel.CollegeDetails(
+                        academicYear = jsonObj.optString("academic_year"),
+                        applicationMode = jsonObj.optString("applicationMode"),
+                        collegeName = jsonObj.optString("college_name"),
+                        collegeUnitId = jsonObj.optString("college_unit_id"),
+                        notes = jsonObj.optString("notes"),
+                        completed = jsonObj.optInt("completed"),
+                        dueDate = jsonObj.optString("due_date"),
+                        recoName = recommenderName,
+                        id = recModel.id
+                    )
+                    recCollegeList.add(recModel.collegeDetails)
+                    recCollegeList.sortBy {
+                        it?.id?.toInt()
                     }
                 }
-                recModel.collegeDetails = RecCollegeModel.CollegeDetails(
-                    academicYear = jsonObj.optString("academic_year"),
-                    applicationMode = jsonObj.optString("applicationMode"),
-                    collegeName = jsonObj.optString("college_name"),
-                    collegeUnitId = jsonObj.optString("college_unit_id"),
-                    notes = jsonObj.optString("notes"),
-                    completed = jsonObj.optInt("completed"),
-                    dueDate = jsonObj.optString("due_date"),
-                    recoName = recommenderName
-                )
-                recCollegeList.add(recModel.collegeDetails)
+
             }
             if (isLoading) {
                 isLoading = false
