@@ -76,6 +76,7 @@ class RecommendationFragment : Fragment(), onClick {
     private var url: String? = null
     private var json: JSONObject? = null
     private var fileId: String = ""
+    private var recoUpdate: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -269,7 +270,12 @@ class RecommendationFragment : Fragment(), onClick {
 
     private fun initRecyclerView() {
         adapterStudent =
-            RecommenderCollegeAdapter(requireContext(), requestSListNew, mBinding.requestList)
+            RecommenderCollegeAdapter(
+                requireContext(),
+                requestSListNew,
+                mBinding.requestList,
+                ::cancelUpdateClick
+            )
         mBinding.requestList.adapter = adapterStudent
         adapterStudent.setOnLoadMoreListener(object : OnLoadMoreListener {
             override fun onLoadMore() {
@@ -282,6 +288,18 @@ class RecommendationFragment : Fragment(), onClick {
                 }, 2000)
             }
         })
+    }
+
+    var updateRecoBragId: String = ""
+    fun cancelUpdateClick(data: RecCollegeModel.RecomenderName, cancel: Boolean) {
+        if (cancel) {
+            progress.show()
+            homeModel.cancelRecommendRequest(data?.id.toString())
+        } else {
+            recoUpdate = true
+            updateRecoBragId = "" + data.id
+            checkStoragePermissionAndOpenImageSelection()
+        }
     }
 
     private fun setListeners() {
@@ -455,7 +473,7 @@ class RecommendationFragment : Fragment(), onClick {
                 val recModel = RecCollegeModel()
                 recModel.id = key
                 val jsonObj = json.optJSONObject(key)
-                var id:String? = null
+                var id: String? = null
                 if (key.isInt()) {
                     id = key
                     val recommenderName = ArrayList<RecCollegeModel.RecomenderName>()
@@ -746,6 +764,10 @@ class RecommendationFragment : Fragment(), onClick {
         pdfDialog.setCancelable(false)
         pdfDialog.setContentView(R.layout.file_upload_dialog)
         body = pdfDialog.findViewById(R.id.tvBody) as TextView
+       var tvTitle=pdfDialog.findViewById(R.id.tvTitle) as TextView
+        if(recoUpdate){
+            tvTitle.setText("Update Brag Sheet")
+        }
         yesBtn = pdfDialog.findViewById(R.id.btn_yes) as Button
         yesBtn.setText("Upload")
         val noBtn = pdfDialog.findViewById(R.id.btn_cancel) as TextView
@@ -780,45 +802,54 @@ class RecommendationFragment : Fragment(), onClick {
         var url: String? = null
         var json: JSONObject? = null
 
-        homeModel.getDocumentPresignedObserver.observe(requireActivity()) {
+//        homeModel.getDocumentPresignedObserver.observe(requireActivity()) {
+////            progress.dismiss()
+//            json = JSONObject(it.toString())
+//            if (json?.optInt("exist") == 0) {
+//                url = json?.optString("s3_url")
+//                url?.let { it1 -> homeModel.uploadDoc(it1) }
+//            } else if (json?.optInt("exist") == 1) {
+//                saveWork(1, json, "")
+//            }
+//
+//        }
+//        homeModel.uploadImageObserver.observe(requireActivity()) {
+//            url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
+//        }
+//        homeModel.fileVirusObserver.observe(requireActivity()) {
+//            val obj = JSONObject(it.toString())
+//            if (obj?.get("file_status").toString() == "clean") {
+//                url?.let { it1 -> saveWork(0, json, it1) }
+//            } else {
+//                Toast.makeText(requireContext(), "Please check your File", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//        }
+//        homeModel.showError.observe(requireActivity()) {
 //            progress.dismiss()
-            json = JSONObject(it.toString())
-            if (json?.optInt("exist") == 0) {
-                url = json?.optString("s3_url")
-                url?.let { it1 -> homeModel.uploadDoc(it1) }
-            } else if (json?.optInt("exist") == 1) {
-                saveWork(1, json, "")
-            }
-
-        }
-        homeModel.uploadImageObserver.observe(requireActivity()) {
-            url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
-        }
-        homeModel.fileVirusObserver.observe(requireActivity()) {
-            val obj = JSONObject(it.toString())
-            if (obj?.get("file_status").toString() == "clean") {
-                url?.let { it1 -> saveWork(0, json, it1) }
-            } else {
-                Toast.makeText(requireContext(), "Please check your File", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-        homeModel.showError.observe(requireActivity()) {
-            progress.dismiss()
-        }
+//        }
     }
 
     private fun saveWork(exist: Int, json: JSONObject?, url: String) {
         if (json != null) {
-            SharedHelper(requireContext()).id?.let {
-                homeModel.saveDocumentBragsheet(
-                    it,
+            if (recoUpdate) {
+                homeModel.uploadRecoBragsheet(
+                    updateRecoBragId,
                     json.optString("filename"),
                     json.optString("path"),
-                    exist,
-                    url,
                     json.optString("hash")
                 )
+            } else {
+                SharedHelper(requireContext()).id?.let {
+                    homeModel.saveDocumentBragsheet(
+                        it,
+                        json.optString("filename"),
+                        json.optString("path"),
+                        exist,
+                        url,
+                        json.optString("hash")
+                    )
+                }
             }
         }
         homeModel.saveDocumentBragsheetObserver.observe(requireActivity()) {

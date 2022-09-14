@@ -15,10 +15,15 @@ import com.maialearning.model.RecomdersModel
 import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.getDate
 
-class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecCollegeModel.CollegeDetails?>, recycler: RecyclerView,
+class RecommenderCollegeAdapter(
+    var context: Context,
+    var list: ArrayList<RecCollegeModel.CollegeDetails?>,
+    recycler: RecyclerView,
+    val clickUpdateCancel: (id: RecCollegeModel.RecomenderName, cancel: Boolean) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var selectedPostion = 0
-    private val linearLayoutManager: LinearLayoutManager = recycler.layoutManager as LinearLayoutManager
+    private val linearLayoutManager: LinearLayoutManager =
+        recycler.layoutManager as LinearLayoutManager
     var lastVisibleItem: Int = 0
     private val viewTypeItem = 0
     private val viewTypeLoading = 1
@@ -61,7 +66,8 @@ class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecCol
         val viewHolder: RecyclerView.ViewHolder?
         return when (viewType) {
             viewTypeItem -> {
-                val bindingView = RecomendationCollegeItemBinding.inflate(inflater, viewGroup, false)
+                val bindingView =
+                    RecomendationCollegeItemBinding.inflate(inflater, viewGroup, false)
                 viewHolder = ViewHolder(bindingView)
                 viewHolder
             }
@@ -82,10 +88,12 @@ class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecCol
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
             viewHolder.binding.uniName.text = list[position]?.collegeName
-            if(list[position]?.dueDate!! !="")
-            viewHolder.binding.date.text = getDate(list[position]?.dueDate!!.toLong(), "MMM dd, yyyy")
-            viewHolder.binding.completed.text = list[position]?.completed.toString() +" Completed"
-            viewHolder.binding.recyclerView.adapter=RecommenderSubAdapter(context, list[position]?.recoName)
+            if (list[position]?.dueDate!! != "")
+                viewHolder.binding.date.text =
+                    getDate(list[position]?.dueDate!!.toLong(), "MMM dd, yyyy")
+            viewHolder.binding.completed.text = list[position]?.completed.toString() + " Completed"
+            viewHolder.binding.recyclerView.adapter =
+                RecommenderSubAdapter(context, list[position]?.recoName, ::cancelUpdateClick)
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2
             loadingViewHolder.binding.layout.setBackgroundColor(
@@ -106,8 +114,13 @@ class RecommenderCollegeAdapter(var context: Context, var list: ArrayList<RecCol
     override fun getItemCount(): Int {
         return list.size
     }
+
     fun setOnLoadMoreListener(mOnLoadMoreListener: OnLoadMoreListener) {
         this.mOnLoadMoreListener = mOnLoadMoreListener
+    }
+
+    fun cancelUpdateClick(data: RecCollegeModel.RecomenderName, cancel: Boolean) {
+        clickUpdateCancel(data,cancel)
     }
 
     fun setLoaded() {

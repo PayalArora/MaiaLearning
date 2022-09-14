@@ -585,6 +585,25 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
+    fun uploadRecoBragsheet(
+        id: String,
+        name: String,
+        path: String,
+        hash: String
+    ) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+
+                catRepository.uploadRecoBragsheet(name, path, hash,id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> saveDocumentBragsheetObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

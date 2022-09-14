@@ -211,6 +211,12 @@ interface LoginRepository {
         iTaskId: String
     ): UseCaseResult<Unit>
 
+    suspend fun uploadRecoBragsheet(
+        name: String,
+        path: String,
+        hash: String,
+        id: String
+    ): UseCaseResult<Unit>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1103,6 +1109,27 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.uncheckItask(
                 "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}",
                 iTaskId
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun uploadRecoBragsheet(
+        name: String,
+        path: String,
+        hash: String,
+        id: String
+    ): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.uploadRecoBragSheet(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id,
+                name,
+                path,
+                hash
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

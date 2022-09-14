@@ -1,10 +1,13 @@
 package com.maialearning.ui.adapter
 
+import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.RecomendationSubCollegeItemBinding
 import com.maialearning.model.RecCollegeModel
@@ -13,7 +16,9 @@ import com.maialearning.viewmodel.HomeViewModel
 
 
 class RecommenderSubAdapter(
-    var context: Context, var list: ArrayList<RecCollegeModel.RecomenderName>?
+    var context: Context,
+    var list: ArrayList<RecCollegeModel.RecomenderName>?,
+    val click: (id: RecCollegeModel.RecomenderName, cancel: Boolean) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -57,14 +62,30 @@ class RecommenderSubAdapter(
 //                viewHolder.binding.brag.visibility=View.GONE
 //            }
             if (list?.get(position)?.cancel.equals("1")) {
-                viewHolder.binding.brag.visibility=View.VISIBLE
+                viewHolder.binding.brag.visibility = View.VISIBLE
                 viewHolder.binding.cancel.visibility = View.VISIBLE
             } else {
-                viewHolder.binding.brag.visibility=View.GONE
+                viewHolder.binding.brag.visibility = View.GONE
                 viewHolder.binding.cancel.visibility = View.GONE
             }
             viewHolder.binding.cancel.setOnClickListener {
 
+                AlertDialog.Builder(context)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setMessage(context.getString(R.string.cancel_req_msg))
+                    .setPositiveButton(
+                        "Yes"
+                    ) { dialog, _ ->
+                        click(list?.get(position)!!, true)
+                        list?.removeAt(position)
+                        notifyDataSetChanged()
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+
+            viewHolder.binding.brag.setOnClickListener {
+                click(list?.get(position)!!, false)
             }
         }
     }

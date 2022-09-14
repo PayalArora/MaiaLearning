@@ -480,6 +480,8 @@
     <string name="select_teachers_ucas">Select Teachers for UCAS Ref</string>
     <string name="requests">Requests</string>
     <string name="mark_complete">Mark Complete</string>
+    <string name="token_expired">Session Expired</string>
+    <string name="session_error_desc">Your session has been expired. Please login again.</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

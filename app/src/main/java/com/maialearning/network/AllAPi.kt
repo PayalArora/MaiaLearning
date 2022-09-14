@@ -444,4 +444,15 @@ interface AllAPi {
     fun uncheckItask(
         @Header("Authorization") AutToken: String,
         @Path("id") id: String):Deferred<Unit>
+
+    @POST("upload-reco-brag-sheet")
+    @FormUrlEncoded
+    fun uploadRecoBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Field("rec_id") id: String,
+        @Field("filename") name: String,
+        @Field("path") path: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<Unit>
+
 }
