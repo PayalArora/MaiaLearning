@@ -315,9 +315,10 @@ class RecommendationFragment : Fragment(), onClick {
                 url = it.get(0).toString()
                 val manager =
                     requireActivity().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                val uri = Uri.parse(url.substring(0, url.indexOf("?")).replace("\"", ""))
+                val uri = Uri.parse(url.replace("\"", ""))
                 val request = DownloadManager.Request(uri)
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 manager.enqueue(request)
             }
         }
