@@ -104,10 +104,14 @@ class RecommendationFragment : Fragment(), onClick {
         homeModel.getRecDeadline()
         mBinding.send.setOnClickListener {
             if (typeRecs == REC_TYPE_RECOMENDATION) {
-                sendRecomendation(typeRecs)
+
             } else if (typeRecs == BOTH) {
-                sendRecomendation(typeRecs)
-                sendUCASRecomendation()
+                if (mBinding.recLetter.isChecked) {
+                    sendRecomendation(typeRecs)
+                }
+                if (mBinding.ucasLetter.isChecked) {
+                    sendUCASRecomendation()
+                }
             } else {
                 sendUCASRecomendation()
             }
@@ -117,6 +121,9 @@ class RecommendationFragment : Fragment(), onClick {
             listTeacher(REC_TYPE_RECOMENDATION)
         }
         mBinding.ucasLetter.setOnClickListener {
+            showRecs()
+        }
+        mBinding.recLetter.setOnClickListener {
             showRecs()
         }
         mBinding.recipentUcas.setOnClickListener {
@@ -171,6 +178,8 @@ class RecommendationFragment : Fragment(), onClick {
 
     private fun sendUCASRecomendation() {
         val teacherId = arrayListOf<String>()
+        if (selectedUcasList.size==0)
+            return
         for (i in selectedUcasList) {
             i.uid?.let { it1 -> teacherId.add(it1) }
         }
@@ -191,8 +200,7 @@ class RecommendationFragment : Fragment(), onClick {
 
     private fun sendRecomendation(type: Int) {
         if (type == BOTH && typeCollege == TYPE_COLLEGE_WITHOUT) {
-            if (mBinding.textDescription.text.toString().trim() == "" || selectedUcasList.size
-                == 0 || selectedList.size == 0
+            if (mBinding.textDescription.text.toString().trim() == "" || selectedList.size == 0
             ) {
                 return
             }
@@ -250,16 +258,28 @@ class RecommendationFragment : Fragment(), onClick {
                 } else {
                     mBinding.recipentUcas.visibility = View.GONE
                 }
+                if (mBinding.recLetter.isChecked) {
+                    mBinding.recipent.visibility = View.VISIBLE
+                } else {
+                    mBinding.recipent.visibility = View.GONE
+                }
+                if (!mBinding.recLetter.isChecked &&!mBinding.ucasLetter.isChecked){
+                    mBinding.reqRecsCard.visibility =  View.GONE
+                } else {
+                    mBinding.reqRecsCard.visibility =  View.VISIBLE
+                }
                 typeRecs = BOTH
             } else {
                 if (recommendationLetterRequests == 1) {
-                    typeRecs = REC_TYPE_UCAS
-                    mBinding.recipentUcas.visibility = View.GONE
-                    mBinding.recipent.visibility = View.VISIBLE
-                } else {
                     typeRecs = REC_TYPE_RECOMENDATION
-                    mBinding.recipentUcas.visibility = View.VISIBLE
+                    mBinding.recipent.visibility = View.VISIBLE
+                    mBinding.recipentUcas.visibility = View.GONE
+                } else {
+
+                    typeRecs = REC_TYPE_UCAS
+
                     mBinding.recipent.visibility = View.GONE
+                    mBinding.recipentUcas.visibility = View.VISIBLE
                 }
                 mBinding.recomendationSelection.visibility = View.GONE
             }
@@ -400,7 +420,11 @@ class RecommendationFragment : Fragment(), onClick {
         }
         homeModel.recSendObserver.observe(requireActivity()) {
             progress.dismiss()
-            Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
+            if ( it.get(0).asString.replaceInvertedComas().equals("true"))
+                context?.showToast(getString(R.string.recs_letter))
+            else
+                context?.showToast(it.get(0).asString.replaceInvertedComas())
+
             selectedUnivList.clear()
             selectedList.clear()
             mBinding.textDescription.setText("")
@@ -412,7 +436,10 @@ class RecommendationFragment : Fragment(), onClick {
             selectedUcasList.clear()
             mBinding.textDescription.setText("")
             mBinding.selectedTeachersUcas.text = ""
-            Toast.makeText(requireContext(), it.get(0).asString, Toast.LENGTH_LONG).show()
+            if ( it.get(0).asString.replaceInvertedComas().equals("true"))
+                context?.showToast(getString(R.string.recs_letter))
+                else
+                context?.showToast(it.get(0).asString.replaceInvertedComas())
         }
         homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
             progress.dismiss()
@@ -724,7 +751,7 @@ class RecommendationFragment : Fragment(), onClick {
         const val TYPE_COLLEGE = 0
         const val TYPE_COLLEGE_WITHOUT = 1
         const val REC_TYPE_UCAS = 2
-        const val BOTH = 1
+        const val BOTH = 3
     }
 
     override fun onCancelClick(data: RecomdersModel.Data?) {

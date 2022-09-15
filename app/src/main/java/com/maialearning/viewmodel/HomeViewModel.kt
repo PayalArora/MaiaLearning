@@ -13,6 +13,7 @@ import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
 import com.maialearning.util.replaceCrossBracketsComas
+import com.maialearning.util.replaceInvertedComas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -325,7 +326,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> recUCASObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.message
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceInvertedComas()
             }
         }
     }

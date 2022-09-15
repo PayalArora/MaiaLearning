@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/_5dp"
     android:layout_marginTop="@dimen/_10dp"
-    android:background="@color/white"
+    android:background="@drawable/white_rect_border"
+    android:backgroundTint="@color/white"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/_10dp">
 

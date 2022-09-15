@@ -245,6 +245,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10dp"
+                app:cardCornerRadius="@dimen/_8dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/download_sheet">
 
@@ -364,7 +365,8 @@
                         android:layout_height="@dimen/_50dp"
                         android:layout_marginTop="@dimen/_15dp"
                         android:layout_marginBottom="@dimen/_20dp"
-                        android:background="@color/blue_alpha"
+                        android:background="@drawable/white_rect_border"
+                        android:backgroundTint="@color/blue_alpha"
                         app:layout_constraintTop_toBottomOf="@id/deadline_lay">
 
                         <LinearLayout
