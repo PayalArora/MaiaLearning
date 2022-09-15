@@ -13,5 +13,5 @@ class NewMessageModel{
     lateinit var subject :  String
     lateinit var recipients:  ArrayList<HashMap<String, String>>
     lateinit var auditEntity:String
-    lateinit var attachments: ArrayList<HashMap<String, String>>
+    lateinit var attachments: ArrayList<AttachmentModel>
 }

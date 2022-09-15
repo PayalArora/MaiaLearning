@@ -38,6 +38,7 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
     val imageUrlObserver = MutableLiveData<JsonObject>()
     val uploadImageObserver = MutableLiveData<String>()
     val fileVirusObserver = MutableLiveData<JsonObject>()
+    val deleteMessageObserver = MutableLiveData<JsonObject>()
 
     fun getInbox() {
         showLoading.value = true
@@ -176,6 +177,23 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
                 is UseCaseResult.Success -> fileVirusObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+
+    fun deleteMessageAttachment(name: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.deleteMessageAttachment(name
+                )
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> deleteMessageObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
 
             }

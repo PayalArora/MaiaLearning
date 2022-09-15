@@ -85,4 +85,11 @@ interface AllMessageAPi {
         @Header("Authorization") AutToken: String,
         @Body file: JsonObject
     ): Deferred<JsonObject>
+
+    @DELETE("v1/messaging/messages/attachments")
+
+    fun deleteMessageAttachment(
+        @Header("x-access-token") AutToken: String,
+        @Query ("files") id :String
+    ): Deferred<JsonObject>
 }

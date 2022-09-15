@@ -16,6 +16,7 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.CheckBox
 import android.widget.RelativeLayout
@@ -32,10 +33,12 @@ import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickId
 import com.maialearning.databinding.NewMessageBinding
 import com.maialearning.model.AttachMessages
+import com.maialearning.model.AttachmentModel
 import com.maialearning.model.ReceipentModel
 import com.maialearning.model.SendMessageModel
 import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.FilesAdapter
+import com.maialearning.ui.adapter.NewMessageAttachAdapter
 import com.maialearning.ui.adapter.RecipentAdapter
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
@@ -70,18 +73,19 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private var bitmap: Bitmap? = null
     private var imageExt: String? = null
     private var fileName: String? = null
-    private  var  url:String? = null
+    private var url: String? = null
     var arrayList = ArrayList<HashMap<String, String>>()
+    var attachList = ArrayList<AttachmentModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = NewMessageBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.root.setBackgroundColor(getResources().getColor(R.color.white))
-        mBinding.filesList.adapter = FilesAdapter(this, attachedArray)
+        mBinding.filesList.adapter = NewMessageAttachAdapter(this, attachList)
         mBinding.toolbar.backBtn.setOnClickListener { finish() }
         mBinding.toolbar.textTitle.setText(getString(R.string.new_message))
         mBinding.textReciepent.setOnClickListener {
-            for (i in list){
+            for (i in list) {
                 i.isSelected = false
             }
             selectedList.clear()
@@ -105,15 +109,15 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
 
                     val json = SendMessageModel()
                     val jsonData = json.message
-                    jsonData.senderUid=
+                    jsonData.senderUid =
                         SharedHelper(BaseApplication.applicationContext()).messageId
 
-                    jsonData.messageStatus= "sent"
-                    jsonData.messageBody= mBinding.textDescription.text.toString()
-                    jsonData.subject=mBinding.textSubject.text.toString()
-                    jsonData.auditEntity= "96452bf5-8156-49e4-af30-ec35a958850c"
-                    jsonData.recipients= arrayList
-                    // jsonData.attachments= arrayList
+                    jsonData.messageStatus = "sent"
+                    jsonData.messageBody = mBinding.textDescription.text.toString()
+                    jsonData.subject = mBinding.textSubject.text.toString()
+                    jsonData.auditEntity = "96452bf5-8156-49e4-af30-ec35a958850c"
+                    jsonData.recipients = arrayList
+                    jsonData.attachments = attachList
                     msgModel.createMessage(this, json)
                 } else {
                     Toast.makeText(this, "Please add description", Toast.LENGTH_LONG).show()
@@ -179,16 +183,31 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         }
         msgModel.uploadImageObserver.observe(this) {
             Log.e("Response: ", " $it")
-            dialog.dismiss()
-            showToast( "Checking File")
-            url?.let { it1 -> msgModel.checkFileVirus(ANTI_VIRUS, it1) }
+            showToast("Checking File")
+            url?.let { it1 ->
+                msgModel.checkFileVirus(ANTI_VIRUS, it1)
+            }
             //profileWork()
         }
         msgModel.fileVirusObserver.observe(this) {
             var obj = JSONObject(it.toString())
+            dialog.dismiss()
             if (obj?.get("file_status").toString() == "clean") {
                 showToast("File Status: " + obj?.get("file_status").toString())
-            }else{
+                if (objPic != null) {
+                    var attachmentModel = AttachmentModel()
+                    attachmentModel.fileType = objPic.optString("fileType")
+                    attachmentModel.filename = objPic.optString("filename")
+                    attachmentModel.key = objPic.optString("key")
+                    attachmentModel.schoolNid = objPic.optString("schoolnid")
+                    attachmentModel.type = objPic.optString("type")
+                    attachList.add(attachmentModel)
+                    if (attachList.size > 0) {
+                        mBinding.filesList.visibility = View.VISIBLE
+                    }
+                    mBinding.filesList.adapter?.notifyDataSetChanged()
+                }
+            } else {
                 showToast("Please check your File")
             }
         }
@@ -203,7 +222,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         val selectAll = view.findViewById<CheckBox>(R.id.select_all)
         selectAll.setOnClickListener {
             if (selectAll.isChecked) {
-                selectedList .addAll(list)
+                selectedList.addAll(list)
                 mBinding.textReciepent.text = "(${selectedList.size} selected)"
             } else {
                 selectedList = ArrayList()
@@ -225,7 +244,13 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     }
 
     override fun onClick(positiion: Int, id: String) {
-
+        dialog.show()
+        msgModel.deleteMessageAttachment(attachList.get(positiion).key)
+        msgModel.deleteMessageObserver.observe(this) {
+            dialog.dismiss()
+            attachList.removeAt(positiion)
+            mBinding.filesList.adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onClick(positiion: Int) {
@@ -331,7 +356,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             imagePath = getRealPathFromURI(tempUri)
             imageExt = tempUri?.let { getMimeType(this, it) }
-            fileName = imagePath!!.substring(imagePath?.lastIndexOf("/")!! + 1)
+//            fileName = imagePath!!.substring(imagePath?.lastIndexOf("/")!! + 1)
 //            sheetBinding.toolbarProf.setImageBitmap(imageBitmap)
             uploadImageWork()
         } else if (requestCode == REQUEST_CHOOSE_PHOTO) {
@@ -443,8 +468,10 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         SharedHelper(this).id?.let {
             imageExt?.let { it1 ->
                 SharedHelper(this).ethnicityTarget?.let { it2 ->
-                    val keyhash = "${it2}/${SharedHelper(this).messageId}/${SimpleDateFormat("yyyyMMddHHmmss").format(Date())}_$fileName"
-                    println("keyhash: "+keyhash)
+                    val keyhash = "${it2}/${SharedHelper(this).messageId}/${
+                        SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+                    }_$fileName"
+                    println("keyhash: " + keyhash)
                     msgModel.getImageURl(
                         SharedHelper(this).jwtToken, fileName ?: "", it1,
                         keyhash, it2
@@ -454,6 +481,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         }
     }
 
+    lateinit var objPic: JSONObject
     private fun upload(it: JsonObject?) {
         val file = File(imagePath)
         val requestBody: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
@@ -467,8 +495,6 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
                 )
             }
         }
-
-
-
+        objPic = JSONObject(it.toString())
     }
 }

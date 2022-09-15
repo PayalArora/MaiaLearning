@@ -122,6 +122,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10dp"
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="@dimen/_16sp"
         app:layout_constraintBottom_toBottomOf="@id/text_add_file"
@@ -131,15 +132,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/files_list"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_10dp"
         android:layout_marginTop="@dimen/_15dp"
         android:orientation="horizontal"
         android:visibility="gone"
-
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintLeft_toRightOf="@+id/text_add_file"
+        app:layout_constraintStart_toEndOf="@+id/text_add_file"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topLayout"
         tools:listitem="@layout/item_files" />
 
