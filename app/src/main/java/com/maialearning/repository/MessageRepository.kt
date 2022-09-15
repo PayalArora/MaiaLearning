@@ -20,8 +20,8 @@ interface MessageRepository {
     suspend fun getInbox(): UseCaseResult<JsonObject>
     suspend fun getSent(): UseCaseResult<JsonObject>
     suspend fun getTrash(): UseCaseResult<JsonObject>
-    suspend fun getMessage(id:String): UseCaseResult<JsonObject>
-    suspend fun delMessage(id:String): UseCaseResult<JsonObject>
+    suspend fun getMessage(id: String): UseCaseResult<JsonObject>
+    suspend fun delMessage(id: String): UseCaseResult<JsonObject>
     suspend fun createMessage(id: SendMessageModel): UseCaseResult<JsonObject>
     suspend fun getImageURL(
         token: String,
@@ -30,9 +30,14 @@ interface MessageRepository {
         key: String,
         schoolId: String
     ): UseCaseResult<JsonObject>
+
     suspend fun uploadImage(content: String, url: String, bode: RequestBody): UseCaseResult<Unit>
     suspend fun checkFileVirus(
         url: String,
+        putUrl: String
+    ): UseCaseResult<JsonObject>
+
+    suspend fun deleteMessageAttachment(
         putUrl: String
     ): UseCaseResult<JsonObject>
 }
@@ -68,6 +73,7 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun getTrash(): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.getTrashAsync(
@@ -82,7 +88,8 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getMessage(id:String): UseCaseResult<JsonObject> {
+
+    override suspend fun getMessage(id: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.getMessageAsync(
                 SharedHelper(BaseApplication.applicationContext()).jwtToken,
@@ -96,7 +103,8 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun delMessage(id:String): UseCaseResult<JsonObject> {
+
+    override suspend fun delMessage(id: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.delMessageAsync(
                 SharedHelper(BaseApplication.applicationContext()).jwtToken,
@@ -133,7 +141,8 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
         schoolId: String
     ): UseCaseResult<JsonObject> {
         return try {
-            var object_ = MessageReqAttachModel(filename, fileTypeExt, key, schoolId,"Message Attachment")
+            var object_ =
+                MessageReqAttachModel(filename, fileTypeExt, key, schoolId, "Message Attachment")
             //val result = catApi.updateMessageAttachment(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
             val result = catApi.updateProfImage1(token, object_).await()
             UseCaseResult.Success(result)
@@ -158,6 +167,7 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun checkFileVirus(
         url: String,
         putUrl: String
@@ -168,6 +178,20 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
             val result = catApi.checkFileVirus(
                 url,
                 "Bearer ${SharedHelper(BaseApplication.applicationContext()).authkey}", obj
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun deleteMessageAttachment(name: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.deleteMessageAttachment(
+                "${SharedHelper(BaseApplication.applicationContext()).jwtToken}",
+                name
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
