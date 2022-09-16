@@ -9,10 +9,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
@@ -29,7 +26,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -178,7 +174,7 @@ class RecommendationFragment : Fragment(), onClick {
 
     private fun sendUCASRecomendation() {
         val teacherId = arrayListOf<String>()
-        if (selectedUcasList.size==0)
+        if (selectedUcasList.size == 0)
             return
         for (i in selectedUcasList) {
             i.uid?.let { it1 -> teacherId.add(it1) }
@@ -263,10 +259,10 @@ class RecommendationFragment : Fragment(), onClick {
                 } else {
                     mBinding.recipent.visibility = View.GONE
                 }
-                if (!mBinding.recLetter.isChecked &&!mBinding.ucasLetter.isChecked){
-                    mBinding.reqRecsCard.visibility =  View.GONE
+                if (!mBinding.recLetter.isChecked && !mBinding.ucasLetter.isChecked) {
+                    mBinding.reqRecsCard.visibility = View.GONE
                 } else {
-                    mBinding.reqRecsCard.visibility =  View.VISIBLE
+                    mBinding.reqRecsCard.visibility = View.VISIBLE
                 }
                 typeRecs = BOTH
             } else {
@@ -339,6 +335,17 @@ class RecommendationFragment : Fragment(), onClick {
                 val request = DownloadManager.Request(uri)
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                request.setAllowedOverRoaming(false)
+                request.setDestinationUri(
+                    Uri.fromFile(
+                        File(
+                            context!!.getExternalFilesDir(
+                                Environment.DIRECTORY_DOWNLOADS
+                            ).toString(),File(uri.path).name
+                        )
+                    )
+                )
+
                 manager.enqueue(request)
             }
         }
@@ -420,7 +427,7 @@ class RecommendationFragment : Fragment(), onClick {
         }
         homeModel.recSendObserver.observe(requireActivity()) {
             progress.dismiss()
-            if ( it.get(0).asString.replaceInvertedComas().equals("true"))
+            if (it.get(0).asString.replaceInvertedComas().equals("true"))
                 context?.showToast(getString(R.string.recs_letter))
             else
                 context?.showToast(it.get(0).asString.replaceInvertedComas())
@@ -436,9 +443,9 @@ class RecommendationFragment : Fragment(), onClick {
             selectedUcasList.clear()
             mBinding.textDescription.setText("")
             mBinding.selectedTeachersUcas.text = ""
-            if ( it.get(0).asString.replaceInvertedComas().equals("true"))
+            if (it.get(0).asString.replaceInvertedComas().equals("true"))
                 context?.showToast(getString(R.string.recs_letter))
-                else
+            else
                 context?.showToast(it.get(0).asString.replaceInvertedComas())
         }
         homeModel.cancelRecommendRequestObserver.observe(requireActivity()) {
@@ -792,8 +799,8 @@ class RecommendationFragment : Fragment(), onClick {
         pdfDialog.setCancelable(false)
         pdfDialog.setContentView(R.layout.file_upload_dialog)
         body = pdfDialog.findViewById(R.id.tvBody) as TextView
-       var tvTitle=pdfDialog.findViewById(R.id.tvTitle) as TextView
-        if(recoUpdate){
+        var tvTitle = pdfDialog.findViewById(R.id.tvTitle) as TextView
+        if (recoUpdate) {
             tvTitle.setText("Update Brag Sheet")
         }
         yesBtn = pdfDialog.findViewById(R.id.btn_yes) as Button
