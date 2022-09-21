@@ -95,7 +95,7 @@ val appModules = module {
     viewModel { DashboardViewModel(catRepository = get())}
 
     viewModel { FactSheetModel(catRepository = get()) }
-
+    viewModel { CareerViewModel(catRepository = get()) }
     viewModel { ProfileViewModel(catRepository = get()) }
     viewModel { DashboardFragViewModel(catRepository = get()) }
 

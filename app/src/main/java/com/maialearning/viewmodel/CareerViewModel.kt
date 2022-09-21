@@ -1,0 +1,49 @@
+package com.maialearning.viewmodel
+
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.google.gson.JsonArray
+import com.maialearning.model.CareerTopPickResponse
+import com.maialearning.model.CareerTopPickResponseItem
+import com.maialearning.model.NotesModel
+import com.maialearning.network.UseCaseResult
+import com.maialearning.repository.LoginRepository
+import com.maialearning.util.Coroutines
+import com.maialearning.util.replaceCrossBracketsComas
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
+
+class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
+    private val job = Job()
+    // Define default thread for Coroutine as Main and add job
+    override val coroutineContext: CoroutineContext = Dispatchers.Main + job
+    val careerListObserver = MutableLiveData<JsonArray>()
+    val showLoading = MutableLiveData<Boolean>()
+    val showError = SingleLiveEvent<String>()
+
+    fun getCareerList(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerListing(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerListObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // Clear our job when the linked activity is destroyed to avoid memory leaks
+        job.cancel()
+    }
+}

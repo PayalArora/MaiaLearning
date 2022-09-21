@@ -217,6 +217,15 @@ interface LoginRepository {
         hash: String,
         id: String
     ): UseCaseResult<Unit>
+
+    suspend fun getCollegeJsonFilter(
+        url: String,
+        file: ArrayList<String>
+    ): UseCaseResult<JsonObject>
+
+    suspend fun getCareerListing(
+        id: String
+    ): UseCaseResult<JsonArray>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1130,6 +1139,36 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
                 name,
                 path,
                 hash
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCollegeJsonFilter(
+        url: String,
+        body: ArrayList<String>
+    ): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getCollegeJsonFilter(
+                url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerListing(id: String): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getCareerTopPicks(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

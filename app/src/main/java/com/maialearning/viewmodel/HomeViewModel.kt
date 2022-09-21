@@ -63,7 +63,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val bragSheetObserver = MutableLiveData<JsonObject>()
     val checkItaskObserver = MutableLiveData<Unit>()
     val uncheckItaskObserver = MutableLiveData<Unit>()
-
+    val univJsonFilter = MutableLiveData<JsonObject>()
 
 
     fun getConsiderList(id: String) {
@@ -326,7 +326,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> recUCASObserver.value = result.data
-                is UseCaseResult.Error -> showError.value = result.exception.response()?.errorBody()?.string()?.replaceInvertedComas()
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceInvertedComas()
             }
         }
     }
@@ -360,6 +361,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     fun getRecommendersCollege(id: String, page: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -374,6 +376,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     fun cancelRecommendRequest(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -461,6 +464,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     fun getUniversities(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -475,6 +479,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     fun getMilestonesID() {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -489,7 +494,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
-    fun getMilestones(id:String) {
+    fun getMilestones(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -502,11 +507,12 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
-    fun downloadBragSheet(file_id:String, uuid:String){
+
+    fun downloadBragSheet(file_id: String, uuid: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.downloadBragSheet(file_id, uuid )
+                catRepository.downloadBragSheet(file_id, uuid)
             }
             // showLoading.value = false
             when (result) {
@@ -517,13 +523,14 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
     }
 
-    fun getBragSheet(id:String){
+    fun getBragSheet(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -538,17 +545,18 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
     }
 
-    fun checkItask(id:String,studentId:String){
+    fun checkItask(id: String, studentId: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.checkItask(id,studentId)
+                catRepository.checkItask(id, studentId)
             }
             // showLoading.value = false
             when (result) {
@@ -559,13 +567,14 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
     }
 
-    fun uncheckItask(id:String){
+    fun uncheckItask(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -580,7 +589,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
                 }
                 is UseCaseResult.Exception -> {
                     showLoading.value = false
-                    showError.value = result.exception.message}
+                    showError.value = result.exception.message
+                }
 
             }
         }
@@ -596,7 +606,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
 
-                catRepository.uploadRecoBragsheet(name, path, hash,id)
+                catRepository.uploadRecoBragsheet(name, path, hash, id)
             }
             showLoading.value = false
             when (result) {
@@ -605,13 +615,27 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks
         job.cancel()
     }
 
+    fun getCollegeJsonFilter(url: String, file: ArrayList<String>) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
 
+                catRepository.getCollegeJsonFilter(url, file)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> univJsonFilter.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
 
 
 }

@@ -3,16 +3,13 @@ package com.maialearning.ui.fragments
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
@@ -20,11 +17,9 @@ import com.maialearning.databinding.*
 import com.maialearning.model.AddProgramConsider
 import com.maialearning.model.ConsiderModel
 import com.maialearning.model.UpdateStudentPlan
-import com.maialearning.ui.adapter.CitizenshipAdapter
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
-import com.maialearning.ui.bottomsheets.UpcomingItemDetails
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
@@ -32,7 +27,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
@@ -75,7 +69,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         initObserver()
         dialogP.show()
         getConsideringList()
-
     }
 
     private fun getConsideringList() {
@@ -196,7 +189,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 }
             }
         }
-
+        homeModel.showError.observe(requireActivity()){
+            dialogP.dismiss()
+        }
     }
 
     private fun notesClick(data: ConsiderModel.Data) {
@@ -237,6 +232,18 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         dialog?.show()
         view.findViewById<RelativeLayout>(R.id.close).setOnClickListener {
             dialog?.dismiss()
+        }
+        var ids = ArrayList<String>()
+        ids.add("175044")
+        ids.add("175668")
+        var url = "https://api-gw-staging.maialearning.com/college-json-filter"
+//        dialogP.show()
+//        val obj = JsonObject()
+//        val jsArray = JSONArray(ids)
+//        obj.addProperty("university_nids", jsArray.toString())
+        homeModel.getCollegeJsonFilter(url, ids)
+        homeModel.univJsonFilter.observe(requireActivity()) {
+            dialogP.dismiss()
         }
         radioAppType.setOnCheckedChangeListener { group, checkedId ->
             val radioButton = radioAppType.findViewById(checkedId) as RadioButton

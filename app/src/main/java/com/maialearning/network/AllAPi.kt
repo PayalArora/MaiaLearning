@@ -443,7 +443,8 @@ interface AllAPi {
     @GET("uncheck-itask-student/{id}")
     fun uncheckItask(
         @Header("Authorization") AutToken: String,
-        @Path("id") id: String):Deferred<Unit>
+        @Path("id") id: String
+    ): Deferred<Unit>
 
     @POST("upload-reco-brag-sheet")
     @FormUrlEncoded
@@ -455,4 +456,16 @@ interface AllAPi {
         @Field("filehash") fileHash: String
     ): Deferred<Unit>
 
+    @GET
+    fun getCollegeJsonFilter(
+        @Url() url: String,
+        @Header("Authorization") AutToken: String,
+        @Path("university_nids") file: ArrayList<String>
+    ): Deferred<JsonObject>
+
+    @GET("get_student_career_top_picks/{id}")
+    fun getCareerTopPicks(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonArray>
 }
