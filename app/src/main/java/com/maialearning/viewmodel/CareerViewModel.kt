@@ -26,8 +26,24 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val showLoading = MutableLiveData<Boolean>()
     val showError = SingleLiveEvent<String>()
     val careerListDetailObserver = MutableLiveData<JsonObject>()
+    val careerKeyboardObserver = MutableLiveData<JsonObject>()
 
+    fun getKeyboardSearch(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getKeyboardSearch("https://services.onetcenter.org/v1.9/ws/mnm/search?keyword=a&client=serviceinfinity")
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerKeyboardObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
 
+            }
+        }
+    }
     fun getCareerList(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
