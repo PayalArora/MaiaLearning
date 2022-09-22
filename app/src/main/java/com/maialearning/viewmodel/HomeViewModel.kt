@@ -622,7 +622,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         job.cancel()
     }
 
-    fun getCollegeJsonFilter(url: String, file: ArrayList<String>) {
+    fun getCollegeJsonFilter(url: String, file: UnivCollegeModel) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {

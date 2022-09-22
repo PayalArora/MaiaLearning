@@ -456,11 +456,12 @@ interface AllAPi {
         @Field("filehash") fileHash: String
     ): Deferred<Unit>
 
-    @GET
+    @POST
     fun getCollegeJsonFilter(
         @Url() url: String,
         @Header("Authorization") AutToken: String,
-        @Path("university_nids") file: ArrayList<String>
+        @Query("") univId: JsonObject,
+    //@Query("") univId: UnivCollegeModel
     ): Deferred<JsonObject>
 
     @GET("get_student_career_top_picks/{id}")

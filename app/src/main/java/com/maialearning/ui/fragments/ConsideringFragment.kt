@@ -16,6 +16,7 @@ import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
 import com.maialearning.model.AddProgramConsider
 import com.maialearning.model.ConsiderModel
+import com.maialearning.model.UnivCollegeModel
 import com.maialearning.model.UpdateStudentPlan
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
@@ -233,15 +234,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         view.findViewById<RelativeLayout>(R.id.close).setOnClickListener {
             dialog?.dismiss()
         }
+        var univModel = UnivCollegeModel()
         var ids = ArrayList<String>()
         ids.add("175044")
         ids.add("175668")
+        univModel.university_nids = ids
         var url = "https://api-gw-staging.maialearning.com/college-json-filter"
 //        dialogP.show()
 //        val obj = JsonObject()
 //        val jsArray = JSONArray(ids)
 //        obj.addProperty("university_nids", jsArray.toString())
-        homeModel.getCollegeJsonFilter(url, ids)
+        homeModel.getCollegeJsonFilter(url, univModel)
         homeModel.univJsonFilter.observe(requireActivity()) {
             dialogP.dismiss()
         }

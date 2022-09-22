@@ -221,7 +221,7 @@ interface LoginRepository {
 
     suspend fun getCollegeJsonFilter(
         url: String,
-        file: ArrayList<String>
+        file: UnivCollegeModel
     ): UseCaseResult<JsonObject>
 
     suspend fun getCareerListing(
@@ -1155,12 +1155,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getCollegeJsonFilter(
         url: String,
-        body: ArrayList<String>
+        body: UnivCollegeModel
     ): UseCaseResult<JsonObject> {
+        val arr = JsonArray()
+       for(i in body.university_nids){
+           arr.add(i)
+       }
+
+        val jsonObj  = JsonObject()
+        jsonObj.add("university_nids", arr)
         return try {
             val result = catApi.getCollegeJsonFilter(
                 url,
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,jsonObj
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
