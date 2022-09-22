@@ -473,4 +473,9 @@ interface AllAPi {
     fun getCareerTopPicksDetails(
         @Url() url: String,
     ): Deferred<JsonObject>
+
+    @GET
+    fun getKeyboardSearch(
+        @Url() url: String,
+    ): Deferred<JsonObject>
 }

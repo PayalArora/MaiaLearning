@@ -59,6 +59,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
         } else {
             mBinding.searchLay.visibility = View.VISIBLE
             mBinding.list.visibility = View.GONE
+            careerViewModel.getKeyboardSearch("it")
         }
         mBinding.searchLay.setOnClickListener {
             mBinding.searchLay.visibility = View.GONE

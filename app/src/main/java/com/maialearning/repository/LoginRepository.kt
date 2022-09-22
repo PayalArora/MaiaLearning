@@ -231,6 +231,9 @@ interface LoginRepository {
     suspend fun getCareerListingDetail(
         id: String, url: String
     ): UseCaseResult<JsonObject>
+    suspend fun getKeyboardSearch(
+       url: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1187,6 +1190,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
 
             val result = catApi.getCareerTopPicksDetails("$url$id$CAREER_FACTSHEET"
+
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getKeyboardSearch( url : String): UseCaseResult<JsonObject> {
+        return try {
+
+            val result = catApi.getKeyboardSearch(url
 
             ).await()
             UseCaseResult.Success(result)
