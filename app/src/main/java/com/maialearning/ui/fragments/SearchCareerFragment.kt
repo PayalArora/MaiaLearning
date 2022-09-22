@@ -69,12 +69,13 @@ class SearchCareerFragment(var type: String) : Fragment() {
 //        mBinding.listProgram.adapter = SearchProgramAdapter(requireContext(), ::loadFragment)
 
     }
+    var arrayList: ArrayList<CareerTopPickResponseItem> = ArrayList()
 
     private fun initObserver() {
         careerViewModel.careerListObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             if (it.size() > 0) {
-                val arrayList: ArrayList<CareerTopPickResponseItem> = ArrayList()
+                arrayList= ArrayList()
                 val gson = GsonBuilder().create()
                 for(i in it){
                     val itModel = gson.fromJson(i, CareerTopPickResponseItem::class.java)
@@ -93,8 +94,12 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
     private fun loadFragment(position: Int) {
         if (type != "trafic") {
+            val fragment=TraficFragment()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.add(R.id.nav_host_fragment_content_dashboard, TraficFragment())
+            var bundle=Bundle()
+            bundle.putSerializable("data",arrayList.get(position))
+            fragment.arguments=bundle
+            transaction.add(R.id.nav_host_fragment_content_dashboard,fragment)
             transaction.addToBackStack("name")
             transaction.commit()
         }

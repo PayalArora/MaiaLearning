@@ -1,6 +1,7 @@
 package com.maialearning.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class CareerTopPickResponse(
 
@@ -33,4 +34,4 @@ data class CareerTopPickResponseItem(
 
 	@field:SerializedName("ccode_2019")
 	val ccode2019: String? = null
-)
+) : Serializable

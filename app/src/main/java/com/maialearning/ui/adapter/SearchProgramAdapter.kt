@@ -52,13 +52,15 @@ class SearchProgramAdapter(
             viewHolder.binding.lay1.visibility=View.VISIBLE
         viewHolder.binding.text1.setText(
             arrayList.get(position).brightOutlook?.stream()
-                ?.collect(Collectors.joining("','", "", ""))
+                ?.collect(Collectors.joining(",", "", ""))
         )}else{
             viewHolder.binding.lay1.visibility=View.INVISIBLE
 
         }
         if (arrayList.get(position).addToCareerPlanStatus.equals("1")){
             viewHolder.binding.tick.visibility=View.VISIBLE
+            viewHolder.binding.text3.visibility=View.VISIBLE
+            viewHolder.binding.text3.text="In Plan"
         }else{
             viewHolder.binding.tick.visibility=View.GONE
         }

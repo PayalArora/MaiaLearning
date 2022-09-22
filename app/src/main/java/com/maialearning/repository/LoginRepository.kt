@@ -7,6 +7,7 @@ import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.network.UseCaseResult
 import com.maialearning.util.BASE_URL
+import com.maialearning.util.CAREER_FACTSHEET
 import com.maialearning.util.CAT_API_MSG_URL
 import com.maialearning.util.ORIGIN
 
@@ -226,6 +227,10 @@ interface LoginRepository {
     suspend fun getCareerListing(
         id: String
     ): UseCaseResult<JsonArray>
+
+    suspend fun getCareerListingDetail(
+        id: String, url: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1169,6 +1174,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getCareerTopPicks(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerListingDetail(id: String, url : String): UseCaseResult<JsonObject> {
+        return try {
+
+            val result = catApi.getCareerTopPicksDetails("$url$id$CAREER_FACTSHEET"
+
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

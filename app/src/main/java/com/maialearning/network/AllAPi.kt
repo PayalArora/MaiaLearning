@@ -468,4 +468,9 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String
     ): Deferred<JsonArray>
+
+    @GET
+    fun getCareerTopPicksDetails(
+        @Url() url: String,
+    ): Deferred<JsonObject>
 }

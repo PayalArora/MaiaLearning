@@ -1,5 +1,6 @@
 package com.maialearning.ui.fragments
 
+import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,21 +19,34 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.databinding.ActivityCareerBinding
+import com.maialearning.model.CareerTopPickResponseItem
+import com.maialearning.model.SelectedCareerResponse
 import com.maialearning.ui.adapter.CareerCompareAdapter
 import com.maialearning.ui.adapter.TraficStateAdapter
+import com.maialearning.util.CARRER_URL
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.CareerViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class TraficFragment  : Fragment(){
+class TraficFragment : Fragment() {
     var dialog: BottomSheetDialog? = null
     private lateinit var binding: ActivityCareerBinding
     private lateinit var toolbarBinding: Toolbar
+    private val careerViewModel: CareerViewModel by viewModel()
+    var careerTopPickResponseItem = CareerTopPickResponseItem()
+    private lateinit var progress: Dialog
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = ActivityCareerBinding.inflate(inflater, container, false)
         toolbarBinding = binding.toolbar
+        progress = showLoadingDialog(requireContext())
         binding.toolbar.contentInsetStartWithNavigation = 0
         binding.toolbar.setNavigationIcon(
             AppCompatResources.getDrawable(
@@ -45,6 +59,7 @@ class TraficFragment  : Fragment(){
         toolbarBinding.setNavigationOnClickListener {
             requireActivity().finish()
         }
+        careerTopPickResponseItem = arguments?.getSerializable("data") as CareerTopPickResponseItem
         initView()
         binding.toolbarProf.setOnClickListener {
             //  ProfileFilter(this, layoutInflater).showDialog()
@@ -53,9 +68,17 @@ class TraficFragment  : Fragment(){
         binding.addFab.setOnClickListener {
             bottomSheetList()
         }
+        progress.show()
+        careerViewModel.getCareerListDetail("" + careerTopPickResponseItem.ccode, CARRER_URL)
+        careerViewModel.careerListDetailObserver.observe(viewLifecycleOwner){
+            progress.dismiss()
+            val gson = GsonBuilder().create()
+            val itModel = gson.fromJson(it, SelectedCareerResponse::class.java)
 
+        }
         return binding.root
     }
+
     private fun bottomSheetList() {
         dialog = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.compare_careers, null)
@@ -66,7 +89,8 @@ class TraficFragment  : Fragment(){
         val close = view.findViewById<RelativeLayout>(R.id.close)
         DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
 
-        listing.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        listing.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         listing.adapter = CareerCompareAdapter(requireContext())
         close.setOnClickListener {
             dialog?.dismiss()
@@ -77,9 +101,11 @@ class TraficFragment  : Fragment(){
     }
 
     private fun initView() {
-        val tabArray = arrayOf(getString(R.string.summary),
+        val tabArray = arrayOf(
+            getString(R.string.summary),
             getString(R.string.rel_car),
-            getString(R.string.salaries))
+            getString(R.string.salaries)
+        )
         for (item in tabArray) {
             binding.tabs.addTab(binding.tabs.newTab().setText(item))
 
@@ -96,7 +122,7 @@ class TraficFragment  : Fragment(){
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (binding.tabs.selectedTabPosition != 0 && binding.tabs.selectedTabPosition != 1){
+                if (binding.tabs.selectedTabPosition != 0 && binding.tabs.selectedTabPosition != 1) {
                     binding.addFab.visibility = View.GONE
                 } else
                     binding.addFab.visibility = View.GONE
