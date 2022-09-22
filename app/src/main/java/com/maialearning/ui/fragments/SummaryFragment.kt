@@ -36,20 +36,25 @@ class SummaryFragment(var response: SelectedCareerResponse) : Fragment() {
         mBinding.progressView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         mBinding.progressView.adapter = TraficSubAdapter(array)
+
         val arrayAct = ArrayList<WorkActivitiesItem?>()
+        arrayAct.addAll(response.workActivities!!)
         mBinding.actView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         mBinding.actView.adapter = WorkActivityAdapter(arrayAct, null, null, null,"work")
+
         val acdeAct = ArrayList<AcademicKnowledgeItem?>()
         acdeAct.addAll(response.academicKnowledge!!)
         mBinding.acdeView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         mBinding.acdeView.adapter = WorkActivityAdapter(null, acdeAct, null, null,"aca")
+
         val skillAct = ArrayList<SkillItem?>()
         skillAct.addAll(response.skill!!)
         mBinding.skillsView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         mBinding.skillsView.adapter = WorkActivityAdapter(null, null, skillAct, null,"skill")
+
         val interAct = ArrayList<InterestItem?>()
         interAct.addAll(response.interest!!)
         mBinding.interView.layoutManager =
