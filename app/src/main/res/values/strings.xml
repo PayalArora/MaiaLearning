@@ -522,4 +522,13 @@
         <item>Rolling Decision</item>
         <item>Restrictive Early Action</item>
     </string-array>
+
+    <string-array name="SEARCH_ARRAY">
+        <item>Keyword</item>
+        <item>Bright Outlook</item>
+        <item>Career Clusters</item>
+        <item>Industry</item>
+        <item>Work Values</item>
+        <item>U.S. Military</item>
+    </string-array>
 </resources>

@@ -57,7 +57,7 @@ class TraficFragment : Fragment() {
         binding.toolbar.title = getString(R.string.air_trafic)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
         toolbarBinding.setNavigationOnClickListener {
-            requireActivity().finish()
+            requireActivity().onBackPressed()
         }
         careerTopPickResponseItem = arguments?.getSerializable("data") as CareerTopPickResponseItem
 

@@ -31,7 +31,4 @@ data class CareerTopPickResponseItem(
 
 	@field:SerializedName("salary")
 	val salary: String? = null,
-
-	@field:SerializedName("ccode_2019")
-	val ccode2019: String? = null
 ) : Serializable

@@ -52,9 +52,16 @@ const val CAREER_FACTSHEET = "/career_search_factsheet.json"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
 const val LOGINRESPONSE = "login_response"
+const val SEARCH_AFFINITY = "https://services.onetcenter.org/v1.9/ws/mnm/search?keyword="
+const val SEARCH_CLIENT = "&client=serviceinfinity"
+const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
 
 object URL{
     var BASEURL = 0
+}
+
+fun String.getURLSearch():String{
+    return "$SEARCH_AFFINITY$this$SEARCH_CLIENT"
 }
 
 fun Context.isNetworkConnected(): Boolean {

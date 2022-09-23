@@ -45,7 +45,7 @@ class CareerActivity : Fragment() {
 //        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
 //        toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).visibility = View.VISIBLE
         toolbarBinding.setNavigationOnClickListener {
-            requireActivity().finish()
+            requireActivity().onBackPressed()
         }
         initView()
 

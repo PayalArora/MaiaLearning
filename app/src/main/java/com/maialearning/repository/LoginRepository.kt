@@ -230,7 +230,9 @@ interface LoginRepository {
     ): UseCaseResult<JsonObject>
     suspend fun getKeyboardSearch(
        url: String
-    ): UseCaseResult<JsonObject>
+    ): UseCaseResult<CareerSearchCodesModel>
+
+    suspend fun getKeywoardSearchDetails( url : String, list:ArrayList<String>): UseCaseResult<JsonArray>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1203,12 +1205,26 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getKeyboardSearch( url : String): UseCaseResult<JsonObject> {
+    override suspend fun getKeyboardSearch( url : String): UseCaseResult<CareerSearchCodesModel> {
         return try {
 
             val result = catApi.getKeyboardSearch(url,
                 ORIGIN, ACCEPT_JSON
             ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getKeywoardSearchDetails( url : String, list:ArrayList<String>): UseCaseResult<JsonArray> {
+        return try {
+            val searchCodesModel = SearchkeywordRequestModel()
+            searchCodesModel.onet_code = list
+
+            val result = catApi.getKeywoardSearchDetails(url,
+                ORIGIN, ACCEPT_JSON, searchCodesModel).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

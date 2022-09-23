@@ -4,13 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.model.CareerTopPickResponse
-import com.maialearning.model.CareerTopPickResponseItem
-import com.maialearning.model.NotesModel
-import com.maialearning.model.SelectedCareerResponse
+import com.maialearning.model.*
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
+import com.maialearning.util.SEARCH_AFFINITY
 import com.maialearning.util.replaceCrossBracketsComas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,17 +24,34 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val showLoading = MutableLiveData<Boolean>()
     val showError = SingleLiveEvent<String>()
     val careerListDetailObserver = MutableLiveData<JsonObject>()
-    val careerKeyboardObserver = MutableLiveData<JsonObject>()
+    val careerKeyboardObserver = MutableLiveData<CareerSearchCodesModel>()
+    val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
 
     fun getKeyboardSearch(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getKeyboardSearch("https://services.onetcenter.org/v1.9/ws/mnm/search?keyword=x&client=serviceinfinity")
+                catRepository.getKeyboardSearch(id)
             }
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> careerKeyboardObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+    fun getKeywoardSearchDetail(url: String, list: ArrayList<String>) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getKeywoardSearchDetails(url,list)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerKeyboardDetailObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
                         ?.replaceCrossBracketsComas()

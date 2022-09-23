@@ -480,5 +480,14 @@ interface AllAPi {
         @Url() url: String,
         @Header("origin") origin: String,
         @Header("accept") accept: String,
-    ): Deferred<JsonObject>
+    ): Deferred<CareerSearchCodesModel>
+
+    @POST
+    fun getKeywoardSearchDetails(
+        @Url url:String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+        @Body model: SearchkeywordRequestModel
+
+    ): Deferred<JsonArray>
 }
