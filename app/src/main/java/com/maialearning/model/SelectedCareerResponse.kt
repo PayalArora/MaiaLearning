@@ -26,7 +26,7 @@ data class SelectedCareerResponse(
 	val academicKnowledge: ArrayList<AcademicKnowledgeItem?>? = null,
 
 	@field:SerializedName("education_level")
-	val educationLevel: List<Any?>? = null,
+	val educationLevel: List<String?>? = null,
 
 	@field:SerializedName("career_title")
 	val careerTitle: String? = null,

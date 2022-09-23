@@ -19,10 +19,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/image">
-        <ImageView
+        <VideoView
             android:layout_width="match_parent"
             android:layout_height="@dimen/_250dp"
             android:scaleType="fitXY"
+            android:id="@+id/video_view"
             android:src="@drawable/video_dummy"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -32,7 +33,7 @@
             android:layout_height="50dp"
             android:scaleType="fitXY"
             android:padding="@dimen/_15dp"
-
+android:id="@+id/play_btn"
             android:src="@drawable/polygon"
             android:background="@drawable/background_curve_rectangle_white_filled"
             app:layout_constraintBottom_toBottomOf="parent"

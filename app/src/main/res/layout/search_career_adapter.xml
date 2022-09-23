@@ -21,13 +21,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10dp"
-            android:padding="@dimen/_10dp">
+            android:paddingHorizontal="@dimen/_5dp"
+            android:paddingVertical="@dimen/_10dp">
 
             <CheckBox
                 android:id="@+id/button"
-                android:layout_width="@dimen/_30dp"
-                android:layout_height="@dimen/_30dp"
-                android:layout_marginStart="@dimen/_10dp"
+                android:layout_width="@dimen/_25dp"
+                android:layout_height="@dimen/_25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
