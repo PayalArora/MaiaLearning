@@ -478,5 +478,7 @@ interface AllAPi {
     @GET
     fun getKeyboardSearch(
         @Url() url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
     ): Deferred<JsonObject>
 }

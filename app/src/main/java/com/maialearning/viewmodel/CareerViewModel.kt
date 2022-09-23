@@ -32,7 +32,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getKeyboardSearch("https://services.onetcenter.org/v1.9/ws/mnm/search?keyword=a&client=serviceinfinity")
+                catRepository.getKeyboardSearch("https://services.onetcenter.org/v1.9/ws/mnm/search?keyword=x&client=serviceinfinity")
             }
             showLoading.value = false
             when (result) {

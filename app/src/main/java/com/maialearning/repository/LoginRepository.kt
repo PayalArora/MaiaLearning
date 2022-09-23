@@ -6,10 +6,7 @@ import com.maialearning.model.*
 import com.maialearning.network.AllAPi
 import com.maialearning.network.BaseApplication
 import com.maialearning.network.UseCaseResult
-import com.maialearning.util.BASE_URL
-import com.maialearning.util.CAREER_FACTSHEET
-import com.maialearning.util.CAT_API_MSG_URL
-import com.maialearning.util.ORIGIN
+import com.maialearning.util.*
 
 import retrofit2.HttpException
 
@@ -1209,8 +1206,8 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getKeyboardSearch( url : String): UseCaseResult<JsonObject> {
         return try {
 
-            val result = catApi.getKeyboardSearch(url
-
+            val result = catApi.getKeyboardSearch(url,
+                ORIGIN, ACCEPT_JSON
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
