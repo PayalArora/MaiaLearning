@@ -38,7 +38,7 @@ class TraficFragment : Fragment() {
     private val careerViewModel: CareerViewModel by viewModel()
     var careerTopPickResponseItem = CareerTopPickResponseItem()
     private lateinit var progress: Dialog
-
+     var itModel=SelectedCareerResponse()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,7 +60,7 @@ class TraficFragment : Fragment() {
             requireActivity().finish()
         }
         careerTopPickResponseItem = arguments?.getSerializable("data") as CareerTopPickResponseItem
-        initView()
+
         binding.toolbarProf.setOnClickListener {
             //  ProfileFilter(this, layoutInflater).showDialog()
         }
@@ -73,8 +73,8 @@ class TraficFragment : Fragment() {
         careerViewModel.careerListDetailObserver.observe(viewLifecycleOwner){
             progress.dismiss()
             val gson = GsonBuilder().create()
-            val itModel = gson.fromJson(it, SelectedCareerResponse::class.java)
-
+            itModel = gson.fromJson(it, SelectedCareerResponse::class.java)
+            initView()
         }
         return binding.root
     }
@@ -111,7 +111,7 @@ class TraficFragment : Fragment() {
 
         }
         val fm: FragmentManager = requireActivity().supportFragmentManager
-        val adapter = TraficStateAdapter(fm, lifecycle, tabArray.size)
+        val adapter = TraficStateAdapter(fm, lifecycle, tabArray.size,itModel)
 
         binding.viewPager.adapter = adapter
 

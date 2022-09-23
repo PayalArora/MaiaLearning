@@ -5,25 +5,25 @@ import com.google.gson.annotations.SerializedName
 data class SelectedCareerResponse(
 
 	@field:SerializedName("work_activities")
-	val workActivities: List<WorkActivitiesItem?>? = null,
+	val workActivities: ArrayList<WorkActivitiesItem?>? = null,
 
 	@field:SerializedName("career_description")
 	val careerDescription: String? = null,
 
 	@field:SerializedName("responsibilities")
-	val responsibilities: List<String?>? = null,
+	val responsibilities: ArrayList<String?>? = null,
 
 	@field:SerializedName("interest")
-	val interest: List<InterestItem?>? = null,
+	val interest: ArrayList<InterestItem?>? = null,
 
 	@field:SerializedName("related_careers")
 	val relatedCareers: List<RelatedCareersItem?>? = null,
 
 	@field:SerializedName("skill")
-	val skill: List<SkillItem?>? = null,
+	val skill: ArrayList<SkillItem?>? = null,
 
 	@field:SerializedName("academic_knowledge")
-	val academicKnowledge: List<AcademicKnowledgeItem?>? = null,
+	val academicKnowledge: ArrayList<AcademicKnowledgeItem?>? = null,
 
 	@field:SerializedName("education_level")
 	val educationLevel: List<Any?>? = null,

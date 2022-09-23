@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.TraficSubAdapBinding
 import com.maialearning.ui.activity.ClickFilters
 
-class TraficSubAdapter (val arr:ArrayList<String>) : RecyclerView.Adapter<TraficSubAdapter.ViewHolder>() {
+class TraficSubAdapter (val arr:ArrayList<String?>) : RecyclerView.Adapter<TraficSubAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
