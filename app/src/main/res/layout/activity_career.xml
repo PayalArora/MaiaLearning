@@ -41,9 +41,7 @@
                 android:layout_width="@dimen/_35dp"
                 android:layout_height="@dimen/_35dp"
                 android:layout_gravity="end"
-
                 android:layout_marginRight="@dimen/_10dp"
-
                 android:src="@drawable/prof" />
 
 
