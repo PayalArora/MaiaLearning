@@ -53,6 +53,7 @@ const val TITLE = "title"
 const val DESCRIPTION = "description"
 const val LOGINRESPONSE = "login_response"
 const val SEARCH_AFFINITY = "https://services.onetcenter.org/v1.9/ws/mnm/search?keyword="
+const val CAREER_AFFINITY = "https://services.onetcenter.org/v1.9/ws/online/career_clusters?client=serviceinfinity"
 const val SEARCH_CLIENT = "&client=serviceinfinity"
 const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
 

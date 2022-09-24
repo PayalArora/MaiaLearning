@@ -30,7 +30,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:id="@+id/spinner_lay"
-                app:layout_constraintEnd_toStartOf="@id/text2"
+                app:layout_constraintEnd_toStartOf="@id/spinner_lay1"
                 app:layout_constraintStart_toStartOf="parent"
                 android:background="@drawable/white_rounded_withboundary"
                 app:layout_constraintTop_toTopOf="parent"
@@ -41,19 +41,24 @@
                 android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40dp"
-
                 android:dropDownVerticalOffset="20dp"
                 android:fontFamily="@font/inter_regular"
                 android:overlapAnchor="false"
-
                 android:spinnerMode="dropdown"
-
                 android:theme="@style/MatchSpinnerTheme" />
             </LinearLayout>
-
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/spinner_lay1"
+              android:orientation="horizontal"
+                android:background="@drawable/white_rounded_withboundary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/spinner_lay"
+                app:layout_constraintTop_toTopOf="parent">
             <EditText
                 android:id="@+id/text1"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/white_rounded_withboundary"
                 android:padding="@dimen/_10dp"
@@ -65,6 +70,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <Spinner
+                android:visibility="visible"
+                android:id="@+id/outSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginStart="@dimen/_10dp"
+                android:dropDownVerticalOffset="20dp"
+                android:fontFamily="@font/inter_regular"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/spinner_lay"
+                app:layout_constraintTop_toTopOf="parent"
+                android:theme="@style/MatchSpinnerTheme" />
             <EditText
                 android:id="@+id/text2"
                 android:layout_width="0dp"
@@ -80,6 +99,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/spinner_lay"
                 app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
     <androidx.constraintlayout.widget.ConstraintLayout

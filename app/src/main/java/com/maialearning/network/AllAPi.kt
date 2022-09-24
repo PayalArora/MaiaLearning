@@ -481,6 +481,18 @@ interface AllAPi {
         @Header("origin") origin: String,
         @Header("accept") accept: String,
     ): Deferred<CareerSearchCodesModel>
+    @GET
+    fun getCareerCluster(
+        @Url() url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+    ): Deferred<CareerClusterModel>
+
+    @POST("career_search_bright_outlook")
+    fun getCareerBright(
+        @Header("Authorization") AutToken: String,
+        @Body model: BrightLook,
+    ): Deferred<BrightOutlookModel>
 
     @POST
     fun getKeywoardSearchDetails(

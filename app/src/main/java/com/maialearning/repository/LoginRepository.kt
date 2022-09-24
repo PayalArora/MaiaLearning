@@ -18,6 +18,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
+import retrofit2.http.Field
 
 
 interface LoginRepository {
@@ -231,6 +232,12 @@ interface LoginRepository {
     suspend fun getKeyboardSearch(
        url: String
     ): UseCaseResult<CareerSearchCodesModel>
+    suspend fun getCareerCluster(
+       url: String
+    ): UseCaseResult<CareerClusterModel>
+    suspend fun getCareerBright(
+       type: String
+    ): UseCaseResult<BrightOutlookModel>
 
     suspend fun getKeywoardSearchDetails( url : String, list:ArrayList<String>): UseCaseResult<JsonArray>
 }
@@ -1210,6 +1217,34 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
             val result = catApi.getKeyboardSearch(url,
                 ORIGIN, ACCEPT_JSON
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getCareerCluster( url : String): UseCaseResult<CareerClusterModel> {
+        return try {
+
+            val result = catApi.getCareerCluster(url,
+                ORIGIN, ACCEPT_JSON
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getCareerBright( type : String): UseCaseResult<BrightOutlookModel> {
+        return try {
+
+            var object_ = BrightLook()
+            object_.bo_key=type
+            object_.pager =1
+            val result = catApi.getCareerBright("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,object_
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

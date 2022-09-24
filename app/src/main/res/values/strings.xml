@@ -531,4 +531,12 @@
         <item>Work Values</item>
         <item>U.S. Military</item>
     </string-array>
+
+    <string-array name="OUT_ARRAY">
+        <item>All</item>
+        <item>Grow Rapidly</item>
+        <item>Many Openings</item>
+        <item>New &amp; Emerging</item>
+
+    </string-array>
 </resources>

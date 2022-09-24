@@ -25,6 +25,8 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val showError = SingleLiveEvent<String>()
     val careerListDetailObserver = MutableLiveData<JsonObject>()
     val careerKeyboardObserver = MutableLiveData<CareerSearchCodesModel>()
+    val careerClusterObserver = MutableLiveData<CareerClusterModel>()
+    val brightOutObserver = MutableLiveData<BrightOutlookModel>()
     val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
 
     fun getKeyboardSearch(id: String) {
@@ -36,6 +38,38 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> careerKeyboardObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+    fun getCareerCluster(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerCluster(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerClusterObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+    fun getCareerBright(type:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerBright(type)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> brightOutObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
                         ?.replaceCrossBracketsComas()
