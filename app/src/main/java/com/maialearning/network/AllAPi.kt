@@ -518,6 +518,10 @@ interface AllAPi {
         @Header("origin") origin: String,
         @Header("accept") accept: String,
         @Body model: SearchkeywordRequestModel
-
     ): Deferred<JsonArray>
+    @GET
+    fun getWorkList(
+        @Header("Authorization") AutToken: String,
+        @Url() url: String): Deferred<BrightOutlookModel>
+
 }

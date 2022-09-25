@@ -249,6 +249,10 @@ interface LoginRepository {
     ): UseCaseResult<ArrayList<BrightOutlookModel.Data>>
 
     suspend fun getKeywoardSearchDetails( url : String, list:ArrayList<String>): UseCaseResult<JsonArray>
+    suspend fun getWorkSearch(
+        url: String
+    ): UseCaseResult<BrightOutlookModel>
+
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1310,6 +1314,18 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
             val result = catApi.getKeywoardSearchDetails(url,
                 ORIGIN, ACCEPT_JSON, searchCodesModel).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getWorkSearch(url: String): UseCaseResult<BrightOutlookModel> {
+        return try {
+            val result = catApi.getWorkList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,url
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

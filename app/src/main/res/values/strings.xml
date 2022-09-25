@@ -537,6 +537,13 @@
         <item>Grow Rapidly</item>
         <item>Many Openings</item>
         <item>New &amp; Emerging</item>
-
+    </string-array>
+    <string-array name="WORK_ARRAY">
+        <item>Achievement</item>
+        <item>Independence</item>
+        <item>Recognition</item>
+        <item>Relationship</item>
+        <item>Support</item>
+        <item>Working Condition</item>
     </string-array>
 </resources>

@@ -179,6 +179,20 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+    fun getWorkSearch(url: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getWorkSearch(url)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> brightOutObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =result.toString()
+
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

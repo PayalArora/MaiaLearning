@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
 import com.maialearning.R
 import com.maialearning.databinding.SearchCareerLayBinding
 import com.maialearning.model.BrightOutlookModel
@@ -28,7 +27,6 @@ import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.CareerViewModel
 import org.json.JSONArray
-import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -113,10 +111,14 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 if (selectedItem == "Bright Outlook") {
                     setOutlookSpinner()
                 } else if (selectedItem == "Career Clusters") {
+                    mBinding.workLayout.visibility = View.GONE
+                    mBinding.spinnerLay1.visibility = View.VISIBLE
                     progress.show()
                     careerViewModel.getCareerCluster(CAREER_AFFINITY)
                 }else if (selectedItem == "Industry") {
                     setIndustrySpinner()
+                }else if (selectedItem == "Work Values") {
+                    setWorkSpinner()
                 } else {
                     mBinding.text2.visibility = View.VISIBLE
                     mBinding.outSpinner.visibility = View.GONE
@@ -127,7 +129,91 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
     }
 
+    private fun setWorkSpinner() {
+        mBinding.spinnerLay1.visibility = View.GONE
+        mBinding.workLayout.visibility = View.VISIBLE
+        var url= BASE_URL+"get_work_values_career/1"
+        val adapter = ArrayAdapter(
+            requireContext(),
+            R.layout.spinner_text, resources.getStringArray(R.array.WORK_ARRAY)
+        )
+        mBinding.spinnerOne.adapter = adapter
+        mBinding.spinnerTwo.adapter = adapter
+        mBinding.spinnerThree.adapter = adapter
+        mBinding.spinnerOne.setSelection(0)
+        mBinding.spinnerOne.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(!url.contains("first_value")){
+                    url +=   "?first_value="+parent.getItemAtPosition(position).toString()
+                }else if(!url.contains("second_value")){
+                    url +=    "&second_value="+parent.getItemAtPosition(position).toString()
+                }else if(!url.contains("third_value")){
+                    url +=  "&third_value="+parent.getItemAtPosition(position).toString()
+                }else{
+                    url = url.replace(url.substring(url.indexOf("first_value="),url.indexOf("&")),"first_value="+ parent.getItemAtPosition(position).toString())
+                }
+                progress.show()
+                careerViewModel.getWorkSearch(url)
+            } // to close the onItemSelected
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        mBinding.spinnerTwo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(!url.contains("first_value")){
+                    url +=   "?first_value="+parent.getItemAtPosition(position).toString()
+                }else if(!url.contains("second_value")){
+                    url +=   "&second_value="+parent.getItemAtPosition(position).toString()
+                }else if (!url.contains("third_value")){
+                    url +=  "&third_value="+parent.getItemAtPosition(position).toString()
+                }else{
+                    url =url.replace(url.substring(url.indexOf("second_value="),url.indexOf("&")),"second_value="+ parent.getItemAtPosition(position).toString())
+
+                }
+                progress.show()
+                careerViewModel.getWorkSearch(url)
+            } // to close the onItemSelected
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+        mBinding.spinnerThree.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(!url.contains("first_value")){
+                    url +=   "?first_value="+parent.getItemAtPosition(position).toString()
+                }else if(!url.contains("second_value")){
+                    url +=    "&second_value="+parent.getItemAtPosition(position).toString()
+                }else if(!url.contains("third_value")){
+                    url +=  "&third_value="+parent.getItemAtPosition(position).toString()
+                }else{
+                    url =url.replace(url.substring(url.indexOf("third_value="),url.length),"third_value="+ parent.getItemAtPosition(position).toString())
+
+                }
+                progress.show()
+                careerViewModel.getWorkSearch(url)
+
+            } // to close the onItemSelected
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
     private fun setIndustrySpinner() {
+        mBinding.workLayout.visibility = View.GONE
+        mBinding.spinnerLay1.visibility = View.VISIBLE
         val list =ArrayList<IndustryModel>()
         val jsonArry = JSONArray(listData)
         for (i in 0 until jsonArry.length()) {
@@ -163,7 +249,9 @@ class SearchCareerFragment(var type: String) : Fragment() {
     }
 
     private fun setOutlookSpinner() {
+        mBinding.workLayout.visibility = View.GONE
         mBinding.text2.visibility = View.GONE
+        mBinding.spinnerLay1.visibility = View.VISIBLE
         mBinding.outSpinner.visibility = View.VISIBLE
         val adapter = ArrayAdapter(
             requireContext(),
@@ -208,6 +296,9 @@ class SearchCareerFragment(var type: String) : Fragment() {
     var arrayListOut: ArrayList<BrightOutlookModel.Data?>? = arrayListOf()
 
     private fun initObserver() {
+        careerViewModel.showError.observe(viewLifecycleOwner) {
+            progress.dismiss()
+        }
         careerViewModel.industryListObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             val list=ArrayList<String>()
