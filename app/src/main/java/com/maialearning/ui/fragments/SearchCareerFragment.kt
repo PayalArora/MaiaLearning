@@ -94,7 +94,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 if (selectedItem == "Bright Outlook") {
-                    setOutSpinner()
+                    setOutlookSpinner()
                 }else if (selectedItem == "Career Clusters") {
                     progress.show()
                     careerViewModel.getCareerCluster(CAREER_AFFINITY)
@@ -115,7 +115,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
         mBinding.outSpinner.setSelection(0)
     }
 
-    private fun setOutSpinner() {
+    private fun setOutlookSpinner() {
         mBinding.text2.visibility=View.GONE
         mBinding.outSpinner.visibility=View.VISIBLE
         val adapter = ArrayAdapter(

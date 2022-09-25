@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginEnd="@dimen/_10dp"
-                    android:paddingHorizontal="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_7dp"
                     android:background="@drawable/white_rounded_withboundary"
                     android:backgroundTint="@color/grey_10"
                    >
@@ -83,7 +83,7 @@
                         android:id="@+id/graph"
                         android:layout_width="@dimen/_15dp"
                         android:layout_height="@dimen/_15dp"
-                        android:layout_marginStart="@dimen/_10dp"
+
                         android:src="@drawable/graph"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -110,6 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10dp"
+                    android:layout_toLeftOf="@+id/lay3"
                     android:layout_marginEnd="@dimen/_5dp"
                     android:background="@drawable/white_rounded_withboundary"
                     android:backgroundTint="@color/green_tint"
@@ -165,8 +166,8 @@
 
                     <ImageView
                         android:id="@+id/tick"
-                        android:layout_width="@dimen/_30dp"
-                        android:layout_height="@dimen/_30dp"
+                        android:layout_width="@dimen/_25dp"
+                        android:layout_height="@dimen/_25dp"
                         android:background="@drawable/arrow_circle"
                         android:backgroundTint="@color/green_2"
                         android:gravity="center"
@@ -186,6 +187,7 @@
                         android:paddingTop="@dimen/_5dp"
                         android:paddingEnd="@dimen/_5sp"
                         android:paddingBottom="@dimen/_5dp"
+                        android:layout_marginRight="@dimen/_5dp"
                         android:text="49,860"
                         android:textColor="@color/green_1"
                         android:textSize="@dimen/_12sp"
