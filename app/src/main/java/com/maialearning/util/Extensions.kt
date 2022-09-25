@@ -55,6 +55,7 @@ const val LOGINRESPONSE = "login_response"
 const val SEARCH_AFFINITY = "https://services.onetcenter.org/v1.9/ws/mnm/search?keyword="
 const val CAREER_AFFINITY = "https://services.onetcenter.org/v1.9/ws/online/career_clusters?client=serviceinfinity"
 const val CAREER_LIST = "https://services.onetcenter.org/v1.9/ws/online/career_clusters/"
+const val INDUSTRY_LIST = "https://services.onetcenter.org/v1.9/ws/online/industries/"
 const val CAREER_CLIENT = "?client=serviceinfinity"
 const val SEARCH_CLIENT = "&client=serviceinfinity"
 const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
@@ -68,6 +69,9 @@ fun String.getURLSearch():String{
 }
 fun String.getURLCluster():String{
     return "$CAREER_LIST$this$CAREER_CLIENT"
+}
+fun String.getURLIndustry():String{
+    return "$INDUSTRY_LIST$this$CAREER_CLIENT"
 }
 
 fun Context.isNetworkConnected(): Boolean {

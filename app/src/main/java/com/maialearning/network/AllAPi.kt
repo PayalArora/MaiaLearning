@@ -493,6 +493,12 @@ interface AllAPi {
         @Header("origin") origin: String,
         @Header("accept") accept: String,
     ): Deferred<CareerClusterListModel>
+    @GET
+    fun getIndustryList(
+        @Url() url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+    ): Deferred<IndustryListModel>
 
     @POST("career_search_bright_outlook")
     fun getCareerBright(

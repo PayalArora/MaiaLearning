@@ -14,16 +14,21 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
 import com.maialearning.R
 import com.maialearning.databinding.SearchCareerLayBinding
 import com.maialearning.model.BrightOutlookModel
 import com.maialearning.model.CareerClusterModel
 import com.maialearning.model.CareerTopPickResponseItem
+import com.maialearning.model.IndustryModel
 import com.maialearning.ui.adapter.CareerCluster
+import com.maialearning.ui.adapter.IndustryClusterAdapter
 import com.maialearning.ui.adapter.SearchProgramAdapter
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.CareerViewModel
+import org.json.JSONArray
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -33,6 +38,13 @@ class SearchCareerFragment(var type: String) : Fragment() {
     private val careerViewModel: CareerViewModel by viewModel()
     private lateinit var progress: Dialog
     lateinit var gson: Gson
+    private val listData: String
+        get() = ("[{\"id\":\"72\",\"name\":\"Accommodation Food Services\"}" + ",{\"id\":\"56\",\"name\":\"Administrative Support Services\"}" +",{\"id\":\"11\",\"name\":\"Agriculture Forestry Fishing Hinting\"}" +
+                ",{\"id\":\"71\",\"name\":\"Arts Entertainment Recreation\"}" +  ",{\"id\":\"23\",\"name\":\"Construction\"}" +  ",{\"id\":\"61\",\"name\":\"Educational Services\"}" + ",{\"id\":\"52\",\"name\":\"Finance Insurance\"}" +
+                ",{\"id\":\"93\",\"name\":\"Government\"}" +",{\"id\":\"62\",\"name\":\"Health Care Social Assistance\"}" +",{\"id\":\"51\",\"name\":\"Information\"}" +",{\"id\":\"55\",\"name\":\"Management Companies Enterprise\"}" +
+                ",{\"id\":\"31\",\"name\":\"Manufacturing\"}" +",{\"id\":\"21\",\"name\":\"Mining Quarrying Iol Gas Extraction\"}" +",{\"id\":\"81\",\"name\":\"Other Services Exc Pub Administration\"}" +",{\"id\":\"54\",\"name\":\"Professional Scientific Technical Service\"}" +
+                ",{\"id\":\"53\",\"name\":\"Real Estate Rental Leasing\"}" + ",{\"id\":\"44\",\"name\":\"Real Trade\"}" +",{\"id\":\"94\",\"name\":\"Self Employed\"}" +",{\"id\":\"48\",\"name\":\"Transportation Warehousing\"}" +",{\"id\":\"22\",\"name\":\"Utilities\"}" +
+                ",{\"id\":\"42\",\"name\":\"Wholesale Trade\"}]")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -103,6 +115,8 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 } else if (selectedItem == "Career Clusters") {
                     progress.show()
                     careerViewModel.getCareerCluster(CAREER_AFFINITY)
+                }else if (selectedItem == "Industry") {
+                    setIndustrySpinner()
                 } else {
                     mBinding.text2.visibility = View.VISIBLE
                     mBinding.outSpinner.visibility = View.GONE
@@ -111,6 +125,22 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+    }
+
+    private fun setIndustrySpinner() {
+        val list =ArrayList<IndustryModel>()
+        val jsonArry = JSONArray(listData)
+        for (i in 0 until jsonArry.length()) {
+            val obj = jsonArry.getJSONObject(i)
+            val user = IndustryModel( obj.getInt("id"), obj.getString("name"))
+            list.add(user)
+        }
+        mBinding.text2.visibility = View.GONE
+        mBinding.outSpinner.visibility = View.VISIBLE
+        val adapter = IndustryClusterAdapter(requireContext(),list, ::clickIndustryItem)
+        mBinding.outSpinner.adapter = adapter
+        mBinding.outSpinner.setSelection(0)
+
     }
 
     private fun setClusterAdapter(it: CareerClusterModel?) {
@@ -122,6 +152,11 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
     }
 
+    private fun clickIndustryItem(item: IndustryModel) {
+        progress.show()
+        careerViewModel.getIndustryList(item.id.toString().getURLIndustry())
+
+    }
     private fun clickClusterItem(item: CareerClusterModel.CareerCluster) {
         progress.show()
         careerViewModel.getCareerClusterList(item.code!!.getURLCluster())
@@ -173,6 +208,15 @@ class SearchCareerFragment(var type: String) : Fragment() {
     var arrayListOut: ArrayList<BrightOutlookModel.Data?>? = arrayListOf()
 
     private fun initObserver() {
+        careerViewModel.industryListObserver.observe(viewLifecycleOwner) {
+            progress.dismiss()
+            val list=ArrayList<String>()
+            for (i in 0 until it.occupation.size){
+                list.add(it.occupation[i].code.toString())
+            }
+            progress.show()
+            careerViewModel.getCareerClusterListDetail(list)
+        }
         careerViewModel.careerClusterListObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             val list=ArrayList<String>()

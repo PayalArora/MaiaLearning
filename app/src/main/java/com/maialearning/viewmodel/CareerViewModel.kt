@@ -27,6 +27,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val careerKeyboardObserver = MutableLiveData<CareerSearchCodesModel>()
     val careerClusterObserver = MutableLiveData<CareerClusterModel>()
     val careerClusterListObserver = MutableLiveData<CareerClusterListModel>()
+    val industryListObserver = MutableLiveData<IndustryListModel>()
     val careerClusterDetailObserver = MutableLiveData<ArrayList<BrightOutlookModel.Data>>()
     val brightOutObserver = MutableLiveData<BrightOutlookModel>()
     val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
@@ -162,7 +163,22 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+    fun getIndustryList(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getIndustryList(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> industryListObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
 
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

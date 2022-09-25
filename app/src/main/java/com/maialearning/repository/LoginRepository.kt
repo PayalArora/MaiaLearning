@@ -238,6 +238,9 @@ interface LoginRepository {
     suspend fun getCareerClusterList(
        url: String
     ): UseCaseResult<CareerClusterListModel>
+    suspend fun getIndustryList(
+       url: String
+    ): UseCaseResult<IndustryListModel>
     suspend fun getCareerBright(
        type: String
     ): UseCaseResult<BrightOutlookModel>
@@ -1248,6 +1251,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
 
             val result = catApi.getCareerClusterList(url,
+                ORIGIN, ACCEPT_JSON
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getIndustryList( url : String): UseCaseResult<IndustryListModel> {
+        return try {
+
+            val result = catApi.getIndustryList(url,
                 ORIGIN, ACCEPT_JSON
             ).await()
             UseCaseResult.Success(result)
