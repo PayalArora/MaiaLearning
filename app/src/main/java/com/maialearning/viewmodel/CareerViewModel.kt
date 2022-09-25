@@ -26,6 +26,8 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val careerListDetailObserver = MutableLiveData<JsonObject>()
     val careerKeyboardObserver = MutableLiveData<CareerSearchCodesModel>()
     val careerClusterObserver = MutableLiveData<CareerClusterModel>()
+    val careerClusterListObserver = MutableLiveData<CareerClusterListModel>()
+    val careerClusterDetailObserver = MutableLiveData<ArrayList<BrightOutlookModel.Data>>()
     val brightOutObserver = MutableLiveData<BrightOutlookModel>()
     val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
 
@@ -54,6 +56,39 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> careerClusterObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+    fun getCareerClusterList(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerClusterList(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerClusterListObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+
+    fun getCareerClusterListDetail( list : ArrayList<String>) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerClusterList(list)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerClusterDetailObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
                         ?.replaceCrossBracketsComas()

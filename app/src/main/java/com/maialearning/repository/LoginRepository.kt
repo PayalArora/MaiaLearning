@@ -235,9 +235,15 @@ interface LoginRepository {
     suspend fun getCareerCluster(
        url: String
     ): UseCaseResult<CareerClusterModel>
+    suspend fun getCareerClusterList(
+       url: String
+    ): UseCaseResult<CareerClusterListModel>
     suspend fun getCareerBright(
        type: String
     ): UseCaseResult<BrightOutlookModel>
+    suspend fun getCareerClusterList(
+        list : ArrayList<String>
+    ): UseCaseResult<ArrayList<BrightOutlookModel.Data>>
 
     suspend fun getKeywoardSearchDetails( url : String, list:ArrayList<String>): UseCaseResult<JsonArray>
 }
@@ -1238,10 +1244,37 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+    override suspend fun getCareerClusterList( url : String): UseCaseResult<CareerClusterListModel> {
+        return try {
+
+            val result = catApi.getCareerClusterList(url,
+                ORIGIN, ACCEPT_JSON
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getCareerClusterList( list : ArrayList<String>): UseCaseResult<ArrayList<BrightOutlookModel.Data>> {
+        return try {
+            val object_ = CareerListModel()
+            object_.onet_code=list
+            object_.onet_year =2019
+            val result = catApi.getCareerSearchList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,object_
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
     override suspend fun getCareerBright( type : String): UseCaseResult<BrightOutlookModel> {
         return try {
 
-            var object_ = BrightLook()
+            val object_ = BrightLook()
             object_.bo_key=type
             object_.pager =1
             val result = catApi.getCareerBright("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,object_

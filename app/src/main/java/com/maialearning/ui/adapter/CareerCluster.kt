@@ -14,7 +14,8 @@ import com.maialearning.model.CareerClusterModel
 
 class CareerCluster(
     context: Context?,
-    algorithmList: ArrayList<CareerClusterModel.CareerCluster>
+    algorithmList: ArrayList<CareerClusterModel.CareerCluster>,
+    var click:(CareerClusterModel.CareerCluster)->Unit
 ) :
     ArrayAdapter<CareerClusterModel.CareerCluster>(context!!, 0, algorithmList) {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -45,6 +46,9 @@ class CareerCluster(
         // current item is not null.
         if (currentItem != null) {
             textViewName?.setText(currentItem.title)
+        }
+        textViewName?.setOnClickListener {
+            click(getItem(position)!!)
         }
         return convertView!!
     }

@@ -90,42 +90,59 @@ class SearchCareerFragment(var type: String) : Fragment() {
         )
         mBinding.spinner.adapter = adapter
         mBinding.spinner.setSelection(0)
-        mBinding.spinner.onItemSelectedListener =object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        mBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 if (selectedItem == "Bright Outlook") {
                     setOutlookSpinner()
-                }else if (selectedItem == "Career Clusters") {
+                } else if (selectedItem == "Career Clusters") {
                     progress.show()
                     careerViewModel.getCareerCluster(CAREER_AFFINITY)
-                }else{
-                    mBinding.text2.visibility=View.VISIBLE
-                    mBinding.outSpinner.visibility=View.GONE
+                } else {
+                    mBinding.text2.visibility = View.VISIBLE
+                    mBinding.outSpinner.visibility = View.GONE
                 }
             } // to close the onItemSelected
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
+
     private fun setClusterAdapter(it: CareerClusterModel?) {
-        mBinding.text2.visibility=View.GONE
-        mBinding.outSpinner.visibility=View.VISIBLE
-        val adapter = CareerCluster(requireContext(),it?.careerCluster!!)
+        mBinding.text2.visibility = View.GONE
+        mBinding.outSpinner.visibility = View.VISIBLE
+        val adapter = CareerCluster(requireContext(), it?.careerCluster!!, ::clickClusterItem)
         mBinding.outSpinner.adapter = adapter
         mBinding.outSpinner.setSelection(0)
+
+    }
+
+    private fun clickClusterItem(item: CareerClusterModel.CareerCluster) {
+        progress.show()
+        careerViewModel.getCareerClusterList(item.code!!.getURLCluster())
     }
 
     private fun setOutlookSpinner() {
-        mBinding.text2.visibility=View.GONE
-        mBinding.outSpinner.visibility=View.VISIBLE
+        mBinding.text2.visibility = View.GONE
+        mBinding.outSpinner.visibility = View.VISIBLE
         val adapter = ArrayAdapter(
             requireContext(),
             R.layout.spinner_text, resources.getStringArray(R.array.OUT_ARRAY)
         )
         mBinding.outSpinner.adapter = adapter
         mBinding.outSpinner.setSelection(0)
-        mBinding.outSpinner.onItemSelectedListener =object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+        mBinding.outSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val selectedItem = parent.getItemAtPosition(position).toString()
                 when (selectedItem) {
                     "All" -> {
@@ -151,21 +168,27 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
 
     }
+
     var arrayList: ArrayList<CareerTopPickResponseItem?>? = arrayListOf()
     var arrayListOut: ArrayList<BrightOutlookModel.Data?>? = arrayListOf()
 
     private fun initObserver() {
-        careerViewModel.careerClusterObserver.observe(viewLifecycleOwner){
+        careerViewModel.careerClusterListObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
-            setClusterAdapter(it)
+            val list=ArrayList<String>()
+            for (i in 0 until it.occupation.size){
+                list.add(it.occupation[i].code.toString())
+            }
+            progress.show()
+            careerViewModel.getCareerClusterListDetail(list)
         }
-        careerViewModel.brightOutObserver.observe(viewLifecycleOwner){
+        careerViewModel.careerClusterDetailObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
-            if (it.data.size > 0) {
+            if (it.size> 0) {
                 mBinding.list.visibility = View.VISIBLE
                 mBinding.searchLay.visibility = View.GONE
                 arrayListOut = arrayListOf<BrightOutlookModel.Data?>()
-                    arrayListOut?.addAll(it.data)
+                arrayListOut?.addAll(it)
                 arrayListOut?.sortBy { it?.title }
                 Log.e("Data", " " + arrayListOut?.get(0)?.title)
             } else {
@@ -174,7 +197,29 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 context?.showToast(getString(R.string.no_data_found))
             }
             mBinding.listProgram.adapter =
-                SearchProgramAdapter(requireContext(), null,arrayListOut!!,"", ::loadFragment)
+                SearchProgramAdapter(requireContext(), null, arrayListOut!!, "", ::loadFragment)
+
+        }
+        careerViewModel.careerClusterObserver.observe(viewLifecycleOwner) {
+            progress.dismiss()
+            setClusterAdapter(it)
+        }
+        careerViewModel.brightOutObserver.observe(viewLifecycleOwner) {
+            progress.dismiss()
+            if (it.data.size > 0) {
+                mBinding.list.visibility = View.VISIBLE
+                mBinding.searchLay.visibility = View.GONE
+                arrayListOut = arrayListOf<BrightOutlookModel.Data?>()
+                arrayListOut?.addAll(it.data)
+                arrayListOut?.sortBy { it?.title }
+                Log.e("Data", " " + arrayListOut?.get(0)?.title)
+            } else {
+                mBinding.list.visibility = View.GONE
+                mBinding.searchLay.visibility = View.VISIBLE
+                context?.showToast(getString(R.string.no_data_found))
+            }
+            mBinding.listProgram.adapter =
+                SearchProgramAdapter(requireContext(), null, arrayListOut!!, "", ::loadFragment)
 
         }
 
@@ -190,7 +235,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 arrayList?.sortBy { it?.title }
 
                 mBinding.listProgram.adapter =
-                    SearchProgramAdapter(requireContext(), arrayList,null,"key", ::loadFragment)
+                    SearchProgramAdapter(requireContext(), arrayList, null, "key", ::loadFragment)
 
 
                 // val listing = itModel.careerTopPickResponse
@@ -210,10 +255,10 @@ class SearchCareerFragment(var type: String) : Fragment() {
                     careerViewModel.getKeywoardSearchDetail(SEARCH_KEYWORD, codeList)
                 }
             }
-            if (it.career== null){
-                    mBinding.list.visibility = View.GONE
-                    mBinding.searchLay.visibility = View.VISIBLE
-                    context?.showToast(getString(R.string.no_data_found))
+            if (it.career == null) {
+                mBinding.list.visibility = View.GONE
+                mBinding.searchLay.visibility = View.VISIBLE
+                context?.showToast(getString(R.string.no_data_found))
             }
 
 
@@ -238,23 +283,24 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 context?.showToast(getString(R.string.no_data_found))
             }
             mBinding.listProgram.adapter =
-                SearchProgramAdapter(requireContext(), arrayList,null,"key", ::loadFragment)
+                SearchProgramAdapter(requireContext(), arrayList, null, "key", ::loadFragment)
 
         }
     }
 
 
-    private fun loadFragment(position: Int) {
-        if (type != "trafic") {
-            val fragment = TraficFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            val bundle = Bundle()
-            bundle.putSerializable("data", arrayList?.get(position))
-            fragment.arguments = bundle
-            transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
-            transaction.addToBackStack("name")
-            transaction.commit()
-        }
+
+private fun loadFragment(position: Int) {
+    if (type != "trafic") {
+        val fragment = TraficFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        val bundle = Bundle()
+        bundle.putSerializable("data", arrayList?.get(position))
+        fragment.arguments = bundle
+        transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
+        transaction.addToBackStack("name")
+        transaction.commit()
+    }
 //        (requireContext() as CareerActivity).dialog
 //        dialog = BottomSheetDialog(requireContext())
 //        val view = layoutInflater.inflate(R.layout.compare_careers, null)
@@ -273,5 +319,5 @@ class SearchCareerFragment(var type: String) : Fragment() {
 //
 //        dialog?.setContentView(view)
 //        dialog?.show()
-    }
+}
 }
