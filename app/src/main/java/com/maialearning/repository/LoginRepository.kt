@@ -229,26 +229,36 @@ interface LoginRepository {
     suspend fun getCareerListingDetail(
         id: String, url: String
     ): UseCaseResult<JsonObject>
+
     suspend fun getKeyboardSearch(
-       url: String
+        url: String
     ): UseCaseResult<CareerSearchCodesModel>
+
     suspend fun getCareerCluster(
-       url: String
+        url: String
     ): UseCaseResult<CareerClusterModel>
+
     suspend fun getCareerClusterList(
-       url: String
+        url: String
     ): UseCaseResult<CareerClusterListModel>
+
     suspend fun getIndustryList(
-       url: String
+        url: String
     ): UseCaseResult<IndustryListModel>
+
     suspend fun getCareerBright(
-       type: String
+        type: String
     ): UseCaseResult<BrightOutlookModel>
+
     suspend fun getCareerClusterList(
-        list : ArrayList<String>
+        list: ArrayList<String>
     ): UseCaseResult<ArrayList<BrightOutlookModel.Data>>
 
-    suspend fun getKeywoardSearchDetails( url : String, list:ArrayList<String>): UseCaseResult<JsonArray>
+    suspend fun getKeywoardSearchDetails(
+        url: String,
+        list: ArrayList<String>
+    ): UseCaseResult<JsonArray>
+
     suspend fun getWorkSearch(
         url: String
     ): UseCaseResult<BrightOutlookModel>
@@ -256,6 +266,9 @@ interface LoginRepository {
         url: String
     ): UseCaseResult<CareerUSModel>
 
+    suspend fun getNYSCareer(
+        id: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1183,16 +1196,16 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         body: UnivCollegeModel
     ): UseCaseResult<JsonObject> {
         val arr = JsonArray()
-       for(i in body.university_nids){
-           arr.add(i)
-       }
+        for (i in body.university_nids) {
+            arr.add(i)
+        }
 
-        val jsonObj  = JsonObject()
+        val jsonObj = JsonObject()
         jsonObj.add("university_nids", arr)
         return try {
             val result = catApi.getCollegeJsonFilter(
                 url,
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,jsonObj
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, jsonObj
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -1215,10 +1228,14 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getCareerListingDetail(id: String, url : String): UseCaseResult<JsonObject> {
+    override suspend fun getCareerListingDetail(
+        id: String,
+        url: String
+    ): UseCaseResult<JsonObject> {
         return try {
 
-            val result = catApi.getCareerTopPicksDetails("$url$id$CAREER_FACTSHEET"
+            val result = catApi.getCareerTopPicksDetails(
+                "$url$id$CAREER_FACTSHEET"
 
             ).await()
             UseCaseResult.Success(result)
@@ -1228,36 +1245,12 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getKeyboardSearch( url : String): UseCaseResult<CareerSearchCodesModel> {
+
+    override suspend fun getKeyboardSearch(url: String): UseCaseResult<CareerSearchCodesModel> {
         return try {
 
-            val result = catApi.getKeyboardSearch(url,
-                ORIGIN, ACCEPT_JSON
-            ).await()
-            UseCaseResult.Success(result)
-        } catch (ex: HttpException) {
-            UseCaseResult.Error(ex)
-        } catch (ex: Exception) {
-            UseCaseResult.Exception(ex)
-        }
-    }
-    override suspend fun getCareerCluster( url : String): UseCaseResult<CareerClusterModel> {
-        return try {
-
-            val result = catApi.getCareerCluster(url,
-                ORIGIN, ACCEPT_JSON
-            ).await()
-            UseCaseResult.Success(result)
-        } catch (ex: HttpException) {
-            UseCaseResult.Error(ex)
-        } catch (ex: Exception) {
-            UseCaseResult.Exception(ex)
-        }
-    }
-    override suspend fun getCareerClusterList( url : String): UseCaseResult<CareerClusterListModel> {
-        return try {
-
-            val result = catApi.getCareerClusterList(url,
+            val result = catApi.getKeyboardSearch(
+                url,
                 ORIGIN, ACCEPT_JSON
             ).await()
             UseCaseResult.Success(result)
@@ -1268,10 +1261,11 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getIndustryList( url : String): UseCaseResult<IndustryListModel> {
+    override suspend fun getCareerCluster(url: String): UseCaseResult<CareerClusterModel> {
         return try {
 
-            val result = catApi.getIndustryList(url,
+            val result = catApi.getCareerCluster(
+                url,
                 ORIGIN, ACCEPT_JSON
             ).await()
             UseCaseResult.Success(result)
@@ -1281,12 +1275,44 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getCareerClusterList( list : ArrayList<String>): UseCaseResult<ArrayList<BrightOutlookModel.Data>> {
+
+    override suspend fun getCareerClusterList(url: String): UseCaseResult<CareerClusterListModel> {
+        return try {
+
+            val result = catApi.getCareerClusterList(
+                url,
+                ORIGIN, ACCEPT_JSON
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getIndustryList(url: String): UseCaseResult<IndustryListModel> {
+        return try {
+
+            val result = catApi.getIndustryList(
+                url,
+                ORIGIN, ACCEPT_JSON
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerClusterList(list: ArrayList<String>): UseCaseResult<ArrayList<BrightOutlookModel.Data>> {
         return try {
             val object_ = CareerListModel()
-            object_.onet_code=list
-            object_.onet_year =2019
-            val result = catApi.getCareerSearchList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,object_
+            object_.onet_code = list
+            object_.onet_year = 2019
+            val result = catApi.getCareerSearchList(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, object_
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -1295,13 +1321,15 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getCareerBright( type : String): UseCaseResult<BrightOutlookModel> {
+
+    override suspend fun getCareerBright(type: String): UseCaseResult<BrightOutlookModel> {
         return try {
 
             val object_ = BrightLook()
-            object_.bo_key=type
-            object_.pager =1
-            val result = catApi.getCareerBright("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,object_
+            object_.bo_key = type
+            object_.pager = 1
+            val result = catApi.getCareerBright(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, object_
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -1310,13 +1338,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
-    override suspend fun getKeywoardSearchDetails( url : String, list:ArrayList<String>): UseCaseResult<JsonArray> {
+
+    override suspend fun getKeywoardSearchDetails(
+        url: String,
+        list: ArrayList<String>
+    ): UseCaseResult<JsonArray> {
         return try {
             val searchCodesModel = SearchkeywordRequestModel()
             searchCodesModel.onet_code = list
 
-            val result = catApi.getKeywoardSearchDetails(url,
-                ORIGIN, ACCEPT_JSON, searchCodesModel).await()
+            val result = catApi.getKeywoardSearchDetails(
+                url,
+                ORIGIN, ACCEPT_JSON, searchCodesModel
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -1327,7 +1361,21 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
     override suspend fun getWorkSearch(url: String): UseCaseResult<BrightOutlookModel> {
         return try {
-            val result = catApi.getWorkList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,url
+            val result = catApi.getWorkList(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, url
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getNYSCareer(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getNYSCareerPlan(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
