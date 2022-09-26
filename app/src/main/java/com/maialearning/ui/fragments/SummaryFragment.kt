@@ -66,6 +66,7 @@ class SummaryFragment(var response: SelectedCareerResponse) : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         mBinding.interView.adapter = WorkActivityAdapter(null, null, null, interAct, "inter")
 
+
         mBinding.text2.text = response.salary
         mBinding.knowText.text =
             response.educationLevel?.stream()?.collect(Collectors.joining("\n-", "", ""))
