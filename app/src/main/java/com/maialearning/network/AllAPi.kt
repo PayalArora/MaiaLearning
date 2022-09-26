@@ -523,5 +523,8 @@ interface AllAPi {
     fun getWorkList(
         @Header("Authorization") AutToken: String,
         @Url() url: String): Deferred<BrightOutlookModel>
-
+    @GET
+    fun getUsList(
+        @Header("Authorization") AutToken: String,
+        @Url() url: String): Deferred<CareerUSModel>
 }

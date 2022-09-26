@@ -16,13 +16,11 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.databinding.SearchCareerLayBinding
-import com.maialearning.model.BrightOutlookModel
-import com.maialearning.model.CareerClusterModel
-import com.maialearning.model.CareerTopPickResponseItem
-import com.maialearning.model.IndustryModel
+import com.maialearning.model.*
 import com.maialearning.ui.adapter.CareerCluster
 import com.maialearning.ui.adapter.IndustryClusterAdapter
 import com.maialearning.ui.adapter.SearchProgramAdapter
+import com.maialearning.ui.adapter.UsCareerAdapter
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.CareerViewModel
@@ -37,12 +35,17 @@ class SearchCareerFragment(var type: String) : Fragment() {
     private lateinit var progress: Dialog
     lateinit var gson: Gson
     private val listData: String
-        get() = ("[{\"id\":\"72\",\"name\":\"Accommodation Food Services\"}" + ",{\"id\":\"56\",\"name\":\"Administrative Support Services\"}" +",{\"id\":\"11\",\"name\":\"Agriculture Forestry Fishing Hinting\"}" +
-                ",{\"id\":\"71\",\"name\":\"Arts Entertainment Recreation\"}" +  ",{\"id\":\"23\",\"name\":\"Construction\"}" +  ",{\"id\":\"61\",\"name\":\"Educational Services\"}" + ",{\"id\":\"52\",\"name\":\"Finance Insurance\"}" +
-                ",{\"id\":\"93\",\"name\":\"Government\"}" +",{\"id\":\"62\",\"name\":\"Health Care Social Assistance\"}" +",{\"id\":\"51\",\"name\":\"Information\"}" +",{\"id\":\"55\",\"name\":\"Management Companies Enterprise\"}" +
-                ",{\"id\":\"31\",\"name\":\"Manufacturing\"}" +",{\"id\":\"21\",\"name\":\"Mining Quarrying Iol Gas Extraction\"}" +",{\"id\":\"81\",\"name\":\"Other Services Exc Pub Administration\"}" +",{\"id\":\"54\",\"name\":\"Professional Scientific Technical Service\"}" +
-                ",{\"id\":\"53\",\"name\":\"Real Estate Rental Leasing\"}" + ",{\"id\":\"44\",\"name\":\"Real Trade\"}" +",{\"id\":\"94\",\"name\":\"Self Employed\"}" +",{\"id\":\"48\",\"name\":\"Transportation Warehousing\"}" +",{\"id\":\"22\",\"name\":\"Utilities\"}" +
+        get() = ("[{\"id\":\"72\",\"name\":\"Accommodation Food Services\"}" + ",{\"id\":\"56\",\"name\":\"Administrative Support Services\"}" + ",{\"id\":\"11\",\"name\":\"Agriculture Forestry Fishing Hinting\"}" +
+                ",{\"id\":\"71\",\"name\":\"Arts Entertainment Recreation\"}" + ",{\"id\":\"23\",\"name\":\"Construction\"}" + ",{\"id\":\"61\",\"name\":\"Educational Services\"}" + ",{\"id\":\"52\",\"name\":\"Finance Insurance\"}" +
+                ",{\"id\":\"93\",\"name\":\"Government\"}" + ",{\"id\":\"62\",\"name\":\"Health Care Social Assistance\"}" + ",{\"id\":\"51\",\"name\":\"Information\"}" + ",{\"id\":\"55\",\"name\":\"Management Companies Enterprise\"}" +
+                ",{\"id\":\"31\",\"name\":\"Manufacturing\"}" + ",{\"id\":\"21\",\"name\":\"Mining Quarrying Iol Gas Extraction\"}" + ",{\"id\":\"81\",\"name\":\"Other Services Exc Pub Administration\"}" + ",{\"id\":\"54\",\"name\":\"Professional Scientific Technical Service\"}" +
+                ",{\"id\":\"53\",\"name\":\"Real Estate Rental Leasing\"}" + ",{\"id\":\"44\",\"name\":\"Real Trade\"}" + ",{\"id\":\"94\",\"name\":\"Self Employed\"}" + ",{\"id\":\"48\",\"name\":\"Transportation Warehousing\"}" + ",{\"id\":\"22\",\"name\":\"Utilities\"}" +
                 ",{\"id\":\"42\",\"name\":\"Wholesale Trade\"}]")
+
+    private val usData: String
+        get() =("[{\"key\":\"1\",\"name\":\"ARMY\"}"+",{\"key\":\"2\",\"name\":\"MARINE_CORPS\"}"+",{\"key\":\"3\",\"name\":\"AIR_FORCE\"}"+",{\"key\":\"4\",\"name\":\"NAVY\"}"+",{\"key\":\"5\",\"name\":\"COAST_GUArD\"}]")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -115,24 +118,37 @@ class SearchCareerFragment(var type: String) : Fragment() {
                     mBinding.spinnerLay1.visibility = View.VISIBLE
                     progress.show()
                     careerViewModel.getCareerCluster(CAREER_AFFINITY)
-                }else if (selectedItem == "Industry") {
+                } else if (selectedItem == "Industry") {
                     setIndustrySpinner()
-                }else if (selectedItem == "Work Values") {
+                } else if (selectedItem == "Work Values") {
                     setWorkSpinner()
-                } else {
-                    mBinding.text2.visibility = View.VISIBLE
-                    mBinding.outSpinner.visibility = View.GONE
+                } else if(selectedItem == "U.S. Military") {
+                    mBinding.outSpinner.visibility = View.VISIBLE
+                    setUsSpinner()
                 }
             } // to close the onItemSelected
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
-
+    private fun setUsSpinner(){
+        val list = ArrayList<IndustryModel>()
+        val jsonArry = JSONArray(usData)
+        for (i in 0 until jsonArry.length()) {
+            val obj = jsonArry.getJSONObject(i)
+            val user = IndustryModel(obj.getInt("key"), obj.getString("name"))
+            list.add(user)
+        }
+        mBinding.text2.visibility = View.GONE
+        mBinding.outSpinner.visibility = View.VISIBLE
+        val adapter = IndustryClusterAdapter(requireContext(), list, ::clickUSItem)
+        mBinding.outSpinner.adapter = adapter
+        mBinding.outSpinner.setSelection(0)
+    }
     private fun setWorkSpinner() {
         mBinding.spinnerLay1.visibility = View.GONE
         mBinding.workLayout.visibility = View.VISIBLE
-        var url= BASE_URL+"get_work_values_career/1"
+        var url = BASE_URL + "get_work_values_career/1"
         val adapter = ArrayAdapter(
             requireContext(),
             R.layout.spinner_text, resources.getStringArray(R.array.WORK_ARRAY)
@@ -148,14 +164,17 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                if(!url.contains("first_value")){
-                    url +=   "?first_value="+parent.getItemAtPosition(position).toString()
-                }else if(!url.contains("second_value")){
-                    url +=    "&second_value="+parent.getItemAtPosition(position).toString()
-                }else if(!url.contains("third_value")){
-                    url +=  "&third_value="+parent.getItemAtPosition(position).toString()
-                }else{
-                    url = url.replace(url.substring(url.indexOf("first_value="),url.indexOf("&")),"first_value="+ parent.getItemAtPosition(position).toString())
+                if (!url.contains("first_value")) {
+                    url += "?first_value=" + parent.getItemAtPosition(position).toString()
+                } else if (!url.contains("second_value")) {
+                    url += "&second_value=" + parent.getItemAtPosition(position).toString()
+                } else if (!url.contains("third_value")) {
+                    url += "&third_value=" + parent.getItemAtPosition(position).toString()
+                } else {
+                    url = url.replace(
+                        url.substring(url.indexOf("first_value="), url.indexOf("&")),
+                        "first_value=" + parent.getItemAtPosition(position).toString()
+                    )
                 }
                 progress.show()
                 careerViewModel.getWorkSearch(url)
@@ -170,14 +189,17 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                if(!url.contains("first_value")){
-                    url +=   "?first_value="+parent.getItemAtPosition(position).toString()
-                }else if(!url.contains("second_value")){
-                    url +=   "&second_value="+parent.getItemAtPosition(position).toString()
-                }else if (!url.contains("third_value")){
-                    url +=  "&third_value="+parent.getItemAtPosition(position).toString()
-                }else{
-                    url =url.replace(url.substring(url.indexOf("second_value="),url.indexOf("&")),"second_value="+ parent.getItemAtPosition(position).toString())
+                if (!url.contains("first_value")) {
+                    url += "?first_value=" + parent.getItemAtPosition(position).toString()
+                } else if (!url.contains("second_value")) {
+                    url += "&second_value=" + parent.getItemAtPosition(position).toString()
+                } else if (!url.contains("third_value")) {
+                    url += "&third_value=" + parent.getItemAtPosition(position).toString()
+                } else {
+                    url = url.replace(
+                        url.substring(url.indexOf("second_value="), url.indexOf("&")),
+                        "second_value=" + parent.getItemAtPosition(position).toString()
+                    )
 
                 }
                 progress.show()
@@ -193,14 +215,17 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                if(!url.contains("first_value")){
-                    url +=   "?first_value="+parent.getItemAtPosition(position).toString()
-                }else if(!url.contains("second_value")){
-                    url +=    "&second_value="+parent.getItemAtPosition(position).toString()
-                }else if(!url.contains("third_value")){
-                    url +=  "&third_value="+parent.getItemAtPosition(position).toString()
-                }else{
-                    url =url.replace(url.substring(url.indexOf("third_value="),url.length),"third_value="+ parent.getItemAtPosition(position).toString())
+                if (!url.contains("first_value")) {
+                    url += "?first_value=" + parent.getItemAtPosition(position).toString()
+                } else if (!url.contains("second_value")) {
+                    url += "&second_value=" + parent.getItemAtPosition(position).toString()
+                } else if (!url.contains("third_value")) {
+                    url += "&third_value=" + parent.getItemAtPosition(position).toString()
+                } else {
+                    url = url.replace(
+                        url.substring(url.indexOf("third_value="), url.length),
+                        "third_value=" + parent.getItemAtPosition(position).toString()
+                    )
 
                 }
                 progress.show()
@@ -211,19 +236,20 @@ class SearchCareerFragment(var type: String) : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
+
     private fun setIndustrySpinner() {
         mBinding.workLayout.visibility = View.GONE
         mBinding.spinnerLay1.visibility = View.VISIBLE
-        val list =ArrayList<IndustryModel>()
+        val list = ArrayList<IndustryModel>()
         val jsonArry = JSONArray(listData)
         for (i in 0 until jsonArry.length()) {
             val obj = jsonArry.getJSONObject(i)
-            val user = IndustryModel( obj.getInt("id"), obj.getString("name"))
+            val user = IndustryModel(obj.getInt("id"), obj.getString("name"))
             list.add(user)
         }
         mBinding.text2.visibility = View.GONE
         mBinding.outSpinner.visibility = View.VISIBLE
-        val adapter = IndustryClusterAdapter(requireContext(),list, ::clickIndustryItem)
+        val adapter = IndustryClusterAdapter(requireContext(), list, ::clickIndustryItem)
         mBinding.outSpinner.adapter = adapter
         mBinding.outSpinner.setSelection(0)
 
@@ -237,12 +263,15 @@ class SearchCareerFragment(var type: String) : Fragment() {
         mBinding.outSpinner.setSelection(0)
 
     }
-
+    private fun clickUSItem(item: IndustryModel) {
+        progress.show()
+        careerViewModel.getUSSearch(item.id.toString().getUSIndustry())
+    }
     private fun clickIndustryItem(item: IndustryModel) {
         progress.show()
         careerViewModel.getIndustryList(item.id.toString().getURLIndustry())
-
     }
+
     private fun clickClusterItem(item: CareerClusterModel.CareerCluster) {
         progress.show()
         careerViewModel.getCareerClusterList(item.code!!.getURLCluster())
@@ -294,15 +323,34 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
     var arrayList: ArrayList<CareerTopPickResponseItem?>? = arrayListOf()
     var arrayListOut: ArrayList<BrightOutlookModel.Data?>? = arrayListOf()
+    var arrayListUs: ArrayList<CareerUSModel.Data?>? = arrayListOf()
 
     private fun initObserver() {
+        careerViewModel.careerUsObserver.observe(viewLifecycleOwner) {
+            progress.dismiss()
+            if (it.data.size > 0) {
+                mBinding.list.visibility = View.VISIBLE
+                mBinding.searchLay.visibility = View.GONE
+                arrayListUs = arrayListOf<CareerUSModel.Data?>()
+                arrayListUs?.addAll(it.data)
+                arrayListUs?.sortBy { it?.title }
+                Log.e("Data", " " + arrayListUs?.get(0)?.title)
+            } else {
+                mBinding.list.visibility = View.GONE
+                mBinding.searchLay.visibility = View.VISIBLE
+                context?.showToast(getString(R.string.no_data_found))
+            }
+            mBinding.listProgram.adapter =
+                UsCareerAdapter(requireContext(), arrayListUs!!)
+
+        }
         careerViewModel.showError.observe(viewLifecycleOwner) {
             progress.dismiss()
         }
         careerViewModel.industryListObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
-            val list=ArrayList<String>()
-            for (i in 0 until it.occupation.size){
+            val list = ArrayList<String>()
+            for (i in 0 until it.occupation.size) {
                 list.add(it.occupation[i].code.toString())
             }
             progress.show()
@@ -310,8 +358,8 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
         careerViewModel.careerClusterListObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
-            val list=ArrayList<String>()
-            for (i in 0 until it.occupation.size){
+            val list = ArrayList<String>()
+            for (i in 0 until it.occupation.size) {
                 list.add(it.occupation[i].code.toString())
             }
             progress.show()
@@ -319,7 +367,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
         careerViewModel.careerClusterDetailObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
-            if (it.size> 0) {
+            if (it.size > 0) {
                 mBinding.list.visibility = View.VISIBLE
                 mBinding.searchLay.visibility = View.GONE
                 arrayListOut = arrayListOf<BrightOutlookModel.Data?>()
@@ -424,18 +472,17 @@ class SearchCareerFragment(var type: String) : Fragment() {
     }
 
 
-
-private fun loadFragment(position: Int) {
-    if (type != "trafic") {
-        val fragment = TraficFragment()
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        val bundle = Bundle()
-        bundle.putSerializable("data", arrayList?.get(position))
-        fragment.arguments = bundle
-        transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
-        transaction.addToBackStack("name")
-        transaction.commit()
-    }
+    private fun loadFragment(position: Int) {
+        if (type != "trafic") {
+            val fragment = TraficFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            val bundle = Bundle()
+            bundle.putSerializable("data", arrayList?.get(position))
+            fragment.arguments = bundle
+            transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
+            transaction.addToBackStack("name")
+            transaction.commit()
+        }
 //        (requireContext() as CareerActivity).dialog
 //        dialog = BottomSheetDialog(requireContext())
 //        val view = layoutInflater.inflate(R.layout.compare_careers, null)
@@ -454,5 +501,5 @@ private fun loadFragment(position: Int) {
 //
 //        dialog?.setContentView(view)
 //        dialog?.show()
-}
+    }
 }
