@@ -15,7 +15,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/inter_bold"
+            android:fontFamily="@font/inter"
+            android:textSize="@dimen/_12sp"
+            android:textColor="@color/black"
             android:gravity="center"
             android:text="@string/name" />
 
@@ -34,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             android:buttonTint="@color/blue"
             android:fontFamily="@font/inter_bold"
             android:gravity="center" />
@@ -48,6 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             android:buttonTint="@color/blue"
             android:fontFamily="@font/inter_bold"
             android:gravity="center" />
@@ -62,6 +66,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             android:buttonTint="@color/blue"
             android:fontFamily="@font/inter_bold"
             android:gravity="center" />

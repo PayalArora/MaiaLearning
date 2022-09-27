@@ -31,7 +31,7 @@ class NYSSkillsAdapter(var context: Context, var data: ArrayList<SkillsItem>) :
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val text = "<font color=#394168>${data.get(position).name}: </font> <font color=#707070>${
+        val text = "<font color=#3743BE>${data.get(position).name}: </font> <font color=#707070>${
             data.get(position).decription
         }</font>"
 

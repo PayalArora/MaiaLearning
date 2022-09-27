@@ -490,6 +490,13 @@
     <string name="grade_txt">Grade</string>
     <string name="parent_guardian">Parent/\nGuardian</string>
     <string name="educator">Educator</string>
+    <string name="attributes_action">Attributes and Actions</string>
+    <string name="below_are_the">Below are the attributes I need to acquire for my career choices.</string>
+    <string name="knowledge_attr">Knowledge Attributes</string>
+    <string name="skills_attr">Skills Attributes</string>
+    <string name="ability_attr">Ability Attributes</string>
+    <string name="tools_attr">Tools Attributes</string>
+    <string name="tech_attr">Technology Attributes</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

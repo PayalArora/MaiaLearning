@@ -37,7 +37,6 @@ class NysCareerPlan : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         mBinding = NysCareerLayoutBinding.inflate(inflater, container, false)
-        progress = showLoadingDialog(requireContext())
         return mBinding.root
 
     }
@@ -57,6 +56,8 @@ class NysCareerPlan : Fragment() {
 //            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 //        mBinding.actionList.adapter = SkillActionAdapter()
 //        progress.show()
+        progress = showLoadingDialog(requireContext())
+
         SharedHelper(requireContext()).id?.let { careerViewModel.getNYSCareerPlan(it) }
         initObserver()
 

@@ -20,8 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10dp"
-            android:padding="@dimen/_10dp">
+            android:paddingHorizontal="@dimen/_10dp">
 
             <CheckBox
                 android:id="@+id/button"
@@ -35,12 +34,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/inter_bold"
                 android:lineSpacingExtra="2sp"
+                android:singleLine="true"
                 android:text="Anesthesiologists"
                 android:textColor="@color/black_1"
-                android:singleLine="true"
-                android:ellipsize="end"
                 android:textSize="@dimen/_12sp"
                 app:layout_constraintBottom_toBottomOf="@id/button"
                 app:layout_constraintStart_toEndOf="@id/button"
@@ -50,7 +49,7 @@
                 android:id="@+id/name1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_2dp"
                 android:fontFamily="@font/inter_medium"
                 android:lineSpacingExtra="2sp"
                 android:maxLines="2"
@@ -63,7 +62,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-
+                android:paddingBottom="@dimen/_10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/name1"
                 app:layout_constraintTop_toBottomOf="@id/name1">
@@ -74,10 +73,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginEnd="@dimen/_10dp"
-                    android:paddingHorizontal="@dimen/_7dp"
                     android:background="@drawable/white_rounded_withboundary"
                     android:backgroundTint="@color/grey_10"
-                   >
+                    android:paddingHorizontal="@dimen/_7dp">
 
                     <ImageView
                         android:id="@+id/graph"
@@ -99,79 +97,82 @@
                         android:paddingEnd="@dimen/_2sp"
                         android:paddingBottom="@dimen/_5dp"
                         android:text="Grow Rapidly"
-                        android:textSize="@dimen/_12sp"
+                        android:textSize="10sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/graph"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lay2"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
-                    android:layout_toLeftOf="@+id/lay3"
-                    android:layout_marginEnd="@dimen/_5dp"
-                    android:background="@drawable/white_rounded_withboundary"
-                    android:backgroundTint="@color/green_tint"
-                    android:paddingHorizontal="@dimen/_5dp"
-                    android:layout_toEndOf="@+id/lay1"
-                    >
+                    android:layout_toStartOf="@+id/lay3"
+                    android:layout_toEndOf="@+id/lay1">
 
-                    <TextView
-                        android:id="@+id/dollar"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
-                        android:layout_marginStart="@dimen/_5dp"
-                        android:layout_marginTop="@dimen/_2dp"
-                        android:layout_marginBottom="@dimen/_2dp"
-                        android:background="@drawable/arrow_circle"
-                        android:backgroundTint="@color/green_1"
-                        android:gravity="center"
-                        android:padding="@dimen/_2dp"
-                        android:text="$"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/text2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/text2"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lay2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_bold"
-                        android:paddingStart="@dimen/_5sp"
-                        android:paddingTop="@dimen/_5dp"
-                        android:paddingEnd="@dimen/_5sp"
-                        android:paddingBottom="@dimen/_5dp"
-                        android:text="49,860"
-                        android:textColor="@color/green_1"
-                        android:textSize="@dimen/_12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/dollar"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_marginTop="@dimen/_10dp"
+                        android:layout_marginEnd="@dimen/_5dp"
+                        android:background="@drawable/white_rounded_withboundary"
+                        android:backgroundTint="@color/green_tint"
+                        android:paddingHorizontal="@dimen/_5dp">
+
+                        <TextView
+                            android:id="@+id/dollar"
+                            android:layout_width="@dimen/_18dp"
+                            android:layout_height="@dimen/_18dp"
+                            android:layout_marginStart="@dimen/_5dp"
+                            android:layout_marginTop="@dimen/_2dp"
+                            android:layout_marginBottom="@dimen/_2dp"
+                            android:background="@drawable/arrow_circle"
+                            android:backgroundTint="@color/green_1"
+                            android:gravity="center"
+                            android:padding="@dimen/_2dp"
+                            android:text="$"
+                            android:textColor="@color/white"
+                            android:textSize="10sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/text2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/text2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold"
+                            android:paddingStart="@dimen/_5sp"
+                            android:paddingTop="@dimen/_5dp"
+                            android:paddingEnd="@dimen/_5sp"
+                            android:paddingBottom="@dimen/_5dp"
+                            android:text="49,860"
+                            android:textColor="@color/green_1"
+                            android:textSize="10sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/dollar"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </RelativeLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lay3"
-                    android:layout_gravity="end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
-                    android:layout_marginEnd="@dimen/_10dp"
                     android:layout_alignParentRight="true"
-               >
+                    android:layout_gravity="end"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_10dp">
 
                     <ImageView
                         android:id="@+id/tick"
-                        android:layout_width="@dimen/_25dp"
-                        android:layout_height="@dimen/_25dp"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
                         android:background="@drawable/arrow_circle"
                         android:backgroundTint="@color/green_2"
                         android:gravity="center"
-                        android:padding="@dimen/_8dp"
+                        android:padding="@dimen/_5dp"
                         android:src="@drawable/check"
                         android:textColor="@color/white"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -187,10 +188,9 @@
                         android:paddingTop="@dimen/_5dp"
                         android:paddingEnd="@dimen/_5sp"
                         android:paddingBottom="@dimen/_5dp"
-                        android:layout_marginRight="@dimen/_5dp"
                         android:text="49,860"
                         android:textColor="@color/green_1"
-                        android:textSize="@dimen/_12sp"
+                        android:textSize="10sp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/tick"

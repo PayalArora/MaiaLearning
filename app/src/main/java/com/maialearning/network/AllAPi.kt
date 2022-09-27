@@ -535,4 +535,10 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<JsonObject>
 
+    @GET("get_student_career_plan/{id}")
+    fun getStudentCareer_Plan(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
 }

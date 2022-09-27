@@ -3,15 +3,13 @@ package com.maialearning.ui.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.maialearning.R
-import com.maialearning.databinding.CareerAdapterBinding
 import com.maialearning.databinding.KnowAttrLayouBinding
 import com.maialearning.model.KnowledgeItem
+import com.maialearning.model.SkillItems
 
-class KnowledgeAttrAdapter(var context: Context, val knowledge: List<KnowledgeItem?>?) :
-    RecyclerView.Adapter<KnowledgeAttrAdapter.ViewHolder>() {
+class StudentSkillsPlanAdapter (var context: Context, val knowledge: List<SkillItems?>?) :
+    RecyclerView.Adapter<StudentSkillsPlanAdapter.ViewHolder>() {
     var isSelected = false
 
     /**

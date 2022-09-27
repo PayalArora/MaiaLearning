@@ -266,6 +266,10 @@ interface LoginRepository {
     suspend fun getNYSCareer(
         id: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun getStudentCareerPlan(
+        id: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1372,6 +1376,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getNYSCareer(id: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.getNYSCareerPlan(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getStudentCareerPlan(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getStudentCareer_Plan(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
             ).await()
             UseCaseResult.Success(result)
