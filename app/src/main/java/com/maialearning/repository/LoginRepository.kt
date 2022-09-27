@@ -262,6 +262,9 @@ interface LoginRepository {
     suspend fun getWorkSearch(
         url: String
     ): UseCaseResult<BrightOutlookModel>
+    suspend fun getUSSearch(
+        url: String
+    ): UseCaseResult<CareerUSModel>
 
     suspend fun getNYSCareer(
         id: String
@@ -1377,6 +1380,17 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getNYSCareerPlan(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getUSSearch(url: String): UseCaseResult<CareerUSModel> {
+        return try {
+            val result = catApi.getUsList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,url
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

@@ -30,6 +30,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val industryListObserver = MutableLiveData<IndustryListModel>()
     val careerClusterDetailObserver = MutableLiveData<ArrayList<BrightOutlookModel.Data>>()
     val brightOutObserver = MutableLiveData<BrightOutlookModel>()
+    val careerUsObserver = MutableLiveData<CareerUSModel>()
     val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
     val nysCareerObserver = MutableLiveData<JsonObject>()
     val studentCareerPlanObserver = MutableLiveData<JsonObject>()
@@ -190,6 +191,20 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> brightOutObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =result.toString()
+
+            }
+        }
+    }
+    fun getUSSearch(url: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getUSSearch(url)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerUsObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =result.toString()
 
             }
