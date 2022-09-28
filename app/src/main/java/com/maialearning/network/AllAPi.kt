@@ -461,7 +461,7 @@ interface AllAPi {
         @Url() url: String,
         @Header("Authorization") AutToken: String,
         @Query("") univId: JsonObject,
-    //@Query("") univId: UnivCollegeModel
+        //@Query("") univId: UnivCollegeModel
     ): Deferred<JsonObject>
 
     @GET("get_student_career_top_picks/{id}")
@@ -481,18 +481,21 @@ interface AllAPi {
         @Header("origin") origin: String,
         @Header("accept") accept: String,
     ): Deferred<CareerSearchCodesModel>
+
     @GET
     fun getCareerCluster(
         @Url() url: String,
         @Header("origin") origin: String,
         @Header("accept") accept: String,
     ): Deferred<CareerClusterModel>
+
     @GET
     fun getCareerClusterList(
         @Url() url: String,
         @Header("origin") origin: String,
         @Header("accept") accept: String,
     ): Deferred<CareerClusterListModel>
+
     @GET
     fun getIndustryList(
         @Url() url: String,
@@ -514,10 +517,33 @@ interface AllAPi {
 
     @POST
     fun getKeywoardSearchDetails(
-        @Url url:String,
+        @Url url: String,
         @Header("origin") origin: String,
         @Header("accept") accept: String,
         @Body model: SearchkeywordRequestModel
-
     ): Deferred<JsonArray>
+
+    @GET
+    fun getWorkList(
+        @Header("Authorization") AutToken: String,
+        @Url() url: String
+    ): Deferred<BrightOutlookModel>
+    @GET
+    fun getUsList(
+        @Header("Authorization") AutToken: String,
+        @Url() url: String
+    ): Deferred<CareerUSModel>
+
+    @GET("newyork_career_plan/{id}")
+    fun getNYSCareerPlan(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+    @GET("get_student_career_plan/{id}")
+    fun getStudentCareer_Plan(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
 }

@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.CareerAdapterBinding
+import com.maialearning.model.CareersItem
 
-class CareerAdapter  : RecyclerView.Adapter<CareerAdapter.ViewHolder>() {
+class CareerAdapter(val careers: List<CareersItem?>?) : RecyclerView.Adapter<CareerAdapter.ViewHolder>() {
     var isSelected = false
 
     /**
@@ -28,14 +29,10 @@ class CareerAdapter  : RecyclerView.Adapter<CareerAdapter.ViewHolder>() {
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position ==1 ){
-            viewHolder.binding.name.text="Community Health Workers"
-        }
-
-
+            viewHolder.binding.name.text=careers?.get(position)?.name
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return careers?.size ?: 0
     }
 }

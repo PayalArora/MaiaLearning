@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/heading_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/grade_txt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/inter"
+            android:textSize="@dimen/_12sp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:text="@string/name" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight=".3" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight=".3" />
+
+        <CheckBox
+            android:id="@+id/student_check"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:buttonTint="@color/blue"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight=".3" />
+
+        <CheckBox
+            android:id="@+id/parent_check"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:buttonTint="@color/blue"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_weight=".3" />
+
+        <CheckBox
+            android:id="@+id/educator_check"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:buttonTint="@color/blue"
+            android:fontFamily="@font/inter_bold"
+            android:gravity="center" />
+    </LinearLayout>
+
+</LinearLayout>

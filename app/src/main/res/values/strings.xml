@@ -483,6 +483,20 @@
     <string name="token_expired">Session Expired</string>
     <string name="session_error_desc">Your session has been expired. Please login again.</string>
     <string name="recs_letter">Recomendation sent successfully</string>
+    <string name="personal_data">Personal Data</string>
+    <string name="student_id_number">Student Identification Number</string>
+    <string name="school_">School</string>
+    <string name="career_plan">Career Plan</string>
+    <string name="grade_txt">Grade</string>
+    <string name="parent_guardian">Parent/\nGuardian</string>
+    <string name="educator">Educator</string>
+    <string name="attributes_action">Attributes and Actions</string>
+    <string name="below_are_the">Below are the attributes I need to acquire for my career choices.</string>
+    <string name="knowledge_attr">Knowledge Attributes</string>
+    <string name="skills_attr">Skills Attributes</string>
+    <string name="ability_attr">Ability Attributes</string>
+    <string name="tools_attr">Tools Attributes</string>
+    <string name="tech_attr">Technology Attributes</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
@@ -537,6 +551,13 @@
         <item>Grow Rapidly</item>
         <item>Many Openings</item>
         <item>New &amp; Emerging</item>
-
+    </string-array>
+    <string-array name="WORK_ARRAY">
+        <item>Achievement</item>
+        <item>Independence</item>
+        <item>Recognition</item>
+        <item>Relationship</item>
+        <item>Support</item>
+        <item>Working Condition</item>
     </string-array>
 </resources>

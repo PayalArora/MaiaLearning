@@ -30,7 +30,10 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val industryListObserver = MutableLiveData<IndustryListModel>()
     val careerClusterDetailObserver = MutableLiveData<ArrayList<BrightOutlookModel.Data>>()
     val brightOutObserver = MutableLiveData<BrightOutlookModel>()
+    val careerUsObserver = MutableLiveData<CareerUSModel>()
     val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
+    val nysCareerObserver = MutableLiveData<JsonObject>()
+    val studentCareerPlanObserver = MutableLiveData<JsonObject>()
 
     fun getKeyboardSearch(id: String) {
         showLoading.value = true
@@ -179,6 +182,66 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+    fun getWorkSearch(url: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getWorkSearch(url)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> brightOutObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =result.toString()
+
+            }
+        }
+    }
+    fun getUSSearch(url: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getUSSearch(url)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerUsObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =result.toString()
+
+            }
+        }
+    }
+
+    fun getNYSCareerPlan(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getNYSCareer(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> nysCareerObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =result.toString()
+
+            }
+        }
+    }
+
+
+    fun getStudentCareerPlan(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getStudentCareerPlan(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> studentCareerPlanObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =result.toString()
+
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

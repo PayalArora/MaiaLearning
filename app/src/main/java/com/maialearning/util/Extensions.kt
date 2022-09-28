@@ -59,7 +59,7 @@ const val INDUSTRY_LIST = "https://services.onetcenter.org/v1.9/ws/online/indust
 const val CAREER_CLIENT = "?client=serviceinfinity"
 const val SEARCH_CLIENT = "&client=serviceinfinity"
 const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
-
+const val US_SEARCH= "get_military_careers_data?pager=1&service="
 object URL{
     var BASEURL = 0
 }
@@ -72,6 +72,9 @@ fun String.getURLCluster():String{
 }
 fun String.getURLIndustry():String{
     return "$INDUSTRY_LIST$this$CAREER_CLIENT"
+}
+fun String.getUSIndustry():String{
+    return "$BASE_URL$US_SEARCH$this$CAREER_CLIENT"
 }
 
 fun Context.isNetworkConnected(): Boolean {
