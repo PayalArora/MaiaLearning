@@ -460,7 +460,7 @@ interface AllAPi {
     fun getCollegeJsonFilter(
         @Url() url: String,
         @Header("Authorization") AutToken: String,
-        @Body univId: UnivCollegeModel,
+        @Body univId: UnivCollegeModel
         //@Query("") univId: UnivCollegeModel
     ): Deferred<JsonObject>
 
