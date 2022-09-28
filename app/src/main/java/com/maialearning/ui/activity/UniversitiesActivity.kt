@@ -492,8 +492,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.search.visibility = View.GONE
         sheetBinding.filters.setText(resources.getString(R.string.filters))
         dialog.show()
-        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
-        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+        sheetBinding.clearText.setOnClickListener {
+            initView()
+            dialog.dismiss() }
+        sheetBinding.backBtn.setOnClickListener {
+            initView()
+            dialog.dismiss() }
         sheetBinding.reciepentList.adapter =
             UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
 
