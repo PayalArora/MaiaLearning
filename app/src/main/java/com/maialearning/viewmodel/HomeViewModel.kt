@@ -626,7 +626,6 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-
                 catRepository.getCollegeJsonFilter(url, file)
             }
             showLoading.value = false
