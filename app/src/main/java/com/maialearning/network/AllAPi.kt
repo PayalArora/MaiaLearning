@@ -460,7 +460,7 @@ interface AllAPi {
     fun getCollegeJsonFilter(
         @Url() url: String,
         @Header("Authorization") AutToken: String,
-        @Query("") univId: JsonObject,
+        @Body univId: UnivCollegeModel,
         //@Query("") univId: UnivCollegeModel
     ): Deferred<JsonObject>
 
@@ -527,7 +527,7 @@ interface AllAPi {
     fun getWorkList(
         @Header("Authorization") AutToken: String,
         @Url() url: String
-    ): Deferred<BrightOutlookModel>
+    ): Deferred<JsonArray>
     @GET
     fun getUsList(
         @Header("Authorization") AutToken: String,

@@ -261,7 +261,7 @@ interface LoginRepository {
 
     suspend fun getWorkSearch(
         url: String
-    ): UseCaseResult<BrightOutlookModel>
+    ): UseCaseResult<JsonArray>
     suspend fun getUSSearch(
         url: String
     ): UseCaseResult<CareerUSModel>
@@ -1209,7 +1209,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getCollegeJsonFilter(
                 url,
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, jsonObj
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -1363,7 +1363,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getWorkSearch(url: String): UseCaseResult<BrightOutlookModel> {
+    override suspend fun getWorkSearch(url: String): UseCaseResult<JsonArray> {
         return try {
             val result = catApi.getWorkList(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, url

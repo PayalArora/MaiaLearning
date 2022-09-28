@@ -405,7 +405,29 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 SearchProgramAdapter(requireContext(), null, arrayListOut!!, "", ::loadFragment)
 
         }
+        careerViewModel.workObserver.observe(viewLifecycleOwner) {
+            progress.dismiss()
+            if (it.size() > 0) {
+                mBinding.list.visibility = View.VISIBLE
+                mBinding.searchLay.visibility = View.GONE
+                arrayList = arrayListOf<CareerTopPickResponseItem?>()
 
+                for (i in it) {
+                    val itModel = gson.fromJson(i, CareerTopPickResponseItem::class.java)
+                    arrayList?.add(itModel)
+                }
+                arrayList?.sortBy { it?.title }
+
+                Log.e("Data", " " + arrayList?.get(0)?.title)
+            } else {
+                mBinding.list.visibility = View.GONE
+                mBinding.searchLay.visibility = View.VISIBLE
+                context?.showToast(getString(R.string.no_data_found))
+            }
+            mBinding.listProgram.adapter =
+                SearchProgramAdapter(requireContext(), arrayList, null, "key", ::loadFragment)
+
+        }
         careerViewModel.careerListObserver.observe(viewLifecycleOwner) {
 
             if (it.size() > 0) {

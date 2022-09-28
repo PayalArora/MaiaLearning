@@ -165,7 +165,7 @@
                         android:layout_marginTop="@dimen/_2dp"
                         android:layout_marginBottom="@dimen/_2dp"
                         android:padding="@dimen/_2dp"
-                        android:text="Active Duty"
+                        android:text="Officer"
                         android:textColor="@color/blue"
                         android:textSize="@dimen/_12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
