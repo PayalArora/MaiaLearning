@@ -15,7 +15,7 @@ class TraficStateAdapter (fragmentManager: FragmentManager, lifecycle: Lifecycle
         if (position == 0) {
             return SummaryFragment(response)
         } else if (position == 1) {
-            return SearchCareerFragment("trafic")
+            return RelatedCareerFragment(response)
         } else if (position == 2) {
             return SalariesFragment()
         }

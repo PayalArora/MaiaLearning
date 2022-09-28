@@ -13,6 +13,7 @@ import com.maialearning.databinding.SummaryTraficBinding
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.TraficSubAdapter
 import com.maialearning.ui.adapter.WorkActivityAdapter
+import com.maialearning.util.replaceInvertedComas
 import java.util.stream.Collectors
 
 
@@ -69,22 +70,25 @@ class SummaryFragment(var response: SelectedCareerResponse) : Fragment() {
         mBinding.text2.text = response.salary
         mBinding.knowText.text =
             response.educationLevel?.stream()?.collect(Collectors.joining("\n-", "", ""))
-        val uri: Uri = Uri.parse(response.careeronestopVideo)
+        val uri: Uri = Uri.parse(response.careeronestopVideo?.replaceInvertedComas())
 
-        mBinding.videoView.setVideoURI(uri)
+
         val mediaController = MediaController(requireContext())
         mediaController.setAnchorView(mBinding.videoView)
         mediaController.setMediaPlayer(mBinding.videoView)
+        mBinding.videoView.setVideoURI(uri)
         mBinding.videoView.setMediaController(mediaController)
 
         mBinding.videoView.setOnPreparedListener {
             // do something when video is ready to play, you want to start playing video here
             mBinding.playBtn.setOnClickListener {
+
                 mBinding.playBtn.visibility=View.GONE
                 mBinding.videoView.requestFocus()
                 mBinding.videoView.start()
             }
         }
+
     }
 
 }
