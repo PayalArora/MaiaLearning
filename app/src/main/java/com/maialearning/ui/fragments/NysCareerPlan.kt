@@ -11,13 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.maialearning.databinding.NysCareerLayoutBinding
-import com.maialearning.model.CareerTopPickResponseItem
 import com.maialearning.model.NYSCareerResponse
 import com.maialearning.model.SkillsItem
 import com.maialearning.model.StudentCareerReviewItem
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.prefhandler.SharedPreference
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.CareerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -84,6 +82,18 @@ class NysCareerPlan : Fragment() {
 
         mBinding.careerList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        mBinding.interstsList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        mBinding.abilityList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        mBinding.personalList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        mBinding.interstsList.adapter = KnowListAdapter(requireContext(), itModel?.interests)
+        mBinding.abilityList.adapter = NYSAbilityAdapter(requireContext(), itModel?.abilities)
+        mBinding.personalList.adapter =
+            NYSPersonAdapter(requireContext(), itModel?.personalAcademicAreas)
+
 
         mBinding.careerList.adapter = NYSCareerAdapter(
             requireContext(),

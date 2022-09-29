@@ -39,12 +39,14 @@ class NYSCareerAdapter(var context: Context, var data: ArrayList<StudentCareerRe
             )
         ) {
             viewHolder.binding.studentCheck.isChecked = true
-        } else if (data.get(position).reviewByParent != null && data.get(position).reviewByParent.equals(
+        }
+        if (data.get(position).reviewByParent != null && data.get(position).reviewByParent.equals(
                 "1"
             )
         ) {
             viewHolder.binding.parentCheck.isChecked = true
-        } else if (data.get(position).reviewByTeacher != null && data.get(position).reviewByTeacher.equals(
+        }
+        if (data.get(position).reviewByTeacher != null && data.get(position).reviewByTeacher.equals(
                 "1"
             )
         ) {

@@ -497,6 +497,17 @@
     <string name="ability_attr">Ability Attributes</string>
     <string name="tools_attr">Tools Attributes</string>
     <string name="tech_attr">Technology Attributes</string>
+    <string name="knowledge">Knowledge</string>
+    <string name="interests_list_of"><font color="#FF0707">Interests: </font><font color="#0B132B">List your top three choices for each of the following areas of interest</font></string>
+    <string name="abilities_list_personal"><font color="#FF0707">Abilities: </font><font color="#0B132B">List personal skills and talents that will be helpful in a career choice</font></string>
+    <string name="personal_text">Personal and academic areas I need to strengthen</string>
+    <string name="one_a_personal">1a. Personal : Out-of-school Activities you Enjoy</string>
+    <string name="one_b">1b. Academic : Classes or subjects you Enjoy the Most</string>
+    <string name="one_c">1c. Work Preference : Working with People, Ideas, and Things</string>
+    <string name="my_personal_ability">My Personal Abilities</string>
+    <string name="career_areas">"Career Areas Where my Abilities Will be Useful "</string>
+    <string name="area_i_need">Areas I Need to Strengthen</string>
+    <string name="steps_i_will">"Steps I Will Take to Strengthen These Areas "</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
