@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.KnowSubListBinding
 
-class KnowSubListAdapter(var type:String) : RecyclerView.Adapter<KnowSubListAdapter.ViewHolder>() {
+class KnowSubListAdapter(var type: String) : RecyclerView.Adapter<KnowSubListAdapter.ViewHolder>() {
     var isSelected = false
 
     /**
@@ -28,26 +28,29 @@ class KnowSubListAdapter(var type:String) : RecyclerView.Adapter<KnowSubListAdap
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-      if(type == "2"){
-          if (position == 0) {
-              viewHolder.binding.name.text =
-                  "My Personal Abilities"
-          }
-          if (position ==1) {
-              viewHolder.binding.name.text =
-                  "Career Areas Where my Abilities Will be Useful"
-          }
-      }
+        if (type == "2") {
+            if (position == 0) {
+                viewHolder.binding.textA.setText(
+                    "My Personal Abilities"
+                )
+            }
+            if (position == 1) {
+                viewHolder.binding.textA.setText(
+                    "Career Areas Where my Abilities Will be Useful"
+                )
+            }
+        }
         if (position == 3) {
-            viewHolder.binding.name.text =
+            viewHolder.binding.textA.setText(
                 "1c. Work Preference : Working with People, Ideas, and Things"
+            )
         }
     }
 
     override fun getItemCount(): Int {
-        if(type=="2"){
+        if (type == "2") {
             return 2
-        }else{
+        } else {
             return 3
         }
 

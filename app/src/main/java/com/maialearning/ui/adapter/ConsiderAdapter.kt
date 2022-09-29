@@ -87,18 +87,18 @@ class ConsiderAdapter(
                 .into(viewHolder.binding.idIVCourse)
             //uniName.text=array[position].naviance_college_name
             appTerm.setOnClickListener {
-                onItemClickOption.onTermClick()
+                onItemClickOption.onTermClick(position)
 
             }
             appType.setOnClickListener {
-                onItemClickOption.onTypeClick()
+                onItemClickOption.onTypeClick(position)
 
             }
             menuDots.setOnClickListener {
                 onItemClickOption.onMenuClick(position,it)
             }
             appPlan.setOnClickListener {
-                onItemClickOption.onPlanClick()
+                onItemClickOption.onPlanClick(position)
             }
             commentImg.setOnClickListener {
                 onItemClickOption.onCommentClick()

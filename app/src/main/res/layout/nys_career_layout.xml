@@ -63,10 +63,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"
                             android:gravity="center"
                             android:text="@string/name"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,9 +75,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"                            android:gravity="center"
+                            android:gravity="center"
                             android:text="@string/student_id_number"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -87,9 +88,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"                            android:gravity="center"
+                            android:gravity="center"
                             android:text="@string/school_"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -110,9 +112,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"                            android:gravity="center"
+                            android:gravity="center"
                             android:text="@string/name"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -122,11 +125,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"
-                            android:maxLines="1"
                             android:gravity="center"
+                            android:maxLines="1"
                             android:text="@string/student_id_number"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -137,11 +140,11 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"
-                            android:maxLines="2"
                             android:gravity="center"
+                            android:maxLines="2"
                             android:text="@string/school_"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -180,52 +183,55 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"                            android:gravity="center"
                             android:id="@+id/grade_txt"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:gravity="center"
                             android:text="@string/grade_txt"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"                            android:gravity="center"
+                            android:gravity="center"
                             android:text="@string/student"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"                            android:gravity="center"
+                            android:gravity="center"
                             android:text="@string/parent_guardian"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="@font/inter"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"                            android:gravity="center"
+                            android:gravity="center"
                             android:text="@string/educator"
-                            />
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
                     </LinearLayout>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/career_list"
                         android:layout_width="match_parent"
@@ -245,6 +251,164 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/carr_list_lay" />
 
+            <LinearLayout
+                android:id="@+id/knowledge_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view1">
+
+                <TextView
+                    android:id="@+id/knowledge_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="@string/knowledge"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sp" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_10dp"
+                    android:background="@color/white"
+                    app:cardCornerRadius="@dimen/_20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/career_paln_id">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/interests_list_of"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:background="@color/tint" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/intersts_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_10dp"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_10dp"
+                    android:background="@color/white"
+                    app:cardCornerRadius="@dimen/_20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/career_paln_id">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/abilities_list_personal"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:background="@color/tint" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/ability_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_10dp"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_10dp"
+                    android:background="@color/white"
+                    app:cardCornerRadius="@dimen/_20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/career_paln_id">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:text="@string/personal_text"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_10dp"
+                            android:background="@color/tint" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/personal_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_10dp"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:background="@color/green_2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/carr_list_lay" />
+
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/skills_txt"
                 android:layout_width="wrap_content"
@@ -257,7 +421,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view1" />
+                app:layout_constraintTop_toBottomOf="@id/knowledge_lay" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/skills_list_lay"

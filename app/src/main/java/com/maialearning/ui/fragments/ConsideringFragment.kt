@@ -190,7 +190,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 }
             }
         }
-        homeModel.showError.observe(requireActivity()){
+        homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
         }
     }
@@ -223,7 +223,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
     }
 
 
-    private fun bottomSheetType(layoutId: Int, rbId: Int, type: Int) {
+    private fun bottomSheetType(layoutId: Int, rbId: Int, type: Int, arratlistPosition: Int) {
         dialog = BottomSheetDialog(requireContext())
 
         val view = layoutInflater.inflate(layoutId, null)
@@ -236,8 +236,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         }
         var univModel = UnivCollegeModel()
         var ids = ArrayList<String>()
-        ids.add("175044")
-        ids.add("175668")
+        ids.add(finalArray[arratlistPosition].universityNid)
         univModel.university_nids = ids
         var url = "https://api-gw-staging.maialearning.com/college-json-filter"
 //        dialogP.show()
@@ -257,16 +256,16 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         }
     }
 
-    override fun onTypeClick() {
-        bottomSheetType(R.layout.application_type, R.id.radio_app_type, 1)
+    override fun onTypeClick(postion: Int) {
+        bottomSheetType(R.layout.application_type, R.id.radio_app_type, 1, postion)
     }
 
-    override fun onTermClick() {
-        bottomSheetType(R.layout.application_term, R.id.radio_app_term, 0)
+    override fun onTermClick(postion: Int) {
+        bottomSheetType(R.layout.application_term, R.id.radio_app_term, 0, postion)
     }
 
-    override fun onPlanClick() {
-        bottomSheetType(R.layout.application_plan_filter, R.id.radio_action, 2)
+    override fun onPlanClick(postion: Int) {
+        bottomSheetType(R.layout.application_plan_filter, R.id.radio_action, 2, postion)
     }
 
     override fun onCommentClick() {
@@ -486,9 +485,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
 
 interface OnItemClickOption {
-    fun onTypeClick()
-    fun onTermClick()
-    fun onPlanClick()
+    fun onTypeClick(postion: Int)
+    fun onTermClick(postion: Int)
+    fun onPlanClick(postion: Int)
     fun onCommentClick()
     fun onAddClick(postion: Int)
     fun onInfoClick(postion: Int)
