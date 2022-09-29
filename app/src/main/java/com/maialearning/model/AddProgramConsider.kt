@@ -1,5 +1,7 @@
 package com.maialearning.model
 
+import com.google.gson.annotations.SerializedName
+
 
 class AddProgramConsider {
     var trans_req_nid: String? = null
@@ -8,5 +10,10 @@ class AddProgramConsider {
     class Programs() {
          var program_name:String=""
         var program_id: Int? = null
+
+        @SerializedName("program_deadline")
+        lateinit var program_deadline: String
+        @SerializedName("program_status")
+       lateinit var program_status: String
     }
 }

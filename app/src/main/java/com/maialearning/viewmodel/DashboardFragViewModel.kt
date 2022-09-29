@@ -264,6 +264,7 @@ class DashboardFragViewModel(private val catRepository: LoginRepository) : ViewM
             }
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

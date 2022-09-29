@@ -1,20 +1,21 @@
 package com.maialearning.ui.activity
 
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.maialearning.R
 import com.maialearning.databinding.ActivityDashboardBinding
 import com.maialearning.ui.bottomsheets.ProfileFilter
-import com.maialearning.ui.bottomsheets.SelectAttachmentSheet
 import com.maialearning.ui.fragments.HomeFragment
 import com.maialearning.ui.fragments.MessageFragment
 import com.maialearning.ui.fragments.NotesFragment
@@ -24,6 +25,7 @@ import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardViewModel
 import com.squareup.picasso.Picasso
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -63,13 +65,34 @@ class DashboardActivity : AppCompatActivity() {
         }
         dashboardViewModel.showError.observe(this) {
             dialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            if (it.toString().contains("JWT expired")) {
+                logoutPopup()
+            } else {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
         }
         loadFragment(HomeFragment())
         if (SharedHelper(this).picture != null && SharedHelper(this).picture?.length!! > 5) {
             Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
         }
         setListeners()
+    }
+
+    private fun logoutPopup() {
+        AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setMessage(getString(R.string.session_error_desc))
+            .setCancelable(false)
+            .setPositiveButton(
+                "Ok"
+            ) { dialog, _ ->
+                Firebase.auth.signOut()
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // To clean up all activities
+                startActivity(intent)
+                finish()
+            }
+            .show()
     }
 
     private fun setListeners() {
@@ -101,7 +124,7 @@ class DashboardActivity : AppCompatActivity() {
                     binding.toolbar.title = getString(R.string.messanger)
                     toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
                     toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
-                        View.VISIBLE
+                        View.GONE
                     loadFragment(MessageFragment())
 
                 }

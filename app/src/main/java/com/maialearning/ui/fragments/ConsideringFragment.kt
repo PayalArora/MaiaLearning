@@ -3,28 +3,24 @@ package com.maialearning.ui.fragments
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
 import com.maialearning.model.AddProgramConsider
 import com.maialearning.model.ConsiderModel
+import com.maialearning.model.UnivCollegeModel
 import com.maialearning.model.UpdateStudentPlan
-import com.maialearning.ui.adapter.CitizenshipAdapter
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
-import com.maialearning.ui.bottomsheets.UpcomingItemDetails
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
@@ -32,7 +28,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
@@ -75,7 +70,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         initObserver()
         dialogP.show()
         getConsideringList()
-
     }
 
     private fun getConsideringList() {
@@ -91,7 +85,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 dialogP?.dismiss()
                 finalArray.clear()
                 if (JSONObject(it.toString()).getJSONObject(userid).has("data")) {
-                    val json =JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
+                    val json = JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
                     val x = json.keys() as Iterator<String>
                     val jsonArray = JSONArray()
                     while (x.hasNext()) {
@@ -157,7 +151,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                             arrayProgram,
                             0,
                             object_.getString("notes"),
-                            arrayCounselor
+                            arrayCounselor, object_.getString("request_transcript"),
+                            object_.getString("application_type"),
+                            object_.getString("application_mode"),
+                            object_.getString("application_status_name"),
+                            object_.getString("app_by_program_supported"),
+                            object_.getInt("confirm_applied")
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -191,7 +190,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 }
             }
         }
-
+        homeModel.showError.observe(requireActivity()){
+            dialogP.dismiss()
+        }
     }
 
     private fun notesClick(data: ConsiderModel.Data) {
@@ -232,6 +233,20 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         dialog?.show()
         view.findViewById<RelativeLayout>(R.id.close).setOnClickListener {
             dialog?.dismiss()
+        }
+        var univModel = UnivCollegeModel()
+        var ids = ArrayList<String>()
+        ids.add("175044")
+        ids.add("175668")
+        univModel.university_nids = ids
+        var url = "https://api-gw-staging.maialearning.com/college-json-filter"
+//        dialogP.show()
+//        val obj = JsonObject()
+//        val jsArray = JSONArray(ids)
+//        obj.addProperty("university_nids", jsArray.toString())
+        homeModel.getCollegeJsonFilter(url, univModel)
+        homeModel.univJsonFilter.observe(requireActivity()) {
+            dialogP.dismiss()
         }
         radioAppType.setOnCheckedChangeListener { group, checkedId ->
             val radioButton = radioAppType.findViewById(checkedId) as RadioButton
@@ -319,7 +334,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
                 updateStudentPlan.campus_tour = "0"
             }
 
-              dialogP.show()
+            dialogP.show()
             homeModel.updateStudentPlan(updateStudentPlan)
             homeModel.updateStudentPlanObserver.observe(requireActivity()) {
                 dialog.dismiss()
@@ -410,30 +425,33 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
+    override fun onTranscriptRequest(postion: Int, chcked: String) {
+    }
+
     override fun onMenuClick(postion: Int, it: View?) {
         menuPopUp(postion, it)
     }
 
     private fun menuPopUp(position: Int, it: View?) {
 
-        val popupMenu = PopupMenu(requireContext(), it)
-        popupMenu.inflate(R.menu.consider_popup)
-        popupMenu.show()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            popupMenu.setForceShowIcon(true)
-        };
-
-        popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
-
-            when (item!!.itemId) {
-                R.id.del_coll -> {
-                    confirmPopup(position)
-                }
-            }
-
-            true
-
-        })
+//        val popupMenu = PopupMenu(requireContext(), it)
+//        popupMenu.inflate(R.menu.consider_popup)
+//        popupMenu.show()
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            popupMenu.setForceShowIcon(true)
+//        };
+//
+//        popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+//
+//            when (item!!.itemId) {
+//                R.id.del_coll -> {
+//                    confirmPopup(position)
+//                }
+//            }
+//
+//            true
+//
+//        })
     }
 
     private fun confirmPopup(position: Int) {
@@ -476,5 +494,5 @@ interface OnItemClickOption {
     fun onInfoClick(postion: Int)
     fun onApplyingClick(postion: Int)
     fun onMenuClick(postion: Int, it: View?)
-
+    fun onTranscriptRequest(postion: Int, checked: String)
 }

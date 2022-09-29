@@ -5,6 +5,7 @@
     android:textColor="@color/black_1"
     android:textSize="@dimen/_14sp"
     android:paddingStart="@dimen/_10dp"
+    android:paddingEnd="@dimen/_0dp"
     android:maxLines="1"
     android:layout_centerVertical="true"
     android:paddingVertical="@dimen/_5dp"

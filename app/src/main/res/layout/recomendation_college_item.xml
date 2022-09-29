@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/_5dp"
+    android:layout_marginTop="@dimen/_10dp"
+    android:background="@drawable/white_rect_border"
+    android:backgroundTint="@color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/_10dp">
+
+    <TextView
+        android:id="@+id/uni_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_toStartOf="@+id/completed"
+        android:layout_weight="1"
+        android:fontFamily="@font/inter_bold"
+        android:gravity="center|start"
+        android:maxLines="2"
+        android:paddingHorizontal="@dimen/_5dp"
+        android:text="@string/university_of_calefornia"
+        android:textColor="@color/univ_name"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/completed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="top"
+        android:fontFamily="@font/inter_black"
+        android:paddingHorizontal="@dimen/_5dp"
+        android:text="@string/completed"
+        android:textColor="@color/green_1"
+        android:textSize="@dimen/_12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/completed"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="top"
+        android:fontFamily="@font/inter_regular"
+        android:paddingHorizontal="@dimen/_5dp"
+        android:text="@string/date"
+        android:textColor="@color/black_1"
+        android:textSize="@dimen/_12sp"
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/date"
+        android:layout_marginTop="@dimen/_5dp"
+        android:background="@color/grey" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:paddingVertical="@dimen/_10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/recomendation_sub_college_item" />
+</RelativeLayout>

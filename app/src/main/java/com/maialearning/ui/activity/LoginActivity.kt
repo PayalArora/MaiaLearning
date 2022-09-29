@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.googleLogin.setOnClickListener {
-            viewModel.signIn()
+           viewModel.signIn()
         }
         binding.loginMicrosoft.setOnClickListener {
             // Microsoftt code refrance https://firebase.google.com/docs/auth/android/microsoft-oauth
@@ -250,23 +250,29 @@ class LoginActivity : AppCompatActivity() {
                 dialog.dismiss()
                 println("Name " + it?.userName)
                 SharedHelper(this).authkey = it.accessToken
+                SharedHelper(this).appResponse = it
                 it.user.let {
                     it?.messageId.let {
                         if (it != null) {
                             SharedHelper(this).messageId = it
                         }
                     }
+                    it?.uuid.let {
+                        if (it != null) {
+                            SharedHelper(this).auditId= it
+                        }
+                    }
                 }
 
-                if (binding.rememberMe.isChecked)
-                    SharedHelper(this).login = "1"
-                SharedHelper(this).id = it.user?.uid
-                SharedHelper(this).uuid = it.user?.uuid?.replace("\"", "")
-                SharedHelper(this).ethnicityTarget = it.user?.ogUserNode?.und?.get(0)?.targetId
-                if (it.mlSchoolConfigData?.gradeConvention?.usConvention == 1 ?: 0) {
-                    SharedHelper(this).convention = true
+                if(binding.rememberMe.isChecked)
+                SharedHelper(this).login = "1"
+                SharedHelper(this).id=it.user?.uid
+                SharedHelper(this).schoolId=it.user?.ogUserNode?.und?.get(0)?.targetId
+                SharedHelper(this).ethnicityTarget=it.user?.ogUserNode?.und?.get(0)?.targetId
+                if (it.mlSchoolConfigData?.gradeConvention?.usConvention == 1?:0){
+                    SharedHelper(this).convention= true
                 } else {
-                    SharedHelper(this).convention = false
+                    SharedHelper(this).convention= false
                 }
 
                 loginWork()

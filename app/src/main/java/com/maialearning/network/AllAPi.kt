@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.maialearning.model.*
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.http.*
 
 
@@ -125,7 +126,7 @@ interface AllAPi {
     fun getEthnicitiesAsync(
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
-    ): Deferred< ArrayList<EthnicityResponse.EthnicityResponseItem?>>
+    ): Deferred<ArrayList<EthnicityResponse.EthnicityResponseItem?>>
 
     @GET("school_wide_configuration/field_race_config/{id}")
     fun getRacesAsync(
@@ -236,6 +237,13 @@ interface AllAPi {
       @Path("studentId") studentId: String,
       @Header("Authorization") Authorization: String
   ): Deferred<Unit>
+    //  https://maia2-staging-backend.maialearning.com/ajs-services/top-picks/402359/9375?new_ui=1
+    @DELETE("top-picks/{schoolId}/{studentId}?new_ui=1")
+    fun hitDeleteUniversityConsidering(
+        @Path("schoolId") schoolId: String,
+        @Path("studentId") studentId: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<Unit>
 
     @POST("college_list_applying")
     @FormUrlEncoded
@@ -279,12 +287,14 @@ interface AllAPi {
 
     @POST("get_documents_download_presigned_url")
     @FormUrlEncoded
-    fun downloadWorkSheet( @Header("Authorization") AutToken: String,
-                           @Header("origin") origin: String,
-                           @Header("referer") referer: String,
-                           @Field("student_uid") uuid: String,
-                           @Field("file_id") fileid: String,
-                           @Field("document_type") docType: String): Deferred<JsonArray>
+    fun downloadWorkSheet(
+        @Header("Authorization") AutToken: String,
+        @Header("origin") origin: String,
+        @Header("referer") referer: String,
+        @Field("student_uid") uuid: String,
+        @Field("file_id") fileid: String,
+        @Field("document_type") docType: String
+    ): Deferred<JsonArray>
 
     @POST("add-student-response-activity")
     @FormUrlEncoded
@@ -332,5 +342,242 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("student_uid") uid: String,
     ): Deferred<JsonArray>
+
+    @GET("get_allowed_values_list/field_status")
+    fun getDecsionStatuses(
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonObject>
+
+    @POST("get_message_center_recipients_for_students")
+    @FormUrlEncoded
+    fun getRecipients(
+        @Header("Authorization") AutToken: String,
+        @Field("school_id") n_id: String,
+        @Field("user_type") type: String
+    ): Deferred<JsonArray>
+
+
+    @GET("get-teacher-counselor-list/{id}?for_reco=1")
+    fun getTeacherList(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+    ): Deferred<JsonArray>
+
+    @POST("recommendation-request")
+    fun sendRecomTeacher(
+        @Header("Authorization") AutToken: String,
+        @Body recModel: RecModel
+
+    ): Deferred<JsonArray>
+
+    @POST("req-ucas-ref-letter")
+    fun sendUcasRec(
+        @Header("Authorization") AutToken: String,
+        @Body recModel: RecModel
+    ): Deferred<JsonArray>
+
+    @GET("get_recommendation_deadline")
+    fun getRecDeadline(
+        @Header("Authorization") AutToken: String,
+    ): Deferred<JsonArray>
+
+    @GET("wc-recommendation-for-student/{id}/{page}")
+    fun getRecomders(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        @Path("page") page: String,
+    ): Deferred<RecomdersModel>
+
+    @GET("recommendation-for-student/{id}/{page}")
+    fun getRecomdersCollege(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        @Path("page") page: String,
+    ): Deferred<JsonObject>
+
+    @DELETE("recommendation-request/{id}")
+    fun cancelRecommendationRequest(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<Unit>
+
+    @GET("recommendation_without_college/{id}")
+    fun getRecomType(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+    ): Deferred<JsonArray>
+
+    @POST("get_documents_presigned_url")
+    @FormUrlEncoded
+    fun getDocumetPresignedURl(
+        @Header("Authorization") AutToken: String,
+        @Field("filename") name: String,
+        @Field("student_uid") uID: String,
+        @Field("document_type") doctype: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<JsonObject>
+
+    @PUT
+    fun uploadDoc(
+        @Url() url: String
+    ): Deferred<Unit>
+
+    @POST("student-brag-sheet")
+    @FormUrlEncoded
+    fun saveDocumentBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Field("student_uid") id: String,
+        @Field("filename") name: String,
+        @Field("path") path: String,
+        @Field("exist") exist: Int,
+        @Field("s3_url") url: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<Unit>
+
+    @GET("get-student-colleges/{id}?for_reco=1")
+    fun getUniversities(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+    @GET("get-itask-category/1/")
+    fun getMilestonesID(
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonObject>
+
+    @GET("get_category_wise_itask/1/{studentId}/{milestoneID}")
+    fun getMilestones(
+        @Header("Authorization") AutToken: String,
+        @Path("studentId") studentId: String,
+        @Path("milestoneID") milestoneID: String
+    ): Deferred<MilestoneResponse>
+
+    @POST("get_documents_download_presigned_url")
+    @FormUrlEncoded
+    fun downloadBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Field("student_uid") uuid: String,
+        @Field("file_id") fileid: String
+    ): Deferred<JsonArray>
+
+    @GET("student-brag-sheet/{id}")
+    fun getBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+    @PUT("itask/{id}/{studentId}")
+    fun checkItask(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+        @Path("studentId") studentId: String
+    ): Deferred<Unit>
+
+    @GET("uncheck-itask-student/{id}")
+    fun uncheckItask(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<Unit>
+
+    @POST("upload-reco-brag-sheet")
+    @FormUrlEncoded
+    fun uploadRecoBragSheet(
+        @Header("Authorization") AutToken: String,
+        @Field("rec_id") id: String,
+        @Field("filename") name: String,
+        @Field("path") path: String,
+        @Field("filehash") fileHash: String
+    ): Deferred<Unit>
+
+    @POST
+    fun getCollegeJsonFilter(
+        @Url() url: String,
+        @Header("Authorization") AutToken: String,
+        @Body univId: UnivCollegeModel
+        //@Query("") univId: UnivCollegeModel
+    ): Deferred<JsonObject>
+
+    @GET("get_student_career_top_picks/{id}")
+    fun getCareerTopPicks(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonArray>
+
+    @GET
+    fun getCareerTopPicksDetails(
+        @Url() url: String,
+    ): Deferred<JsonObject>
+
+    @GET
+    fun getKeyboardSearch(
+        @Url() url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+    ): Deferred<CareerSearchCodesModel>
+
+    @GET
+    fun getCareerCluster(
+        @Url() url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+    ): Deferred<CareerClusterModel>
+
+    @GET
+    fun getCareerClusterList(
+        @Url() url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+    ): Deferred<CareerClusterListModel>
+
+    @GET
+    fun getIndustryList(
+        @Url() url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+    ): Deferred<IndustryListModel>
+
+    @POST("career_search_bright_outlook")
+    fun getCareerBright(
+        @Header("Authorization") AutToken: String,
+        @Body model: BrightLook,
+    ): Deferred<BrightOutlookModel>
+
+    @POST("career_search_onet")
+    fun getCareerSearchList(
+        @Header("Authorization") AutToken: String,
+        @Body model: CareerListModel,
+    ): Deferred<ArrayList<BrightOutlookModel.Data>>
+
+    @POST
+    fun getKeywoardSearchDetails(
+        @Url url: String,
+        @Header("origin") origin: String,
+        @Header("accept") accept: String,
+        @Body model: SearchkeywordRequestModel
+    ): Deferred<JsonArray>
+
+    @GET
+    fun getWorkList(
+        @Header("Authorization") AutToken: String,
+        @Url() url: String
+    ): Deferred<JsonArray>
+    @GET
+    fun getUsList(
+        @Header("Authorization") AutToken: String,
+        @Url() url: String
+    ): Deferred<CareerUSModel>
+
+    @GET("newyork_career_plan/{id}")
+    fun getNYSCareerPlan(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+    @GET("get_student_career_plan/{id}")
+    fun getStudentCareer_Plan(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
 
 }

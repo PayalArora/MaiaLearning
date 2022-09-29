@@ -1,15 +1,15 @@
 package com.maialearning.ui.fragments
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.RelativeLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
@@ -20,12 +20,14 @@ import com.maialearning.databinding.FragmentApplyingBinding
 import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.model.AddProgramConsider
 import com.maialearning.model.ConsiderModel
+import com.maialearning.model.UpdateStudentPlan
 import com.maialearning.ui.adapter.ApplyingAdapter
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
+import com.maialearning.util.showToast
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
@@ -34,7 +36,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnItemClick {
     var selectedValue = ""
     private lateinit var mBinding: FragmentApplyingBinding
-        private lateinit var dialogP: Dialog
+    private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
     val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
     lateinit var userid: String
@@ -74,6 +76,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
         initObserver()
+        getApplyingList()
+    }
+
+    private fun getApplyingList() {
         SharedHelper(requireContext()).id?.let {
             userid = SharedHelper(requireContext()).id!!
             homeModel.getApplyList(userid)
@@ -112,24 +118,24 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     }
                     var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
                         arrayListOf()
-             /*       var counselorNotes = object_.getJSONArray("counselor_notes")
-                    if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
-                        if (counselorNotes is JSONObject) {
-                            val x = counselorNotes.keys() as Iterator<String>
-                            while (x.hasNext()) {
-                                var json: JSONObject = counselorNotes.get(x.next()) as JSONObject
-                                val notesObj: ConsiderModel.CounselorNotes =
-                                    ConsiderModel.CounselorNotes(json.optString("id"),
-                                        json.optString("uid"),
-                                        json.optString("counselor_note"),
-                                        json.optString("first_name"),
-                                        json.optString("last_name"))
-                                arrayCounselor.add(notesObj)
-                            }
+                    /*       var counselorNotes = object_.getJSONArray("counselor_notes")
+                           if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
+                               if (counselorNotes is JSONObject) {
+                                   val x = counselorNotes.keys() as Iterator<String>
+                                   while (x.hasNext()) {
+                                       var json: JSONObject = counselorNotes.get(x.next()) as JSONObject
+                                       val notesObj: ConsiderModel.CounselorNotes =
+                                           ConsiderModel.CounselorNotes(json.optString("id"),
+                                               json.optString("uid"),
+                                               json.optString("counselor_note"),
+                                               json.optString("first_name"),
+                                               json.optString("last_name"))
+                                       arrayCounselor.add(notesObj)
+                                   }
 
 
-                        }
-                    }*/
+                               }
+                           }*/
                     if (!countries.contains(object_.getString("country_name")))
                         countries.add(object_.getString("country_name"))
                     val model: ConsiderModel.Data = ConsiderModel.Data(
@@ -150,7 +156,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         arrayProgram,
                         0,
                         object_.getString("notes"),
-                        arrayCounselor
+                        arrayCounselor, object_.getString("request_transcript"),
+                        object_.getString("application_type"),
+                        object_.getString("application_mode"),
+                        object_.getString("application_status_name"),
+                        object_.getString("app_by_program_supported"),
+                        object_.getInt("confirm_applied")
                     )
                     array.add(model)
                     array.sortBy { it.naviance_college_name }
@@ -182,7 +193,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            context?.showToast(it)
         }
     }
 
@@ -224,7 +235,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     }
 
     override fun onCommentClick() {
-   //     bottomSheetComment()
+        //     bottomSheetComment()
     }
 
     private fun bottomSheetComment() {
@@ -251,8 +262,21 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         TODO("Not yet implemented")
     }
 
-    override fun onMenuClick(postion: Int, it: View?) {
 
+    override fun onTranscriptRequest(postion: Int, checked: String) {
+        var updateStudentPlan = UpdateStudentPlan()
+        updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+        updateStudentPlan.college_nid = finalArray[postion].university_nid
+        updateStudentPlan.app_type = "4"
+        updateStudentPlan.request_transcript = checked
+        dialogP.show()
+        homeModel.updateStudentPlan(updateStudentPlan)
+        homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+        }
+        homeModel.showError.observe(requireActivity()) {
+            dialogP.dismiss()
+        }
     }
 
     private fun bottomSheetProgram(postion: Int) {
@@ -311,7 +335,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 dialogP.dismiss()
                 dialog.dismiss()
                 SharedHelper(requireContext()).id?.let {
-                  val  userid = SharedHelper(requireContext()).id!!
+                    val userid = SharedHelper(requireContext()).id!!
                     homeModel.getApplyList(userid)
                 }
 
@@ -319,8 +343,60 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
 
     }
+
     override fun onAddClick(position: Int) {
         bottomSheetProgram(position)
+    }
+
+    override fun onMenuClick(postion: Int, it: View?) {
+        menuPopUp(postion, it)
+    }
+
+    private fun menuPopUp(position: Int, it: View?) {
+
+        val popupMenu = PopupMenu(requireContext(), it)
+        popupMenu.inflate(R.menu.consider_popup)
+        popupMenu.show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true)
+        };
+
+        popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+            when (item!!.itemId) {
+                R.id.del_coll -> {
+                    confirmPopup(position)
+                }
+            }
+
+            true
+
+        })
+    }
+
+    private fun confirmPopup(position: Int) {
+        AlertDialog.Builder(requireContext())
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setMessage(getString(R.string.move_to_applying))
+            .setPositiveButton(
+                "Yes"
+            ) { dialog, _ -> deleteWork(position) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteWork(position: Int) {
+        SharedHelper(requireContext()).id?.let {
+            dialogP.show()
+            homeModel.moveToApplying(
+                it,
+                finalArray.get(position).university_nid,
+                "0"
+            )
+        }
+        homeModel.applyingObserver.observe(requireActivity()) {
+            getApplyingList()
+        }
     }
 
 }

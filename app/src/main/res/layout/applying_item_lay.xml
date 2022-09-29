@@ -27,6 +27,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
+                android:paddingHorizontal="@dimen/_3dp"
                 android:layout_marginBottom="10dp"
                 android:src="@drawable/us_flag" />
 
@@ -152,16 +153,16 @@
                     <ImageView
                         android:layout_width="@dimen/_15dp"
                         android:layout_height="@dimen/_15dp"
-                        android:layout_marginStart="@dimen/_5dp"
+                        android:layout_marginStart="@dimen/_13dp"
                         android:id="@+id/info_icon"
                         android:layout_marginTop="@dimen/_3dp"
                         app:tint="@color/grey_4"
                         android:src="@drawable/info_icon" />
 
                     <ImageView
+                        android:id="@+id/menu_dots"
                         android:layout_width="@dimen/_20dp"
                         android:layout_height="@dimen/_20dp"
-                        android:visibility="gone"
                         android:layout_marginStart="@dimen/_5dp"
                         android:src="@drawable/menu_dots" />
                 </LinearLayout>
@@ -232,7 +233,7 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginRight="@dimen/_2dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_baseline_edit_24"
+                    android:src="@drawable/ic_edit"
                     app:tint="@color/black_4" />
 
                 <TextView
@@ -524,6 +525,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/add_button"
                     android:gravity="center_vertical"
+                    android:paddingVertical="@dimen/_5dp"
                     android:background="@drawable/white_rect_15"
                     android:backgroundTint="@color/gray_2"
                     android:orientation="vertical">
@@ -542,7 +544,7 @@
                     <Spinner
                         android:id="@+id/all_system"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_30dp"
+                        android:layout_height="@dimen/_20dp"
                         android:layout_marginStart="@dimen/_5dp"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
@@ -590,7 +592,7 @@
                         android:id="@+id/transcript_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
+                        android:checked="false"
                         android:thumb="@drawable/thum_selector"
                         app:track="@drawable/track_selector" />
 
@@ -644,7 +646,7 @@
                         android:id="@+id/applied_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
+                        android:checked="false"
                         android:thumb="@drawable/thum_selector"
                         app:track="@drawable/track_selector" />
 

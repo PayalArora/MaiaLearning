@@ -21,20 +21,20 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:paddingTop="@dimen/_10dp"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/_10dp">
+                android:paddingHorizontal="@dimen/_10dp"
+                android:paddingTop="@dimen/_10dp">
 
                 <RelativeLayout
                     android:id="@+id/icon_lay"
                     android:layout_width="@dimen/_40dp"
                     android:layout_height="@dimen/_40dp"
-                    android:background="@drawable/univ_rounded_icon">
+                    >
 
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/univ_icon"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         android:src="@drawable/univ_icon" />
 
@@ -54,6 +54,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/decision_plan"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/univ"
@@ -61,13 +62,23 @@
                     android:layout_toStartOf="@+id/info_lay"
                     android:layout_toEndOf="@+id/icon_lay"
                     android:fontFamily="@font/inter"
-                    android:text="Regular Admission"
-                    android:textColor="@color/black_1"
                     android:textFontWeight="500"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
+                <TextView
+                    android:id="@+id/application_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/decision_plan"
+                    android:layout_marginStart="@dimen/_5dp"
+                    android:layout_toStartOf="@+id/info_lay"
+                    android:layout_toEndOf="@+id/icon_lay"
+                    android:fontFamily="@font/inter"
+                    android:textFontWeight="500"
+                    android:textSize="12sp" />
                 <LinearLayout
                     android:id="@+id/info_lay"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -103,15 +114,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1dp"
                 android:layout_marginTop="@dimen/_20dp"
-
-                android:background="@color/divider_color" />
+                android:background="@color/divider_color"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="@dimen/_5dp"
-                android:paddingHorizontal="@dimen/_10dp">
+                android:paddingHorizontal="@dimen/_10dp"
+                android:paddingTop="@dimen/_5dp">
 
                 <TextView
                     android:id="@+id/decision_1"
@@ -119,14 +130,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5dp"
                     android:layout_weight="1"
-                    android:padding="@dimen/_5dp"
                     android:background="@drawable/white_rect_15"
                     android:backgroundTint="@color/grey_5"
                     android:fontFamily="@font/inter"
+                    android:padding="@dimen/_5dp"
                     android:text="Chemical Engineering"
                     android:textColor="@color/black_1"
                     android:textFontWeight="500"
-                    android:textSize="@dimen/_12sp" />
+                    android:textSize="@dimen/_12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/decision_2"
@@ -134,15 +146,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_5dp"
                     android:layout_weight="1"
-                    android:padding="@dimen/_5dp"
                     android:background="@drawable/white_rect_15"
                     android:backgroundTint="@color/grey_5"
                     android:fontFamily="@font/inter"
+                    android:padding="@dimen/_5dp"
                     android:text="Bio Medical Engineering"
                     android:textColor="@color/black_1"
                     android:textFontWeight="500"
-                    android:textSize="@dimen/_12sp" />
+                    android:textSize="@dimen/_12sp"
+                    android:visibility="gone" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/program_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -152,8 +169,8 @@
                 android:layout_height="@dimen/_1dp"
                 android:layout_marginTop="@dimen/_5dp"
                 android:layout_marginBottom="@dimen/_10dp"
-
-                android:background="@color/divider_color" />
+                android:background="@color/divider_color"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -180,8 +197,8 @@
                     android:textColor="@color/green_1"
                     android:textFontWeight="800"
                     android:textSize="@dimen/_12sp"
-                    android:textStyle="bold"
-/>
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/rb_decision"
                     android:layout_width="wrap_content"
@@ -190,40 +207,41 @@
                     android:layout_gravity="start"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
-                    android:visibility="gone"
                     android:background="@android:color/transparent"
                     android:drawableLeft="@drawable/check"
                     android:drawablePadding="@dimen/_5dp"
                     android:fontFamily="@font/inter"
                     android:gravity="center_vertical"
                     android:text="@string/select_decision"
-
                     android:textColor="@color/black_1"
+
                     android:textFontWeight="800"
                     android:textSize="@dimen/_12sp"
                     android:textStyle="bold"
-            />
+                    android:visibility="gone" />
 
                 <CheckBox
                     android:id="@+id/rb_other_app"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_30dp"
                     android:layout_alignParentRight="true"
-                    android:visibility="gone"
                     android:layout_gravity="start"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
                     android:button="@drawable/radiobutton_done"
                     android:buttonTint="@color/green_1"
                     android:checked="false"
+                    android:enabled="false"
+                    android:clickable="false"
                     android:fontFamily="@font/inter"
                     android:layoutDirection="rtl"
                     android:paddingStart="@dimen/_10dp"
-                    android:text="@string/accepted"
+                    android:text="@string/applied"
                     android:textColor="@color/green_1"
                     android:textFontWeight="800"
                     android:textSize="@dimen/_12sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="visible" />
 
 
             </RelativeLayout>

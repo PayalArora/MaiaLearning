@@ -10,11 +10,12 @@
 
     <TextView
         android:id="@+id/text_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15dp"
         android:layout_marginTop="@dimen/_10dp"
         android:lineSpacingExtra="@dimen/_2sp"
+        app:layout_constraintRight_toLeftOf="@+id/menu_dots"
         android:text="@string/resume"
         android:textColor="@color/black_1"
         android:textSize="@dimen/_14sp"
@@ -25,7 +26,7 @@
     <ImageButton
         android:layout_width="@dimen/_10dp"
         android:layout_height="wrap_content"
-
+android:id="@+id/menu_dots"
         android:layout_marginTop="@dimen/_10dp"
         android:layout_marginRight="@dimen/_15dp"
         android:background="@android:color/transparent"
@@ -99,7 +100,8 @@
         android:background="@android:color/transparent"
         android:button="@drawable/radiobutton_done"
         android:buttonTint="@color/green_1"
-        android:checked="false"
+        android:checked="true"
+        android:enabled="false"
         android:layoutDirection="rtl"
         android:paddingStart="@dimen/_10dp"
         android:text="@string/done"

@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.viewbinding.BuildConfig
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -29,6 +30,9 @@ import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.UnsupportedEncodingException
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,11 +44,38 @@ const val CAT_API_MSG_URL = "https://msg-staging.maialearning.com/"
 var BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 var UNIV_LOGO_URL="https://college-images-staging.maialearning.com/"
 const val ORIGIN = "https://maia2-staging.maialearning.com"
+const val ACCEPT_JSON = "application/json, text/plain, */*"
 const val ML_URL = "https://ml-api-staging.maialearning.com/"
 const val ANTI_VIRUS = "https://api-gw-staging.maialearning.com/ml-s3-antivirus-status"
+const val CARRER_URL = "https://maia2-staging.maialearning.com/atlas-static-data/career-factsheet/"
+const val CAREER_FACTSHEET = "/career_search_factsheet.json"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
+const val LOGINRESPONSE = "login_response"
+const val SEARCH_AFFINITY = "https://services.onetcenter.org/v1.9/ws/mnm/search?keyword="
+const val CAREER_AFFINITY = "https://services.onetcenter.org/v1.9/ws/online/career_clusters?client=serviceinfinity"
+const val CAREER_LIST = "https://services.onetcenter.org/v1.9/ws/online/career_clusters/"
+const val INDUSTRY_LIST = "https://services.onetcenter.org/v1.9/ws/online/industries/"
+const val CAREER_CLIENT = "?client=serviceinfinity"
+const val SEARCH_CLIENT = "&client=serviceinfinity"
+const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
+const val US_SEARCH= "get_military_careers_data?pager=1&service="
+object URL{
+    var BASEURL = 0
+}
 
+fun String.getURLSearch():String{
+    return "$SEARCH_AFFINITY$this$SEARCH_CLIENT"
+}
+fun String.getURLCluster():String{
+    return "$CAREER_LIST$this$CAREER_CLIENT"
+}
+fun String.getURLIndustry():String{
+    return "$INDUSTRY_LIST$this$CAREER_CLIENT"
+}
+fun String.getUSIndustry():String{
+    return "$BASE_URL$US_SEARCH$this$CAREER_CLIENT"
+}
 
 fun Context.isNetworkConnected(): Boolean {
     val connectivityManager: ConnectivityManager? =
@@ -87,7 +118,7 @@ val appModules = module {
     viewModel { DashboardViewModel(catRepository = get())}
 
     viewModel { FactSheetModel(catRepository = get()) }
-
+    viewModel { CareerViewModel(catRepository = get()) }
     viewModel { ProfileViewModel(catRepository = get()) }
     viewModel { DashboardFragViewModel(catRepository = get()) }
 
@@ -101,7 +132,7 @@ val appModules1 = module{
         )
     }
     factory<MessageRepository> { MessageRepositoryImpl(catApi = get()) }
-    viewModel { MessageViewModel(catRepository = get())}
+    viewModel { MessageViewModel(catRepository = get()) }
 }
 
 fun createHttpClient(): OkHttpClient {
@@ -117,7 +148,7 @@ fun createHttpClient(): OkHttpClient {
 //        return@addInterceptor it.proceed(request)
 //    }.build()
 
-    return if (BuildConfig.DEBUG) {
+    return if (BuildConfig.DEBUG){
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         client
@@ -138,6 +169,16 @@ fun getDate(timestamp: Long, format: String): String {
     calendar.timeInMillis = timestamp * 1000L
     val date = DateFormat.format(format, calendar).toString()
     return date
+}
+
+fun getDateTime(s: String, format: String): String? {
+    try {
+        val sdf = SimpleDateFormat(format)
+        val netDate = Date((s.toLong()))
+        return sdf.format(netDate)
+    } catch (e: Exception) {
+        return e.toString()
+    }
 }
 
 inline fun <reified T> createWebService(
@@ -236,4 +277,28 @@ fun String.replaceNextLine(): String {
 }
 fun String.replaceInvertedComas():String {
     return this.replace("\"", "")
+}
+
+fun String.replaceCrossBracketsComas():String {
+    return this.replace("[", "").replace("]", "").replace("\"", "")
+}
+
+fun Context.showToast(it:String){
+    this.let {it1->
+        Toast.makeText(it1, it, Toast.LENGTH_SHORT).show()
+    }
+}
+
+
+@Throws(NoSuchAlgorithmException::class, UnsupportedEncodingException::class)
+fun String.getMd5Hash(): String? {
+    val md: MessageDigest = MessageDigest.getInstance("MD5")
+    val thedigest: ByteArray = md.digest(this.toByteArray(charset("UTF-8")))
+    val hexString = java.lang.StringBuilder()
+    for (i in thedigest.indices) {
+        val hex = Integer.toHexString(0xFF and thedigest[i].toInt())
+        if (hex.length == 1) hexString.append('0')
+        hexString.append(hex)
+    }
+    return hexString.toString().toUpperCase()
 }

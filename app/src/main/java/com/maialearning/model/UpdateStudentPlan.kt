@@ -11,7 +11,7 @@ class UpdateStudentPlan {
     lateinit var app_status: String
     lateinit var deadline_date: String
     lateinit var college_priority_choice: String
-    lateinit var request_transcript: String
+    var request_transcript: String = "1"
     lateinit var old_app_status: String
     lateinit var multiple_decision_round: String
     lateinit var program_name: String

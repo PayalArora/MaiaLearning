@@ -40,17 +40,33 @@ class ConsiderModel {
         var notes: String,
         @SerializedName("counselor_notes")
         var counselorNotes: ArrayList<CounselorNotes>?,
+        @SerializedName("request_transcript")
+        var requestTranscript: String,
+        @SerializedName("application_type")
+        var applicationType: String,
+        @SerializedName("application_mode")
+        var applicationMode: String,
+        @SerializedName("application_status_name")
+        var applicationStatusName: String,
+        @SerializedName("app_by_program_supported")
+        var appByProgramSupported: String,
+        @SerializedName("confirm_applied")
+        var confirmApplied: Int
     )
 
     data class ProgramData(
         @SerializedName("program_id")
         var program_id: Int,
         @SerializedName("program_name")
+
+
         var program_name: String,
         @SerializedName("program_deadline")
         var program_deadline: String,
         @SerializedName("program_status")
         var program_status: String,
+        @SerializedName("app_status_val")
+        var app_status_val:String? = null
     )
 
     data class CounselorNotes(

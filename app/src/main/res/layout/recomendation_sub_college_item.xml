@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/_10dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/rec_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/_5dp"
+        android:layout_toStartOf="@+id/date"
+        android:layout_weight="1"
+        android:fontFamily="@font/inter"
+        android:gravity="center|start"
+        android:maxLines="1"
+        android:paddingHorizontal="@dimen/_5dp"
+        android:singleLine="true"
+        android:textColor="@color/univ_name"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+       android:gravity="center"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_regular"
+        android:layout_gravity="top"
+        android:paddingHorizontal="@dimen/_5dp"
+        android:layout_alignParentRight="true"
+        android:text="@string/date"
+        android:textColor="@color/black_1"
+        android:textSize="@dimen/_12sp"
+        android:textStyle="bold" />
+    <RelativeLayout
+        android:id="@+id/cancel_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rec_name">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_black"
+            android:padding="@dimen/_5dp"
+            android:layout_marginStart="@dimen/_5dp"
+            android:text="@string/cancel_request"
+            android:textColor="@color/red_1"
+            android:textSize="@dimen/_12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/brag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/inter_black"
+
+            android:padding="@dimen/_5dp"
+            android:text="@string/update_brag"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_12sp" />
+    </RelativeLayout>
+</RelativeLayout>

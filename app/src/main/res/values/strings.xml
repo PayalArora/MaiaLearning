@@ -156,6 +156,12 @@
     <string name="country">Country</string>
     <string name="reigon">Reigon</string>
     <string name="list">List</string>
+    <string name="cancel_request">Cancel Request</string>
+    <string name="cancel_req_msg">Are you sure you\'d like to cancel  request?</string>
+    <string name="reload_brag_sheet">Reload Brag Sheet</string>
+    <string name="select_file">Please select PDF to upload</string>
+    <string name="select_university">Select Universities</string>
+    <string name="update_brag">Update Brag Sheet</string>
 
     <string-array name="UnivFilters">
         <item>Country</item>
@@ -463,6 +469,34 @@
     <string name="view">View</string>
     <string name="upload_file">Upload File</string>
     <string name="delete_coll">Delete College</string>
+    <string name="search_tea">Search Teacher</string>
+    <string name="move_to_applying">Do you want to move this university from applying to considering list?</string>
+    <string name="applied">Applied</string>
+    <string name="status">status</string>
+    <string name="enter_your_new">Enter your new message \ndescription here!</string>
+    <string name="rec_letter">Recommendation Letter</string>
+    <string name="ucas_letter">UCAS Ref</string>
+    <string name="select_teachers_recs">Select Teachers for Recommendation</string>
+    <string name="select_teachers_ucas">Select Teachers for UCAS Ref</string>
+    <string name="requests">Requests</string>
+    <string name="mark_complete">Mark Complete</string>
+    <string name="token_expired">Session Expired</string>
+    <string name="session_error_desc">Your session has been expired. Please login again.</string>
+    <string name="recs_letter">Recomendation sent successfully</string>
+    <string name="personal_data">Personal Data</string>
+    <string name="student_id_number">Student Identification Number</string>
+    <string name="school_">School</string>
+    <string name="career_plan">Career Plan</string>
+    <string name="grade_txt">Grade</string>
+    <string name="parent_guardian">Parent/\nGuardian</string>
+    <string name="educator">Educator</string>
+    <string name="attributes_action">Attributes and Actions</string>
+    <string name="below_are_the">Below are the attributes I need to acquire for my career choices.</string>
+    <string name="knowledge_attr">Knowledge Attributes</string>
+    <string name="skills_attr">Skills Attributes</string>
+    <string name="ability_attr">Ability Attributes</string>
+    <string name="tools_attr">Tools Attributes</string>
+    <string name="tech_attr">Technology Attributes</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
@@ -476,5 +510,54 @@
         <item>Yes</item>
         <item>I plan to</item>
         <item>College doesnt offer interviews</item>
+    </string-array>
+
+    <string-array name="APPLICATION_TYPE">
+        <item>CSU Application</item>
+        <item>UC Application</item>
+        <item>Common App</item>
+        <item>Other Application</item>
+        <item>Coalition App</item>
+        <item>Online App / Mail</item>
+        <item>Mail Application</item>
+        <item>UCAS</item>
+        <item>California State App</item>
+        <item>Apply Texas Application</item>
+        <item>Universal App</item>
+    </string-array>
+
+    <string-array name="DECISION_PLAN">
+        <item>Early Action</item>
+        <item>Early Action II</item>
+        <item>Early Decision</item>
+        <item>Early Decision II</item>
+        <item>Priority Application</item>
+        <item>Regular Admission</item>
+        <item>Rolling Decision</item>
+        <item>Restrictive Early Action</item>
+    </string-array>
+
+    <string-array name="SEARCH_ARRAY">
+        <item>Keyword</item>
+        <item>Bright Outlook</item>
+        <item>Career Clusters</item>
+        <item>Industry</item>
+        <item>Work Values</item>
+        <item>U.S. Military</item>
+    </string-array>
+
+    <string-array name="OUT_ARRAY">
+        <item>All</item>
+        <item>Grow Rapidly</item>
+        <item>Many Openings</item>
+        <item>New &amp; Emerging</item>
+    </string-array>
+    <string-array name="WORK_ARRAY">
+        <item>Achievement</item>
+        <item>Independence</item>
+        <item>Recognition</item>
+        <item>Relationship</item>
+        <item>Support</item>
+        <item>Working Condition</item>
     </string-array>
 </resources>

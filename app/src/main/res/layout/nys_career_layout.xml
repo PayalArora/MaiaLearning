@@ -4,53 +4,237 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_1"
-    android:paddingBottom="@dimen/_10dp"
-    >
+    android:paddingBottom="@dimen/_10dp">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
 
-        app:layout_constraintTop_toTopOf="parent"
-
-        >
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:padding="@dimen/_10dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10dp">
+
             <TextView
-                android:id="@+id/knowledge"
+                android:id="@+id/personal_data_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_10dp"
                 android:fontFamily="@font/inter_bold"
                 android:lineSpacingExtra="2sp"
-                android:text="Knowledge"
+                android:text="@string/personal_data"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16sp"
+                android:textSize="@dimen/_12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/pd_lay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:background="@color/white"
+                app:cardCornerRadius="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/personal_data_txt">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10dp">
+
+                    <LinearLayout
+                        android:id="@+id/heading_lay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:gravity="center"
+                            android:text="@string/name"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"                            android:gravity="center"
+                            android:text="@string/student_id_number"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"                            android:gravity="center"
+                            android:text="@string/school_"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/heading_lay">
+
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"                            android:gravity="center"
+                            android:text="@string/name"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/student_id_no"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:maxLines="1"
+                            android:gravity="center"
+                            android:text="@string/student_id_number"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/school_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"
+                            android:maxLines="2"
+                            android:gravity="center"
+                            android:text="@string/school_"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
             <TextView
-                android:id="@+id/know_data"
+                android:id="@+id/career_paln_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_10dp"
                 android:fontFamily="@font/inter_bold"
                 android:lineSpacingExtra="2sp"
-                android:text="A. Self-knowledge: Who am I?"
+                android:text="@string/career_plan"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16sp"
+                android:textSize="@dimen/_12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/knowledge" />
+                app:layout_constraintTop_toBottomOf="@id/pd_lay" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/knowList"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/carr_list_lay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:background="@color/white"
+                app:cardCornerRadius="@dimen/_20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/know_data" />
+                app:layout_constraintTop_toBottomOf="@id/career_paln_id">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"                            android:gravity="center"
+                            android:id="@+id/grade_txt"
+                            android:text="@string/grade_txt"
+                            />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"                            android:gravity="center"
+                            android:text="@string/student"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"                            android:gravity="center"
+                            android:text="@string/parent_guardian"
+                            />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/inter"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"                            android:gravity="center"
+                            android:text="@string/educator"
+                            />
+                    </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/career_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/_10dp"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
             <View
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
@@ -59,28 +243,43 @@
                 android:background="@color/green_2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/knowList" />
+                app:layout_constraintTop_toBottomOf="@id/carr_list_lay" />
+
             <TextView
-                android:id="@+id/carrer_data"
+                android:id="@+id/skills_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_10dp"
                 android:fontFamily="@font/inter_bold"
                 android:lineSpacingExtra="2sp"
-                android:text="A. Self-knowledge: Who am I?"
+                android:text="@string/skills_app"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16sp"
+                android:textSize="@dimen/_12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view1" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/careerList"
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/skills_list_lay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/_20dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginEnd="@dimen/_10dp"
+                android:background="@color/white"
+                app:cardCornerRadius="@dimen/_20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/carrer_data" />
+                app:layout_constraintTop_toBottomOf="@id/skills_txt">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/skills_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:padding="@dimen/_10dp"
+                    android:paddingBottom="@dimen/_20dp" />
+            </androidx.cardview.widget.CardView>
+
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
@@ -89,88 +288,9 @@
                 android:background="@color/green_2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/careerList" />
+                app:layout_constraintTop_toBottomOf="@id/skills_list_lay" />
 
-            <TextView
-                android:id="@+id/attr"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:fontFamily="@font/inter_bold"
-                android:lineSpacingExtra="2sp"
-                android:text="@string/skills_app"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view" />
 
-            <TextView
-                android:id="@+id/hide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:fontFamily="@font/inter_medium"
-                android:lineSpacingExtra="2sp"
-                android:text="@string/dir_app"
-                android:textColor="@color/black_1"
-                android:textSize="@dimen/_16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/attr" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/skill_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:background="@drawable/round_rect"
-                android:paddingBottom="@dimen/_20dp"
-                app:layout_constraintBottom_toTopOf="@id/action"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hide" />
-
-            <TextView
-                android:id="@+id/action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:fontFamily="@font/inter_bold"
-                android:lineSpacingExtra="2sp"
-                android:text="Culminating Activities"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/skill_list" />
-            <TextView
-                android:id="@+id/actionText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_10dp"
-                android:fontFamily="@font/inter_medium"
-                android:lineSpacingExtra="2sp"
-                android:text="@string/direc_app"
-                android:textColor="@color/black_1"
-                android:textSize="@dimen/_16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/action" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/action_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="@dimen/_10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/actionText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

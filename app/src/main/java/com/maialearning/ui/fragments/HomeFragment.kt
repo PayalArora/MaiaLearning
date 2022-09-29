@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
     private fun loadFragment(fragment: Fragment) {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
-        transaction.addToBackStack("name")
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 }

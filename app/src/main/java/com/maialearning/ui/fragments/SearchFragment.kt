@@ -266,11 +266,9 @@ class SearchFragment : Fragment() {
 
         homeModel.likeObserver.observe(requireActivity()) {
             progress.dismiss()
-//            hitAPI(page)
         }
         homeModel.unlikeObserver.observe(requireActivity()) {
             progress.dismiss()
-//            hitAPI(page)
         }
         homeModel.showError.observe(requireActivity()) {
             progress.dismiss()

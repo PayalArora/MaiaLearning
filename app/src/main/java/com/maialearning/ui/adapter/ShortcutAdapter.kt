@@ -1,11 +1,16 @@
 package com.maialearning.ui.adapter
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemShorcutsBinding
+import com.maialearning.model.ShortcutModel
 
-class ShortcutAdapter() : RecyclerView.Adapter<ShortcutAdapter.ViewHolder>() {
+
+class ShortcutAdapter(var context: Context, var array: ArrayList<ShortcutModel>) : RecyclerView.Adapter<ShortcutAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -27,10 +32,19 @@ class ShortcutAdapter() : RecyclerView.Adapter<ShortcutAdapter.ViewHolder>() {
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
+
+            viewHolder.binding.textUpcomingVisits.text = array.get(position).name
+
+        viewHolder.binding.textDescription.text = "N/A"
+        viewHolder.binding.layout.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse( array.get(position).link))
+                context.startActivity(intent)
+
+        }
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return array.size
     }
 
 }

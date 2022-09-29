@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.CareerAdapterBinding
 import com.maialearning.databinding.KnowAttrLayouBinding
+import com.maialearning.model.KnowledgeItem
 
-class KnowledgeAttrAdapter(var context: Context) : RecyclerView.Adapter<KnowledgeAttrAdapter.ViewHolder>() {
+class KnowledgeAttrAdapter(var context: Context, val knowledge: List<KnowledgeItem?>?) :
+    RecyclerView.Adapter<KnowledgeAttrAdapter.ViewHolder>() {
     var isSelected = false
 
     /**
@@ -32,17 +34,12 @@ class KnowledgeAttrAdapter(var context: Context) : RecyclerView.Adapter<Knowledg
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        if (position ==1 ){
-            viewHolder.binding.name.text="Biology"
-            viewHolder.binding.name1.text="Anesthesiologists, Comm..."
-            viewHolder.binding.name.setTextColor(ContextCompat.getColor(context, R.color.green_1))
-            viewHolder.binding.name1.setTextColor(ContextCompat.getColor(context, R.color.green_1))
-        }
 
+        viewHolder.binding.name.text = knowledge?.get(position)?.name
 
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return knowledge?.size ?: 0
     }
 }

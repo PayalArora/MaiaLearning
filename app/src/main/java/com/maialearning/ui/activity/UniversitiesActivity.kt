@@ -1,6 +1,7 @@
 package com.maialearning.ui.activity
 
 import android.app.Dialog
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
@@ -648,7 +649,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         return model
     }
-
 
 }
 

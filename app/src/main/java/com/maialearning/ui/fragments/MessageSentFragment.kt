@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClickDelete
+import com.maialearning.calbacks.OnItemClickId
 import com.maialearning.databinding.LayoutRecyclerviewBinding
 import com.maialearning.model.InboxResponse
 import com.maialearning.ui.activity.MessageDetailActivity
@@ -22,7 +23,7 @@ import com.maialearning.viewmodel.MessageViewModel
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MessageSentFragment : Fragment(), OnItemClickDelete {
+class MessageSentFragment : Fragment(),  OnItemClickDelete  {
     private lateinit var mBinding: LayoutRecyclerviewBinding
     private var recyclerDataArrayList: ArrayList<InboxResponse.MessagesItem> = arrayListOf()
     private val messageViewModel: MessageViewModel by viewModel()
@@ -66,6 +67,9 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
         messageViewModel.showError.observe(viewLifecycleOwner) {
             dialog?.dismiss()
         }
+        messageViewModel.delObserver.observe(viewLifecycleOwner) {
+            dialog?.dismiss()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,14 +78,13 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
         dialog.show()
         messageViewModel.getSent()
         observer()
-        setAdapter()
 
     }
 
 
 
     private fun setAdapter() {
-        mBinding.recyclerList.adapter = MessageAdapter(this, recyclerDataArrayList)
+        mBinding.recyclerList.adapter = MessageAdapter(this, recyclerDataArrayList, 1)
         val swipeHelper: SwipeHelper = object : SwipeHelper(context, mBinding.recyclerList) {
             override fun instantiateUnderlayButton(
                 viewHolder: RecyclerView.ViewHolder,
@@ -100,16 +103,22 @@ class MessageSentFragment : Fragment(), OnItemClickDelete {
 
     }
 
-    override fun onClick(positiion: Int) {
-        val intent = Intent(requireActivity(), MessageDetailActivity::class.java)
+    override fun onClick(positiion: Int, id: String) {
+        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id).putExtra("type","true")
         startActivity(intent)
     }
 
     override fun onDelete(position: Int) {
+//        recyclerDataArrayList.removeAt(position)
+//        (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)
+        dialog.show()
+        messageViewModel.delMessage(recyclerDataArrayList[position].messageId?:"")
         recyclerDataArrayList.removeAt(position)
-        (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)
 
+        // below line is to notify our item is removed from adapter.
+        (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)
     }
+
 
 }
 
