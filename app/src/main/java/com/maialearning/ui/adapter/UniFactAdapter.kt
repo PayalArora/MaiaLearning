@@ -2,6 +2,7 @@ package com.maialearning.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
@@ -14,6 +15,7 @@ import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.UNIV_LOGO_URL
+import com.maialearning.util.parseNA
 import com.squareup.picasso.Picasso
 
 class UniFactAdapter(
@@ -89,7 +91,7 @@ class UniFactAdapter(
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
-            viewHolder.binding.university.setText(university_list.get(position)?.collegeName)
+            viewHolder.binding.university.setText(parseNA(university_list.get(position)?.collegeName))
             viewHolder.binding.name.setText(university_list.get(position)?.cityState)
             viewHolder.binding.country.setText(university_list.get(position)?.country)
             viewHolder.binding.profit.setText(university_list.get(position)?.collegeType)
@@ -99,6 +101,14 @@ class UniFactAdapter(
             viewHolder.binding.termValue.setText("ACT Scores")
             viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
             viewHolder.binding.planValue.setText("Acceptance Rate")
+            if (university_list.get(position)?.country!= "US"){
+                viewHolder.binding.list.visibility = View.GONE
+                viewHolder.binding.location.visibility = View.GONE
+            } else
+            {
+                viewHolder.binding.list.visibility = View.VISIBLE
+                viewHolder.binding.location.visibility = View.VISIBLE
+            }
             if (university_list.get(position)?.topPickFlag == 0) {
                 viewHolder.binding.like.setImageResource(R.drawable.like)
             } else if (university_list.get(position)?.topPickFlag == 1) {

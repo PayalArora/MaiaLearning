@@ -86,29 +86,145 @@ class SearchFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
             .commit()
-        if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
-            germanListUpdate = ArrayList()
-            germanList = ArrayList()
-            germanListNew = ArrayList<GermanUniversitiesResponse.Data.CollegeData?>()
-            isEuropean = false
-            germanAdapter = GermanFactAdapter(
-                requireContext(),
-                germanListNew,
-                ::click,
-                mBinding.rvUniv
-            )
-            mBinding.rvUniv.adapter = germanAdapter
-            germanAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
-                override fun onLoadMore() {
-                    germanListNew.add(null)
-                    isLoading = true
-                    germanAdapter.notifyItemInserted(germanListNew.size - 1)
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        hitAPI(page, "")
+        universitySearch()
+        observers()
 
-                    }, 2000)
+        mBinding.searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                page = 1
+                hitAPI(page, mBinding.searchText.text.toString())
+                return@OnEditorActionListener true
+            }
+            false
+        })
+        mBinding.close.setOnClickListener {
+            mBinding.searchText.setText("")
+            page = 1
+            hitAPI(page, "")
+        }
+    }
+
+    private fun observers() {
+        homeModel.searchUniversityObserver.observe(requireActivity()) {
+            if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
+//                val univ = SearchParser(it).parseGermanJson()
+//                page = (univ.pager!!.current!! + 1)
+//                val totalPage = univ.pager?.total
+//                val last = univ.pager?.last
+//                progress.dismiss()
+//                germanList?.addAll(univ.data?.collegeData!!)
+//                germanListUpdate?.addAll(univ.data?.collegeData!!)
+//                if (isLoading) {
+//                    isLoading = false
+//                    germanListNew.removeAt(germanListNew.size - 1)
+//                    germanAdapter.notifyItemRemoved(germanListNew.size)
+//                }
+//                //for swipe refresh page
+//                if (totalPage != null) {
+//                    if (last != null) {
+//                        germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last)
+//                    }
+//                }
+//                germanAdapter.setLoaded()
+            } else if ((SharedHelper(requireContext()).country ?: "US") == "GB") {
+//                val univ = SearchParser(it).parseUkJson()
+//                page = (univ.pager!!.current!! + 1)
+//                val totalPage = univ.pager?.total
+//                val last = univ.pager?.last
+//                progress.dismiss()
+//                ukList?.addAll(univ.data?.collegeData!!)
+//                ukListUpdate?.addAll(univ.data?.collegeData!!)
+//                if (isLoading) {
+//                    isLoading = false
+//                    ukListNew.removeAt(ukListNew.size - 1)
+//                    ukAdapter.notifyItemRemoved(ukListNew.size)
+//                }
+//                //for swipe refresh page
+//                if (totalPage != null) {
+//                    if (last != null) {
+//                        ukAdapter.addAllLis(ukList!!, totalPage.toInt(), last)
+//                    }
+//                }
+//                ukAdapter.setLoaded()
+
+            } else if (isEuropean) {
+//                val univ = SearchParser(it).parseEuropeanJson()
+//                page = (univ.pager!! + 1)
+//                val totalPage = univ.totalRecords
+//                val last = univ.last
+//                progress.dismiss()
+//                euroList?.addAll(univ.collegeList)
+//                euroListUpdate?.addAll(univ.collegeList)
+//                if (isLoading) {
+//                    isLoading = false
+//                    euroListNew.removeAt(euroListNew.size - 1)
+//                    euroAdapter.notifyItemRemoved(euroListNew.size)
+//                }
+//                //for swipe refresh page
+//                if (totalPage != null) {
+//                    if (last != null) {
+//                        euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
+//                    }
+//                }
+//                euroAdapter.setLoaded()
+            } else {
+                val univ = SearchParser(it).parseJson()
+                page = (univ.pager!! + 1)
+                val totalPage = univ.totalRecords
+                val last = univ.last
+                progress.dismiss()
+                universityList?.addAll(univ.university_list!!)
+                universityListUpdate?.addAll(univ.university_list!!)
+                if (isLoading) {
+                    isLoading = false
+                    universityListNew.removeAt(universityListNew.size - 1)
+                    adapter.notifyItemRemoved(universityListNew.size)
                 }
-            })
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        adapter.addAllLis(universityList!!, totalPage, last)
+                    }
+                }
+                adapter.setLoaded()
+            }
+        }
+        homeModel.likeObserver.observe(requireActivity()) {
+            progress.dismiss()
+        }
+        homeModel.unlikeObserver.observe(requireActivity()) {
+            progress.dismiss()
+        }
+        homeModel.showError.observe(requireActivity()) {
+            progress.dismiss()
+            Log.e("Error", "err" + it)
+        }
+    }
+
+    private fun universitySearch() {
+        if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
+//            germanListUpdate = ArrayList()
+//            germanList = ArrayList()
+//            germanListNew = ArrayList<GermanUniversitiesResponse.Data.CollegeData?>()
+//            isEuropean = false
+//            germanAdapter = GermanFactAdapter(
+//                requireContext(),
+//                germanListNew,
+//                ::click,
+//                mBinding.rvUniv
+//            )
+//            mBinding.rvUniv.adapter = germanAdapter
+//            germanAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+//                override fun onLoadMore() {
+//                    germanListNew.add(null)
+//                    isLoading = true
+//                    germanAdapter.notifyItemInserted(germanListNew.size - 1)
+//                    Handler(Looper.getMainLooper()).postDelayed({
+//                        hitAPI(page, "")
+//
+//                    }, 2000)
+//                }
+//            })
         } else if ((SharedHelper(requireContext()).country ?: "US").equals("GB")) {
             ukListUpdate= ArrayList()
             ukList = ArrayList()
@@ -132,28 +248,28 @@ class SearchFragment : Fragment() {
                 }
             })
         } else if (euCountries.contains(SharedHelper(requireContext()).country ?: "US")) {
-            euroListUpdate = ArrayList()
-            euroList = ArrayList()
-            euroListNew = ArrayList()
-            isEuropean = true
-            euroAdapter = EuropeanFactAdapter(
-                requireContext(),
-                euroListNew,
-                ::click,
-                mBinding.rvUniv
-            )
-            mBinding.rvUniv.adapter = euroAdapter
-            euroAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
-                override fun onLoadMore() {
-                    euroListNew.add(null)
-                    isLoading = true
-                    euroAdapter.notifyItemInserted(euroListNew.size - 1)
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        hitAPI(page, "")
-
-                    }, 2000)
-                }
-            })
+//            euroListUpdate = ArrayList()
+//            euroList = ArrayList()
+//            euroListNew = ArrayList()
+//            isEuropean = true
+//            euroAdapter = EuropeanFactAdapter(
+//                requireContext(),
+//                euroListNew,
+//                ::click,
+//                mBinding.rvUniv
+//            )
+//            mBinding.rvUniv.adapter = euroAdapter
+//            euroAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+//                override fun onLoadMore() {
+//                    euroListNew.add(null)
+//                    isLoading = true
+//                    euroAdapter.notifyItemInserted(euroListNew.size - 1)
+//                    Handler(Looper.getMainLooper()).postDelayed({
+//                        hitAPI(page, "")
+//
+//                    }, 2000)
+//                }
+//            })
         } else {
             universityListUpdate = ArrayList()
             universityList = ArrayList()
@@ -179,115 +295,7 @@ class SearchFragment : Fragment() {
             })
         }
         hitAPI(page, "")
-        homeModel.searchUniversityObserver.observe(requireActivity()) {
-            if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
-                val univ = SearchParser(it).parseGermanJson()
-                page = (univ.pager!!.current!! + 1)
-                val totalPage = univ.pager?.total
-                val last = univ.pager?.last
-                progress.dismiss()
-                germanList?.addAll(univ.data?.collegeData!!)
-                germanListUpdate?.addAll(univ.data?.collegeData!!)
-                if (isLoading) {
-                    isLoading = false
-                    germanListNew.removeAt(germanListNew.size - 1)
-                    germanAdapter.notifyItemRemoved(germanListNew.size)
-                }
-                //for swipe refresh page
-                if (totalPage != null) {
-                    if (last != null) {
-                        germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last)
-                    }
-                }
-                germanAdapter.setLoaded()
-            } else if ((SharedHelper(requireContext()).country ?: "US") == "GB") {
-                val univ = SearchParser(it).parseUkJson()
-                page = (univ.pager!!.current!! + 1)
-                val totalPage = univ.pager?.total
-                val last = univ.pager?.last
-                progress.dismiss()
-                ukList?.addAll(univ.data?.collegeData!!)
-                ukListUpdate?.addAll(univ.data?.collegeData!!)
-                if (isLoading) {
-                    isLoading = false
-                    ukListNew.removeAt(ukListNew.size - 1)
-                    ukAdapter.notifyItemRemoved(ukListNew.size)
-                }
-                //for swipe refresh page
-                if (totalPage != null) {
-                    if (last != null) {
-                        ukAdapter.addAllLis(ukList!!, totalPage.toInt(), last)
-                    }
-                }
-                ukAdapter.setLoaded()
 
-            } else if (isEuropean) {
-                val univ = SearchParser(it).parseEuropeanJson()
-                page = (univ.pager!! + 1)
-                val totalPage = univ.totalRecords
-                val last = univ.last
-                progress.dismiss()
-                euroList?.addAll(univ.collegeList)
-                euroListUpdate?.addAll(univ.collegeList)
-                if (isLoading) {
-                    isLoading = false
-                    euroListNew.removeAt(euroListNew.size - 1)
-                    euroAdapter.notifyItemRemoved(euroListNew.size)
-                }
-                //for swipe refresh page
-                if (totalPage != null) {
-                    if (last != null) {
-                        euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
-                    }
-                }
-                euroAdapter.setLoaded()
-            } else {
-                val univ = SearchParser(it).parseJson()
-                page = (univ.pager!! + 1)
-                val totalPage = univ.totalRecords
-                val last = univ.last
-                progress.dismiss()
-                universityList?.addAll(univ.university_list!!)
-                universityListUpdate?.addAll(univ.university_list!!)
-                if (isLoading) {
-                    isLoading = false
-                    universityListNew.removeAt(universityListNew.size - 1)
-                    adapter.notifyItemRemoved(universityListNew.size)
-                }
-                //for swipe refresh page
-                if (totalPage != null) {
-                    if (last != null) {
-                        adapter.addAllLis(universityList!!, totalPage, last)
-                    }
-                }
-                adapter.setLoaded()
-            }
-        }
-
-        homeModel.likeObserver.observe(requireActivity()) {
-            progress.dismiss()
-        }
-        homeModel.unlikeObserver.observe(requireActivity()) {
-            progress.dismiss()
-        }
-        homeModel.showError.observe(requireActivity()) {
-            progress.dismiss()
-            Log.e("Error", "err" + it)
-        }
-
-        mBinding.searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                page = 1
-                hitAPI(page, mBinding.searchText.text.toString())
-                return@OnEditorActionListener true
-            }
-            false
-        })
-        mBinding.close.setOnClickListener {
-            mBinding.searchText.setText("")
-            page = 1
-            hitAPI(page, "")
-        }
     }
 
     private fun hitAPI(pageNo: Int, search: String) {

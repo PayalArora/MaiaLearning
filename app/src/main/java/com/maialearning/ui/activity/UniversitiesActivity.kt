@@ -50,6 +50,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private lateinit var binding: ActivityUniversitiesBinding
     private lateinit var toolbarBinding: Toolbar
     var dialog: BottomSheetDialog? = null
+    var mainDialog: BottomSheetDialog? = null
     var dialogFacts: BottomSheetDialog? = null
     var model: CollegeFactSheetModel? = null
     var modelOther: FactsheetModelOther? = null
@@ -485,20 +486,20 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun univFilter() {
-        val dialog = BottomSheetDialog(this)
+         mainDialog = BottomSheetDialog(this)
 
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
+        mainDialog?.setContentView(sheetBinding.root)
         sheetBinding.search.visibility = View.GONE
         sheetBinding.filters.setText(resources.getString(R.string.filters))
-        dialog.show()
+        mainDialog?.show()
         sheetBinding.clearText.setOnClickListener {
             initView()
-            dialog.dismiss() }
+            mainDialog?.dismiss() }
         sheetBinding.backBtn.setOnClickListener {
             initView()
-            dialog.dismiss() }
+            mainDialog?.dismiss() }
         sheetBinding.reciepentList.adapter =
             UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
 
@@ -629,6 +630,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     fun refreshTab() {
 
         binding.tabs.selectTab(binding.tabs.getTabAt(0))
+
     }
 
     fun likeClick() {
