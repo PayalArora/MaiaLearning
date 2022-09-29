@@ -41,7 +41,7 @@
         android:layout_alignParentRight="true"
         android:fontFamily="@font/inter"
         android:padding="@dimen/_15dp"
-        android:text="@string/clear"
+        android:text="@string/done"
         android:textColor="@color/black_1"
         android:textFontWeight="500"
         android:textSize="@dimen/_14sp" />
