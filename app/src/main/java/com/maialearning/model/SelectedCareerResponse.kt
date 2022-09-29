@@ -17,7 +17,7 @@ data class SelectedCareerResponse(
 	val interest: ArrayList<InterestItem?>? = null,
 
 	@field:SerializedName("related_careers")
-	val relatedCareers: List<RelatedCareersItem?>? = null,
+	val relatedCareers: ArrayList<RelatedCareersItem>? = null,
 
 	@field:SerializedName("skill")
 	val skill: ArrayList<SkillItem?>? = null,
