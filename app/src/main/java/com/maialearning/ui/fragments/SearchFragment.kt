@@ -226,27 +226,27 @@ class SearchFragment : Fragment() {
 //                }
 //            })
         } else if ((SharedHelper(requireContext()).country ?: "US").equals("GB")) {
-            ukListUpdate= ArrayList()
-            ukList = ArrayList()
-            ukListNew = ArrayList<UkResponseModel.Data.CollegeData?>()
-            ukAdapter = UkFactAdapter(
-                requireContext(),
-                ukListNew,
-                ::click,
-                mBinding.rvUniv
-            )
-            mBinding.rvUniv.adapter = ukAdapter
-            ukAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
-                override fun onLoadMore() {
-                    ukListNew.add(null)
-                    isLoading = true
-                    ukAdapter.notifyItemInserted(ukListNew.size - 1)
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        hitAPI(page, "")
-
-                    }, 2000)
-                }
-            })
+//            ukListUpdate= ArrayList()
+//            ukList = ArrayList()
+//            ukListNew = ArrayList<UkResponseModel.Data.CollegeData?>()
+//            ukAdapter = UkFactAdapter(
+//                requireContext(),
+//                ukListNew,
+//                ::click,
+//                mBinding.rvUniv
+//            )
+//            mBinding.rvUniv.adapter = ukAdapter
+//            ukAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+//                override fun onLoadMore() {
+//                    ukListNew.add(null)
+//                    isLoading = true
+//                    ukAdapter.notifyItemInserted(ukListNew.size - 1)
+//                    Handler(Looper.getMainLooper()).postDelayed({
+//                        hitAPI(page, "")
+//
+//                    }, 2000)
+//                }
+//            })
         } else if (euCountries.contains(SharedHelper(requireContext()).country ?: "US")) {
 //            euroListUpdate = ArrayList()
 //            euroList = ArrayList()
