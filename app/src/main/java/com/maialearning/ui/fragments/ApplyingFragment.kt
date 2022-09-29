@@ -222,15 +222,15 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             })
     }
 
-    override fun onTypeClick() {
+    override fun onTypeClick(postion: Int) {
         bottomSheetType(R.layout.application_type, R.id.radio_app_type, 1)
     }
 
-    override fun onTermClick() {
+    override fun onTermClick(postion: Int) {
         bottomSheetType(R.layout.application_term, R.id.radio_app_term, 0)
     }
 
-    override fun onPlanClick() {
+    override fun onPlanClick(postion: Int) {
         bottomSheetType(R.layout.application_plan_filter, R.id.radio_action, 2)
     }
 

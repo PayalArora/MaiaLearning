@@ -71,18 +71,18 @@ class ApplyingAdapter(
                 .into(viewHolder.binding.idIVCourse)
 
             appTerm.setOnClickListener {
-                onItemClickOption.onTermClick()
+                onItemClickOption.onTermClick(position)
 
             }
             appType.setOnClickListener {
-                onItemClickOption.onTypeClick()
+                onItemClickOption.onTypeClick(position)
 
             }
             addButton.setOnClickListener {
                 onItemClickOption.onAddClick(position)
             }
             appPlan.setOnClickListener {
-                onItemClickOption.onPlanClick()
+                onItemClickOption.onPlanClick(position)
             }
             menuDots.setOnClickListener {
                 onItemClickOption.onMenuClick(position,it)
