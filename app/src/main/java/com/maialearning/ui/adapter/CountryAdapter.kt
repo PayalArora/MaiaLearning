@@ -6,17 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.maialearning.databinding.ItemNotesBinding
-import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ItemCountryFilterBinding
-import com.maialearning.databinding.ItemUnivFilterBinding
-import com.maialearning.model.CountryData
+import com.maialearning.model.FilterUSModelClass
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.util.prefhandler.SharedHelper
-import java.time.format.TextStyle
 
 
-class CountryAdapter(val arr:ArrayList<CountryData>, val onItemClick: ClickFilters,var context :Context) : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
+
+class CountryAdapter(val arr:ArrayList<FilterUSModelClass.CountryList>, val onItemClick: ClickFilters, var context :Context) : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -41,11 +38,11 @@ class CountryAdapter(val arr:ArrayList<CountryData>, val onItemClick: ClickFilte
        // viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 1) }
         viewHolder.binding.apply {
 
-            filters.setText(arr.get(position).name)
+            filters.text = arr[position].name
             if (arr[position].select){
                 imgCheck.visibility = View.VISIBLE
                 filters.setTypeface(filters.typeface, Typeface.BOLD)
-                SharedHelper(context).country=arr[position].key
+                SharedHelper(context).country=arr[position].name
             } else {
                 imgCheck.visibility = View.GONE
                 filters.setTypeface(filters.typeface, Typeface.NORMAL)

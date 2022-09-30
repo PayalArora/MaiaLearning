@@ -271,6 +271,7 @@ interface LoginRepository {
     suspend fun getWorkSearch(
         url: String
     ): UseCaseResult<JsonArray>
+
     suspend fun getUSSearch(
         url: String
     ): UseCaseResult<CareerUSModel>
@@ -282,6 +283,14 @@ interface LoginRepository {
     suspend fun getStudentCareerPlan(
         id: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun getcountryFilter(
+    ): UseCaseResult<JsonObject>
+
+    suspend fun getSaveCountry(
+    ): UseCaseResult<JsonArray>
+    suspend fun setSaveCountry(
+    ): UseCaseResult<JsonArray>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1455,9 +1464,11 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun getUSSearch(url: String): UseCaseResult<CareerUSModel> {
         return try {
-            val result = catApi.getUsList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,url
+            val result = catApi.getUsList(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, url
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -1471,6 +1482,47 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getStudentCareer_Plan(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getcountryFilter(): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getcountryFilterAsync().await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getSaveCountry(): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getSaveCountryAsync(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                "" + SharedHelper(BaseApplication.applicationContext()).id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun setSaveCountry(): UseCaseResult<JsonArray> {
+        return try {
+            val saveModel = SaveCountryModel()
+            saveModel.country_code = SharedHelper(BaseApplication.applicationContext()).country?:""
+            saveModel.user_id = SharedHelper(BaseApplication.applicationContext()).id?:""
+            val result = catApi.setSaveCountryAsync(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                saveModel
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

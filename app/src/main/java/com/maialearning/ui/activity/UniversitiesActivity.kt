@@ -1,11 +1,9 @@
 package com.maialearning.ui.activity
 
 import android.app.Dialog
-import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -14,7 +12,6 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.view.size
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,16 +29,13 @@ import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
-import com.maialearning.ui.fragments.SearchFragment
 import com.maialearning.util.UNIV_LOGO_URL
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
 import com.maialearning.viewmodel.HomeViewModel
 import com.squareup.picasso.Picasso
-import okhttp3.internal.notify
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -59,7 +53,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private lateinit var universityName: TextView
     private lateinit var noData: TextView
     var listUni = ArrayList<UniersitiesListModel>()
-    val countries = arrayListOf<CountryData>()
+    private val countries: ArrayList<FilterUSModelClass.CountryList> = ArrayList()
+    private val region: ArrayList<String> = ArrayList()
+    private val sportList: ArrayList<String> = ArrayList()
+    private val selectivity: ArrayList<String> = ArrayList()
+    private var savedCountry=""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUniversitiesBinding.inflate(layoutInflater)
@@ -78,167 +77,15 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         binding.toolbarProf.setOnClickListener {
             ProfileFilter(this, layoutInflater).showDialog()
         }
+        mModel.getSaveCountry()
         observerInit()
 
     }
 
-    private fun observerInit() {
-        mModel.factSheetOtherObserver.observe(this) {
-            dialogP.dismiss()
-            loadDataOther(it)
-            dialogFacts?.show()
-        }
 
-
-        mModel.factSheetObserver.observe(this) {
-            dialogP.dismiss()
-            val gson = GsonBuilder().create()
-            val itModel = gson.fromJson(it, CollegeFactSheetModel::class.java)
-
-            val array: ArrayList<CollegeFactSheetModel.DegreeMajors1.Majors1> = ArrayList()
-            val json =
-                JSONObject(it.toString()).getJSONObject("degree_majors").getJSONObject("majors")
-            val keyList = ArrayList<String>()
-            val x = json.keys() as Iterator<String>
-            val jsonArray = JSONArray()
-            while (x.hasNext()) {
-                val key: String = x.next().toString()
-                jsonArray.put(json.get(key))
-                keyList.add(key)
-            }
-            for (i in 0 until jsonArray.length()) {
-                val objectProgram = jsonArray.getJSONObject(i)
-                array.add(
-                    CollegeFactSheetModel.DegreeMajors1.Majors1(
-                        keyList[i], CollegeFactSheetModel.DegreeMajors1.Majors1.AnimalSciences(
-                            objectProgram.getInt("Associate Degree"),
-                            objectProgram.getInt("Master Degree"),
-                            objectProgram.getInt("Bachelor Degree"),
-                            objectProgram.getInt("Doctorate Degree"),
-                            objectProgram.getInt("count"),
-                            objectProgram.getString("description")
-                        )
-                    )
-                )
-
-            }
-            val varArray: ArrayList<CollegeFactSheetModel.VarsityAthleticSports1.Teams1> =
-                ArrayList()
-            val jsonVar =
-                JSONObject(it.toString()).getJSONObject("varsity_athletic_sports")
-                    .getJSONObject("teams")
-            val jsonServices =
-                JSONObject(it.toString()).getJSONObject("services")
-            val varList = ArrayList<String>()
-            val x1 = jsonVar.keys() as Iterator<String>
-            val jsonVarArray = JSONArray()
-            while (x1.hasNext()) {
-                val key: String = x1.next().toString()
-                jsonVarArray.put(jsonVar.get(key))
-                varList.add(key)
-            }
-            val serList = ArrayList<String>()
-            val x2 = jsonServices.keys() as Iterator<String>
-            val jsonSerArray = JSONArray()
-            while (x2.hasNext()) {
-                val key: String = x2.next().toString()
-                jsonSerArray.put(jsonServices.get(key))
-                serList.add(key)
-            }
-
-            for (i in 0 until jsonVarArray.length()) {
-                val objectProgram = jsonVarArray.getJSONObject(i)
-                varArray.add(
-                    CollegeFactSheetModel.VarsityAthleticSports1.Teams1(
-                        varList[i], CollegeFactSheetModel.VarsityAthleticSports1.Teams1.Baseball(
-                            objectProgram.getString("men"),
-                            objectProgram.getString("women")
-                        )
-                    )
-                )
-            }
-            itModel.varsityAthleticSports1 = CollegeFactSheetModel.VarsityAthleticSports1(
-                varArray,
-                itModel.varsityAthleticSports.athleticAssociation
-            )
-            if (itModel.degreeMajors.programOffered != null) {
-                itModel.degreeMajors1 =
-                    CollegeFactSheetModel.DegreeMajors1(array, itModel.degreeMajors.programOffered)
-                loadData(itModel)
-                universityName.text = itModel.basicInfo.name
-            } else {
-                if (binding.tabs.selectedTabPosition == 0)
-                    noData.visibility = View.VISIBLE
-            }
-
-            dialogFacts?.show()
-
-        }
-        mModel.showError.observe(this) {
-            dialogP.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-        }
-        mModel.listObserver.observe(this) {
-            dialogP.dismiss()
-            for (i in 0 until it.size()) {
-                val objectProgram = it.get(i).asJsonObject
-                listUni.add(
-                    UniersitiesListModel(
-                        objectProgram.getAsJsonPrimitive("id").toString().replace("\"", ""),
-                        objectProgram.getAsJsonPrimitive("name").toString().replace("\"", ""),
-                        "",
-                        objectProgram.getAsJsonPrimitive("type").toString(),
-                        objectProgram.getAsJsonPrimitive("created").toString(),
-                        objectProgram.getAsJsonPrimitive("changed").toString(),
-                        "",
-                        objectProgram.getAsJsonPrimitive("status").toString(),
-                        "",
-                        objectProgram.getAsJsonPrimitive("district_scope").toString()
-                    )
-                )
-            }
-//            val sortedList: MutableList<UniersitiesListModel> =
-//               listUni.groupBy { it.name }
-//                    .values
-//                    .map {
-//                        it.reduce {
-//                                acc, item -> UniersitiesListModel(item.name)
-//                        }
-//                    }.sortedWith(compareBy { it.name }).toMutableList()
-            SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
-                View.VISIBLE,
-                resources.getString(R.string.list),
-                listUni, View.GONE
-            )
-        }
-        mModel.countryObserver.observe(this) {
-            Log.e("Response: ", " $it")
-            dialogP.dismiss()
-            val iter: Iterator<String> = it.keySet().iterator()
-            while (iter.hasNext()) {
-                val key = iter.next()
-                try {
-                    val countryData =
-                        CountryData(key, it.get(key).toString().replace("\"", ""), false)
-                    countries.add(countryData)
-                } catch (e: JSONException) {
-                    // Something went wrong!
-                }
-            }
-            if (countries.size > 0)
-                countryFilter()
-//            if (profileResponse.info?.country != null) {
-//                for (i in countries.indices) {
-//                    if (profileResponse.info?.country == countries.get(i).name) {
-//                        sheetBinding.spinner.setSelection(i)
-//                    }
-//                }
-//            }
-        }
-    }
 
     private fun initView() {
-        var tabArray = arrayOf(
+        val tabArray = arrayOf(
             getString(R.string.search),
             getString(R.string.considering),
             getString(R.string.applying),
@@ -305,7 +152,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val layout = view.findViewById<ConstraintLayout>(R.id.layout)
         DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
 
-        listing.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        listing.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         var arrayList = arrayListOf<UniversitiesSearchModel>()
         //listing.adapter = UniFactAdapter(this, arrayList, ::click)
 //        close.setOnClickListener {
@@ -476,30 +323,39 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             } else {
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
-                SharedHelper(BaseApplication.applicationContext()).authkey?.let {
-                    mModel.getCountries(
-                        "Bearer $it"
-                    )
-                }
+                mModel.getFilterCollege()
             }
         }
     }
 
     private fun univFilter() {
-         mainDialog = BottomSheetDialog(this)
+        mainDialog = BottomSheetDialog(this)
 
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         mainDialog?.setContentView(sheetBinding.root)
         sheetBinding.search.visibility = View.GONE
         sheetBinding.filters.setText(resources.getString(R.string.filters))
+        dialogP = showLoadingDialog(this)
+        dialogP.show()
+        mModel.getFilterCollege()
         mainDialog?.show()
         sheetBinding.clearText.setOnClickListener {
-            initView()
-            mainDialog?.dismiss() }
+            if(savedCountry!=SharedHelper(this).country){
+                dialogP = showLoadingDialog(this)
+                dialogP.show()
+                mModel.setSaveCountry()
+            }
+            mainDialog?.dismiss()
+        }
         sheetBinding.backBtn.setOnClickListener {
-            initView()
-            mainDialog?.dismiss() }
+            if(savedCountry!=SharedHelper(this).country){
+                dialogP = showLoadingDialog(this)
+                dialogP.show()
+                mModel.setSaveCountry()
+            }
+            mainDialog?.dismiss()
+        }
         sheetBinding.reciepentList.adapter =
             UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
 
@@ -517,14 +373,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else {
                     dialogP = showLoadingDialog(this)
                     dialogP.show()
-                    SharedHelper(BaseApplication.applicationContext()).authkey?.let {
-                        mModel.getCountries(
-                            "Bearer $it"
-                        )
-                    }
+                    mModel.getFilterCollege()
                 }
             } else if (positiion == 1) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                SheetUniversityFilter(this, layoutInflater).regionFilter(region,
                     View.VISIBLE,
                     resources.getString(R.string.reigon),
                     positiion
@@ -546,19 +398,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             } else if (positiion == 3) {
                 typeFilter()
             } else if (positiion == 4) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                SheetUniversityFilter(this, layoutInflater).regionFilter(selectivity,
                     View.GONE,
                     resources.getString(R.string.selectivity),
                     positiion
                 )
             } else if (positiion == 5) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                SheetUniversityFilter(this, layoutInflater).regionFilter(region,
                     View.VISIBLE,
                     resources.getString(R.string.programs),
                     positiion
                 )
             } else if (positiion == 6) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
+                SheetUniversityFilter(this, layoutInflater).regionFilter(sportList,
                     View.GONE,
                     resources.getString(R.string.sports),
                     positiion, View.VISIBLE
@@ -633,17 +485,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
-    fun likeClick() {
+    private fun likeClick() {
         binding.tabs.selectTab(binding.tabs.getTabAt(1))
         dialogFacts?.let { it.dismiss() }
         dialog?.let { it.dismiss() }
     }
 
-    fun loadData(model: CollegeFactSheetModel) {
+    private fun loadData(model: CollegeFactSheetModel) {
         this.model = model
     }
 
-    fun loadDataOther(model: FactsheetModelOther) {
+    private fun loadDataOther(model: FactsheetModelOther) {
         this.modelOther = model
     }
 
@@ -655,7 +507,223 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         return model
     }
+    private fun observerInit() {
 
+        mModel.getSaveCountryObserver.observe(this) {
+            dialogP.dismiss()
+            initView()
+        }
+        mModel.saveCountryObserver.observe(this) {
+        if(it.get(0).toString() !=null ||  it.get(0).toString() !=""){
+            savedCountry=it.get(0).toString()
+            SharedHelper(this).country=it.get(0).toString()
+        }
+        }
+        mModel.countryFilterObserver.observe(this) {
+            dialogP.dismiss()
+            countries.clear()
+            val json = JSONObject(it.toString()).getJSONObject("country_list")
+            val jsonRegion = JSONObject(it.toString()).getJSONObject("region")
+            val jsonSports = JSONObject(it.toString()).getJSONObject("sport_list")
+            val jsonSelectivity = JSONObject(it.toString()).getJSONObject("selectivity")
+            val keyList = ArrayList<String>()
+            val jsonArray = JSONArray()
+            val jsonArraySports = JSONArray()
+            val jsonArraySelect = JSONArray()
+            val x = json.keys() as Iterator<String>
+            val xSports = jsonSports.keys() as Iterator<String>
+            val xRegion = jsonRegion.keys() as Iterator<String>
+            val xSelect = jsonSelectivity.keys() as Iterator<String>
+            val jsonArrayRegion = JSONArray()
+            while (xRegion.hasNext()) {
+                val key: String = xRegion.next()
+                jsonArrayRegion.put(jsonRegion.get(key))
+            }
+            while (xSports.hasNext()) {
+                val key: String = xSports.next()
+                jsonArraySports.put(jsonSports.get(key))
+
+            }
+            while (xSelect.hasNext()) {
+                val key: String = xSelect.next()
+                jsonArraySelect.put(jsonSelectivity.get(key))
+
+            }
+            while (x.hasNext()) {
+                val key: String = x.next()
+                jsonArray.put(json.get(key))
+                keyList.add(key)
+            }
+            for (i in 0 until jsonArray.length()) {
+                countries.add(
+                    FilterUSModelClass.CountryList(
+                        keyList[i], jsonArray.get(i).toString(),false
+                    )
+                )
+            }
+            for (i in 0 until jsonArrayRegion.length()) {
+                region.add(jsonArrayRegion.get(i).toString())
+            }
+            for (i in 0 until jsonArraySports.length()) {
+                sportList.add(jsonArraySports.get(i).toString())
+            }
+            for (i in 0 until jsonArraySelect.length()) {
+                selectivity.add(jsonArraySelect.get(i).toString())
+            }
+        }
+        mModel.factSheetOtherObserver.observe(this) {
+            dialogP.dismiss()
+            loadDataOther(it)
+            dialogFacts?.show()
+        }
+
+
+        mModel.factSheetObserver.observe(this) {
+            dialogP.dismiss()
+            val gson = GsonBuilder().create()
+            val itModel = gson.fromJson(it, CollegeFactSheetModel::class.java)
+
+            val array: ArrayList<CollegeFactSheetModel.DegreeMajors1.Majors1> = ArrayList()
+            val json =
+                JSONObject(it.toString()).getJSONObject("degree_majors").getJSONObject("majors")
+            val keyList = ArrayList<String>()
+            val x = json.keys() as Iterator<String>
+            val jsonArray = JSONArray()
+            while (x.hasNext()) {
+                val key: String = x.next().toString()
+                jsonArray.put(json.get(key))
+                keyList.add(key)
+            }
+            for (i in 0 until jsonArray.length()) {
+                val objectProgram = jsonArray.getJSONObject(i)
+                array.add(
+                    CollegeFactSheetModel.DegreeMajors1.Majors1(
+                        keyList[i], CollegeFactSheetModel.DegreeMajors1.Majors1.AnimalSciences(
+                            objectProgram.getInt("Associate Degree"),
+                            objectProgram.getInt("Master Degree"),
+                            objectProgram.getInt("Bachelor Degree"),
+                            objectProgram.getInt("Doctorate Degree"),
+                            objectProgram.getInt("count"),
+                            objectProgram.getString("description")
+                        )
+                    )
+                )
+
+            }
+            val varArray: ArrayList<CollegeFactSheetModel.VarsityAthleticSports1.Teams1> =
+                ArrayList()
+            val jsonVar =
+                JSONObject(it.toString()).getJSONObject("varsity_athletic_sports")
+                    .getJSONObject("teams")
+            val jsonServices =
+                JSONObject(it.toString()).getJSONObject("services")
+            val varList = ArrayList<String>()
+            val x1 = jsonVar.keys() as Iterator<String>
+            val jsonVarArray = JSONArray()
+            while (x1.hasNext()) {
+                val key: String = x1.next().toString()
+                jsonVarArray.put(jsonVar.get(key))
+                varList.add(key)
+            }
+            val serList = ArrayList<String>()
+            val x2 = jsonServices.keys() as Iterator<String>
+            val jsonSerArray = JSONArray()
+            while (x2.hasNext()) {
+                val key: String = x2.next().toString()
+                jsonSerArray.put(jsonServices.get(key))
+                serList.add(key)
+            }
+
+            for (i in 0 until jsonVarArray.length()) {
+                val objectProgram = jsonVarArray.getJSONObject(i)
+                varArray.add(
+                    CollegeFactSheetModel.VarsityAthleticSports1.Teams1(
+                        varList[i], CollegeFactSheetModel.VarsityAthleticSports1.Teams1.Baseball(
+                            objectProgram.getString("men"),
+                            objectProgram.getString("women")
+                        )
+                    )
+                )
+            }
+            itModel.varsityAthleticSports1 = CollegeFactSheetModel.VarsityAthleticSports1(
+                varArray,
+                itModel.varsityAthleticSports.athleticAssociation
+            )
+            if (itModel.degreeMajors.programOffered != null) {
+                itModel.degreeMajors1 =
+                    CollegeFactSheetModel.DegreeMajors1(array, itModel.degreeMajors.programOffered)
+                loadData(itModel)
+                universityName.text = itModel.basicInfo.name
+            } else {
+                if (binding.tabs.selectedTabPosition == 0)
+                    noData.visibility = View.VISIBLE
+            }
+
+            dialogFacts?.show()
+
+        }
+        mModel.showError.observe(this) {
+            dialogP.dismiss()
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
+        mModel.listObserver.observe(this) {
+            dialogP.dismiss()
+            for (i in 0 until it.size()) {
+                val objectProgram = it.get(i).asJsonObject
+                listUni.add(
+                    UniersitiesListModel(
+                        objectProgram.getAsJsonPrimitive("id").toString().replace("\"", ""),
+                        objectProgram.getAsJsonPrimitive("name").toString().replace("\"", ""),
+                        "",
+                        objectProgram.getAsJsonPrimitive("type").toString(),
+                        objectProgram.getAsJsonPrimitive("created").toString(),
+                        objectProgram.getAsJsonPrimitive("changed").toString(),
+                        "",
+                        objectProgram.getAsJsonPrimitive("status").toString(),
+                        "",
+                        objectProgram.getAsJsonPrimitive("district_scope").toString()
+                    )
+                )
+            }
+//            val sortedList: MutableList<UniersitiesListModel> =
+//               listUni.groupBy { it.name }
+//                    .values
+//                    .map {
+//                        it.reduce {
+//                                acc, item -> UniersitiesListModel(item.name)
+//                        }
+//                    }.sortedWith(compareBy { it.name }).toMutableList()
+            SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
+                View.VISIBLE,
+                resources.getString(R.string.list),
+                listUni, View.GONE
+            )
+        }
+//        mModel.countryObserver.observe(this) {
+//            Log.e("Response: ", " $it")
+//            dialogP.dismiss()
+//            val iter: Iterator<String> = it.keySet().iterator()
+//            while (iter.hasNext()) {
+//                val key = iter.next()
+//                try {
+//                    val countryData =
+//                        CountryData(key, it.get(key).toString().replace("\"", ""), false)
+//                    countries.add(countryData)
+//                } catch (e: JSONException) {
+//                    // Something went wrong!
+//                }
+//            }
+//            if (countries.size > 0)
+//                countryFilter()
+////            if (profileResponse.info?.country != null) {
+////                for (i in countries.indices) {
+////                    if (profileResponse.info?.country == countries.get(i).name) {
+////                        sheetBinding.spinner.setSelection(i)
+////                    }
+////                }
+////            }
+//        }
+    }
 }
 
 interface ClickFilters {

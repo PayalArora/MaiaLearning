@@ -9,7 +9,7 @@ import com.maialearning.databinding.SportsRowBinding
 import com.maialearning.ui.activity.ClickFilters
 
 
-class SportsFilterAdapter(val arr: Array<String>) :
+class SportsFilterAdapter(val arr: ArrayList<String>) :
     RecyclerView.Adapter<SportsFilterAdapter.ViewHolder>(),ClickFilters {
     /**
      * Provide a reference to the type of views that you are using
@@ -36,8 +36,8 @@ class SportsFilterAdapter(val arr: Array<String>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             rbInenr.setText(arr.get(position))
-            if(position>=2)
-                arrow.visibility = visibility[position]
+//            if(position>=2)
+//                arrow.visibility = visibility[position]
 
            arrow.setOnClickListener {
               if(position>=2) {

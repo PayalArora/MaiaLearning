@@ -578,6 +578,19 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String
     ): Deferred<JsonObject>
+    @GET("un_aws_search_filters")
+    fun getcountryFilterAsync(
+    ): Deferred<JsonObject>
 
+    @GET("get_default_country/{id}")
+    fun getSaveCountryAsync(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonArray>
 
+    @POST("save_default_country")
+    fun setSaveCountryAsync(
+        @Header("Authorization") AutToken: String,
+        @Body model: SaveCountryModel
+    ): Deferred<JsonArray>
 }

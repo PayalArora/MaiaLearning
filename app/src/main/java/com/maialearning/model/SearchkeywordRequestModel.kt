@@ -11,3 +11,7 @@ class CareerListModel {
     lateinit var  onet_code:ArrayList<String>
     var  onet_year: Int = 0
 }
+class SaveCountryModel {
+    lateinit var  country_code:String
+    var  user_id: String = ""
+}

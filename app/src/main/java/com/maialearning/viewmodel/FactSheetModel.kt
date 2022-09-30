@@ -32,6 +32,9 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val factSheetObserver = MutableLiveData<JsonObject>()
     val factSheetOtherObserver = MutableLiveData<FactsheetModelOther>()
     val countryObserver = MutableLiveData<JsonObject>()
+    val countryFilterObserver = MutableLiveData<JsonObject>()
+    val saveCountryObserver = MutableLiveData<JsonArray>()
+    val getSaveCountryObserver = MutableLiveData<JsonArray>()
     val showError = SingleLiveEvent<String>()
 
     fun getColFactSheet(token: String, id: String) {
@@ -176,6 +179,70 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+
+    fun getFilterCollege() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getcountryFilter()
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> countryFilterObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message
+                }
+
+            }
+        }
+    }
+    fun getSaveCountry() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getSaveCountry()
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> saveCountryObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message
+                }
+
+            }
+        }
+    }
+    fun setSaveCountry() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.setSaveCountry()
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getSaveCountryObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message
+                }
 
             }
         }

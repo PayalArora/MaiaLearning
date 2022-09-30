@@ -9,7 +9,7 @@ import com.maialearning.databinding.ItemReigonBinding
 import com.maialearning.ui.activity.ClickFilters
 
 
-class ReigonAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : RecyclerView.Adapter<ReigonAdapter.ViewHolder>() {
+class ReigonAdapter(val arr:ArrayList<String>, val onItemClick: ClickFilters) : RecyclerView.Adapter<ReigonAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).

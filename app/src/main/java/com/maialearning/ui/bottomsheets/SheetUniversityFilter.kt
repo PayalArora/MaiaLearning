@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.databinding.UniversityFilterBinding
 import com.maialearning.model.CountryData
+import com.maialearning.model.FilterUSModelClass
 import com.maialearning.model.UniersitiesListModel
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.ui.activity.UniversitiesActivity
@@ -16,7 +17,7 @@ import com.maialearning.ui.adapter.*
 
 class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: LayoutInflater) {
 
-    fun showDialog(list: ArrayList<CountryData>, context: Context) {
+    fun showDialog(list: ArrayList<FilterUSModelClass.CountryList>, context: Context) {
         val dialog = BottomSheetDialog(con)
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -35,7 +36,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
 
     }
 
-    fun regionFilter(visibility: Int, title: String, positiion: Int, visibility_spinner: Int = 0) {
+    fun regionFilter(list: ArrayList<String>,visibility: Int, title: String, positiion: Int, visibility_spinner: Int = 0) {
         val dialog = BottomSheetDialog(con)
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -50,21 +51,21 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
         if (positiion == 1) {
             sheetBinding.reciepentList.adapter =
-                ReigonAdapter(con.resources.getStringArray(R.array.Region), con)
+                ReigonAdapter(list, con)
             sheetBinding.spinnerLay.visibility = View.GONE
 
         } else if (positiion == 2) {
-            sheetBinding.spinnerLay.visibility = View.GONE
-            sheetBinding.reciepentList.adapter =
-                ItemListAdapter(con.resources.getStringArray(R.array.list), con)
-            sheetBinding.close.setOnClickListener {
-                sheetBinding.searchText.setText("")
-            }
+//            sheetBinding.spinnerLay.visibility = View.GONE
+//            sheetBinding.reciepentList.adapter =
+//                ItemListAdapter(con.resources.getStringArray(R.array.list), con)
+//            sheetBinding.close.setOnClickListener {
+//                sheetBinding.searchText.setText("")
+//            }
 
         } else if (positiion == 6) {
             sheetBinding.spinnerLay.visibility = View.VISIBLE
             sheetBinding.reciepentList.adapter =
-                SportsFilterAdapter(con.resources.getStringArray(R.array.sports))
+                SportsFilterAdapter(list)
             sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
             }
@@ -83,7 +84,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
             }
         } else if (positiion == 4) {
             sheetBinding.reciepentList.adapter =
-                ItemListAdapter(con.resources.getStringArray(R.array.selectivity), con)
+                ItemListAdapter(list, con)
             sheetBinding.spinnerLay.visibility = View.GONE
             sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
