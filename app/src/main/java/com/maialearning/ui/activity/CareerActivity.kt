@@ -49,14 +49,14 @@ class CareerActivity : Fragment() {
         }
         initView()
 
-        binding.addFab.setOnClickListener {
-            bottomSheetList()
-        }
+//        binding.addFab.setOnClickListener {
+//            bottomSheetList()
+//        }
 
         return binding.root
     }
 
-    private fun bottomSheetList() {
+   /* private fun bottomSheetList() {
         dialog = BottomSheetDialog(requireContext())
         val view = layoutInflater.inflate(R.layout.compare_careers, null)
 //        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -68,7 +68,7 @@ class CareerActivity : Fragment() {
 
         listing.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        listing.adapter = CareerCompareAdapter(requireContext())
+        listing.adapter = CareerCompareAdapter(requireContext(), arrayListOut)
         close.setOnClickListener {
             dialog?.dismiss()
         }
@@ -76,7 +76,7 @@ class CareerActivity : Fragment() {
         dialog?.setContentView(view)
         dialog?.show()
     }
-
+*/
     private fun initView() {
         val tabArray = arrayOf(
             getString(R.string.search),

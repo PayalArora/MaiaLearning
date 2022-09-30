@@ -262,6 +262,7 @@ interface LoginRepository {
     suspend fun getWorkSearch(
         url: String
     ): UseCaseResult<JsonArray>
+
     suspend fun getUSSearch(
         url: String
     ): UseCaseResult<CareerUSModel>
@@ -272,6 +273,10 @@ interface LoginRepository {
 
     suspend fun getStudentCareerPlan(
         id: String
+    ): UseCaseResult<JsonObject>
+
+    suspend fun getCareerComparisons(
+        body: CompareCareerBody
     ): UseCaseResult<JsonObject>
 }
 
@@ -1388,9 +1393,11 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun getUSSearch(url: String): UseCaseResult<CareerUSModel> {
         return try {
-            val result = catApi.getUsList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,url
+            val result = catApi.getUsList(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, url
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -1404,6 +1411,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getStudentCareer_Plan(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerComparisons(body: CompareCareerBody): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.compareCareers(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

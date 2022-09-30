@@ -546,4 +546,11 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<JsonObject>
 
+
+
+    @POST("career_search_compare/")
+    fun compareCareers(
+        @Header("Authorization") AutToken: String,
+        @Body univId: CompareCareerBody
+    ): Deferred<JsonObject>
 }

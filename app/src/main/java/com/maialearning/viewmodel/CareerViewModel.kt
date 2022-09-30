@@ -18,6 +18,7 @@ import kotlin.coroutines.CoroutineContext
 
 class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
     private val job = Job()
+
     // Define default thread for Coroutine as Main and add job
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
     val careerListObserver = MutableLiveData<JsonArray>()
@@ -35,6 +36,8 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
     val nysCareerObserver = MutableLiveData<JsonObject>()
     val studentCareerPlanObserver = MutableLiveData<JsonObject>()
+    val careerComparisonsObserver = MutableLiveData<JsonObject>()
+
 
     fun getKeyboardSearch(id: String) {
         showLoading.value = true
@@ -52,6 +55,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+
     fun getCareerCluster(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -68,6 +72,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+
     fun getCareerClusterList(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -85,7 +90,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
         }
     }
 
-    fun getCareerClusterListDetail( list : ArrayList<String>) {
+    fun getCareerClusterListDetail(list: ArrayList<String>) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -101,7 +106,8 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
-    fun getCareerBright(type:String) {
+
+    fun getCareerBright(type: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -117,11 +123,12 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+
     fun getKeywoardSearchDetail(url: String, list: ArrayList<String>) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getKeywoardSearchDetails(url,list)
+                catRepository.getKeywoardSearchDetails(url, list)
             }
             showLoading.value = false
             when (result) {
@@ -133,6 +140,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+
     fun getCareerList(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -151,7 +159,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     }
 
 
-    fun getCareerListDetail(id: String, url:String) {
+    fun getCareerListDetail(id: String, url: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -167,6 +175,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+
     fun getIndustryList(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -183,6 +192,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+
     fun getWorkSearch(url: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -192,11 +202,12 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> workObserver.value = result.data
-                is UseCaseResult.Error -> showError.value =result.toString()
+                is UseCaseResult.Error -> showError.value = result.toString()
 
             }
         }
     }
+
     fun getUSSearch(url: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -206,7 +217,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> careerUsObserver.value = result.data
-                is UseCaseResult.Error -> showError.value =result.toString()
+                is UseCaseResult.Error -> showError.value = result.toString()
 
             }
         }
@@ -221,7 +232,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> nysCareerObserver.value = result.data
-                is UseCaseResult.Error -> showError.value =result.toString()
+                is UseCaseResult.Error -> showError.value = result.toString()
 
             }
         }
@@ -237,7 +248,22 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> studentCareerPlanObserver.value = result.data
-                is UseCaseResult.Error -> showError.value =result.toString()
+                is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
+
+    fun compareCareers(body: CompareCareerBody) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerComparisons(body)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerComparisonsObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
 
             }
         }

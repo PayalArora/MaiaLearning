@@ -35,7 +35,6 @@
                 android:visibility="gone" />
 
 
-
             <ImageView
                 android:id="@+id/toolbar_prof"
                 android:layout_width="@dimen/_35dp"
@@ -87,57 +86,59 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+
     <RelativeLayout
         android:id="@+id/add_fab"
         android:layout_width="@dimen/_45dp"
         android:layout_height="@dimen/_45dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/blue_circle"
         android:backgroundTint="@color/blue"
         android:gravity="center"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp">
-    <RelativeLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    android:layout_width="@dimen/_22dp"
-    android:layout_height="@dimen/_22dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="@color/white"
-    android:background="@drawable/forgot_circle"
-    android:gravity="center">
+        <RelativeLayout
 
-        <ImageView
-            android:id="@+id/forward"
-            android:layout_width="@dimen/_20dp"
-            android:layout_height="@dimen/_10dp"
+            android:layout_width="@dimen/_22dp"
+            android:layout_height="@dimen/_22dp"
+            android:background="@drawable/forgot_circle"
+            android:backgroundTint="@color/white"
             android:gravity="center"
-            android:src="@drawable/ic_baseline_arrow_back_24"
-            android:textColor="@color/black"
-            app:tint="@color/blue" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="@dimen/_20dp"
-            android:layout_height="@dimen/_10dp"
-            android:layout_below="@id/forward"
-            android:gravity="center"
-            android:src="@drawable/ic_baseline_arrow_forward_24"
-            android:textColor="@color/black"
-            app:tint="@color/blue" />
+            <ImageView
+                android:id="@+id/forward"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_10dp"
+                android:gravity="center"
+                android:src="@drawable/ic_baseline_arrow_back_24"
+                android:textColor="@color/black"
+                app:tint="@color/blue" />
 
-</RelativeLayout>
+            <ImageView
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_10dp"
+                android:layout_below="@id/forward"
+                android:gravity="center"
+                android:src="@drawable/ic_baseline_arrow_forward_24"
+                android:textColor="@color/black"
+                app:tint="@color/blue" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
 
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_baseline_add_circle_24"
+        android:visibility="gone"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
