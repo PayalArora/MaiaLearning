@@ -31,6 +31,7 @@ import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
 import com.maialearning.util.UNIV_LOGO_URL
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.replaceInvertedComas
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
 import com.maialearning.viewmodel.HomeViewModel
@@ -319,7 +320,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         sheetBinding.country.setOnClickListener {
             if (countries.size > 0) {
-                SheetUniversityFilter(this, layoutInflater).showDialog(countries, this)
+                SheetUniversityFilter(this, layoutInflater).showDialog(countries, this, sheetBinding.flagImg)
             } else {
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
@@ -361,15 +362,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
-    private fun countryFilter() {
-        SheetUniversityFilter(this, layoutInflater).showDialog(countries, this)
+    private fun countryFilter( flagImg:ImageView) {
+        SheetUniversityFilter(this, layoutInflater).showDialog(
+            countries,
+            this,
+           flagImg
+        )
     }
 
-    override fun onClick(positiion: Int, type: Int) {
+    override fun onClick(positiion: Int, type: Int, flagImg:ImageView?) {
         if (type == 2) {
             if (positiion == 0) {
                 if (countries.size > 0) {
-                    countryFilter()
+                    flagImg?.let { countryFilter(it) }
                 } else {
                     dialogP = showLoadingDialog(this)
                     dialogP.show()
@@ -515,13 +520,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         mModel.saveCountryObserver.observe(this) {
         if(it.get(0).toString() !=null ||  it.get(0).toString() !=""){
-            savedCountry=it.get(0).toString()
-            SharedHelper(this).country=it.get(0).toString()
+            savedCountry=it.get(0).toString().replaceInvertedComas().replace("\\","")
+            SharedHelper(this).country = savedCountry
         }
         }
         mModel.countryFilterObserver.observe(this) {
             dialogP.dismiss()
             countries.clear()
+            sportList.clear()
+            region.clear()
+            selectivity.clear()
             val json = JSONObject(it.toString()).getJSONObject("country_list")
             val jsonRegion = JSONObject(it.toString()).getJSONObject("region")
             val jsonSports = JSONObject(it.toString()).getJSONObject("sport_list")
@@ -727,6 +735,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 }
 
 interface ClickFilters {
-    fun onClick(positiion: Int, type: Int)
+    fun onClick(positiion: Int, type: Int, flagImg: ImageView?)
 }
 

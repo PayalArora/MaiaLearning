@@ -38,7 +38,7 @@ class SearchFragment : Fragment() {
     var page: Int = 1
     private var universityListUpdate: ArrayList<UniversitiesSearchModel?>? = null
     private var universityList: ArrayList<UniversitiesSearchModel?>? = null
-    private lateinit var universityListNew: ArrayList<UniversitiesSearchModel?>
+    private var universityListNew: ArrayList<UniversitiesSearchModel?> = arrayListOf()
 
     private var germanListUpdate: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>? = null
     private var germanList: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>? = null
@@ -76,6 +76,12 @@ class SearchFragment : Fragment() {
 
         mBinding = SearchLayoutBinding.inflate(inflater, container, false)
         progress = showLoadingDialog(requireContext())
+        adapter = UniFactAdapter(
+            requireContext(),
+            universityListNew,
+            ::click,
+            mBinding.rvUniv
+        )
         return mBinding.root
 
     }
@@ -148,25 +154,25 @@ class SearchFragment : Fragment() {
 //                ukAdapter.setLoaded()
 
             } else if (isEuropean) {
-//                val univ = SearchParser(it).parseEuropeanJson()
-//                page = (univ.pager!! + 1)
-//                val totalPage = univ.totalRecords
-//                val last = univ.last
-//                progress.dismiss()
-//                euroList?.addAll(univ.collegeList)
-//                euroListUpdate?.addAll(univ.collegeList)
-//                if (isLoading) {
-//                    isLoading = false
-//                    euroListNew.removeAt(euroListNew.size - 1)
-//                    euroAdapter.notifyItemRemoved(euroListNew.size)
-//                }
-//                //for swipe refresh page
-//                if (totalPage != null) {
-//                    if (last != null) {
-//                        euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
-//                    }
-//                }
-//                euroAdapter.setLoaded()
+                val univ = SearchParser(it).parseEuropeanJson()
+                page = (univ.pager!! + 1)
+                val totalPage = univ.totalRecords
+                val last = univ.last
+                progress.dismiss()
+                euroList?.addAll(univ.collegeList)
+                euroListUpdate?.addAll(univ.collegeList)
+                if (isLoading) {
+                    isLoading = false
+                    euroListNew.removeAt(euroListNew.size - 1)
+                    euroAdapter.notifyItemRemoved(euroListNew.size)
+                }
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
+                    }
+                }
+               euroAdapter.setLoaded()
             } else {
                 val univ = SearchParser(it).parseJson()
                 page = (univ.pager!! + 1)
@@ -248,28 +254,28 @@ class SearchFragment : Fragment() {
 //                }
 //            })
         } else if (euCountries.contains(SharedHelper(requireContext()).country ?: "US")) {
-//            euroListUpdate = ArrayList()
-//            euroList = ArrayList()
-//            euroListNew = ArrayList()
-//            isEuropean = true
-//            euroAdapter = EuropeanFactAdapter(
-//                requireContext(),
-//                euroListNew,
-//                ::click,
-//                mBinding.rvUniv
-//            )
-//            mBinding.rvUniv.adapter = euroAdapter
-//            euroAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
-//                override fun onLoadMore() {
-//                    euroListNew.add(null)
-//                    isLoading = true
-//                    euroAdapter.notifyItemInserted(euroListNew.size - 1)
-//                    Handler(Looper.getMainLooper()).postDelayed({
-//                        hitAPI(page, "")
-//
-//                    }, 2000)
-//                }
-//            })
+            euroListUpdate = ArrayList()
+            euroList = ArrayList()
+            euroListNew = ArrayList()
+            isEuropean = true
+            euroAdapter = EuropeanFactAdapter(
+                requireContext(),
+                euroListNew,
+                ::clickEuropean,
+                mBinding.rvUniv
+            )
+            mBinding.rvUniv.adapter = euroAdapter
+            euroAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+                override fun onLoadMore() {
+                    euroListNew.add(null)
+                    isLoading = true
+                    euroAdapter.notifyItemInserted(euroListNew.size - 1)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        hitAPI(page, "")
+
+                    }, 2000)
+                }
+            })
         } else {
             universityListUpdate = ArrayList()
             universityList = ArrayList()
@@ -296,6 +302,13 @@ class SearchFragment : Fragment() {
         }
         hitAPI(page, "")
 
+    }
+
+    private fun clickEuropean(id: String?, boolean: Boolean) {
+        if (boolean)
+        hitLikeWork(id)
+        else
+            hitUnlikeWork(id)
     }
 
     private fun hitAPI(pageNo: Int, search: String) {
@@ -347,16 +360,16 @@ class SearchFragment : Fragment() {
 
     fun likeWork(get: UniversitiesSearchModel?) {
         if (get?.topPickFlag == 0) {
-            hitLikeWork(get)
+            hitLikeWork(get?.nid)
         } else {
-            hitUnlikeWork(get)
+            hitUnlikeWork(get?.nid)
         }
     }
 
-    private fun hitUnlikeWork(get: UniversitiesSearchModel?) {
+    private fun hitUnlikeWork(nid: String?) {
         progress.show()
         SharedHelper(requireContext()).id?.let {
-            get?.nid?.let { it1 ->
+            nid?.let { it1 ->
                 homeModel.hitunlike(
                     it,
                     it1
@@ -365,11 +378,11 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun hitLikeWork(get: UniversitiesSearchModel) {
+    private fun hitLikeWork(nid:String?) {
         progress.show()
 
         SharedHelper(requireContext()).id?.let {
-            get.nid?.let { it1 ->
+            nid?.let { it1 ->
                 homeModel.hitlike(
                     it,
                     it1

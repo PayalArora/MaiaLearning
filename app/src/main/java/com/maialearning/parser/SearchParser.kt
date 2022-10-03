@@ -11,8 +11,11 @@ import org.json.JSONObject
 class SearchParser(val it: JsonObject) {
     fun parseJson(): UniversitySearchResponse{
         val universitySearchResponse= UniversitySearchResponse()
+        if (it.has("last"))
         universitySearchResponse.last=it.get("last").asInt
+        if (it.has("pager"))
         universitySearchResponse.pager=it.get("pager").asInt
+        if (it.has("total_records"))
         universitySearchResponse.totalRecords=it.get("total_records").asInt
         val arrayList= arrayListOf<UniversitiesSearchModel>()
         val json = JSONObject(it.toString())

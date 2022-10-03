@@ -89,5 +89,9 @@ class SharedHelper(var context: Context) {
         set(country) {
             sharedPreference!!.putKey("country", country)
         }
-
+    var countryName:String?
+        get() = sharedPreference!!.getKey("countryName")
+        set(country) {
+            sharedPreference!!.putKey("countryName", country)
+        }
 }

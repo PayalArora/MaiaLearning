@@ -8,6 +8,9 @@ import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ItemUnivFilterBinding
 import com.maialearning.ui.activity.ClickFilters
+import com.maialearning.util.prefhandler.SharedHelper
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.flow.SharedFlow
 
 
 class UnivFilterAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : RecyclerView.Adapter<UnivFilterAdapter.ViewHolder>() {
@@ -31,7 +34,7 @@ class UnivFilterAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : 
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 2) }
+        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 2, viewHolder.binding.flagImg) }
         viewHolder.binding.apply {
             filters.setText(arr.get(position))
             if (position == 0){
@@ -44,6 +47,10 @@ class UnivFilterAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : 
                 flagImg.visibility = View.GONE
                 flagText.visibility = View.GONE
             }
+            Picasso.with(root.context)
+                .load("https://countryflagsapi.com/png/${SharedHelper(root.context).country}")
+                .into(flagImg)
+
         }
 
     }

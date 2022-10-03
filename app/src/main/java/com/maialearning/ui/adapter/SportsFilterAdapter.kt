@@ -3,6 +3,7 @@ package com.maialearning.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.SportsRowBinding
@@ -70,7 +71,7 @@ class SportsFilterAdapter(val arr: ArrayList<String>) :
         return arr.size
     }
 
-    override fun onClick(positiion: Int, type: Int) {
+    override fun onClick(positiion: Int, type: Int, img:ImageView?) {
 
     }
 

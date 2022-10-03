@@ -5,15 +5,20 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemCountryFilterBinding
 import com.maialearning.model.FilterUSModelClass
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.util.prefhandler.SharedHelper
+import com.squareup.picasso.Picasso
 
 
+class CountryAdapter(
+    val arr:ArrayList<FilterUSModelClass.CountryList>, var click: (url:String) -> Unit, var context :Context,  val mFlagImg: ImageView
+) : RecyclerView.Adapter<CountryAdapter.ViewHolder>()
 
-class CountryAdapter(val arr:ArrayList<FilterUSModelClass.CountryList>, val onItemClick: ClickFilters, var context :Context) : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
+{
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -39,15 +44,18 @@ class CountryAdapter(val arr:ArrayList<FilterUSModelClass.CountryList>, val onIt
         viewHolder.binding.apply {
 
             filters.text = arr[position].name
+
             if (arr[position].select){
                 imgCheck.visibility = View.VISIBLE
                 filters.setTypeface(filters.typeface, Typeface.BOLD)
-                SharedHelper(context).country=arr[position].name
             } else {
                 imgCheck.visibility = View.GONE
                 filters.setTypeface(filters.typeface, Typeface.NORMAL)
-
             }
+
+            Picasso.with(viewHolder.binding.root.context)
+                .load("https://countryflagsapi.com/png/${arr[position].code}")
+                .into(flagImg)
 
 
             root.setOnClickListener {
@@ -55,6 +63,12 @@ class CountryAdapter(val arr:ArrayList<FilterUSModelClass.CountryList>, val onIt
                     arr[i].select = false
                 }
                 arr[position].select=true
+                SharedHelper(context).country=arr[position].code
+             //   click("https://countryflagsapi.com/png/${arr[position].code}")
+
+                Picasso.with(viewHolder.binding.root.context)
+                    .load("https://countryflagsapi.com/png/${arr[position].code}")
+                    .into(mFlagImg)
 
                 notifyDataSetChanged()
             }

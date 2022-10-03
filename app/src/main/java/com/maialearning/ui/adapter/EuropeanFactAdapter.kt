@@ -2,6 +2,7 @@ package com.maialearning.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
@@ -12,11 +13,16 @@ import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.UniListItemBinding
 import com.maialearning.model.EuropeanUniList
 import com.maialearning.util.OnLoadMoreListener
+import com.maialearning.util.UNIV_LOGO_URL
+import com.maialearning.util.prefhandler.SharedHelper
+import com.squareup.picasso.Picasso
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EuropeanFactAdapter(
     var context: Context,
     var university_list: ArrayList<EuropeanUniList.CollegeList?>,
-    var click: (position: Int) -> Unit,
+    var click: (position: String?, like:Boolean) -> Unit,
     recycler: RecyclerView
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     /**
@@ -88,7 +94,8 @@ class EuropeanFactAdapter(
         if (viewHolder is ViewHolder) {
             viewHolder.binding.university.setText(university_list.get(position)?.collegeName)
 //            viewHolder.binding.name.setText(university_list.get(position)?.cityState)
-//            viewHolder.binding.country.setText(university_list.get(position)?.country)
+            val loc = Locale("", SharedHelper(context).country)
+            viewHolder.binding.country.setText(loc.getDisplayCountry())
 //            viewHolder.binding.profit.setText(university_list.get(position)?.collegeType)
 //            viewHolder.binding.typeValue.setText("SAT Scores")
 //            viewHolder.binding.type.setText(university_list.get(position)?.satScores)
@@ -96,21 +103,24 @@ class EuropeanFactAdapter(
 //            viewHolder.binding.termValue.setText("ACT Scores")
 //            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
 //            viewHolder.binding.planValue.setText("Acceptance Rate")
-//            if (university_list.get(position)?.topPickFlag == 0) {
-//                viewHolder.binding.like.setImageResource(R.drawable.like)
-//            } else if (university_list.get(position)?.topPickFlag == 1) {
-//                viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
-//            }
-////        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
-//            Picasso.with(viewHolder.binding.root.context).load(
-//                "$UNIV_LOGO_URL${university_list.get(position)?.countryCode?.toLowerCase()}/${
-//                    university_list.get(position)?.unitid
-//                }/logo_sm.jpg"
-//            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
-
+            if (university_list.get(position)?.topPickFlag?:false== false) {
+                viewHolder.binding.like.setImageResource(R.drawable.like)
+            } else if (university_list.get(position)?.topPickFlag?:0  == true) {
+                viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
+            }
+//        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
+            Picasso.with(viewHolder.binding.root.context).load(
+                "$UNIV_LOGO_URL${SharedHelper(context).country?.toLowerCase()}/${
+                    university_list.get(position)?.collegeNid
+                }/logo_sm.jpg"
+            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
+            viewHolder.binding.list.visibility = View.GONE
+            viewHolder.binding.profit.visibility = View.GONE
+            viewHolder.binding.location.visibility = View.GONE
+            viewHolder.binding.name.setText("${university_list.get(position)?.programList?.size?:0} Programs")
 
             viewHolder.binding.university.setOnClickListener {
-                // click
+//                 click
 //                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
             }
             viewHolder.binding.image.setOnClickListener {
@@ -118,12 +128,13 @@ class EuropeanFactAdapter(
 //                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
             }
             viewHolder.binding.like.setOnClickListener {
-                click(position)
-//                if (university_list.get(position)?.topPickFlag == 1) {
-//                    university_list.get(position)?.topPickFlag = 0
-//                } else {
-//                    university_list.get(position)?.topPickFlag = 1
-//                }
+
+                if (university_list.get(position)?.topPickFlag?:false == false) {
+                    university_list.get(position)?.topPickFlag = true
+                } else {
+                    university_list.get(position)?.topPickFlag = false
+                }
+                click(university_list.get(position)?.collegeNid,university_list.get(position)?.topPickFlag?:false )
                 notifyDataSetChanged()
             }
         } else {

@@ -31,7 +31,7 @@ class AddUniversiityAdapter(val onItemClick: ClickFilters) : RecyclerView.Adapte
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 0) }
+        viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 0, null) }
         viewHolder. binding.addCheck.setOnCheckedChangeListener { compoundButton, b ->
             if (compoundButton.isChecked){
                 viewHolder. binding.addCheck.setText(viewHolder. binding.root.context.getString(R.string.added))

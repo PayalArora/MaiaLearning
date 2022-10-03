@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.databinding.UniversityFilterBinding
@@ -17,7 +18,11 @@ import com.maialearning.ui.adapter.*
 
 class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: LayoutInflater) {
 
-    fun showDialog(list: ArrayList<FilterUSModelClass.CountryList>, context: Context) {
+    fun showDialog(
+        list: ArrayList<FilterUSModelClass.CountryList>,
+        context: Context,
+        flagImg: ImageView
+    ) {
         val dialog = BottomSheetDialog(con)
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -32,7 +37,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.backBtn.setOnClickListener {  con.refreshTab()
             dialog.dismiss() }
         sheetBinding.reciepentList.adapter =
-            CountryAdapter(list, con as ClickFilters, context)
+            CountryAdapter(list, ::selectCountry, context, flagImg)
 
     }
 
@@ -121,4 +126,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
 
     }
 
+}
+
+fun selectCountry(s: String) {
 }
