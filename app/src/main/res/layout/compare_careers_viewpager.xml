@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:minHeight="700dp"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/_10dp">
     <androidx.cardview.widget.CardView
@@ -12,14 +13,14 @@
         android:layout_marginEnd="@dimen/_10dp"
         android:background="@color/white"
         app:cardCornerRadius="@dimen/_20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/_10dp"
             android:padding="@dimen/_10dp">
 
@@ -30,7 +31,6 @@
                 android:layout_marginStart="@dimen/_5dp"
                 android:fontFamily="@font/inter_bold"
                 android:lineSpacingExtra="2sp"
-                android:text="Anthropologists and Archeologists"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +51,7 @@
                 android:layout_marginTop="@dimen/_10dp"
                 android:fontFamily="@font/inter_medium"
                 android:lineSpacingExtra="2sp"
-                android:text="Post-Doctoral Training, First Professional Degree,\nDoctoral Degree"
-                android:textColor="@color/black"
+                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/name"
@@ -65,7 +64,6 @@
                 android:layout_marginTop="@dimen/_10dp"
                 android:fontFamily="@font/inter_medium"
                 android:lineSpacingExtra="2sp"
-                android:text="Perform limited clinical duties under the direction of a dentist. Clinical duties may include equipment preparation and sterilization, preparing patients for treatment, assisting the dentist during treatment, and providing patients with instructions for oral healthcare procedures."
                 android:textColor="@color/black_1"
                 android:textSize="@dimen/_12sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -105,7 +103,7 @@
                     android:paddingTop="@dimen/_5dp"
                     android:paddingEnd="@dimen/_5sp"
                     android:paddingBottom="@dimen/_5dp"
-                    android:text="Grow Rapidly"
+                    android:text="@string/na"
                     android:textSize="@dimen/_12sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/graph"
@@ -153,7 +151,7 @@
                     android:paddingTop="@dimen/_5dp"
                     android:paddingEnd="@dimen/_5sp"
                     android:paddingBottom="@dimen/_5dp"
-                    android:text="49,860"
+                    android:text="@string/na"
                     android:textColor="@color/green_1"
                     android:textSize="@dimen/_12sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -183,6 +181,7 @@
                     android:paddingStart="@dimen/_10dp"
                     android:paddingTop="@dimen/_5dp"
                     android:paddingEnd="@dimen/_10dp"
+                    android:visibility="gone"
                     android:paddingBottom="@dimen/_5dp"
                     android:text="Add"
 

@@ -26,7 +26,7 @@ interface AllAPi {
         @Field("email") email: String,
         @Field("id") id: String,
         @Field("id_token") id_token: String
-    ):  Deferred<LoginNewModel>
+    ): Deferred<LoginNewModel>
 
     @POST("azure_ad_oauth_login")
     @FormUrlEncoded
@@ -593,4 +593,11 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Body model: SaveCountryModel
     ): Deferred<JsonArray>
+
+
+    @POST("career_search_compare/")
+    fun compareCareers(
+        @Header("Authorization") AutToken: String,
+        @Body univId: CompareCareerBody
+    ): Deferred<JsonObject>
 }

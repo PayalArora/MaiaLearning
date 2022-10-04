@@ -53,18 +53,8 @@
         android:layout_marginTop="@dimen/_10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/rela"
         app:layout_constraintTop_toBottomOf="@id/view"
 
       />
-    <RelativeLayout
-        android:id="@+id/rela"
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_marginEnd="@dimen/_10dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/listing"
-    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

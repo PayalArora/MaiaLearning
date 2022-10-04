@@ -45,36 +45,59 @@ class SearchProgramAdapter(
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         if (type == "key") {
-        viewHolder.binding.lay.setOnClickListener {
-            click(position)
-        }
-        viewHolder.binding.name.text = arrayList?.get(position)?.title
-        viewHolder.binding.name1.text =
-            arrayList?.get(position)?.education?.stream()?.collect(Collectors.joining(",", "", ""))
-        viewHolder.binding.text2.setText(arrayList?.get(position)?.salary)
-        if (arrayList?.get(position)?.brightOutlook?.size!! > 0) {
-            viewHolder.binding.lay1.visibility = View.VISIBLE
-            viewHolder.binding.text1.setText(
-                arrayList?.get(position)?.brightOutlook?.stream()
+            viewHolder.binding.lay.setOnClickListener {
+                click(position)
+            }
+            viewHolder.binding.name.text = arrayList?.get(position)?.title
+            viewHolder.binding.name1.text =
+                arrayList?.get(position)?.education?.stream()
                     ?.collect(Collectors.joining(",", "", ""))
-            )
+            viewHolder.binding.text2.setText(arrayList?.get(position)?.salary)
+            if (arrayList?.get(position)?.brightOutlook?.size!! > 0) {
+                viewHolder.binding.lay1.visibility = View.VISIBLE
+                viewHolder.binding.text1.setText(
+                    arrayList?.get(position)?.brightOutlook?.stream()
+                        ?.collect(Collectors.joining(",", "", ""))
+                )
+            } else {
+                viewHolder.binding.lay1.visibility = View.INVISIBLE
+
+            }
+            if (arrayList.get(position)?.addToCareerPlanStatus.equals("1")) {
+                viewHolder.binding.tick.visibility = View.VISIBLE
+                viewHolder.binding.text3.visibility = View.VISIBLE
+                viewHolder.binding.text3.text = "In Plan"
+            } else {
+                viewHolder.binding.tick.visibility = View.GONE
+            }
+            viewHolder.binding.button.setOnClickListener {
+
+                if (arrayList?.get(position)?.selected == true) {
+                    arrayList[position]?.selected = false
+                } else {
+                    arrayList?.get(position)?.selected = true
+                }
+                notifyDataSetChanged()
+
+            }
+
+
+            if (arrayList?.get(position)?.selected == true) {
+                viewHolder.binding.lay.background =
+                    ContextCompat.getDrawable(context, R.drawable.back_stroke_selected)
+                viewHolder.binding.button.isChecked = true
+            } else {
+                viewHolder.binding.lay.background =
+                    ContextCompat.getDrawable(context, R.drawable.bg_white_rect)
+                viewHolder.binding.button.isChecked = false
+
+            }
+
         } else {
-            viewHolder.binding.lay1.visibility = View.INVISIBLE
-
-        }
-        if (arrayList.get(position)?.addToCareerPlanStatus.equals("1")) {
-            viewHolder.binding.tick.visibility = View.VISIBLE
-            viewHolder.binding.text3.visibility = View.VISIBLE
-            viewHolder.binding.text3.text = "In Plan"
-        } else {
-            viewHolder.binding.tick.visibility = View.GONE
-        }
-
-
-        }else{
             viewHolder.binding.name.text = arrayListOut?.get(position)?.title
             viewHolder.binding.name1.text =
-                arrayListOut?.get(position)?.education?.stream()?.collect(Collectors.joining(",", "", ""))
+                arrayListOut?.get(position)?.education?.stream()
+                    ?.collect(Collectors.joining(",", "", ""))
             viewHolder.binding.text2.setText(arrayListOut?.get(position)?.salary)
             if (arrayListOut?.get(position)?.brightOutlook?.size!! > 0) {
                 viewHolder.binding.lay1.visibility = View.VISIBLE
@@ -86,26 +109,37 @@ class SearchProgramAdapter(
                 viewHolder.binding.lay1.visibility = View.INVISIBLE
 
             }
+            viewHolder.binding.button.setOnClickListener {
 
-        }
-        viewHolder.binding.button.setOnClickListener {
-            if (viewHolder.binding.button.isChecked) {
+                if (arrayListOut?.get(position)?.selected == true) {
+                    arrayListOut[position]?.selected = false
+                } else {
+                    arrayListOut?.get(position)?.selected = true
+                }
+                notifyDataSetChanged()
+            }
+
+
+            if (arrayListOut?.get(position)?.selected == true) {
                 viewHolder.binding.lay.background =
                     ContextCompat.getDrawable(context, R.drawable.back_stroke_selected)
+                viewHolder.binding.button.isChecked = true
             } else {
                 viewHolder.binding.lay.background =
                     ContextCompat.getDrawable(context, R.drawable.bg_white_rect)
-            }
+                viewHolder.binding.button.isChecked = false
 
+            }
         }
+
     }
 
     override fun getItemCount(): Int {
         if (type == "key") {
             return arrayList?.size!!
-        }else{
+        } else {
             return arrayListOut?.size!!
         }
-        
+
     }
 }

@@ -31,4 +31,5 @@ data class CareerTopPickResponseItem(
 
 	@field:SerializedName("salary")
 	val salary: String? = null,
+	var selected: Boolean = false
 ) : Serializable

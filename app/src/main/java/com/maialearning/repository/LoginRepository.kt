@@ -291,6 +291,10 @@ interface LoginRepository {
     ): UseCaseResult<JsonArray>
     suspend fun setSaveCountry(
     ): UseCaseResult<JsonArray>
+
+    suspend fun getCareerComparisons(
+        body: CompareCareerBody
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1523,6 +1527,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.setSaveCountryAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 saveModel
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerComparisons(body: CompareCareerBody): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.compareCareers(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
