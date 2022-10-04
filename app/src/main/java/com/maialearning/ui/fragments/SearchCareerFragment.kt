@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.maialearning.R
@@ -45,6 +46,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
     private val usData: String
         get() = ("[{\"key\":\"1\",\"name\":\"ARMY\"}" + ",{\"key\":\"2\",\"name\":\"MARINE_CORPS\"}" + ",{\"key\":\"3\",\"name\":\"AIR_FORCE\"}" + ",{\"key\":\"4\",\"name\":\"NAVY\"}" + ",{\"key\":\"5\",\"name\":\"COAST_GUArD\"}]")
+    private lateinit var tableLayout: TabLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +62,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
         progress = showLoadingDialog(requireContext())
 
         mBinding = SearchCareerLayBinding.inflate(inflater, container, false)
+        tableLayout = requireActivity().findViewById<TabLayout>(R.id.tabs)
         return mBinding.root
 
     }
@@ -71,6 +74,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
             mBinding.searchLay.visibility = View.GONE
             mBinding.cardView.visibility = View.GONE
             mBinding.list.visibility = View.VISIBLE
+            if (tableLayout.selectedTabPosition == 1)
             progress.show()
             SharedHelper(requireContext()).id?.let { careerViewModel.getCareerList(it) }
         } else if (type == "trafic") {

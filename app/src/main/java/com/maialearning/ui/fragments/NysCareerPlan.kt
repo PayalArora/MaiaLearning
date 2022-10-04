@@ -56,7 +56,10 @@ class NysCareerPlan : Fragment() {
 //        progress.show()
         progress = showLoadingDialog(requireContext())
 
-        SharedHelper(requireContext()).id?.let { careerViewModel.getNYSCareerPlan(it) }
+
+        SharedHelper(requireContext()).id?.let {
+            progress.show()
+            careerViewModel.getNYSCareerPlan(it) }
         initObserver()
 
     }
@@ -67,7 +70,7 @@ class NysCareerPlan : Fragment() {
             progress.dismiss()
         }
         careerViewModel.nysCareerObserver.observe(requireActivity()) {
-//            progress.dismiss()
+           progress.dismiss()
             val itModel = gson.fromJson(it, NYSCareerResponse::class.java)
             Log.e("DATA", "" + itModel.studentFirstName)
             dataset(itModel)

@@ -32,6 +32,8 @@ class CareerActivity : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = ActivityCareerBinding.inflate(inflater, container, false)
+        val toolbar: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+        toolbar.visibility = View.GONE
         toolbarBinding = binding.toolbar
         binding.toolbar.contentInsetStartWithNavigation = 0
         binding.toolbar.setNavigationIcon(

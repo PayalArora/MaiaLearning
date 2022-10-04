@@ -53,6 +53,8 @@ class TraficFragment : Fragment() {
     ): View? {
         binding = ActivityCareerBinding.inflate(inflater, container, false)
         toolbarBinding = binding.toolbar
+        val toolbar: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+        toolbar.visibility = View.GONE
         progress = showLoadingDialog(requireContext())
         binding.toolbar.contentInsetStartWithNavigation = 0
         binding.toolbar.setNavigationIcon(
@@ -65,6 +67,7 @@ class TraficFragment : Fragment() {
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
         toolbarBinding.setNavigationOnClickListener {
             requireActivity().onBackPressed()
+            toolbar.visibility = View.GONE
         }
         careerTopPickResponseItem = arguments?.getSerializable("data") as CareerTopPickResponseItem
 
