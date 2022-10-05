@@ -12,7 +12,7 @@ import java.util.stream.Collectors
 
 class CareerCompareAdapter
     (
-    var context: Context,
+    val context: Context,
     var arrayListOut: ArrayList<BrightOutlookModel.Data>, val json: JSONObject
 ) : RecyclerView.Adapter<CareerCompareAdapter.ViewHolder>() {
     /**
@@ -44,8 +44,10 @@ class CareerCompareAdapter
         viewHolder.binding.text1.text = arrayListOut.get(position).brightOutlook.stream()?.collect(
             Collectors.joining(",", "", "")
         )
-        viewHolder.binding.detail.text =
-            json.optJSONObject(arrayListOut.get(position).ccode).optString("detail")
+        arrayListOut.get(position).ccode.let {
+            viewHolder.binding.detail.text =
+                json.optJSONObject(arrayListOut.get(position).ccode).optString("detail")
+        }
     }
 
     override fun getItemCount(): Int {

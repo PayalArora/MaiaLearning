@@ -14,7 +14,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_10dp">
+            android:paddingVertical="@dimen/_10dp">
 
             <TextView
                 android:id="@+id/personal_data_txt"
@@ -236,7 +236,6 @@
                         android:id="@+id/career_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/_10dp"
                         app:layout_constraintEnd_toEndOf="parent" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -308,7 +307,7 @@
                             android:id="@+id/intersts_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/_10dp"
+
                             app:layout_constraintEnd_toEndOf="parent" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -350,7 +349,6 @@
                             android:id="@+id/ability_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/_10dp"
                             app:layout_constraintEnd_toEndOf="parent" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -392,7 +390,6 @@
                             android:id="@+id/personal_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="@dimen/_10dp"
                             app:layout_constraintEnd_toEndOf="parent" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

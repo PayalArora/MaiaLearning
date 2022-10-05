@@ -1,5 +1,5 @@
 package com.maialearning.model
 class CompareCareerBody {
-    lateinit var  onet_code:ArrayList<String>
+    var  onet_code:ArrayList<String> = arrayListOf()
 
 }

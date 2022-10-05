@@ -73,7 +73,7 @@ class SearchProgramAdapter(
             viewHolder.binding.button.setOnClickListener {
 
                 if (arrayList?.get(position)?.selected == true) {
-                    arrayList[position]?.selected = false
+                    arrayList?.get(position)?.selected = false
                 } else {
                     arrayList?.get(position)?.selected = true
                 }
@@ -112,7 +112,8 @@ class SearchProgramAdapter(
             viewHolder.binding.button.setOnClickListener {
 
                 if (arrayListOut?.get(position)?.selected == true) {
-                    arrayListOut[position]?.selected = false
+                    arrayListOut?.get(position)?.selected = false
+
                 } else {
                     arrayListOut?.get(position)?.selected = true
                 }
@@ -121,13 +122,14 @@ class SearchProgramAdapter(
 
 
             if (arrayListOut?.get(position)?.selected == true) {
+                viewHolder.binding.button.isChecked = true
                 viewHolder.binding.lay.background =
                     ContextCompat.getDrawable(context, R.drawable.back_stroke_selected)
-                viewHolder.binding.button.isChecked = true
             } else {
+                viewHolder.binding.button.isChecked = false
                 viewHolder.binding.lay.background =
                     ContextCompat.getDrawable(context, R.drawable.bg_white_rect)
-                viewHolder.binding.button.isChecked = false
+
 
             }
         }

@@ -275,3 +275,4 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
         job.cancel()
     }
 }
+

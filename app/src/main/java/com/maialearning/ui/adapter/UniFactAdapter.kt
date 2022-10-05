@@ -101,7 +101,7 @@ class UniFactAdapter(
             viewHolder.binding.termValue.setText("ACT Scores")
             viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
             viewHolder.binding.planValue.setText("Acceptance Rate")
-            if (university_list.get(position)?.country!= "US"){
+            if (university_list.get(position)?.countryCode!= "US"){
                 viewHolder.binding.list.visibility = View.GONE
                 viewHolder.binding.location.visibility = View.GONE
             } else

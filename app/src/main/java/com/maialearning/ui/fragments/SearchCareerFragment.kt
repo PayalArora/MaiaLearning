@@ -12,6 +12,9 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -47,6 +50,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
     private val usData: String
         get() = ("[{\"key\":\"1\",\"name\":\"ARMY\"}" + ",{\"key\":\"2\",\"name\":\"MARINE_CORPS\"}" + ",{\"key\":\"3\",\"name\":\"AIR_FORCE\"}" + ",{\"key\":\"4\",\"name\":\"NAVY\"}" + ",{\"key\":\"5\",\"name\":\"COAST_GUArD\"}]")
     private lateinit var tableLayout: TabLayout
+    private var adapType:Int = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +108,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
         val fab = activity?.findViewById<RelativeLayout>(R.id.add_fab)
         fab?.setOnClickListener {
-            if (type == "key")
+            if (adapType == 1)
             bottomSheetCompareSearch()
             else
                 bottomSheetCompareList()
@@ -398,6 +402,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 mBinding.searchLay.visibility = View.VISIBLE
                 context?.showToast(getString(R.string.no_data_found))
             }
+            adapType = 1
             mBinding.listProgram.adapter =
                 SearchProgramAdapter(requireContext(), null, arrayListOut!!, "", ::loadFragment)
 
@@ -420,6 +425,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 mBinding.searchLay.visibility = View.VISIBLE
                 context?.showToast(getString(R.string.no_data_found))
             }
+            adapType = 1
             mBinding.listProgram.adapter =
                 SearchProgramAdapter(requireContext(), null, arrayListOut!!, "", ::loadFragment)
 
@@ -443,6 +449,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 mBinding.searchLay.visibility = View.VISIBLE
                 context?.showToast(getString(R.string.no_data_found))
             }
+            adapType = 2
             mBinding.listProgram.adapter =
                 SearchProgramAdapter(requireContext(), arrayList, null, "key", ::loadFragment)
 
@@ -457,7 +464,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                     arrayList?.add(itModel)
                 }
                 arrayList?.sortBy { it?.title }
-
+                adapType = 2
                 mBinding.listProgram.adapter =
                     SearchProgramAdapter(requireContext(), arrayList, null, "key", ::loadFragment)
 
@@ -506,6 +513,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 mBinding.searchLay.visibility = View.VISIBLE
                 context?.showToast(getString(R.string.no_data_found))
             }
+            adapType = 2
             mBinding.listProgram.adapter =
                 SearchProgramAdapter(requireContext(), arrayList, null, "key", ::loadFragment)
 
@@ -547,12 +555,15 @@ class SearchCareerFragment(var type: String) : Fragment() {
     private fun bottomSheetCompareSearch() {
         var onet_code = ArrayList<String>()
         var compareList = ArrayList<BrightOutlookModel.Data>()
+        compareList.clear()
+        onet_code.clear()
 
         if (arrayListOut != null) {
             for (i in arrayListOut?.indices!!) {
                 if (arrayListOut?.get(i)?.selected == true) {
-                    arrayListOut?.get(i)?.ccode?.let { onet_code.add(it) }
-                    compareList.add(arrayListOut?.get(i)!!)
+                    arrayListOut?.get(i)?.ccode?.let { onet_code.add(it)
+                        compareList.add(arrayListOut?.get(i)!!)}
+
                 }
             }
         }
@@ -573,36 +584,45 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
         listing.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        listing.setHasFixedSize(true)
         close.setOnClickListener {
             dialog?.dismiss()
         }
         val body: CompareCareerBody = CompareCareerBody()
         body.onet_code = onet_code
-        careerViewModel.compareCareers(body)
+        dialog?.show()
         progress.show()
-        careerViewModel.careerComparisonsObserver.observe(requireActivity()) {
+        careerViewModel.compareCareers(body)
+
+        careerViewModel.careerComparisonsObserver.observe(viewLifecycleOwner) {
             Log.e("DATA", "" + it.toString())
             progress.dismiss()
             val gson = Gson()
             val json = gson.toJson(it)
             val resp = JSONObject(json)
             listing.adapter = CareerCompareAdapter(requireContext(), compareList, resp)
-            dialog?.show()
+            (listing.adapter as CareerCompareAdapter).notifyDataSetChanged()
         }
         dialog?.setContentView(view)
-
+        dialog?.setOnDismissListener {
+            if (view.parent != null) {
+                val parentViewGroup = view.parent as ViewGroup?
+                parentViewGroup?.removeAllViews();
+            }
+        }
     }
     private fun bottomSheetCompareList() {
         var onet_code = ArrayList<String>()
         var compareList = ArrayList<CareerTopPickResponseItem>()
         var compareListNew = ArrayList<BrightOutlookModel.Data>()
-
+        compareList.clear()
+        onet_code.clear()
+        compareListNew.clear()
         if (arrayList != null) {
             for (i in arrayList?.indices!!) {
                 if (arrayList?.get(i)?.selected == true) {
-                    arrayList?.get(i)?.ccode?.let { onet_code.add(it) }
-                    compareList.add(arrayList?.get(i)!!)
+                    arrayList?.get(i)?.ccode?.let { onet_code.add(it)
+                        compareList.add(arrayList?.get(i)!!)}
+
                 }
             }
         }
@@ -627,11 +647,13 @@ class SearchCareerFragment(var type: String) : Fragment() {
         close.setOnClickListener {
             dialog?.dismiss()
         }
+        dialog?.show()
         val body: CompareCareerBody = CompareCareerBody()
         body.onet_code = onet_code
-        careerViewModel.compareCareers(body)
         progress.show()
-        careerViewModel.careerComparisonsObserver.observe(requireActivity()) {
+        careerViewModel.compareCareers(body)
+
+        careerViewModel.careerComparisonsObserver.observe(viewLifecycleOwner) {
             Log.e("DATA", "" + it.toString())
             progress.dismiss()
             val gson = Gson()
@@ -645,9 +667,23 @@ class SearchCareerFragment(var type: String) : Fragment() {
             }
 
             listing.adapter = CareerCompareAdapter(requireContext(), compareListNew, resp)
-            dialog?.show()
+
+
         }
         dialog?.setContentView(view)
-
+        dialog?.setOnDismissListener {
+            if (view.parent != null) {
+                val parentViewGroup = view.parent as ViewGroup?
+                parentViewGroup?.removeAllViews();
+            }
+        }
+    }
+    fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+        observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(t: T?) {
+                observer.onChanged(t)
+                removeObserver(this)
+            }
+        })
     }
 }
