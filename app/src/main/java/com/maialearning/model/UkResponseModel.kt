@@ -21,16 +21,22 @@ data class UkResponseModel(
 			@SerializedName("course_count"  ) var courseCount : String?     = null,
 			@SerializedName("top_pick_flag" ) var topPickFlag : Int?        = null,
 			@SerializedName("file_name"     ) var fileName    : String?     = null,
-//			@SerializedName("course_list"   ) var courseList  : CourseList? = CourseList()
+			var courseList  : ArrayList<CourseList> = ArrayList<CourseList>()
 
-		)
+		){
+				data class CourseList(
+					@SerializedName("course_id") var courseId: String? = "",
+					@SerializedName("course_name") var courseName: String? = "",
+					@SerializedName("option_count") var optionCount: String? = "",
+					@SerializedName("a_level") var aLevel: String? = "",
+					@SerializedName("ib") var ib: String? = ""
+				)
+		}
 	}
 	data class Pager (
-
 		@SerializedName("current" ) var current : Int?    = null,
 		@SerializedName("last"    ) var last    : Int?    = null,
 		@SerializedName("total"   ) var total   : String? = null
-
 	)
 }
 

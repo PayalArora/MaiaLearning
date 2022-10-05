@@ -2,6 +2,7 @@ package com.maialearning.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
@@ -9,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
-import com.maialearning.databinding.UniListItemBinding
-import com.maialearning.model.EuropeanUniList
+import com.maialearning.databinding.UniListGermanBinding
 import com.maialearning.model.UkResponseModel
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.util.OnLoadMoreListener
 
 
@@ -53,7 +54,7 @@ class UkFactAdapter(
         })
     }
 
-    class ViewHolder(val binding: UniListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: UniListGermanBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
         }
@@ -68,7 +69,7 @@ class UkFactAdapter(
         val viewHolder: RecyclerView.ViewHolder?
         return when (viewType) {
             viewTypeItem -> {
-                val bindingView = UniListItemBinding.inflate(inflater, viewGroup, false)
+                val bindingView = UniListGermanBinding.inflate(inflater, viewGroup, false)
                 viewHolder = ViewHolder(bindingView)
                 viewHolder
             }
@@ -88,36 +89,47 @@ class UkFactAdapter(
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
-            viewHolder.binding.university.setText(university_list.get(position)?.collegeName)
-//            viewHolder.binding.name.setText(university_list.get(position)?.cityState)
-//            viewHolder.binding.country.setText(university_list.get(position)?.country)
-//            viewHolder.binding.profit.setText(university_list.get(position)?.collegeType)
-//            viewHolder.binding.typeValue.setText("SAT Scores")
-//            viewHolder.binding.type.setText(university_list.get(position)?.satScores)
-//            viewHolder.binding.term.setText(university_list.get(position)?.actScores)
-//            viewHolder.binding.termValue.setText("ACT Scores")
-//            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
-//            viewHolder.binding.planValue.setText("Acceptance Rate")
-//            if (university_list.get(position)?.topPickFlag == 0) {
-//                viewHolder.binding.like.setImageResource(R.drawable.like)
-//            } else if (university_list.get(position)?.topPickFlag == 1) {
-//                viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
-//            }
-////        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
-//            Picasso.with(viewHolder.binding.root.context).load(
-//                "$UNIV_LOGO_URL${university_list.get(position)?.countryCode?.toLowerCase()}/${
-//                    university_list.get(position)?.unitid
-//                }/logo_sm.jpg"
-//            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
+            viewHolder.binding.university.text = university_list[position]?.collegeName
 
+            if ((university_list[position]?.courseList?.size ?: 0) > 2) {
+                viewHolder.binding.profit.visibility = View.VISIBLE
+                viewHolder.binding.profit.text =
+                    "See all " + university_list[position]?.courseList?.size ?: "0"
+            } else {
+                viewHolder.binding.profit.visibility = View.GONE
+            }
+
+            if ((university_list[position]?.courseList?.size ?: 0) >= 2) {
+                viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
+                viewHolder.binding.type2.text = university_list[position]?.courseList?.get(1)?.courseName
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.optionCount
+                viewHolder.binding.term2.text = university_list[position]?.courseList?.get(1)?.optionCount
+                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.aLevel
+                viewHolder.binding.termValue2.text = university_list[position]?.courseList?.get(1)?.aLevel
+
+            } else if ((university_list[position]?.courseList?.size ?: 0) >= 1) {
+                viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
+                viewHolder.binding.type2.text = "--"
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.optionCount
+                viewHolder.binding.term2.text = "--"
+                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.aLevel
+                viewHolder.binding.termValue2.text = "--"
+            } else {
+                viewHolder.binding.type.text = "--"
+                viewHolder.binding.type2.text = "--"
+                viewHolder.binding.term.text = "--"
+                viewHolder.binding.term2.text = "--"
+                viewHolder.binding.termValue2.text = "--"
+                viewHolder.binding.termValue.text = "--"
+            }
 
             viewHolder.binding.university.setOnClickListener {
                 // click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetUk(university_list.get(position)!!)
             }
             viewHolder.binding.image.setOnClickListener {
                 // click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetUk(university_list[position]!!)
             }
             viewHolder.binding.like.setOnClickListener {
                 click(position)
@@ -127,6 +139,9 @@ class UkFactAdapter(
 //                    university_list.get(position)?.topPickFlag = 1
 //                }
                 notifyDataSetChanged()
+            }
+            viewHolder.binding.profit.setOnClickListener {
+                (context as UniversitiesActivity).bottomSheetCourseList(university_list[position]!!,null,"uk")
             }
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2
