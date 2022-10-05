@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lay"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/_10dp"
+    android:layout_marginVertical="@dimen/_5dp"
+    android:layout_marginEnd="@dimen/_10dp"
+    app:cardCornerRadius="@dimen/_10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/labeled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/_20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/_5dp"
+            android:fontFamily="@font/inter_bold"
+            android:paddingStart="@dimen/_8dp"
+            android:paddingTop="@dimen/_5dp"
+            android:paddingEnd="@dimen/_8dp"
+            android:paddingBottom="@dimen/_5dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:text="See all"
+            android:textColor="@color/alpha_blue1"
+            android:textSize="@dimen/_14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15dp"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/_5dp"
+            android:paddingEnd="@dimen/_5dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/name">
+            <TextView
+                android:visibility="visible"
+                android:id="@+id/option"
+                android:padding="5dp"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/gray_2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center"
+                android:minLines="2"
+                android:maxLines="2"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_12sp" />
+
+            <TextView
+                android:layout_marginStart="@dimen/_5dp"
+                android:id="@+id/alevels"
+                android:padding="@dimen/_5dp"
+                android:layout_width="wrap_content"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/gray_2"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center"
+                android:text="@string/term"
+                android:minLines="2"
+                android:maxLines="2"
+                android:textColor="@color/green_1"
+                android:textSize="@dimen/_12sp" />
+
+            <TextView
+                android:layout_marginStart="@dimen/_5dp"
+                android:id="@+id/ib"
+                android:padding="@dimen/_5dp"
+                android:layout_width="wrap_content"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/gray_2"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center"
+                android:minLines="2"
+                android:text="SAT"
+                android:maxLines="2"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_11sp" />
+
+
+
+
+
+
+        </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

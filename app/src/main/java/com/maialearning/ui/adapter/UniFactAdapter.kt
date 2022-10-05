@@ -91,17 +91,17 @@ class UniFactAdapter(
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
-            viewHolder.binding.university.setText(parseNA(university_list.get(position)?.collegeName))
-            viewHolder.binding.name.setText(university_list.get(position)?.cityState)
-            viewHolder.binding.country.setText(university_list.get(position)?.country)
-            viewHolder.binding.profit.setText(university_list.get(position)?.collegeType)
-            viewHolder.binding.typeValue.setText("SAT Scores")
-            viewHolder.binding.type.setText(university_list.get(position)?.satScores)
-            viewHolder.binding.term.setText(university_list.get(position)?.actScores)
-            viewHolder.binding.termValue.setText("ACT Scores")
-            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
-            viewHolder.binding.planValue.setText("Acceptance Rate")
-            if (university_list.get(position)?.country!= "US"){
+            viewHolder.binding.university.text = parseNA(university_list[position]?.collegeName)
+            viewHolder.binding.name.text = university_list[position]?.cityState
+            viewHolder.binding.country.text = university_list[position]?.country
+            viewHolder.binding.profit.text = university_list[position]?.collegeType
+            viewHolder.binding.typeValue.text = "SAT Scores"
+            viewHolder.binding.type.text = university_list[position]?.satScores
+            viewHolder.binding.term.text = university_list[position]?.actScores
+            viewHolder.binding.termValue.text = "ACT Scores"
+            viewHolder.binding.plan.text = university_list[position]?.acceptance ?: "N/A"
+            viewHolder.binding.planValue.text = "Acceptance Rate"
+            if (university_list[position]?.country!= "US"){
                 viewHolder.binding.list.visibility = View.GONE
                 viewHolder.binding.location.visibility = View.GONE
             } else
@@ -109,33 +109,33 @@ class UniFactAdapter(
                 viewHolder.binding.list.visibility = View.VISIBLE
                 viewHolder.binding.location.visibility = View.VISIBLE
             }
-            if (university_list.get(position)?.topPickFlag == 0) {
+            if (university_list[position]?.topPickFlag == 0) {
                 viewHolder.binding.like.setImageResource(R.drawable.like)
-            } else if (university_list.get(position)?.topPickFlag == 1) {
+            } else if (university_list[position]?.topPickFlag == 1) {
                 viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
             }
 //        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
             Picasso.with(viewHolder.binding.root.context).load(
-                "${UNIV_LOGO_URL}${university_list.get(position)?.countryCode?.toLowerCase()}/${
-                    university_list.get(position)?.unitid
+                "${UNIV_LOGO_URL}${university_list[position]?.countryCode?.toLowerCase()}/${
+                    university_list[position]?.unitid
                 }/logo_sm.jpg"
             ).error(R.drawable.static_coll).into(viewHolder.binding.image)
 
 
             viewHolder.binding.university.setOnClickListener {
                 // click
-                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetWork(university_list[position]!!)
             }
             viewHolder.binding.image.setOnClickListener {
                 // click
-                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetWork(university_list[position]!!)
             }
             viewHolder.binding.like.setOnClickListener {
                 click(position)
-                if (university_list.get(position)?.topPickFlag == 1) {
-                    university_list.get(position)?.topPickFlag = 0
+                if (university_list[position]?.topPickFlag == 1) {
+                    university_list[position]?.topPickFlag = 0
                 } else {
-                    university_list.get(position)?.topPickFlag = 1
+                    university_list[position]?.topPickFlag = 1
                 }
                 notifyDataSetChanged()
             }

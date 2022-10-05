@@ -8,12 +8,12 @@ import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
-import com.maialearning.databinding.UniListItemBinding
 import com.maialearning.model.GermanUniversitiesResponse
 import com.maialearning.util.OnLoadMoreListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.UniListGermanBinding
+import com.maialearning.ui.activity.UniversitiesActivity
 
 class GermanFactAdapter(
     var context: Context,
@@ -129,11 +129,11 @@ class GermanFactAdapter(
 
             viewHolder.binding.university.setOnClickListener {
                 // click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetGerman(university_list[position]!!)
             }
             viewHolder.binding.image.setOnClickListener {
                 // click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetGerman(university_list[position]!!)
             }
             viewHolder.binding.like.setOnClickListener {
                 click(position)
@@ -143,6 +143,10 @@ class GermanFactAdapter(
                     university_list.get(position)?.topPickFlag = 1
                 }
                 notifyDataSetChanged()
+            }
+
+            viewHolder.binding.profit.setOnClickListener {
+                (context as UniversitiesActivity).bottomSheetCourseList(null,university_list[position]!!,"gr")
             }
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2

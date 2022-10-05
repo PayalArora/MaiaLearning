@@ -12,6 +12,7 @@ import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.UniListGermanBinding
 import com.maialearning.model.UkResponseModel
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.util.OnLoadMoreListener
 
 
@@ -101,17 +102,17 @@ class UkFactAdapter(
             if ((university_list[position]?.courseList?.size ?: 0) >= 2) {
                 viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
                 viewHolder.binding.type2.text = university_list[position]?.courseList?.get(1)?.courseName
-                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.location
-                viewHolder.binding.term2.text = university_list[position]?.courseList?.get(1)?.location
-                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.studyMode
-                viewHolder.binding.termValue2.text = university_list[position]?.courseList?.get(1)?.studyMode
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.optionCount
+                viewHolder.binding.term2.text = university_list[position]?.courseList?.get(1)?.optionCount
+                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.aLevel
+                viewHolder.binding.termValue2.text = university_list[position]?.courseList?.get(1)?.aLevel
 
             } else if ((university_list[position]?.courseList?.size ?: 0) >= 1) {
                 viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
                 viewHolder.binding.type2.text = "--"
-                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.location
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.optionCount
                 viewHolder.binding.term2.text = "--"
-                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.studyMode
+                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.aLevel
                 viewHolder.binding.termValue2.text = "--"
             } else {
                 viewHolder.binding.type.text = "--"
@@ -124,11 +125,11 @@ class UkFactAdapter(
 
             viewHolder.binding.university.setOnClickListener {
                 // click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetUk(university_list.get(position)!!)
             }
             viewHolder.binding.image.setOnClickListener {
                 // click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                (context as UniversitiesActivity).bottomSheetUk(university_list[position]!!)
             }
             viewHolder.binding.like.setOnClickListener {
                 click(position)
@@ -138,6 +139,9 @@ class UkFactAdapter(
 //                    university_list.get(position)?.topPickFlag = 1
 //                }
                 notifyDataSetChanged()
+            }
+            viewHolder.binding.profit.setOnClickListener {
+                (context as UniversitiesActivity).bottomSheetCourseList(university_list[position]!!,null,"uk")
             }
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2

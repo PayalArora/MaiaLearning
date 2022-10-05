@@ -77,7 +77,7 @@ class SearchParser(val it: JsonObject) {
                             objectProgram.getString("course_name")?:"",
                     objectProgram.getString("option_count")?:"",
                     objectProgram.getString("a_level")?:"",
-
+                    objectProgram.getString("ib")?:""
                     )
                 )
 

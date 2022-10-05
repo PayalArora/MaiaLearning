@@ -27,8 +27,9 @@ data class UkResponseModel(
 				data class CourseList(
 					@SerializedName("course_id") var courseId: String? = "",
 					@SerializedName("course_name") var courseName: String? = "",
-					@SerializedName("option_count") var location: String? = "",
-					@SerializedName("a_level") var studyMode: String? = ""
+					@SerializedName("option_count") var optionCount: String? = "",
+					@SerializedName("a_level") var aLevel: String? = "",
+					@SerializedName("ib") var ib: String? = ""
 				)
 		}
 	}
