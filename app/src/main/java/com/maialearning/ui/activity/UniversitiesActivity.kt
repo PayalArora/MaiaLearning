@@ -74,10 +74,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         toolbarBinding.setNavigationOnClickListener {
             finish()
         }
-        initView()
+//        initView()
         binding.toolbarProf.setOnClickListener {
             ProfileFilter(this, layoutInflater).showDialog()
         }
+        dialogP = showLoadingDialog(this)
+        dialogP.show()
         mModel.getSaveCountry()
         observerInit()
 
@@ -519,9 +521,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             initView()
         }
         mModel.saveCountryObserver.observe(this) {
+            dialogP.dismiss()
         if(it.get(0).toString() !=null ||  it.get(0).toString() !=""){
             savedCountry=it.get(0).toString().replaceInvertedComas().replace("\\","")
             SharedHelper(this).country = savedCountry
+            initView()
         }
         }
         mModel.countryFilterObserver.observe(this) {

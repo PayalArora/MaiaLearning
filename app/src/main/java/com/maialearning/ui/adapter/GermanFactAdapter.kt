@@ -2,6 +2,7 @@ package com.maialearning.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
@@ -12,8 +13,9 @@ import com.maialearning.model.GermanUniversitiesResponse
 import com.maialearning.util.OnLoadMoreListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.databinding.UniListGermanBinding
 
-class GermanFactAdapter (
+class GermanFactAdapter(
     var context: Context,
     var university_list: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>,
     var click: (position: Int) -> Unit,
@@ -51,7 +53,7 @@ class GermanFactAdapter (
         })
     }
 
-    class ViewHolder(val binding: UniListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: UniListGermanBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
         }
@@ -66,7 +68,7 @@ class GermanFactAdapter (
         val viewHolder: RecyclerView.ViewHolder?
         return when (viewType) {
             viewTypeItem -> {
-                val bindingView = UniListItemBinding.inflate(inflater, viewGroup, false)
+                val bindingView = UniListGermanBinding.inflate(inflater, viewGroup, false)
                 viewHolder = ViewHolder(bindingView)
                 viewHolder
             }
@@ -86,28 +88,44 @@ class GermanFactAdapter (
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (viewHolder is ViewHolder) {
-            viewHolder.binding.university.setText(university_list.get(position)?.collegeName)
-//            viewHolder.binding.name.setText(university_list.get(position)?.cityState)
-//            viewHolder.binding.country.setText(university_list.get(position)?.country)
-//            viewHolder.binding.profit.setText(university_list.get(position)?.collegeType)
-//            viewHolder.binding.typeValue.setText("SAT Scores")
-//            viewHolder.binding.type.setText(university_list.get(position)?.satScores)
-//            viewHolder.binding.term.setText(university_list.get(position)?.actScores)
-//            viewHolder.binding.termValue.setText("ACT Scores")
-//            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
-            viewHolder.binding.planValue.setText("Acceptance Rate")
-            if (university_list.get(position)?.topPickFlag == 0) {
+            viewHolder.binding.university.text = university_list[position]?.collegeName
+
+            if ((university_list[position]?.courseList?.size ?: 0) > 2) {
+                viewHolder.binding.profit.visibility = View.VISIBLE
+                viewHolder.binding.profit.text =
+                    "See all " + university_list[position]?.courseList?.size ?: "0"
+            } else {
+                viewHolder.binding.profit.visibility = View.GONE
+            }
+
+            if ((university_list[position]?.courseList?.size ?: 0) >= 2) {
+                viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
+                viewHolder.binding.type2.text = university_list[position]?.courseList?.get(1)?.courseName
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.studyMode
+                viewHolder.binding.term2.text = university_list[position]?.courseList?.get(1)?.studyMode
+                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.location
+                viewHolder.binding.termValue2.text = university_list[position]?.courseList?.get(1)?.location
+
+            } else if ((university_list[position]?.courseList?.size ?: 0) >= 1) {
+                viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
+                viewHolder.binding.type2.text = "--"
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.studyMode
+                viewHolder.binding.term2.text = "--"
+                viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.location
+                viewHolder.binding.termValue2.text = "--"
+            } else {
+                viewHolder.binding.type.text = "--"
+                viewHolder.binding.type2.text = "--"
+                viewHolder.binding.term.text = "--"
+                viewHolder.binding.term2.text = "--"
+                viewHolder.binding.termValue2.text = "--"
+                viewHolder.binding.termValue.text = "--"
+            }
+            if (university_list[position]?.topPickFlag == 0) {
                 viewHolder.binding.like.setImageResource(R.drawable.like)
-            } else if (university_list.get(position)?.topPickFlag == 1) {
+            } else if (university_list[position]?.topPickFlag == 1) {
                 viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
             }
-//        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
-//            Picasso.with(viewHolder.binding.root.context).load(
-//                "$UNIV_LOGO_URL${university_list.get(position)?.countryCode?.toLowerCase()}/${
-//                    university_list.get(position)?.unitid
-//                }/logo_sm.jpg"
-//            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
-
 
             viewHolder.binding.university.setOnClickListener {
                 // click
@@ -154,7 +172,11 @@ class GermanFactAdapter (
         isLoading = false
     }
 
-    fun addAllLis(list: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>, total: Int, current: Int) {
+    fun addAllLis(
+        list: ArrayList<GermanUniversitiesResponse.Data.CollegeData?>,
+        total: Int,
+        current: Int
+    ) {
         this.university_list.addAll(list)
         this.totalPages = total
         this.currentPages = current
