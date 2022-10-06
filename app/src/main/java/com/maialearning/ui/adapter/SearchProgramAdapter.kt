@@ -73,7 +73,7 @@ class SearchProgramAdapter(
             viewHolder.binding.button.setOnClickListener {
 
                 if (arrayList?.get(position)?.selected == true) {
-                    arrayList?.get(position)?.selected = false
+                    arrayList[position]?.selected = false
                 } else {
                     arrayList?.get(position)?.selected = true
                 }

@@ -28,7 +28,7 @@ data class BrightOutlookModel(
         @SerializedName("bright_outlook") var brightOutlook: ArrayList<String> = arrayListOf(),
         @field:SerializedName("nid")
         val nid: Int? = null,
-        var selected: Boolean
+        var selected: Boolean = false
 
     )
 

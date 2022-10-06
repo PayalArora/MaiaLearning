@@ -118,8 +118,14 @@ class SearchFragment : Fragment() {
                 val totalPage = univ.pager?.total
                 val last = univ.pager?.last
                 progress.dismiss()
-                germanList?.addAll(univ.data?.collegeData!!)
-                germanListUpdate?.addAll(univ.data?.collegeData!!)
+
+               for (item in univ.data?.collegeData!!){
+                   item.courseList.sortBy { it.courseName }
+                   germanList?.add(item)
+                   germanListUpdate?.add(item)
+               }
+
+
                 if (isLoading) {
                     isLoading = false
                     germanListNew.removeAt(germanListNew.size - 1)
