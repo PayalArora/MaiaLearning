@@ -498,16 +498,24 @@
     <string name="tools_attr">Tools Attributes</string>
     <string name="tech_attr">Technology Attributes</string>
     <string name="knowledge">Knowledge</string>
-    <string name="interests_list_of"><font color="#FF0707">Interests: </font><font color="#0B132B">List your top three choices for each of the following areas of interest</font></string>
-    <string name="abilities_list_personal"><font color="#FF0707">Abilities: </font><font color="#0B132B">List personal skills and talents that will be helpful in a career choice</font></string>
+    <string name="interests_list_of"><font color="#3743BE"><b>Interests:</b> </font><font color="#0B132B">List your top three choices for each of the following areas of interest</font></string>
+    <string name="abilities_list_personal"><font color="#3743BE"><b>Abilities:</b> </font><font color="#0B132B">List personal skills and talents that will be helpful in a career choice</font></string>
     <string name="personal_text">Personal and academic areas I need to strengthen</string>
     <string name="one_a_personal">1a. Personal : Out-of-school Activities you Enjoy</string>
     <string name="one_b">1b. Academic : Classes or subjects you Enjoy the Most</string>
     <string name="one_c">1c. Work Preference : Working with People, Ideas, and Things</string>
     <string name="my_personal_ability">My Personal Abilities</string>
-    <string name="career_areas">"Career Areas Where my Abilities Will be Useful "</string>
+    <string name="career_areas">Career Areas Where my Abilities Will be Useful</string>
     <string name="area_i_need">Areas I Need to Strengthen</string>
-    <string name="steps_i_will">"Steps I Will Take to Strengthen These Areas "</string>
+    <string name="steps_i_will">Steps I Will Take to Strengthen These Areas </string>
+    <string name="school_text"><font color="#3743BE"><b>Schools and/or Community Experiences:</b></font> I have participated in the following school and/or community experiences</string>
+    <string name="school_community_exp">School and/or Community Experiences</string>
+    <string name="skills_acquired">Skills Acquired Through Experiences</string>
+    <string name="work_text"><font color="#3743BE"><b>Work Experiences:</b></font> I have participated in the following work experiences</string>
+    <string name="career_text"><font color="#3743BE"><b>Careers of Interest and Characteristics:</b> </font>I am interested in the following careers and have discovered the following information about these careers</string>
+    <string name="career_goal_text">"Career Goals and Action Steps "</string>
+    <string name="culminating_text">Directions: Briefly describe the activity that you completed. Indicate the most important thing you learned about yourself through this activity. Describe how this self knowledge will influence your plans for the future</string>
+    <string name="culminating_activity">Culminating Activity</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

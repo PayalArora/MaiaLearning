@@ -91,12 +91,15 @@ class NysCareerPlan : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         mBinding.personalList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        mBinding.schoolList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         mBinding.interstsList.adapter = KnowListAdapter(requireContext(), itModel?.interests)
         mBinding.abilityList.adapter = NYSAbilityAdapter(requireContext(), itModel?.abilities)
         mBinding.personalList.adapter =
             NYSPersonAdapter(requireContext(), itModel?.personalAcademicAreas)
 
+        mBinding.schoolList.adapter = NYSSchoolAdapter(requireContext(), itModel?.schoolsExperience)
 
         mBinding.careerList.adapter = NYSCareerAdapter(
             requireContext(),

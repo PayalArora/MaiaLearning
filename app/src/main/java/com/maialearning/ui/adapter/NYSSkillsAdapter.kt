@@ -37,9 +37,7 @@ class NYSSkillsAdapter(var context: Context, var data: ArrayList<SkillsItem>) :
 
         viewHolder.binding.name.text = Html.fromHtml(text)
         viewHolder.binding.text1.setText(data?.get(position)?.beginningSkill.toString())
-        viewHolder.binding.text1.isEnabled = false
         viewHolder.binding.text2.setText(data.get(position).finalSkill)
-        viewHolder.binding.text2.isEnabled = false
         viewHolder.binding.text3.setText(data.get(position).experiencesActivities)
 
     }
