@@ -119,7 +119,7 @@ class UniFactAdapter(
                 "${UNIV_LOGO_URL}${university_list.get(position)?.countryCode?.toLowerCase()}/${
                     university_list.get(position)?.unitid
                 }/logo_sm.jpg"
-            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
+            ).placeholder(R.drawable.static_coll).error(R.drawable.static_coll).into(viewHolder.binding.image)
 
 
             viewHolder.binding.university.setOnClickListener {

@@ -14,12 +14,15 @@ import com.maialearning.databinding.UniListGermanBinding
 import com.maialearning.model.UkResponseModel
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.util.OnLoadMoreListener
+import com.maialearning.util.UNIV_LOGO_URL
+import com.maialearning.util.prefhandler.SharedHelper
+import com.squareup.picasso.Picasso
 
 
 class UkFactAdapter(
     var context: Context,
     var university_list: ArrayList<UkResponseModel.Data.CollegeData?>,
-    var click: (position: Int) -> Unit,
+    var click: (position: String?, like:Boolean) -> Unit,
     recycler: RecyclerView
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     /**
@@ -98,19 +101,23 @@ class UkFactAdapter(
             } else {
                 viewHolder.binding.profit.visibility = View.GONE
             }
+            Picasso.with(viewHolder.binding.root.context).load(
+                "$UNIV_LOGO_URL${SharedHelper(context).country?.toLowerCase()}/${
+                    university_list.get(position)?.collegeNid
+                }/logo_sm.jpg").placeholder(R.drawable.static_coll).error(R.drawable.static_coll).into(viewHolder.binding.image)
 
             if ((university_list[position]?.courseList?.size ?: 0) >= 2) {
                 viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
                 viewHolder.binding.type2.text = university_list[position]?.courseList?.get(1)?.courseName
-                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.optionCount
-                viewHolder.binding.term2.text = university_list[position]?.courseList?.get(1)?.optionCount
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.ib
+                viewHolder.binding.term2.text = university_list[position]?.courseList?.get(1)?.ib
                 viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.aLevel
                 viewHolder.binding.termValue2.text = university_list[position]?.courseList?.get(1)?.aLevel
 
             } else if ((university_list[position]?.courseList?.size ?: 0) >= 1) {
                 viewHolder.binding.type.text = university_list[position]?.courseList?.get(0)?.courseName
                 viewHolder.binding.type2.text = "--"
-                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.optionCount
+                viewHolder.binding.term.text = university_list[position]?.courseList?.get(0)?.ib
                 viewHolder.binding.term2.text = "--"
                 viewHolder.binding.termValue.text = university_list[position]?.courseList?.get(0)?.aLevel
                 viewHolder.binding.termValue2.text = "--"
@@ -122,7 +129,11 @@ class UkFactAdapter(
                 viewHolder.binding.termValue2.text = "--"
                 viewHolder.binding.termValue.text = "--"
             }
-
+            if (university_list[position]?.topPickFlag == 0) {
+                viewHolder.binding.like.setImageResource(R.drawable.like)
+            } else if (university_list[position]?.topPickFlag == 1) {
+                viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
+            }
             viewHolder.binding.university.setOnClickListener {
                 // click
                 (context as UniversitiesActivity).bottomSheetUk(university_list.get(position)!!)
@@ -132,12 +143,15 @@ class UkFactAdapter(
                 (context as UniversitiesActivity).bottomSheetUk(university_list[position]!!)
             }
             viewHolder.binding.like.setOnClickListener {
-                click(position)
-//                if (university_list.get(position)?.topPickFlag == 1) {
-//                    university_list.get(position)?.topPickFlag = 0
-//                } else {
-//                    university_list.get(position)?.topPickFlag = 1
-//                }
+
+                if (university_list.get(position)?.topPickFlag?:0 == 0) {
+                    university_list.get(position)?.topPickFlag = 1
+                    click(university_list.get(position)?.collegeNid,true)
+                } else {
+                    click(university_list.get(position)?.collegeNid,false)
+                    university_list.get(position)?.topPickFlag = 0
+                }
+
                 notifyDataSetChanged()
             }
             viewHolder.binding.profit.setOnClickListener {

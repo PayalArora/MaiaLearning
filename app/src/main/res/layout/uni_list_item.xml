@@ -25,7 +25,7 @@
             android:layout_marginStart="@dimen/_10dp"
             android:layout_marginTop="@dimen/_20dp"
             android:contentDescription="@string/about"
-            android:src="@drawable/college_pic"
+            android:src="@drawable/static_coll"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

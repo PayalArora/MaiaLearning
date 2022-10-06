@@ -600,4 +600,11 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Body univId: CompareCareerBody
     ): Deferred<JsonObject>
+
+    @POST("get_country_based_on_continent")
+    @FormUrlEncoded
+    fun getCountriesContinentBased(
+        @Header("Authorization") AutToken: String,
+        @Field("continent_code") code: String
+    ): Deferred<JsonObject>
 }

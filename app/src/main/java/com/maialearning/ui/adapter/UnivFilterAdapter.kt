@@ -51,6 +51,7 @@ class UnivFilterAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : 
                 .load("https://countryflagsapi.com/png/${SharedHelper(root.context).country}")
                 .into(flagImg)
 
+
         }
 
     }

@@ -295,6 +295,10 @@ interface LoginRepository {
     suspend fun getCareerComparisons(
         body: CompareCareerBody
     ): UseCaseResult<JsonObject>
+
+    suspend fun getCountriesContinentBased(
+        body: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -683,6 +687,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
                     payload
                 ).await()
             } else if (payload.country == "GB") {
+                payload.sort_parameter ="name"
                 catApi.ukUniversitiesAsync(
                     "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                     payload
@@ -1540,6 +1545,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.compareCareers(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCountriesContinentBased(code: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getCountriesContinentBased(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, code
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

@@ -103,17 +103,16 @@ class EuropeanFactAdapter(
 //            viewHolder.binding.termValue.setText("ACT Scores")
 //            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
 //            viewHolder.binding.planValue.setText("Acceptance Rate")
-            if (university_list.get(position)?.topPickFlag?:false== false) {
+            if (university_list.get(position)?.topPickFlag?:0== 0) {
                 viewHolder.binding.like.setImageResource(R.drawable.like)
-            } else if (university_list.get(position)?.topPickFlag?:0  == true) {
+            } else if (university_list.get(position)?.topPickFlag?:0  == 1) {
                 viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
             }
 //        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
             Picasso.with(viewHolder.binding.root.context).load(
                 "$UNIV_LOGO_URL${SharedHelper(context).country?.toLowerCase()}/${
                     university_list.get(position)?.collegeNid
-                }/logo_sm.jpg"
-            ).error(R.drawable.static_coll).into(viewHolder.binding.image)
+                }/logo_sm.jpg").placeholder(R.drawable.static_coll).error(R.drawable.static_coll).into(viewHolder.binding.image)
             viewHolder.binding.list.visibility = View.GONE
             viewHolder.binding.profit.visibility = View.GONE
             viewHolder.binding.location.visibility = View.GONE

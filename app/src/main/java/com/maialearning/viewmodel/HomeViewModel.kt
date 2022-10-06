@@ -62,6 +62,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val checkItaskObserver = MutableLiveData<Unit>()
     val uncheckItaskObserver = MutableLiveData<Unit>()
     val univJsonFilter = MutableLiveData<JsonObject>()
+    val getcontinentFilter = MutableLiveData<JsonObject>()
 
     fun getConsiderList(id: String) {
         showLoading.value = true
@@ -646,5 +647,17 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
-
+    fun getCountriesContinentBased(code: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCountriesContinentBased(code)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getcontinentFilter.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
 }

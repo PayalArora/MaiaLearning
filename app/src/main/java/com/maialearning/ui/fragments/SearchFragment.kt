@@ -26,8 +26,10 @@ import com.maialearning.ui.adapter.UkFactAdapter
 import com.maialearning.ui.adapter.UniFactAdapter
 import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.replaceInvertedComas
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -51,12 +53,7 @@ class SearchFragment : Fragment() {
     private var ukListUpdate: ArrayList<UkResponseModel.Data.CollegeData?>? = null
     private var ukList: ArrayList<UkResponseModel.Data.CollegeData?>? = null
     private lateinit var ukListNew : ArrayList<UkResponseModel.Data.CollegeData?>
-    private var euCountries = arrayOf(
-        "BE", "EL", "LT", "PT", "BG", "ES", "LU", "RO", "CZ", "FR", "HU", "SI", "DK", "HR",
-        "MT", "SK", "DE", "IT", "NL", "FI", "EE", "CY", "AT", "SE", "IE", "LV", "PL", "UK",
-        "CH", "NO", "IS", "LI"
-    )
-
+    private var euCountries = arrayListOf<String>()
     private var isLoading = false
     private var isEuropean = false
     lateinit var adapter: UniFactAdapter
@@ -82,6 +79,11 @@ class SearchFragment : Fragment() {
             ::click,
             mBinding.rvUniv
         )
+        if (euCountries.isEmpty()) {
+        homeModel.getCountriesContinentBased("EU")}
+        else {
+            universitySearch()
+        }
         return mBinding.root
 
     }
@@ -92,7 +94,6 @@ class SearchFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
             .commit()
-        universitySearch()
         observers()
 
         mBinding.searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
@@ -111,6 +112,17 @@ class SearchFragment : Fragment() {
     }
 
     private fun observers() {
+        if (euCountries.isEmpty()) {
+            homeModel.getcontinentFilter.observe(viewLifecycleOwner) {
+                val json = JSONObject(it.toString())
+                val x = json.keys() as Iterator<String>
+                while (x.hasNext()) {
+                    euCountries.add(x.next().replaceInvertedComas())
+                }
+                universitySearch()
+            }
+        }
+
         homeModel.searchUniversityObserver.observe(requireActivity()) {
             if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
                 val univ = SearchParser(it).parseGermanJson()
@@ -144,8 +156,13 @@ class SearchFragment : Fragment() {
                 val totalPage = univ.pager?.total
                 val last = univ.pager?.last
                 progress.dismiss()
-                ukList?.addAll(univ.data?.collegeData!!)
-                ukListUpdate?.addAll(univ.data?.collegeData!!)
+                for (item in univ.data?.collegeData!!){
+                    item.courseList.sortBy { it.courseName }
+                    ukList?.add(item)
+                    ukListUpdate?.add(item)
+                }
+//                ukList?.addAll(univ.data?.collegeData!!)
+//                ukListUpdate?.addAll(univ.data?.collegeData!!)
                 if (isLoading) {
                     isLoading = false
                     ukListNew.removeAt(ukListNew.size - 1)
@@ -222,7 +239,7 @@ class SearchFragment : Fragment() {
             germanAdapter = GermanFactAdapter(
                 requireContext(),
                 germanListNew,
-                ::click,
+                ::clickEuropean,
                 mBinding.rvUniv
             )
             mBinding.rvUniv.adapter = germanAdapter
@@ -244,7 +261,7 @@ class SearchFragment : Fragment() {
             ukAdapter = UkFactAdapter(
                 requireContext(),
                 ukListNew,
-                ::click,
+                ::clickEuropean,
                 mBinding.rvUniv
             )
             mBinding.rvUniv.adapter = ukAdapter
