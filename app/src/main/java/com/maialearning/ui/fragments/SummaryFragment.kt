@@ -2,6 +2,7 @@ package com.maialearning.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,16 @@ import com.maialearning.model.*
 import com.maialearning.ui.adapter.TraficSubAdapter
 import com.maialearning.ui.adapter.WorkActivityAdapter
 import com.maialearning.util.replaceInvertedComas
+import com.maialearning.viewmodel.CareerViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.stream.Collectors
 
 
 class SummaryFragment(var response: SelectedCareerResponse) : Fragment() {
+
     var dialog: BottomSheetDialog? = null
+    private val careerViewModel: CareerViewModel by viewModel()
+
     private lateinit var mBinding: SummaryTraficBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +77,7 @@ class SummaryFragment(var response: SelectedCareerResponse) : Fragment() {
         mBinding.text2.text = response.salary
         mBinding.knowText.text =
             response.educationLevel?.stream()?.collect(Collectors.joining("\n-", "", ""))
-        val uri: Uri = Uri.parse(response.careeronestopVideo?.replaceInvertedComas())
+        val uri: Uri = Uri.parse("https://cdn.careeronestop.org/OccVids/OccupationVideos/${response.yearWiseCode?.jsonMember2019}.mp4")
 
 
         val mediaController = MediaController(requireContext())
@@ -79,15 +85,20 @@ class SummaryFragment(var response: SelectedCareerResponse) : Fragment() {
         mediaController.setMediaPlayer(mBinding.videoView)
         mBinding.videoView.setVideoURI(uri)
         mBinding.videoView.setMediaController(mediaController)
-
+        mBinding.playBtn.setOnClickListener {
+            mBinding.playBtn.visibility=View.GONE
+            mBinding.videoView.requestFocus()
+            mBinding.videoView.start()
+        }
         mBinding.videoView.setOnPreparedListener {
             // do something when video is ready to play, you want to start playing video here
-            mBinding.playBtn.setOnClickListener {
 
-                mBinding.playBtn.visibility=View.GONE
-                mBinding.videoView.requestFocus()
-                mBinding.videoView.start()
-            }
+        }
+
+
+        careerViewModel.getVideoCode(response.careeronestopVideo.toString())
+        careerViewModel.getVideoCodeObserver.observe(requireActivity()){
+            Log.e("Code"," "+it.toString())
         }
 
     }
