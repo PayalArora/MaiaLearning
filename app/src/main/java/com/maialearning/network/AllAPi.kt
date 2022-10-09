@@ -607,4 +607,10 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Field("continent_code") code: String
     ): Deferred<JsonObject>
+
+    @GET("get-student-career-toppick-new")
+    fun getStudentTopPick(
+        @Header("Authorization") AutToken: String,
+        @Query("student_id") id: String
+    ): Deferred<JsonArray>
 }

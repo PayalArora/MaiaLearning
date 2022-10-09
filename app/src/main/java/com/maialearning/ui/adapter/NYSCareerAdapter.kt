@@ -46,8 +46,8 @@ class NYSCareerAdapter(var context: Context, var data: ArrayList<StudentCareerRe
         ) {
             viewHolder.binding.parentCheck.isChecked = true
         }
-        if (data.get(position).reviewByTeacher != null && data.get(position).reviewByTeacher.equals(
-                "1"
+        if (data.get(position).reviewByTeacher != null && !data.get(position).reviewByTeacher.equals(
+                ""
             )
         ) {
             viewHolder.binding.educatorCheck.isChecked = true

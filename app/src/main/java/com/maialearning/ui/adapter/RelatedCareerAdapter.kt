@@ -38,6 +38,9 @@ class RelatedCareerAdapter(
             viewHolder.binding.plan.setText(
                parseNA(arrayList?.get(position)?.brightOutlook?.capitalize()))
         viewHolder.binding.title.text = arrayList?.get(position)?.careerTitle
+        if ( arrayList?.get(position)?.topPick == true){
+
+        }
 
     }
 
