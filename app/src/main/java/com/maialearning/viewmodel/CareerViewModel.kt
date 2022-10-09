@@ -37,7 +37,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val nysCareerObserver = MutableLiveData<JsonObject>()
     val studentCareerPlanObserver = MutableLiveData<JsonObject>()
     val careerComparisonsObserver = MutableLiveData<JsonObject>()
-
+    val getVideoCodeObserver = MutableLiveData<JsonObject>()
 
     fun getKeyboardSearch(id: String) {
         showLoading.value = true
@@ -269,6 +269,20 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
         }
     }
 
+    fun getVideoCode(url: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getVideoCode(url)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getVideoCodeObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

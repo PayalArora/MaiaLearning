@@ -608,6 +608,11 @@ interface AllAPi {
         @Field("continent_code") code: String
     ): Deferred<JsonObject>
 
+    @GET
+    fun getVideoCode(
+        @Url() url: String,
+    ): Deferred<JsonObject>
+
     @GET("get-student-career-toppick-new")
     fun getStudentTopPick(
         @Header("Authorization") AutToken: String,

@@ -299,6 +299,10 @@ interface LoginRepository {
     suspend fun getCountriesContinentBased(
         body: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun getVideoCode(
+        body: String
+    ): UseCaseResult<JsonObject>
     suspend fun getStudentTopPick(
         id: String
     ): UseCaseResult<JsonArray>
@@ -690,7 +694,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
                     payload
                 ).await()
             } else if (payload.country == "GB") {
-                payload.sort_parameter ="name"
+                payload.sort_parameter = "name"
                 catApi.ukUniversitiesAsync(
                     "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                     payload
@@ -1530,8 +1534,9 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun setSaveCountry(): UseCaseResult<JsonArray> {
         return try {
             val saveModel = SaveCountryModel()
-            saveModel.country_code = SharedHelper(BaseApplication.applicationContext()).country?:""
-            saveModel.user_id = SharedHelper(BaseApplication.applicationContext()).id?:""
+            saveModel.country_code =
+                SharedHelper(BaseApplication.applicationContext()).country ?: ""
+            saveModel.user_id = SharedHelper(BaseApplication.applicationContext()).id ?: ""
             val result = catApi.setSaveCountryAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 saveModel
@@ -1573,6 +1578,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getStudentTopPick(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getVideoCode(url: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getVideoCode(
+                url
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
