@@ -60,6 +60,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/_5dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:id="@+id/name_text"
                                     android:layout_marginTop="@dimen/_15dp"
                                     android:layout_toRightOf="@+id/prof_img"
                                     android:fontFamily="@font/inter_bold"
@@ -129,6 +131,7 @@
                                             android:fontFamily="@font/inter"
                                             android:gravity="center_vertical"
                                             android:text="@string/city"
+                                            android:id="@+id/city_txt"
                                             android:textColor="@color/hintColor"
                                             android:textSize="@dimen/_14sp" />
                                     </LinearLayout>

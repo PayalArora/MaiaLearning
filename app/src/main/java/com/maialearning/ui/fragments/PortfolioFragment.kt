@@ -1,6 +1,7 @@
 package com.maialearning.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,12 +21,20 @@ import com.maialearning.databinding.ApplicationFilterBinding
 import com.maialearning.databinding.DashbordFragBinding
 import com.maialearning.databinding.DateFilterBinding
 import com.maialearning.ui.adapter.PortfolioAdapter
+import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.showLoadingDialog
+import com.maialearning.viewmodel.PortfolioViewModel
+import com.maialearning.viewmodel.ProfileViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PortfolioFragment : Fragment(), OnItemClick {
+
+
+
+
     private lateinit var mBinding: ActivityPortfolioBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -51,11 +60,14 @@ class PortfolioFragment : Fragment(), OnItemClick {
             }
         }
         setAdapter()
+
         return mBinding.root
     }
-    fun showApplicationFilter(){
+
+    fun showApplicationFilter() {
         val dialog = BottomSheetDialog(requireContext())
-        val sheetBinding: ApplicationFilterBinding = ApplicationFilterBinding.inflate(layoutInflater)
+        val sheetBinding: ApplicationFilterBinding =
+            ApplicationFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
