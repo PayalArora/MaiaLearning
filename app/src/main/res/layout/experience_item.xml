@@ -47,6 +47,7 @@
                 android:layout_toRightOf="@+id/trop_img"
                 android:fontFamily="@font/inter_bold"
                 android:text="2"
+                android:id="@+id/award_count"
                 android:textColor="@color/yellow" />
         </RelativeLayout>
 
@@ -104,6 +105,7 @@
             android:layout_toRightOf="@+id/ic_carr"
             android:fontFamily="@font/inter_black"
             android:text="@string/food_runner"
+            android:id="@+id/name"
             android:textColor="@color/black"
             android:textSize="@dimen/_16sp" />
 
@@ -113,6 +115,7 @@
             android:layout_marginTop="@dimen/_10dp"
             android:layout_marginEnd="@dimen/_5dp"
             android:layout_marginBottom="@dimen/_5dp"
+            android:visibility="gone"
             android:layout_toRightOf="@+id/ic_carr"
             android:fontFamily="@font/inter_semibold"
             android:text="@string/at_cup"
@@ -128,7 +131,6 @@
         android:layout_marginBottom="@dimen/_5dp"
         android:layout_toRightOf="@+id/ic_carr"
         android:fontFamily="@font/inter_semibold"
-        android:text="@string/community_center"
         android:textColor="@color/black"
         android:textSize="@dimen/_16sp" />
 
@@ -140,6 +142,7 @@
         android:layout_marginEnd="@dimen/_5dp"
         android:layout_marginBottom="@dimen/_5dp"
         android:layout_toRightOf="@+id/ic_carr"
+        android:id="@+id/grade"
         android:fontFamily="@font/inter_semibold"
         android:text="@string/grades"
         android:textColor="@color/univ_name"
@@ -153,6 +156,7 @@
         android:layout_marginBottom="@dimen/_5dp"
         android:layout_toRightOf="@+id/ic_carr"
         android:fontFamily="@font/inter_regular"
+        android:id="@+id/location"
         android:text="@string/cupertino"
         android:textColor="@color/univ_name"
         android:textSize="@dimen/_14sp" />
@@ -175,6 +179,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="@dimen/_5dp"
             android:layout_marginBottom="@dimen/_5dp"
+            android:id="@+id/description_txt"
             android:layout_toRightOf="@+id/ic_hyp"
             android:fontFamily="@font/inter_semibold"
             android:text="@string/helping"

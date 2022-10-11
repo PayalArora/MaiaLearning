@@ -6,10 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.GsonBuilder
 import com.maialearning.R
 
 import com.maialearning.databinding.PortfolioProfileFragmentBinding
-import com.maialearning.model.ProfileResponse
+import com.maialearning.model.*
+import com.maialearning.ui.adapter.PortfolioExperienceAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.PortfolioViewModel
@@ -35,7 +38,7 @@ class PortfolioProfileFragment : Fragment() {
 
         progress = showLoadingDialog(requireContext())
         progress.show()
-//        SharedHelper(requireContext()).id?.let { portfolioModel.getProfile(it) }
+        SharedHelper(requireContext()).id?.let { portfolioModel.getProfile(it) }
         observers()
         return mBinding.root
 
@@ -54,6 +57,7 @@ class PortfolioProfileFragment : Fragment() {
             transaction.commit()
         }
     }
+    var arrayList: ArrayList<ExperiencesModelResponseItem?>? = arrayListOf()
 
 
     private fun observers() {
@@ -61,13 +65,24 @@ class PortfolioProfileFragment : Fragment() {
             progress.dismiss()
         }
         portfolioModel.observer.observe(requireActivity()) {
-            progress.dismiss()
             setData(it)
+            SharedHelper(requireContext()).id?.let { portfolioModel.getExperiences(it) }
+        }
+        portfolioModel.experienceObserver.observe(requireActivity()) {
+            progress.dismiss()
+            mBinding.experienceList.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            val gson = GsonBuilder().create()
+            for (i in it) {
+                val itModel = gson.fromJson(i, ExperiencesModelResponseItem::class.java)
+                arrayList?.add(itModel)
+            }
+            mBinding.experienceList.adapter = PortfolioExperienceAdapter(arrayList)
         }
     }
 
     private fun setData(profileResponse: ProfileResponse) {
-        mBinding.nameText.setText(profileResponse.info?.firstName)
+        mBinding.nameText.setText(profileResponse.info?.firstName?.capitalize())
         mBinding.fullAddressTxt.setText(profileResponse.info?.address)
         mBinding.fullAddressTxt.setText(profileResponse.info?.address)
         mBinding.cityTxt.setText(profileResponse.info?.locality)

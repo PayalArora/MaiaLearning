@@ -619,4 +619,10 @@ interface AllAPi {
     fun getVideoCode(
         @Url() url: String,
     ): Deferred<JsonObject>
+
+    @GET("mre_activity/{id}")
+    fun getExperiences(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonArray>
 }
