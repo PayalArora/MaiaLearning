@@ -66,7 +66,8 @@ data class RelatedCareersItem(
 
 	@field:SerializedName("career_title")
 	val careerTitle: String? = null,
-    var topPick:Boolean = false
+    var topPick:Boolean = false,
+    var nid:String ? = null
 )
 
 data class WorkActivitiesItem(

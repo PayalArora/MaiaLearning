@@ -618,4 +618,17 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Query("student_id") id: String
     ): Deferred<JsonArray>
+
+    @POST("create-content")
+    fun createContent(
+        @Header("Authorization") AutToken: String,
+        @Body model: CreateContent,
+    ): Deferred<JsonObject>
+
+    @POST("delete-node")
+    fun deleteContent(
+        @Header("Authorization") AutToken: String,
+        @Body model: DeleteContent,
+    ): Deferred<JsonObject>
+
 }

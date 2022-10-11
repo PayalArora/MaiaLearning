@@ -306,6 +306,13 @@ interface LoginRepository {
     suspend fun getStudentTopPick(
         id: String
     ): UseCaseResult<JsonArray>
+    suspend fun likeRelatedCareer(
+        content: CreateContent
+    ): UseCaseResult<JsonObject>
+
+    suspend fun unlikeRelatedCareer(
+        content: DeleteContent
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1592,6 +1599,28 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.getVideoCode(
                 url
             ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+
+override suspend fun likeRelatedCareer(content: CreateContent): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.createContent("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, content).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun unlikeRelatedCareer(content: DeleteContent): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.deleteContent("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,content).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

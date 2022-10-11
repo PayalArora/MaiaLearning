@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.R
 import com.maialearning.databinding.RelatedCareerItemBinding
 import com.maialearning.model.RelatedCareersItem
 import com.maialearning.util.parseNA
@@ -39,9 +40,20 @@ class RelatedCareerAdapter(
                parseNA(arrayList?.get(position)?.brightOutlook?.capitalize()))
         viewHolder.binding.title.text = arrayList?.get(position)?.careerTitle
         if ( arrayList?.get(position)?.topPick == true){
-
+            viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
+        } else {
+            viewHolder.binding.like.setImageResource(R.drawable.like)
         }
+        viewHolder.binding.like.setOnClickListener {
 
+            if (arrayList?.get(position)?.topPick == true) {
+                arrayList?.get(position)?.topPick = false
+            } else {
+                arrayList?.get(position)?.topPick = true
+            }
+            click(position)
+            notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount(): Int {
