@@ -31,7 +31,7 @@ class PortfolioFilledProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mBinding.experienceList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        mBinding.experienceList.adapter = PortfolioExperienceAdapter()
+//        mBinding.experienceList.adapter = PortfolioExperienceAdapter()
     }
 }
 

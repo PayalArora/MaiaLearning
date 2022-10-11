@@ -46,7 +46,7 @@ class HomeFragment : Fragment() {
             loadFragment(CareerActivity())
         }
         dashboardBinding.portfolios.setOnClickListener {
-           // loadFragment(PortfolioFragment())
+            loadFragment(PortfolioFragment())
              }
         dashboardBinding.dashboard.setOnClickListener {
             loadFragment(DashboardFragment())

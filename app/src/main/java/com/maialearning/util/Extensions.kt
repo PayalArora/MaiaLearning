@@ -123,6 +123,7 @@ val appModules = module {
     viewModel { DashboardFragViewModel(catRepository = get()) }
     viewModel { RelatedCareerViewModel(catRepository = get()) }
 
+    viewModel { PortfolioViewModel(catRepository = get()) }
 }
 val appModules1 = module{
     single {

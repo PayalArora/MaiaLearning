@@ -303,6 +303,10 @@ interface LoginRepository {
     suspend fun getVideoCode(
         body: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun getExperiences(
+        id: String
+    ): UseCaseResult<JsonArray>
     suspend fun getStudentTopPick(
         id: String
     ): UseCaseResult<JsonArray>
@@ -1538,6 +1542,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun setSaveCountry(): UseCaseResult<JsonArray> {
         return try {
             val saveModel = SaveCountryModel()
@@ -1598,6 +1603,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getVideoCode(
                 url
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getExperiences(id: String): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getExperiences(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

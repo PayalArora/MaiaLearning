@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardUseCompatPadding="true"
-                card_view:cardCornerRadius="10dp"
+                app:cardCornerRadius="@dimen/_10dp"
                 card_view:cardElevation="3dp">
 
                 <LinearLayout
@@ -35,20 +35,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:cardUseCompatPadding="true"
-                        card_view:cardCornerRadius="10dp"
+                        app:cardCornerRadius="@dimen/_10dp"
                         card_view:cardElevation="3dp">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/grey">
+                            android:background="@color/green_5">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/_250dp"
+                                android:backgroundTint="@color/green_4"
                                 android:background="@drawable/curved_grey">
 
-                                <ImageView
+                                <de.hdodenhof.circleimageview.CircleImageView
                                     android:id="@+id/prof_img"
                                     android:layout_width="@dimen/_70dp"
                                     android:layout_height="@dimen/_70dp"
@@ -57,9 +58,11 @@
                                     android:src="@drawable/prof" />
 
                                 <TextView
+                                    android:id="@+id/name_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/_5dp"
+                                    android:layout_marginLeft="5dp"
                                     android:layout_marginTop="@dimen/_15dp"
                                     android:layout_toRightOf="@+id/prof_img"
                                     android:fontFamily="@font/inter_bold"
@@ -123,6 +126,7 @@
                                             android:textSize="@dimen/_14sp" />
 
                                         <TextView
+                                            android:id="@+id/city_txt"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginLeft="@dimen/_5dp"
@@ -264,20 +268,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardUseCompatPadding="true"
-                card_view:cardCornerRadius="10dp"
+                app:cardCornerRadius="@dimen/_10dp"
                 card_view:cardElevation="3dp"
                 >
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageView
-                        android:layout_width="wrap_content"
                         android:id="@+id/ic_carr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_10dp"
-                        android:src="@drawable/career"
-                        app:tint="@color/grey"
                         android:layout_marginTop="@dimen/_10dp"
-                        android:layout_height="wrap_content"/>
+                        android:src="@drawable/career"
+                        app:tint="@color/grey" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -291,29 +296,39 @@
                         android:text="@string/experiences"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_16sp" />
+
+                    <TextView
+                        android:id="@+id/add_exp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="@dimen/_15dp"
+                        android:layout_marginTop="@dimen/_10dp"
+                        android:layout_marginEnd="@dimen/_15dp"
+                        android:background="@drawable/white_rounded_withboundary"
+                        android:fontFamily="@font/inter_bold"
+                        android:paddingHorizontal="@dimen/_10dp"
+                        android:paddingVertical="@dimen/_5dp"
+                        android:text="@string/add_plus"
+                        android:textColor="@color/blue" />
+
                     <View
                         android:id="@+id/view2"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_below="@+id/ic_carr"
+                        android:layout_below="@+id/add_exp"
                         android:layout_marginTop="@dimen/_10dp"
                         android:background="@color/grey_3" />
 
-                    <TextView
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/experience_list"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40dp"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/view2"
-                        android:layout_margin="@dimen/_10dp"
                         android:layout_marginStart="@dimen/_5dp"
                         android:layout_marginTop="@dimen/_5dp"
                         android:layout_marginEnd="@dimen/_5dp"
-                        android:layout_marginBottom="@dimen/_5dp"
-                        android:background="@drawable/rect"
-                        android:gravity="center"
-                        android:fontFamily="@font/inter_bold"
-                        android:text="@string/add_experiences"
-                        android:textColor="@color/blue"
-                        app:backgroundTint="@color/alpha_blue_t" />
+                        android:layout_marginBottom="@dimen/_5dp" />
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
@@ -321,7 +336,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardUseCompatPadding="true"
-                card_view:cardCornerRadius="10dp"
+                app:cardCornerRadius="@dimen/_10dp"
                 card_view:cardElevation="3dp"
                 >
                 <RelativeLayout

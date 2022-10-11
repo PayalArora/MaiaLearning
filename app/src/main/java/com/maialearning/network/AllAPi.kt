@@ -31,22 +31,22 @@ interface AllAPi {
     @POST("azure_ad_oauth_login")
     @FormUrlEncoded
     fun microLoginAsync(
-        @Header("origin") origin:String,
+        @Header("origin") origin: String,
         @Field("token") token: String
-    ):  Deferred<LoginNewModel>
+    ): Deferred<LoginNewModel>
 
- @GET("user_my_account_info/{id}")
+    @GET("user_my_account_info/{id}")
     fun getProfileAsync(
-     @Header("Authorization") Authorization: String,
-     @Path("id") id: String
-    ):  Deferred<ProfileResponse>
+        @Header("Authorization") Authorization: String,
+        @Path("id") id: String
+    ): Deferred<ProfileResponse>
 
     @POST("forgot_password")
     @FormUrlEncoded
     fun forgetPassAsync(
         @Field("email") email: String,
         @Field("type") type: String
-    ):  Deferred<ForgetModel>
+    ): Deferred<ForgetModel>
 
 //    @GET("counselor_college/{id}?status={status}")
 //    fun considerListAsync(
@@ -56,15 +56,15 @@ interface AllAPi {
 
     @GET("counselor_college/{id}?status=considering")
     fun considerListAsync(
-        @Header("Authorization")  AutToken:String,
-        @Path("id") id:String
-    ):  Deferred<JsonObject>
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 
     @GET("counselor_college/{id}?status=applying")
     fun applyListAsync(
-        @Path("id")  id:String,
-        @Header("Authorization")  AutToken:String
-    ):  Deferred<JsonObject>
+        @Path("id") id: String,
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonObject>
 
     @GET("get_notes_for_student/{id}")
     fun getNotesAsync(
@@ -101,8 +101,8 @@ interface AllAPi {
 
     @GET("get_jwt_token")
     fun getJWTTokenAsync(
-        @Header("Authorization")  AutToken:String
-    ):  Deferred<JsonArray>
+        @Header("Authorization") AutToken: String
+    ): Deferred<JsonArray>
 
 //    @GET("{id}/inbox")
 //    fun getInbox(
@@ -111,15 +111,16 @@ interface AllAPi {
 //    ):  Deferred<InboxResponse>
 
     @GET
-    fun getInboxNAsync(@Url url: String,
-                       @Header("x-access-token")  JwtToken:String,
-    ):  Deferred<JsonObject>
+    fun getInboxNAsync(
+        @Url url: String,
+        @Header("x-access-token") JwtToken: String,
+    ): Deferred<JsonObject>
 
     @GET("{id}/inbox")
     fun getInbox(
-        @Header("x-access-token")  AutToken:String,
-        @Path("id") id:String
-    ):  Deferred<JsonObject>
+        @Header("x-access-token") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 
 
     @GET("school_wide_configuration/field_ethnicity_config/{id}")
@@ -132,7 +133,7 @@ interface AllAPi {
     fun getRacesAsync(
         @Path("id") id: String,
         @Header("Authorization") Authorization: String
-    ): Deferred< ArrayList<RaceItem?>>
+    ): Deferred<ArrayList<RaceItem?>>
 
     @POST("get_profile_picure_update_presigned_url")
     @FormUrlEncoded
@@ -147,7 +148,8 @@ interface AllAPi {
     fun uploadImageAsync(
         @Url() url: String,
         @Header("Content-Type") content: String,
-        @Body body:RequestBody): Deferred<Unit>
+        @Body body: RequestBody
+    ): Deferred<Unit>
 
     @GET("student-assignment-dashboard/{id}")
     fun getOverDueCompletedAsync(
@@ -159,11 +161,13 @@ interface AllAPi {
     fun getColFactSheetAsync(
         @Url() url: String,
     ): Deferred<JsonObject>
+
     @GET
     fun getColFactSheetOtherAsync(
         @Url() url: String,
         @Header("Authorization") Authorization: String
     ): Deferred<FactsheetModelOther>
+
     @GET("college_nid_by_unitid/{id}")
     fun getCollegeNidAsync(
         @Path("id") id: String,
@@ -231,12 +235,13 @@ interface AllAPi {
     ): Deferred<Unit>
 
 
-  @DELETE("top-picks/{schoolId}/{studentId}?new_ui=1")
-  fun hitDeleteUniversityConsideringAsync(
-      @Path("schoolId") schoolId: String,
-      @Path("studentId") studentId: String,
-      @Header("Authorization") Authorization: String
-  ): Deferred<Unit>
+    @DELETE("top-picks/{schoolId}/{studentId}?new_ui=1")
+    fun hitDeleteUniversityConsideringAsync(
+        @Path("schoolId") schoolId: String,
+        @Path("studentId") studentId: String,
+        @Header("Authorization") Authorization: String
+    ): Deferred<Unit>
+
     //  https://maia2-staging-backend.maialearning.com/ajs-services/top-picks/402359/9375?new_ui=1
     @DELETE("top-picks/{schoolId}/{studentId}?new_ui=1")
     fun hitDeleteUniversityConsidering(
@@ -270,7 +275,7 @@ interface AllAPi {
     fun getUniversityListAsync(
         @Url url: String,
         @Header("Authorization") Authorization: String
-        ): Deferred<JsonArray>
+    ): Deferred<JsonArray>
 
 
     @GET
@@ -561,6 +566,7 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Url() url: String
     ): Deferred<JsonArray>
+
     @GET
     fun getUsList(
         @Header("Authorization") AutToken: String,
@@ -578,6 +584,7 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String
     ): Deferred<JsonObject>
+
     @GET("un_aws_search_filters")
     fun getcountryFilterAsync(
     ): Deferred<JsonObject>
@@ -612,6 +619,12 @@ interface AllAPi {
     fun getVideoCode(
         @Url() url: String,
     ): Deferred<JsonObject>
+
+    @GET("mre_activity/{id}")
+    fun getExperiences(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonArray>
 
     @GET("get-student-career-toppick-new")
     fun getStudentTopPick(
