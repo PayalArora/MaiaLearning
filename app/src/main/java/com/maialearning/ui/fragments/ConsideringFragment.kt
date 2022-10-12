@@ -11,17 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
-import com.maialearning.model.AddProgramConsider
-import com.maialearning.model.ConsiderModel
-import com.maialearning.model.UnivCollegeModel
-import com.maialearning.model.UpdateStudentPlan
+import com.maialearning.model.*
 import com.maialearning.ui.adapter.CommentAdapter
 import com.maialearning.ui.adapter.ConsiderAdapter
+import com.maialearning.ui.adapter.ConsideringTypeTermAdapter
 import com.maialearning.ui.adapter.ProgramAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
@@ -35,7 +34,7 @@ const val type: String = "UCAS"
 const val term = "Spring 2022"
 const val plan = "Early Action"
 
-class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
+class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOptionFilters {
     var count: Int = 0
     var dialog: BottomSheetDialog? = null
     var notesDialog: BottomSheetDialog? = null
@@ -224,7 +223,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         super.onDestroyView()
     }
 
-
+    var selectedUnivId: String = ""
     private fun bottomSheetType(layoutId: Int, rbId: Int, type: Int, arratlistPosition: Int) {
         dialog = BottomSheetDialog(requireContext())
 
@@ -236,26 +235,53 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
         view.findViewById<RelativeLayout>(R.id.close).setOnClickListener {
             dialog?.dismiss()
         }
+        val recyclerView = view.findViewById<RecyclerView>(R.id.consider_list_type)
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         var univModel = UnivCollegeModel()
         var ids = ArrayList<String>()
         ids.add(finalArray[arratlistPosition].universityNid)
+        selectedUnivId = finalArray[arratlistPosition].universityNid
         univModel.university_nids = ids
         var url = "https://api-gw-staging.maialearning.com/college-json-filter"
-//        dialogP.show()
+        dialogP.show()
 //        val obj = JsonObject()
 //        val jsArray = JSONArray(ids)
 //        obj.addProperty("university_nids", jsArray.toString())
         homeModel.getCollegeJsonFilter(url, univModel)
         homeModel.univJsonFilter.observe(requireActivity()) {
             dialogP.dismiss()
+            val json = JSONObject(it.toString())
+            if (json.has(selectedUnivId)) {
+                val jsonUniv = json.optJSONObject(selectedUnivId)
+                if (jsonUniv.has("allowed_application_type")) {
+                    val allowedType = jsonUniv.optJSONObject("allowed_application_type")
+                    var typeList = ArrayList<DynamicKeyValue>()
+                    val keys: Iterator<*> = allowedType.keys()
+                    while (keys.hasNext()) {
+                        // loop to get the dynamic key
+                        val currentDynamicKey = keys.next() as String
+                        // get the value of the dynamic key
+                        typeList.add(
+                            DynamicKeyValue(
+                                currentDynamicKey,
+                                allowedType.getString(currentDynamicKey), false
+                            )
+                        )
+                    }
+                    if (typeList != null && typeList.size > 0 && type == 1) {
+                        recyclerView.adapter = ConsideringTypeTermAdapter(typeList, type, this)
+                    }
+                }
+            }
         }
-        radioAppType.setOnCheckedChangeListener { group, checkedId ->
-            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
-            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
-                radioButton.text.toString(),
-                type
-            )
-        }
+//        radioAppType.setOnCheckedChangeListener { group, checkedId ->
+//            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
+//            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
+//                radioButton.text.toString(),
+//                type
+//            )
+//        }
     }
 
     override fun onTypeClick(postion: Int) {
@@ -483,8 +509,29 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick {
 
     }
 
+    override fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue) {
+        if (type == 1) {
+            var updateStudentPlan = UpdateStudentPlan()
+            updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+            updateStudentPlan.college_nid = selectedUnivId
+            updateStudentPlan.app_type = dynamicKeyValue.key
+            updateStudentPlan.app_status = "accepted"
+            updateStudentPlan.app_status="3"
+            dialogP.show()
+            homeModel.updateStudentPlan(updateStudentPlan)
+            homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+                dialog?.dismiss()
+                dialogP.dismiss()
+                getConsideringList()
+            }
+        }
+    }
+
 }
 
+interface ClickOptionFilters {
+    fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue)
+}
 
 interface OnItemClickOption {
     fun onTypeClick(postion: Int)
