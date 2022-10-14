@@ -42,6 +42,7 @@
 <RadioGroup
     android:layout_width="match_parent"
     android:layout_below="@+id/view1"
+    android:visibility="gone"
     android:id="@+id/radio_app_term"
     android:layout_height="wrap_content">
     <RadioButton
@@ -113,4 +114,9 @@
         android:background="@color/divider_color" />
 
 </RadioGroup>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/consider_list_type"
+        android:layout_below="@+id/view1" />
 </RelativeLayout>
