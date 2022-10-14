@@ -154,6 +154,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("notes"),
                             arrayCounselor, object_.getString("request_transcript"),
                             object_.getString("application_type"),
+                            object_.optString("application_term"),
                             object_.getString("application_mode"),
                             object_.getString("application_status_name"),
                             object_.getString("app_by_program_supported"),
@@ -223,8 +224,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         super.onDestroyView()
     }
 
+    lateinit var allowedType: JSONObject
+    lateinit var allowedTypeArray: JSONArray
+    lateinit var jsonUniv: JSONObject
     var selectedUnivId: String = ""
-    private fun bottomSheetType(layoutId: Int, rbId: Int, type: Int, arratlistPosition: Int) {
+    private fun bottomSheetType(
+        layoutId: Int,
+        rbId: Int,
+        type: Int,
+        arratlistPosition: Int,
+        selectedValue: String
+    ) {
         dialog = BottomSheetDialog(requireContext())
 
         val view = layoutInflater.inflate(layoutId, null)
@@ -253,28 +263,61 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             dialogP.dismiss()
             val json = JSONObject(it.toString())
             if (json.has(selectedUnivId)) {
-                val jsonUniv = json.optJSONObject(selectedUnivId)
+                jsonUniv = json.optJSONObject(selectedUnivId)
                 if (jsonUniv.has("allowed_application_type")) {
-                    val allowedType = jsonUniv.optJSONObject("allowed_application_type")
                     var typeList = ArrayList<DynamicKeyValue>()
-                    val keys: Iterator<*> = allowedType.keys()
-                    while (keys.hasNext()) {
-                        // loop to get the dynamic key
-                        val currentDynamicKey = keys.next() as String
-                        // get the value of the dynamic key
-                        typeList.add(
-                            DynamicKeyValue(
-                                currentDynamicKey,
-                                allowedType.getString(currentDynamicKey), false
+                    var termList = ArrayList<DynamicKeyValue>()
+                    if (jsonUniv.optJSONObject("allowed_application_type") != null) {
+                        allowedType = jsonUniv.optJSONObject("allowed_application_type")
+                        val keys: Iterator<*> = allowedType.keys()
+                        while (keys.hasNext()) {
+                            // loop to get the dynamic key
+                            val currentDynamicKey = keys.next() as String
+                            // get the value of the dynamic key
+                            typeList.add(
+                                DynamicKeyValue(
+                                    currentDynamicKey,
+                                    allowedType.getString(currentDynamicKey), false
+                                )
                             )
-                        )
+                        }
+                    } else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
+                        allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
+                        for (i in 0 until allowedTypeArray.length()) {
+                            val item = allowedTypeArray.getJSONObject(i)
+                            typeList.add(
+                                DynamicKeyValue(
+                                    item.optString("id"),
+                                    item.optString("label"),
+                                    false
+                                )
+                            )
+                        }
                     }
+
                     if (typeList != null && typeList.size > 0 && type == 1) {
                         recyclerView.adapter = ConsideringTypeTermAdapter(typeList, type, this)
+                    } else if (type == 0) {
+                        if (selectedValue != null) {
+                            val selectedJson = jsonUniv.optJSONObject(selectedValue)
+                            val termListArray = selectedJson.optJSONArray("term_list")
+                            if (termListArray != null) {
+                                for (i in 0 until termListArray.length()) {
+                                    // get the value of the dynamic key
+                                    termList.add(
+                                        DynamicKeyValue(
+                                            "",
+                                            termListArray.getString(i), false
+                                        )
+                                    )
+
+
+                                    recyclerView.adapter =
+                                        ConsideringTypeTermAdapter(termList, type, this)
+                                }
+                            }
+                        }
                     }
-                }
-            }
-        }
 //        radioAppType.setOnCheckedChangeListener { group, checkedId ->
 //            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
 //            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
@@ -282,18 +325,26 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 //                type
 //            )
 //        }
+                }
+            }
+        }
     }
 
+
+    var typeTermPosition = -1
     override fun onTypeClick(postion: Int) {
-        bottomSheetType(R.layout.application_type, R.id.radio_app_type, 1, postion)
+        typeTermPosition = postion
+        bottomSheetType(R.layout.application_type, R.id.radio_app_type, 1, postion, "")
     }
 
     override fun onTermClick(postion: Int) {
-        bottomSheetType(R.layout.application_term, R.id.radio_app_term, 0, postion)
+        typeTermPosition = postion
+        bottomSheetType(R.layout.application_term, R.id.radio_app_term, 0, postion, "")
     }
 
     override fun onPlanClick(postion: Int) {
-        bottomSheetType(R.layout.application_plan_filter, R.id.radio_action, 2, postion)
+        typeTermPosition = postion
+        bottomSheetType(R.layout.application_plan_filter, R.id.radio_action, 2, postion, "")
     }
 
     override fun onCommentClick() {
@@ -508,21 +559,41 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     override fun onClick(positiion: Int) {
 
     }
-
+ lateinit var selectedKeyType:String
     override fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue) {
+        var updateStudentPlan = UpdateStudentPlan()
+        updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+        updateStudentPlan.college_nid = selectedUnivId
         if (type == 1) {
-            var updateStudentPlan = UpdateStudentPlan()
-            updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
-            updateStudentPlan.college_nid = selectedUnivId
+            selectedKeyType=dynamicKeyValue.key
             updateStudentPlan.app_type = dynamicKeyValue.key
             updateStudentPlan.app_status = "accepted"
-            updateStudentPlan.app_status="3"
-            dialogP.show()
-            homeModel.updateStudentPlan(updateStudentPlan)
-            homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+        }
+        if (type == 0) {
+            updateStudentPlan.app_type = selectedKeyType
+            updateStudentPlan.app_status = "accepted"
+            updateStudentPlan.application_term = dynamicKeyValue.value
+        }
+        updateStudentPlan.app_status = "3"
+        dialogP.show()
+        homeModel.updateStudentPlan(updateStudentPlan)
+        homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+            dialog?.dismiss()
+            dialogP.dismiss()
+            if (type == 1) {
+                finalArray.get(typeTermPosition).applicationType = dynamicKeyValue.value
+                mBinding.consideringList.adapter?.notifyDataSetChanged()
+                bottomSheetType(
+                    R.layout.application_term,
+                    R.id.radio_app_term,
+                    0,
+                    typeTermPosition,
+                    dynamicKeyValue.value
+                )
+            } else if (type == 0) {
+                finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue.value
+                mBinding.consideringList.adapter?.notifyDataSetChanged()
                 dialog?.dismiss()
-                dialogP.dismiss()
-                getConsideringList()
             }
         }
     }
