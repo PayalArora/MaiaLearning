@@ -123,16 +123,7 @@
             android:textSize="@dimen/_16sp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10dp"
-        android:layout_marginEnd="@dimen/_5dp"
-        android:layout_marginBottom="@dimen/_5dp"
-        android:layout_toRightOf="@+id/ic_carr"
-        android:fontFamily="@font/inter_semibold"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_16sp" />
+
 
     <TextView
         android:layout_width="wrap_content"

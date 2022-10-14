@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.DegreeAdapterBinding
 import com.maialearning.databinding.ExperienceItemBinding
 import com.maialearning.model.ExperiencesModelResponseItem
+import com.maialearning.util.parseNA
 import java.util.stream.Collectors
 
 class PortfolioExperienceAdapter(val experiencesModelResponse: List<ExperiencesModelResponseItem?>?) :
@@ -32,9 +33,9 @@ class PortfolioExperienceAdapter(val experiencesModelResponse: List<ExperiencesM
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.name.setText(experiencesModelResponse?.get(position)?.name)
-        viewHolder.binding.location.setText(" at " + experiencesModelResponse?.get(position)?.location)
+        viewHolder.binding.location.setText(" at " + parseNA(experiencesModelResponse?.get(position)?.location))
         viewHolder.binding.awardCount.setText(experiencesModelResponse?.get(position)?.award)
-        viewHolder.binding.descriptionTxt.setText(experiencesModelResponse?.get(position)?.description)
+        viewHolder.binding.descriptionTxt.setText( parseNA(experiencesModelResponse?.get(position)?.description))
         val years = ArrayList<String>() as ArrayList
         for (i in experiencesModelResponse?.get(position)?.year?.indices!!) {
             years.add("${(experiencesModelResponse?.get(position)?.year?.get(i)?.toInt()?.plus(5) ?: 0)}" +"th")

@@ -516,6 +516,7 @@
     <string name="career_goal_text">"Career Goals and Action Steps "</string>
     <string name="culminating_text">Directions: Briefly describe the activity that you completed. Indicate the most important thing you learned about yourself through this activity. Describe how this self knowledge will influence your plans for the future</string>
     <string name="culminating_activity">Culminating Activity</string>
+    <string name="top_fiv_career_interest">Top 5 Career Interests</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
