@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -18,17 +20,18 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
 import com.maialearning.model.*
-import com.maialearning.ui.adapter.CommentAdapter
-import com.maialearning.ui.adapter.ConsiderAdapter
-import com.maialearning.ui.adapter.ConsideringTypeTermAdapter
-import com.maialearning.ui.adapter.ProgramAdapter
+import com.maialearning.ui.adapter.*
+import com.maialearning.util.COLLEGE_JSON
+import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.replaceInvertedComas
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
@@ -158,7 +161,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("application_mode"),
                             object_.getString("application_status_name"),
                             object_.getString("app_by_program_supported"),
-                            object_.getInt("confirm_applied")
+                            object_.getInt("confirm_applied"), null
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -187,10 +190,187 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
 
                     mBinding.universitisCounte.text = array.size.toString() + " Universities"
-                    mBinding.consideringList.adapter =
-                        ConsiderAdapter(this, finalArray, ::notesClick)
+                    var univModel = UnivCollegeModel()
+                    var ids = ArrayList<String>()
+                    for (i in finalArray.indices) {
+                        ids.add(finalArray[i].universityNid)
+                        selectedUnivId = finalArray[i].universityNid
+                    }
+                    univModel.university_nids = ids
+                    dialogP.show()
+                    homeModel.getCollegeJsonFilter(COLLEGE_JSON, univModel)
+
                 }
             }
+        }
+        homeModel.univJsonFilter.observe(requireActivity()) {
+            dialogP.dismiss()
+            for (i in finalArray.indices) {
+                selectedUnivId = finalArray[i].university_nid
+                val json = JSONObject(it.toString())
+                if (json.has(selectedUnivId)) {
+                    var jsonUniv = json.optJSONObject(selectedUnivId)
+                    if (jsonUniv.has("allowed_application_type")) {
+                        var typeList = ArrayList<DynamicKeyValue>()
+
+                        if (jsonUniv.optJSONObject("allowed_application_type") != null) {
+                            allowedType = jsonUniv.optJSONObject("allowed_application_type")
+//                            println("allowedType " + allowedType)
+//                            println("allowedType " + selectedUnivId)
+                            val keys: Iterator<*> = allowedType.keys()
+                            while (keys.hasNext()) {
+                                // loop to get the dynamic key
+                                val currentDynamicKey = keys.next() as String
+                                // get the value of the dynamic key
+                                val term =
+                                    jsonUniv.optJSONObject(allowedType.getString(currentDynamicKey))
+                                var termList = ArrayList<String>()
+                                val termListArray: JSONArray? = term.optJSONArray("term_list")
+                                //collTerm.collTerm = termList
+                                val collTerm: ConsiderModel.CollTerm =
+                                    ConsiderModel.CollTerm()
+
+                                collTerm.type = term.optString("type")
+//                                println("term " + term.optString("type"))
+                                //val collTermList: ArrayList<ConsiderModel.CollTerm> = arrayListOf()
+                                val collPlanList: ArrayList<ConsiderModel.CollPlan> = arrayListOf()
+                                termListArray?.let { termListArray ->
+                                    for (i in 0 until termListArray.length()) {
+                                        termList.add(termListArray.getString(i))
+//                                        println("termListArray" + termListArray.getString(i))
+                                        val plan: JSONArray? =
+                                            term.optJSONArray(termListArray.getString(i))
+                                        val collPlan = ConsiderModel.CollPlan()
+                                        collPlan.plan = termListArray.getString(i)
+                                        var decision: ArrayList<ConsiderModel.Decision> =
+                                            arrayListOf()
+                                        plan?.let { plan ->
+                                            for (i in 0 until plan.length()) {
+                                                val json: JSONObject = plan[i] as JSONObject
+                                                val descisionItem = ConsiderModel.Decision(
+                                                    json.optString("decision_plan"),
+                                                    json.optString("decision_plan_value"),
+                                                    json.optString("deadline_date")
+                                                )
+                                                decision?.add(descisionItem)
+                                            }
+                                        }
+                                        collPlan.collPlan = decision
+                                        collPlanList.add(collPlan)
+
+                                        collTerm.collTerm = collPlanList
+                                    }
+                                    collTerm.termList = termList
+
+                                }
+//                                println("collTerm " + collTerm.termList.toString())
+                                typeList.add(
+                                    DynamicKeyValue(
+                                        currentDynamicKey,
+                                        allowedType.getString(currentDynamicKey),
+                                        collTerm
+                                    )
+                                )
+
+                            }
+
+                            finalArray.get(i).collegeAppLicationType =
+                                ConsiderModel.CollType(typeList)
+
+                        } else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
+                            allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
+                            for (i in 0 until allowedTypeArray.length()) {
+                                val term = allowedTypeArray.getJSONObject(i)
+                                var termList = ArrayList<String>()
+                                val termListArray: JSONArray? = term.optJSONArray("term_list")
+                                //collTerm.collTerm = termList
+
+                                val collTerm: ConsiderModel.CollTerm =
+                                    ConsiderModel.CollTerm()
+
+                                collTerm.type = term.optString("type")
+                                val collTermList: ArrayList<ConsiderModel.CollTerm> = arrayListOf()
+                                val collPlanList: ArrayList<ConsiderModel.CollPlan> = arrayListOf()
+                                termListArray?.let { termListArray ->
+                                    for (i in 0 until termListArray.length()) {
+                                        termList.add(termListArray.getString(i))
+                                        val plan: JSONArray? =
+                                            term.optJSONArray(termListArray.getString(i))
+                                        collTerm.termList = termList
+                                        val collPlan = ConsiderModel.CollPlan()
+                                        collPlan.plan = termListArray.getString(i)
+                                        var decision: ArrayList<ConsiderModel.Decision> =
+                                            arrayListOf()
+                                        plan?.let { plan ->
+                                            for (i in 0 until plan.length()) {
+                                                val json: JSONObject = plan[i] as JSONObject
+                                                val descisionItem = ConsiderModel.Decision(
+                                                    json.optString("decision_plan"),
+                                                    json.optString("decision_plan_value"),
+                                                    json.optString("deadline_date")
+                                                )
+                                                decision?.add(descisionItem)
+                                            }
+                                        }
+                                        collPlan.collPlan = decision
+                                        collPlanList.add(collPlan)
+                                        collTerm.termList = termList
+                                        collTerm.collTerm = collPlanList
+                                        collTermList.add(collTerm)
+                                    }
+
+                                }
+                                typeList.add(
+                                    DynamicKeyValue(
+                                        term.optString("id"),
+                                        term.optString("label"),
+                                        collTerm
+                                    )
+                                )
+                            }
+
+                            finalArray.get(i).collegeAppLicationType =
+                                ConsiderModel.CollType(typeList)
+
+                        }
+
+
+//                        if (typeList != null && typeList.size > 0 && type == 1) {
+//                            recyclerView.adapter = ConsideringTypeTermAdapter(typeList, type, this)
+//                        } else if (type == 0) {
+//                            if (selectedValue != null) {
+//                                val selectedJson = jsonUniv.optJSONObject(selectedValue)
+//                                val termListArray = selectedJson.optJSONArray("term_list")
+//                                if (termListArray != null) {
+//                                    for (i in 0 until termListArray.length()) {
+//                                        // get the value of the dynamic key
+//                                        termList.add(
+//                                            DynamicKeyValue(
+//                                                "",
+//                                                termListArray.getString(i), false
+//                                            )
+//                                        )
+//
+//
+//                                        recyclerView.adapter =
+//                                            ConsideringTypeTermAdapter(termList, type, this)
+//                                    }
+//                                }
+//                            }
+//                        }
+
+//        radioAppType.setOnCheckedChangeListener { group, checkedId ->
+//            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
+//            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
+//                radioButton.text.toString(),
+//                type
+//            )
+//        }
+                    }
+                }
+            }
+            mBinding.consideringList.adapter =
+                ConsiderAdapter(this, finalArray, ::notesClick)
         }
         homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
@@ -226,7 +406,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
     lateinit var allowedType: JSONObject
     lateinit var allowedTypeArray: JSONArray
-    lateinit var jsonUniv: JSONObject
+
     var selectedUnivId: String = ""
     private fun bottomSheetType(
         layoutId: Int,
@@ -248,86 +428,140 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         val recyclerView = view.findViewById<RecyclerView>(R.id.consider_list_type)
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        var univModel = UnivCollegeModel()
-        var ids = ArrayList<String>()
-        ids.add(finalArray[arratlistPosition].universityNid)
-        selectedUnivId = finalArray[arratlistPosition].universityNid
-        univModel.university_nids = ids
-        var url = "https://api-gw-staging.maialearning.com/college-json-filter"
-        dialogP.show()
-//        val obj = JsonObject()
-//        val jsArray = JSONArray(ids)
-//        obj.addProperty("university_nids", jsArray.toString())
-        homeModel.getCollegeJsonFilter(url, univModel)
-        homeModel.univJsonFilter.observe(requireActivity()) {
-            dialogP.dismiss()
-            val json = JSONObject(it.toString())
-            if (json.has(selectedUnivId)) {
-                jsonUniv = json.optJSONObject(selectedUnivId)
-                if (jsonUniv.has("allowed_application_type")) {
-                    var typeList = ArrayList<DynamicKeyValue>()
-                    var termList = ArrayList<DynamicKeyValue>()
-                    if (jsonUniv.optJSONObject("allowed_application_type") != null) {
-                        allowedType = jsonUniv.optJSONObject("allowed_application_type")
-                        val keys: Iterator<*> = allowedType.keys()
-                        while (keys.hasNext()) {
-                            // loop to get the dynamic key
-                            val currentDynamicKey = keys.next() as String
-                            // get the value of the dynamic key
-                            typeList.add(
-                                DynamicKeyValue(
-                                    currentDynamicKey,
-                                    allowedType.getString(currentDynamicKey), false
-                                )
-                            )
-                        }
-                    } else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
-                        allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
-                        for (i in 0 until allowedTypeArray.length()) {
-                            val item = allowedTypeArray.getJSONObject(i)
-                            typeList.add(
-                                DynamicKeyValue(
-                                    item.optString("id"),
-                                    item.optString("label"),
-                                    false
-                                )
-                            )
-                        }
+        if (type == 1) {
+            recyclerView.adapter =
+                finalArray[arratlistPosition].collegeAppLicationType?.collType?.let {
+
+                    ConsideringTypeTermAdapter(it, type, this)
+
+                }
+        } else if (type == 0) {
+            for (i in finalArray[arratlistPosition].collegeAppLicationType?.collType?.indices!!) {
+                if (finalArray[arratlistPosition].applicationMode == finalArray[i].collegeAppLicationType?.collType?.get(
+                        i
+                    )?.key
+                ) {
+                    finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
+                        recyclerView.adapter = ConsideringTermAdapter(
+                            it, type, this
+                        )
+                        return
                     }
-
-                    if (typeList != null && typeList.size > 0 && type == 1) {
-                        recyclerView.adapter = ConsideringTypeTermAdapter(typeList, type, this)
-                    } else if (type == 0) {
-                        if (selectedValue != null) {
-                            val selectedJson = jsonUniv.optJSONObject(selectedValue)
-                            val termListArray = selectedJson.optJSONArray("term_list")
-                            if (termListArray != null) {
-                                for (i in 0 until termListArray.length()) {
-                                    // get the value of the dynamic key
-                                    termList.add(
-                                        DynamicKeyValue(
-                                            "",
-                                            termListArray.getString(i), false
-                                        )
-                                    )
-
-
-                                    recyclerView.adapter =
-                                        ConsideringTypeTermAdapter(termList, type, this)
-                                }
-                            }
-                        }
-                    }
-//        radioAppType.setOnCheckedChangeListener { group, checkedId ->
-//            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
-//            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
-//                radioButton.text.toString(),
-//                type
-//            )
-//        }
                 }
             }
         }
+        radioAppType.setOnCheckedChangeListener { group, checkedId ->
+            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
+            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
+                radioButton.text.toString(),
+                type
+            )
+        }
+//        var univModel = UnivCollegeModel()
+//        var ids = ArrayList<String>()
+//        ids.add(finalArray[arratlistPosition].universityNid)
+//        selectedUnivId = finalArray[arratlistPosition].universityNid
+//        univModel.university_nids = ids
+//
+//        dialogP.show()
+////        val obj = JsonObject()
+////        val jsArray = JSONArray(ids)
+////        obj.addProperty("university_nids", jsArray.toString())
+//        homeModel.getCollegeJsonFilter(COLLEGE_JSON, univModel)
+//        homeModel.univJsonFilter.observe(requireActivity()) {
+//            dialogP.dismiss()
+//            for ( i in finalArray.indices) {
+//                selectedUnivId = finalArray[i].university_nid
+//            val json = JSONObject(it.toString())
+//            if (json.has(selectedUnivId)) {
+//                jsonUniv = json.optJSONObject(selectedUnivId)
+//                if (jsonUniv.has("allowed_application_type")) {
+//                    var typeList = ArrayList<DynamicKeyValue>()
+//
+//                    if (jsonUniv.optJSONObject("allowed_application_type") != null) {
+//                        allowedType = jsonUniv.optJSONObject("allowed_application_type")
+//                        val keys: Iterator<*> = allowedType.keys()
+//                        while (keys.hasNext()) {
+//                            // loop to get the dynamic key
+//                            val currentDynamicKey = keys.next() as String
+//                            // get the value of the dynamic key
+//                            typeList.add(
+//                                DynamicKeyValue(
+//                                    currentDynamicKey,
+//                                    allowedType.getString(currentDynamicKey)
+//                                )
+//                            )
+//                            val term = jsonUniv.optJSONObject( allowedType.getString(currentDynamicKey))
+//                            var termList = ArrayList<String>()
+//                            val termListArray:JSONArray = term.optJSONArray("term_list")
+//                            val collTerm : ConsiderModel.CollTerm = ConsiderModel.CollTerm(termList, decisionPlan)
+//
+//                            for (i in 0 ..termListArray.length()){
+//                                termList.add(termListArray.getString(i))
+//                                val plan = term.optJSONArray(termListArray.getString(i))
+//                               var decision: ArrayList<ConsiderModel.Decision> = arrayListOf()
+//                                for (i in 0 ..plan.length()){
+//                                    val json:JSONObject = plan[i] as JSONObject
+//                                val descisionItem = ConsiderModel.Decision(json.optString("decision_plan"),
+//                                    json.optString("decision_plan_value"), json.optString("deadline_date") )
+//                                    decision.add(descisionItem)
+//                                }
+//                                val decisionPlan: ConsiderModel.DecisionPlan = ConsiderModel.DecisionPlan(decision)
+//                                collTerm.plan = decisionPlan
+//                            }
+//
+//
+//                        }
+//
+//                       finalArray.get(i).collegeAppLicationType = ConsiderModel.CollType(typeList)
+//                    } else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
+//                        allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
+//                        for (i in 0 until allowedTypeArray.length()) {
+//                            val item = allowedTypeArray.getJSONObject(i)
+//                            typeList.add(
+//                                DynamicKeyValue(
+//                                    item.optString("id"),
+//                                    item.optString("label"),
+//                                    false
+//                                )
+//                            )
+//                        }
+//                    }
+//
+//                    if (typeList != null && typeList.size > 0 && type == 1) {
+//                        recyclerView.adapter = ConsideringTypeTermAdapter(typeList, type, this)
+//                    } else if (type == 0) {
+//                        if (selectedValue != null) {
+//                            val selectedJson = jsonUniv.optJSONObject(selectedValue)
+//                            val termListArray = selectedJson.optJSONArray("term_list")
+//                            if (termListArray != null) {
+//                                for (i in 0 until termListArray.length()) {
+//                                    // get the value of the dynamic key
+//                                    termList.add(
+//                                        DynamicKeyValue(
+//                                            "",
+//                                            termListArray.getString(i), false
+//                                        )
+//                                    )
+//
+//
+//                                    recyclerView.adapter =
+//                                        ConsideringTypeTermAdapter(termList, type, this)
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+////        radioAppType.setOnCheckedChangeListener { group, checkedId ->
+////            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
+////            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
+////                radioButton.text.toString(),
+////                type
+////            )
+////        }
+//                }
+//            }
+//        }
     }
 
 
@@ -559,42 +793,48 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     override fun onClick(positiion: Int) {
 
     }
- lateinit var selectedKeyType:String
+
+    var selectedKeyType: String = ""
     override fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue) {
         var updateStudentPlan = UpdateStudentPlan()
         updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
         updateStudentPlan.college_nid = selectedUnivId
         if (type == 1) {
-            selectedKeyType=dynamicKeyValue.key
+            selectedKeyType = dynamicKeyValue.key
             updateStudentPlan.app_type = dynamicKeyValue.key
             updateStudentPlan.app_status = "accepted"
         }
-        if (type == 0) {
-            updateStudentPlan.app_type = selectedKeyType
-            updateStudentPlan.app_status = "accepted"
-            updateStudentPlan.application_term = dynamicKeyValue.value
-        }
         updateStudentPlan.app_status = "3"
+        dialogP = showLoadingDialog(requireContext())
         dialogP.show()
         homeModel.updateStudentPlan(updateStudentPlan)
         homeModel.updateStudentPlanObserver.observe(requireActivity()) {
             dialog?.dismiss()
             dialogP.dismiss()
             if (type == 1) {
-                finalArray.get(typeTermPosition).applicationType = dynamicKeyValue.value
-                mBinding.consideringList.adapter?.notifyDataSetChanged()
-                bottomSheetType(
-                    R.layout.application_term,
-                    R.id.radio_app_term,
-                    0,
-                    typeTermPosition,
-                    dynamicKeyValue.value
-                )
-            } else if (type == 0) {
                 finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue.value
                 mBinding.consideringList.adapter?.notifyDataSetChanged()
-                dialog?.dismiss()
+
             }
+        }
+    }
+
+    override fun onTermItemClick(positiion: Int, type: Int, dynamicKeyValue: String) {
+        var updateStudentPlan = UpdateStudentPlan()
+        updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+        updateStudentPlan.college_nid = selectedUnivId
+        updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
+        //updateStudentPlan.app_status = "accepted"
+        updateStudentPlan.application_term = dynamicKeyValue
+        updateStudentPlan.app_status = "3"
+        dialogP = showLoadingDialog(requireContext())
+        dialogP.show()
+        homeModel.updateStudentPlan(updateStudentPlan)
+        homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+            dialog?.dismiss()
+            dialogP.dismiss()
+            finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue
+            mBinding.consideringList.adapter?.notifyDataSetChanged()
         }
     }
 
@@ -602,6 +842,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
 interface ClickOptionFilters {
     fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue)
+    fun onTermItemClick(positiion: Int, type: Int, dynamicKeyValue: String)
 }
 
 interface OnItemClickOption {

@@ -16,6 +16,7 @@ import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 import com.maialearning.util.CommonClass
 import com.maialearning.util.UNIV_LOGO_URL
+import com.maialearning.util.replaceInvertedComas
 import com.squareup.picasso.Picasso
 
 class ConsiderAdapter(
@@ -84,8 +85,10 @@ class ConsiderAdapter(
                 countTxt.setText(array[position].college_priority_choice)
             }
 
-            if (array[position].applicationType != null && !array[position].applicationType.equals("null")) {
-                typeValue.setText(array[position].applicationType)
+            if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
+              //  typeValue.setText(array[position].applicationType)
+                val typeVal = getAppType(array[position].applicationMode, position)
+                typeVal.let { typeValue.setText(it) }
             } else {
                 typeValue.setText("Select")
 
@@ -158,5 +161,15 @@ class ConsiderAdapter(
         notifyDataSetChanged()
     }
 
+    fun getAppType(key:String, position: Int):String?{
+        array.get(position).collegeAppLicationType?.collType?.let {
+            for (item in it){
+                if (item.key.replaceInvertedComas().equals(key)){
+                    return item.value
+                }
+            }
+        }
+        return null
+    }
 }
 

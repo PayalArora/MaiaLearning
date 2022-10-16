@@ -53,7 +53,28 @@ class ConsiderModel {
         @SerializedName("app_by_program_supported")
         var appByProgramSupported: String,
         @SerializedName("confirm_applied")
-        var confirmApplied: Int
+        var confirmApplied: Int,
+        var collegeAppLicationType: CollType?
+    )
+
+    data class CollType(var collType: ArrayList<DynamicKeyValue>?)
+
+    class CollTerm {
+        lateinit var type: String
+         var termList: ArrayList<String>? = null
+         var collTerm: ArrayList<CollPlan>? = null
+
+    }
+
+    class CollPlan {
+        lateinit var plan: String
+         var collPlan: ArrayList<Decision>? = null
+    }
+
+    data class Decision(
+        var decision_plan: String,
+        var decision_plan_value: String,
+        var deadline_date: String
     )
 
     data class ProgramData(
@@ -68,7 +89,7 @@ class ConsiderModel {
         @SerializedName("program_status")
         var program_status: String,
         @SerializedName("app_status_val")
-        var app_status_val:String? = null
+        var app_status_val: String? = null
     )
 
     data class CounselorNotes(
@@ -83,5 +104,7 @@ class ConsiderModel {
         @SerializedName("last_name")
         var lastName: String
     )
+
+
 }
 

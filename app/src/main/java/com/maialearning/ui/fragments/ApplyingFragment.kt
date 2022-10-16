@@ -162,7 +162,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.getString("application_mode"),
                         object_.getString("application_status_name"),
                         object_.getString("app_by_program_supported"),
-                        object_.getInt("confirm_applied")
+                        object_.getInt("confirm_applied"), null
                     )
                     array.add(model)
                     array.sortBy { it.naviance_college_name }
