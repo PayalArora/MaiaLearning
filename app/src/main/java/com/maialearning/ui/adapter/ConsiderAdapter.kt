@@ -71,9 +71,6 @@ class ConsiderAdapter(
                     ?.let { CommonClass.getDate(it) })
             name.setText(array[position].created_name)
             typeValue.setText(typeVal)
-            termValue.setText(termVal)
-            planValue.setText(planVal)
-
 
             if (array[position].college_priority_choice.equals("null")) {
                 countTxt.setText("?")
@@ -95,9 +92,27 @@ class ConsiderAdapter(
             }
             if (array[position].applicationTerm != null && !array[position].applicationTerm.equals("null")) {
                 termValue.setText(array[position].applicationTerm)
-            } else {
-                termValue.setText("Select")
+                appTerm.visibility = View.VISIBLE
             }
+                if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
+                    for (i in array[position].collegeAppLicationType?.collType?.indices!!) {
+                        if (array[position].applicationMode == array[i].collegeAppLicationType?.collType?.get(
+                                i
+                            )?.key
+                        ) {
+                            array[position].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
+
+                                return
+                            }
+                            termValue.setText("Select")
+                            appTerm.visibility = View.GONE
+                        }
+                    }
+                } else {
+                    appTerm.visibility = View.VISIBLE
+                    termValue.setText("Select")
+                }
+
             Picasso.with(viewHolder.binding.root.context)
                 .load("${UNIV_LOGO_URL}${array[position].country?.toLowerCase()}/${array[position].unitid}/logo_sm.jpg")
                 .error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
