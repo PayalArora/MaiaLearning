@@ -449,6 +449,27 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
             }
+        } else if (type == 2) {
+            for (i in finalArray[arratlistPosition].collegeAppLicationType?.collType?.indices!!) {
+                for (k in finalArray[arratlistPosition].collegeAppLicationType?.collType?.indices!!) {
+                    if (finalArray[arratlistPosition].applicationTerm.equals(
+                            finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(
+                                k
+                            )?.term?.collTerm?.get(k)?.plan
+                        )
+                    ) {
+//                        finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(k)?.term?.collTerm?.get(k)?.collPlan
+                        finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.collTerm?.get(
+                            k
+                        )?.collPlan?.let {
+                            recyclerView.adapter = ConsiderPlanAdapter(
+                                it, type, this
+                            )
+                            return
+                        }
+                    }
+                }
+            }
         }
         radioAppType.setOnCheckedChangeListener { group, checkedId ->
             val radioButton = radioAppType.findViewById(checkedId) as RadioButton
@@ -553,8 +574,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 //                    }
 //                }
 ////        radioAppType.setOnCheckedChangeListener { group, checkedId ->
-////            val radioButton = radioAppType.findViewById(checkedId) as RadioButton
-////            (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
+////            val radioButton = radioAppType.findViewById(checkedId) as RadioButton     (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
 ////                radioButton.text.toString(),
 ////                type
 ////            )
