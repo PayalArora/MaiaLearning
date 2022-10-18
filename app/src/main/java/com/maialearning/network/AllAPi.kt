@@ -565,7 +565,7 @@ interface AllAPi {
     fun getWorkList(
         @Header("Authorization") AutToken: String,
         @Url() url: String
-    ): Deferred<JsonArray>
+    ): Deferred<JsonObject>
 
     @GET
     fun getUsList(

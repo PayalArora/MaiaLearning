@@ -46,9 +46,9 @@ class IndustryClusterAdapter(
         if (currentItem != null) {
             textViewName?.setText(currentItem.name)
         }
-        textViewName?.setOnClickListener {
-            click(getItem(position)!!)
-        }
+//        textViewName?.setOnClickListener {
+//            click(getItem(position)!!)
+//        }
         return convertView!!
     }
 }

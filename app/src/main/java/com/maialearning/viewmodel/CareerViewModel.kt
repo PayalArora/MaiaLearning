@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
 class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
@@ -31,7 +32,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val industryListObserver = MutableLiveData<IndustryListModel>()
     val careerClusterDetailObserver = MutableLiveData<ArrayList<BrightOutlookModel.Data>>()
     val brightOutObserver = MutableLiveData<BrightOutlookModel>()
-    val workObserver = MutableLiveData<JsonArray>()
+    val workObserver = MutableLiveData<JsonObject>()
     val careerUsObserver = MutableLiveData<CareerUSModel>()
     val careerKeyboardDetailObserver = MutableLiveData<JsonArray>()
     val nysCareerObserver = MutableLiveData<JsonObject>()

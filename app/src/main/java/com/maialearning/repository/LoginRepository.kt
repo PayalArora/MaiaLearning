@@ -270,7 +270,7 @@ interface LoginRepository {
 
     suspend fun getWorkSearch(
         url: String
-    ): UseCaseResult<JsonArray>
+    ): UseCaseResult<JsonObject>
 
     suspend fun getUSSearch(
         url: String
@@ -1466,7 +1466,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getWorkSearch(url: String): UseCaseResult<JsonArray> {
+    override suspend fun getWorkSearch(url: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.getWorkList(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, url
