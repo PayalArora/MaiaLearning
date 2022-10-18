@@ -21,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class OverViewFragment : Fragment() {
-    private lateinit var mBinding:OverviewLayoutBinding
+    private lateinit var mBinding: OverviewLayoutBinding
     private val mModel: FactSheetModel by viewModel()
     var model: CollegeFactSheetModel? = null
     var modelOther: FactsheetModelOther? = null
@@ -36,8 +36,8 @@ class OverViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        mBinding= OverviewLayoutBinding.inflate(inflater,container,false)
-    return mBinding.root
+        mBinding = OverviewLayoutBinding.inflate(inflater, container, false)
+        return mBinding.root
 
     }
 
@@ -47,45 +47,65 @@ class OverViewFragment : Fragment() {
         childFragmentManager.beginTransaction()
             .replace(R.id.map, mapFragment)
             .commit()
-        mBinding.recyclerView.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+        mBinding.recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         mBinding.recyclerView.adapter = VideoFactAdapter()
         observer()
         init()
     }
 
     private fun init() {
-        if((SharedHelper(context as UniversitiesActivity).country?: "US") == "US"){
-        model = (context as UniversitiesActivity).getData()
-        if (model != null) {
-            mBinding.aboutdes.text=" ${ model?.basicInfo?.description}"
-            mBinding.phoneNo.text=" ${ model?.basicInfo?.phone}"
-            mBinding.webUrl.text=" ${ model?.basicInfo?.webAddr}"
-            mBinding.entType.text=" ${ model?.basicInfo?.environmentType}"
-            mBinding.termTyp.text=" ${ model?.basicInfo?.termType}"
-            mBinding.intsType.text=" ${ model?.basicInfo?.institutionType}"
-            mBinding.degree.text=" ${ model?.basicInfo?.award?.joinToString(",")}"
-            mBinding.locTxt.text=" ${ model?.basicInfo?.city+","+ model?.basicInfo?.state+","+ model?.basicInfo?.zip}"
-            mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
-
-        }}else{
-            modelOther = (context as UniversitiesActivity).getDataOther()
-            if (modelOther != null) {
-                mBinding.aboutdes.text=" ${ modelOther?.basicInfo?.basicInfo?.description}"
-                mBinding.phoneNo.text=" ${ modelOther?.basicInfo?.basicInfo?.phone}"
-                mBinding.webUrl.text=" ${ modelOther?.basicInfo?.basicInfo?.webAddr}"
-                mBinding.entType.text=" ${ modelOther?.basicInfo?.basicInfo?.environmentType}"
-                mBinding.termTyp.text=" ${ modelOther?.basicInfo?.basicInfo?.termType}"
-                mBinding.intsType.text=" ${ modelOther?.basicInfo?.basicInfo?.institutionType}"
-                mBinding.degree.text=" ${ modelOther?.basicInfo?.basicInfo?.award}"
-                mBinding.locTxt.text=" ${ modelOther?.basicInfo?.basicInfo?.city+","+ modelOther?.basicInfo?.basicInfo?.state+","+ modelOther?.basicInfo?.basicInfo?.zip}"
-                mModel.getCollegeNid("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,"222178")
+        if ((SharedHelper(context as UniversitiesActivity).country ?: "US") == "US") {
+            model = (context as UniversitiesActivity).getData()
+            if (model != null && model?.basicInfo != null) {
+                mBinding.aboutdes.text = " ${model?.basicInfo?.description}"
+                mBinding.phoneNo.text = " ${model?.basicInfo?.phone}"
+                mBinding.webUrl.text = " ${model?.basicInfo?.webAddr}"
+                mBinding.entType.text = " ${model?.basicInfo?.environmentType}"
+                mBinding.termTyp.text = " ${model?.basicInfo?.termType}"
+                mBinding.intsType.text = " ${model?.basicInfo?.institutionType}"
+                mBinding.degree.text = " ${model?.basicInfo?.award?.joinToString(",")}"
+                mBinding.locTxt.text =
+                    " ${model?.basicInfo?.city + "," + model?.basicInfo?.state + "," + model?.basicInfo?.zip}"
+                mModel.getCollegeNid(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    "222178"
+                )
 
             }
-        }}
-    fun observer(){
+        } else {
+            modelOther = (context as UniversitiesActivity).getDataOther()
+            if (modelOther != null && modelOther?.basicInfo?.basicInfo?.name != null) {
+                mBinding.aboutdes.text = " ${modelOther?.basicInfo?.basicInfo?.description}"
+                mBinding.phoneNo.text = " ${modelOther?.basicInfo?.basicInfo?.phone}"
+                mBinding.webUrl.text = " ${modelOther?.basicInfo?.basicInfo?.webAddr}"
+                mBinding.entType.text = " ${modelOther?.basicInfo?.basicInfo?.environmentType}"
+                mBinding.termTyp.text = " ${modelOther?.basicInfo?.basicInfo?.termType}"
+                mBinding.intsType.text = " ${modelOther?.basicInfo?.basicInfo?.institutionType}"
+                mBinding.degree.text = " ${modelOther?.basicInfo?.basicInfo?.award}"
+                mBinding.locTxt.text =
+                    " ${modelOther?.basicInfo?.basicInfo?.city + "," + modelOther?.basicInfo?.basicInfo?.state + "," + modelOther?.basicInfo?.basicInfo?.zip}"
+                mModel.getCollegeNid(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    "222178"
+                )
+
+            } else if (modelOther?.providerInfo != null) {
+                mBinding.webUrl.text = " ${modelOther?.providerInfo?.website}"
+                mBinding.locTxt.text =
+                    " ${modelOther?.providerInfo?.address1 + "," + modelOther?.providerInfo?.address2 + "," + modelOther?.providerInfo?.address3+","+modelOther?.providerInfo?.address4+", "+modelOther?.providerInfo?.postalCode}"
+
+            }
+        }
+    }
+
+    fun observer() {
         mModel.idObserver.observe(requireActivity()) {
             SharedHelper(requireContext()).collegeNId = it.get("nid").toString()
-            mModel.getUniversityContact("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,SharedHelper(requireContext()).collegeNId)
+            mModel.getUniversityContact(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                SharedHelper(requireContext()).collegeNId
+            )
 
         }
     }

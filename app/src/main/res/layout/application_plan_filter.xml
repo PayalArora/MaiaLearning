@@ -42,6 +42,7 @@
 
         android:background="@color/divider_color" />
 <RadioGroup
+    android:visibility="gone"
     android:layout_width="match_parent"
     android:layout_below="@+id/view1"
     android:id="@+id/radio_action"
@@ -143,6 +144,11 @@
         android:checked="true"
         android:text="@string/reg"/>
 </RadioGroup>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/consider_list_type"
+        android:layout_below="@+id/view1" />
     <View
         android:id="@+id/view6"
         android:layout_width="match_parent"
