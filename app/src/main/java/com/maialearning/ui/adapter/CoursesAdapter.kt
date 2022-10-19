@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.CoursesListAdapterBinding
+import com.maialearning.model.CourseListModel
 import com.maialearning.model.GermanUniversitiesResponse
 
 import com.maialearning.model.UkResponseModel
 
 class CoursesAdapter(
     var context: Context,
-    val list: List<UkResponseModel.Data.CollegeData.CourseList?>?,
+    val list: List<CourseListModel>?,
     val listGerman: List<GermanUniversitiesResponse.Data.CollegeData.CourseList?>?,
     var type: String
 ) :

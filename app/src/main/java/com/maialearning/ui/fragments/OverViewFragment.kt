@@ -93,7 +93,7 @@ class OverViewFragment : Fragment() {
             } else if (modelOther?.providerInfo != null) {
                 mBinding.webUrl.text = " ${modelOther?.providerInfo?.website}"
                 mBinding.locTxt.text =
-                    " ${modelOther?.providerInfo?.address1 + "," + modelOther?.providerInfo?.address2 + "," + modelOther?.providerInfo?.address3+","+modelOther?.providerInfo?.address4+", "+modelOther?.providerInfo?.postalCode}"
+                    " ${modelOther?.providerInfo?.address1 + "\n" + modelOther?.providerInfo?.address2 + "\n" + modelOther?.providerInfo?.address3 + "\n" + modelOther?.providerInfo?.address4 + "\n" + modelOther?.providerInfo?.postalCode}"
 
             }
         }

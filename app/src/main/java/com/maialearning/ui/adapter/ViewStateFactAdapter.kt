@@ -24,7 +24,7 @@ class ViewStateFactAdapter(
             if ((SharedHelper(context).country ?: "US") == "US") {
                 return CommunityFragmet()
             } else {
-                return AdmissionFragment()
+                return ProgramListFragment()
             }
         } else if (position == 2) {
             return AdmissionFragment()

@@ -10,17 +10,17 @@ import org.json.JSONObject
 
 
 class SearchParser(val it: JsonObject) {
-    fun parseJson(): UniversitySearchResponse{
-        val universitySearchResponse= UniversitySearchResponse()
+    fun parseJson(): UniversitySearchResponse {
+        val universitySearchResponse = UniversitySearchResponse()
         if (it.has("last"))
-        universitySearchResponse.last=it.get("last").asInt
+            universitySearchResponse.last = it.get("last").asInt
         if (it.has("pager"))
-        universitySearchResponse.pager=it.get("pager").asInt
+            universitySearchResponse.pager = it.get("pager").asInt
         if (it.has("total_records"))
-        universitySearchResponse.totalRecords=it.get("total_records").asInt
-        val arrayList= arrayListOf<UniversitiesSearchModel>()
+            universitySearchResponse.totalRecords = it.get("total_records").asInt
+        val arrayList = arrayListOf<UniversitiesSearchModel>()
         val json = JSONObject(it.toString())
-        val x =json.keys() as Iterator<String>
+        val x = json.keys() as Iterator<String>
         x.next()
         x.next()
         x.next()
@@ -42,25 +42,27 @@ class SearchParser(val it: JsonObject) {
 
     }
 
-    fun parseGermanJson(): GermanUniversitiesResponse{
+    fun parseGermanJson(): GermanUniversitiesResponse {
         val gson = GsonBuilder().create()
         val itModel = gson.fromJson(it, GermanUniversitiesResponse::class.java)
         return itModel
     }
-    fun parseEuropeanJson(): EuropeanUniList{
+
+    fun parseEuropeanJson(): EuropeanUniList {
         val gson = GsonBuilder().create()
         val itModel = gson.fromJson(it, EuropeanUniList::class.java)
         return itModel
     }
-    fun parseUkJson(): UkResponseModel{
+
+    fun parseUkJson(): UkResponseModel {
         val gson = GsonBuilder().create()
         val itModel = gson.fromJson(it, UkResponseModel::class.java)
-        val itModelNew =ArrayList<UkResponseModel.Data.CollegeData>()
+        val itModelNew = ArrayList<UkResponseModel.Data.CollegeData>()
         val json = JSONObject(it.toString()).getJSONObject("data").getJSONArray("college_data")
-        for(i in 0 until json.length()){
-            val varArray: ArrayList<UkResponseModel.Data.CollegeData.CourseList> =
+        for (i in 0 until json.length()) {
+            val varArray: ArrayList<CourseListModel> =
                 ArrayList()
-            val data=json.getJSONObject(i)
+            val data = json.getJSONObject(i)
             val jsonVar = data.getJSONObject("course_list")
             val varList = ArrayList<String>()
             val x1 = jsonVar.keys() as Iterator<String>
@@ -72,23 +74,31 @@ class SearchParser(val it: JsonObject) {
             }
             for (j in 0 until jsonVarArray.length()) {
                 val objectProgram = jsonVarArray.getJSONObject(j)
-                varArray.add(UkResponseModel.Data.CollegeData.CourseList(
-                            objectProgram.getString("course_id")?:"",
-                            objectProgram.getString("course_name")?:"",
-                    objectProgram.getString("option_count")?:"",
-                    objectProgram.getString("a_level")?:"",
-                    objectProgram.getString("ib")?:""
+                varArray.add(
+                    CourseListModel(
+                        objectProgram.getString("course_id") ?: "",
+                        objectProgram.getString("course_name") ?: "",
+                        objectProgram.getString("option_count") ?: "",
+                        objectProgram.getString("a_level") ?: "",
+                        objectProgram.getString("ib") ?: ""
                     )
                 )
 
+            }
+            itModelNew.add(
+                UkResponseModel.Data.CollegeData(
+                    data.getString("college_nid"),
+                    data.getString("college_name"),
+                    data.getInt("parchment"),
+                    data.getInt("slate"),
+                    data.getString("course_count"),
+                    data.getInt("top_pick_flag"),
+                    data.getString("file_name"),
+                    varArray
+                )
+            )
         }
-            itModelNew.add(UkResponseModel.Data.CollegeData(data.getString("college_nid"),
-                data.getString("college_name"), data.getInt("parchment"), data.getInt("slate"),
-                data.getString("course_count"), data.getInt("top_pick_flag"), data.getString("file_name"),
-                varArray
-            ))
-        }
-        itModel.data?.collegeData=itModelNew
+        itModel.data?.collegeData = itModelNew
         return itModel
     }
 }
