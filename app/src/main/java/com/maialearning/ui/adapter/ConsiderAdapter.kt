@@ -90,13 +90,14 @@ class ConsiderAdapter(
                 typeValue.setText("Select")
 
             }
-            if (array[position].applicationTerm != null && !array[position].applicationTerm.equals("null")) {
+            if (array[position].applicationTerm != null && !array[position].applicationTerm.equals("null") && !array[position].applicationTerm.equals("Reset")) {
                 termValue.setText(array[position].applicationTerm)
                 appTerm.visibility = View.VISIBLE
             }
-                if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
+            else if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
+                    val appMode = array[position].applicationMode
                     for (i in array[position].collegeAppLicationType?.collType?.indices!!) {
-                        if (array[position].applicationMode == array[i].collegeAppLicationType?.collType?.get(
+                        if (appMode == array[position].collegeAppLicationType?.collType?.get(
                                 i
                             )?.key
                         ) {
@@ -104,14 +105,20 @@ class ConsiderAdapter(
 
                                 return
                             }
+                            if (array[position].collegeAppLicationType?.collType?.get(i)?.term?.type == "decision") {
                             termValue.setText("Select")
-                            appTerm.visibility = View.GONE
+                            appTerm.visibility = View.VISIBLE}
+                            else {
+                                termValue.setText("Select")
+                               // appTerm.visibility = View.GONE
+                            }
                         }
                     }
                 } else {
                     appTerm.visibility = View.VISIBLE
                     termValue.setText("Select")
                 }
+
 
             Picasso.with(viewHolder.binding.root.context)
                 .load("${UNIV_LOGO_URL}${array[position].country?.toLowerCase()}/${array[position].unitid}/logo_sm.jpg")

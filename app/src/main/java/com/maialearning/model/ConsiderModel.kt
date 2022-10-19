@@ -60,7 +60,7 @@ class ConsiderModel {
     data class CollType(var collType: ArrayList<DynamicKeyValue>?)
 
     class CollTerm {
-        lateinit var type: String
+         var type: String? = null
          var termList: ArrayList<String>? = null
          var collTerm: ArrayList<CollPlan>? = null
 

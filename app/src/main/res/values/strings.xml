@@ -119,6 +119,7 @@
     <string name="plan">Plan</string>
     <string name="spring_2022">Spring 2022</string>
     <string name="select_term">Select Term</string>
+    <string name="select">Select</string>
     <string name="winter">Winter 2022</string>
     <string name="fall">Fall 2022</string>
     <string name="summer">Summer 2022</string>
@@ -546,6 +547,13 @@
         <item>Universal App</item>
     </string-array>
 
+    <string-array name="APPLICATION_TERM">
+        <item>Fall</item>
+        <item>Winter</item>
+        <item>Spring</item>
+        <item>Summer</item>
+        <item>Reset</item>
+    </string-array>
     <string-array name="DECISION_PLAN">
         <item>Early Action</item>
         <item>Early Action II</item>

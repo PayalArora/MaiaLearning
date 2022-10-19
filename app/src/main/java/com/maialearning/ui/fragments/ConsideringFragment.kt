@@ -224,13 +224,15 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 // get the value of the dynamic key
                                 val term =
                                     jsonUniv.optJSONObject(allowedType.getString(currentDynamicKey))
-                                var termList = ArrayList<String>()
-                                val termListArray: JSONArray? = term.optJSONArray("term_list")
-                                //collTerm.collTerm = termList
                                 val collTerm: ConsiderModel.CollTerm =
                                     ConsiderModel.CollTerm()
 
                                 collTerm.type = term.optString("type")
+                                var termList = ArrayList<String>()
+
+                                val termListArray: JSONArray? = term.optJSONArray("term_list")
+                                //collTerm.collTerm = termList
+
 //                                println("term " + term.optString("type"))
                                 //val collTermList: ArrayList<ConsiderModel.CollTerm> = arrayListOf()
                                 val collPlanList: ArrayList<ConsiderModel.CollPlan> = arrayListOf()
@@ -280,53 +282,60 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         } else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
                             allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
                             for (i in 0 until allowedTypeArray.length()) {
-                                val term = allowedTypeArray.getJSONObject(i)
+                                val type = allowedTypeArray.getJSONObject(i)
                                 var termList = ArrayList<String>()
-                                val termListArray: JSONArray? = term.optJSONArray("term_list")
+
                                 //collTerm.collTerm = termList
 
                                 val collTerm: ConsiderModel.CollTerm =
                                     ConsiderModel.CollTerm()
-
-                                collTerm.type = term.optString("type")
-                                val collTermList: ArrayList<ConsiderModel.CollTerm> = arrayListOf()
-                                val collPlanList: ArrayList<ConsiderModel.CollPlan> = arrayListOf()
-                                termListArray?.let { termListArray ->
-                                    for (i in 0 until termListArray.length()) {
-                                        termList.add(termListArray.getString(i))
-                                        val plan: JSONArray? =
-                                            term.optJSONArray(termListArray.getString(i))
-                                        collTerm.termList = termList
-                                        val collPlan = ConsiderModel.CollPlan()
-                                        collPlan.plan = termListArray.getString(i)
-                                        var decision: ArrayList<ConsiderModel.Decision> =
-                                            arrayListOf()
-                                        plan?.let { plan ->
-                                            for (i in 0 until plan.length()) {
-                                                val json: JSONObject = plan[i] as JSONObject
-                                                val descisionItem = ConsiderModel.Decision(
-                                                    json.optString("decision_plan"),
-                                                    json.optString("decision_plan_value"),
-                                                    json.optString("deadline_date")
-                                                )
-                                                decision?.add(descisionItem)
+                                val term: JSONObject? =
+                                    jsonUniv.optJSONObject(type.optString("label"))
+                                term?.let {
+                                    collTerm.type = term?.optString("type")
+                                    val termListArray: JSONArray? = type?.optJSONArray("term_list")
+                                    val collTermList: ArrayList<ConsiderModel.CollTerm> =
+                                        arrayListOf()
+                                    val collPlanList: ArrayList<ConsiderModel.CollPlan> =
+                                        arrayListOf()
+                                    termListArray?.let { termListArray ->
+                                        for (i in 0 until termListArray.length()) {
+                                            termList.add(termListArray.getString(i))
+                                            val plan: JSONArray? =
+                                                term.optJSONArray(termListArray.getString(i))
+                                            collTerm.termList = termList
+                                            val collPlan = ConsiderModel.CollPlan()
+                                            collPlan.plan = termListArray.getString(i)
+                                            var decision: ArrayList<ConsiderModel.Decision> =
+                                                arrayListOf()
+                                            plan?.let { plan ->
+                                                for (i in 0 until plan.length()) {
+                                                    val json: JSONObject = plan[i] as JSONObject
+                                                    val descisionItem = ConsiderModel.Decision(
+                                                        json.optString("decision_plan"),
+                                                        json.optString("decision_plan_value"),
+                                                        json.optString("deadline_date")
+                                                    )
+                                                    decision?.add(descisionItem)
+                                                }
                                             }
+                                            collPlan.collPlan = decision
+                                            collPlanList.add(collPlan)
+                                            collTerm.termList = termList
+                                            collTerm.collTerm = collPlanList
+                                            collTermList.add(collTerm)
                                         }
-                                        collPlan.collPlan = decision
-                                        collPlanList.add(collPlan)
-                                        collTerm.termList = termList
-                                        collTerm.collTerm = collPlanList
-                                        collTermList.add(collTerm)
-                                    }
 
+                                    }
                                 }
-                                typeList.add(
-                                    DynamicKeyValue(
-                                        term.optString("id"),
-                                        term.optString("label"),
-                                        collTerm
+                                    typeList.add(
+                                        DynamicKeyValue(
+                                            type.optString("id"),
+                                            type.optString("label"),
+                                            collTerm
+                                        )
                                     )
-                                )
+
                             }
 
                             finalArray.get(i).collegeAppLicationType =
@@ -441,11 +450,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         i
                     )?.key
                 ) {
+                   if (finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.type == "term") {
                     finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
                         recyclerView.adapter = ConsideringTermAdapter(
                             it, type, this
                         )
                         return
+                   }
+                   } else {
+                        recyclerView.adapter = ConsideringTermAdapter( ArrayList(Arrays.asList(* resources.getStringArray(R.array.APPLICATION_TERM)))
+                           , type, this
+                        )
                     }
                 }
             }
@@ -842,10 +857,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     override fun onTermItemClick(positiion: Int, type: Int, dynamicKeyValue: String) {
         var updateStudentPlan = UpdateStudentPlan()
         updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
-        updateStudentPlan.college_nid = selectedUnivId
+        updateStudentPlan.college_nid =  finalArray.get(typeTermPosition).university_nid
         updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
         //updateStudentPlan.app_status = "accepted"
+        if (!dynamicKeyValue.equals("Reset"))
         updateStudentPlan.application_term = dynamicKeyValue
+
         updateStudentPlan.app_status = "3"
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
