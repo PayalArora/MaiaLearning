@@ -328,13 +328,13 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
                                     }
                                 }
-                                    typeList.add(
-                                        DynamicKeyValue(
-                                            type.optString("id"),
-                                            type.optString("label"),
-                                            collTerm
-                                        )
+                                typeList.add(
+                                    DynamicKeyValue(
+                                        type.optString("id"),
+                                        type.optString("label"),
+                                        collTerm
                                     )
+                                )
 
                             }
 
@@ -450,16 +450,18 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         i
                     )?.key
                 ) {
-                   if (finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.type == "term") {
-                    finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
+                    if (finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.type == "term") {
+                        finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
+                            recyclerView.adapter = ConsideringTermAdapter(
+                                it, type, this
+                            )
+                            return
+                        }
+                    } else {
                         recyclerView.adapter = ConsideringTermAdapter(
-                            it, type, this
-                        )
-                        return
-                   }
-                   } else {
-                        recyclerView.adapter = ConsideringTermAdapter( ArrayList(Arrays.asList(* resources.getStringArray(R.array.APPLICATION_TERM)))
-                           , type, this
+                            ArrayList(Arrays.asList(* resources.getStringArray(R.array.APPLICATION_TERM))),
+                            type,
+                            this
                         )
                     }
                 }
@@ -857,11 +859,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     override fun onTermItemClick(positiion: Int, type: Int, dynamicKeyValue: String) {
         var updateStudentPlan = UpdateStudentPlan()
         updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
-        updateStudentPlan.college_nid =  finalArray.get(typeTermPosition).university_nid
+        updateStudentPlan.college_nid = finalArray.get(typeTermPosition).university_nid
         updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
         //updateStudentPlan.app_status = "accepted"
         if (!dynamicKeyValue.equals("Reset"))
-        updateStudentPlan.application_term = dynamicKeyValue
+            updateStudentPlan.application_term = dynamicKeyValue
 
         updateStudentPlan.app_status = "3"
         dialogP = showLoadingDialog(requireContext())
@@ -875,11 +877,38 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
     }
 
+    override fun onPlanOptionClick(
+        positiion: Int,
+        type: Int,
+        dynamicKeyValue: ConsiderModel.Decision
+    ) {
+        var updateStudentPlan = UpdateStudentPlan()
+        updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+        updateStudentPlan.college_nid = finalArray.get(typeTermPosition).university_nid
+        updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
+        //updateStudentPlan.app_status = "accepted"
+            updateStudentPlan.app_plan = dynamicKeyValue.decision_plan
+        updateStudentPlan.application_term=finalArray.get(typeTermPosition).applicationTerm
+
+        updateStudentPlan.app_status = "3"
+        dialogP = showLoadingDialog(requireContext())
+        dialogP.show()
+        homeModel.updateStudentPlan(updateStudentPlan)
+        homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+            dialog?.dismiss()
+            dialogP.dismiss()
+            finalArray.get(typeTermPosition).applicationType = dynamicKeyValue.decision_plan_value
+            mBinding.consideringList.adapter?.notifyDataSetChanged()
+        }
+    }
+
 }
 
 interface ClickOptionFilters {
     fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue)
     fun onTermItemClick(positiion: Int, type: Int, dynamicKeyValue: String)
+    fun onPlanOptionClick(positiion: Int, type: Int, dynamicKeyValue: ConsiderModel.Decision)
+
 }
 
 interface OnItemClickOption {
