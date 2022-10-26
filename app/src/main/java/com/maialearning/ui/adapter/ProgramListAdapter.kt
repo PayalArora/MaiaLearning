@@ -15,11 +15,13 @@ import com.maialearning.databinding.ProgramListItemLayoutBinding
 import com.maialearning.model.CourseListModel
 import com.maialearning.model.GermanUniversitiesResponse
 import com.maialearning.model.UkResponseModel
+import com.maialearning.ui.fragments.OnClickOption
+import com.maialearning.ui.fragments.OnItemClickOption
 
 class ProgramListAdapter(
     var context: Context,
-    val list: List<CourseListModel?>?,
-) :
+    val list: List<CourseListModel?>?, val onClickOption: OnClickOption
+    ) :
     RecyclerView.Adapter<ProgramListAdapter.ViewHolder>() {
     var isSelected = false
 
@@ -61,17 +63,16 @@ class ProgramListAdapter(
                     viewHolder.binding.subList.layoutManager =
                         LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     viewHolder.binding.subList.adapter =
-                        CourseOptionAdapter(context, list?.get(position)?.courseOptionList)
+                        CourseOptionAdapter(context, list?.get(position)?.courseOptionList,position,onClickOption)
                     viewHolder.binding.subList.visibility = View.VISIBLE
                 }else{
                     viewHolder.binding.subList.visibility = View.GONE
                 }
-
             }
         }
-
-
     }
+
+
 
     override fun getItemCount(): Int {
         return list?.size ?: 0

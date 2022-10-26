@@ -289,6 +289,7 @@ interface LoginRepository {
 
     suspend fun getSaveCountry(
     ): UseCaseResult<JsonArray>
+
     suspend fun setSaveCountry(
     ): UseCaseResult<JsonArray>
 
@@ -307,9 +308,11 @@ interface LoginRepository {
     suspend fun getExperiences(
         id: String
     ): UseCaseResult<JsonArray>
+
     suspend fun getStudentTopPick(
         id: String
     ): UseCaseResult<JsonArray>
+
     suspend fun likeRelatedCareer(
         content: CreateContent
     ): UseCaseResult<JsonObject>
@@ -317,6 +320,10 @@ interface LoginRepository {
     suspend fun unlikeRelatedCareer(
         content: DeleteContent
     ): UseCaseResult<JsonObject>
+
+    suspend fun getProgramListDetail(
+        id: String
+    ): UseCaseResult<CourseModelOptionDetailResponse>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1586,6 +1593,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun getStudentTopPick(id: String): UseCaseResult<JsonArray> {
         return try {
             val result = catApi.getStudentTopPick(
@@ -1626,9 +1634,12 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     }
 
 
-override suspend fun likeRelatedCareer(content: CreateContent): UseCaseResult<JsonObject> {
+    override suspend fun likeRelatedCareer(content: CreateContent): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.createContent("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, content).await()
+            val result = catApi.createContent(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                content
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
@@ -1636,9 +1647,27 @@ override suspend fun likeRelatedCareer(content: CreateContent): UseCaseResult<Js
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun unlikeRelatedCareer(content: DeleteContent): UseCaseResult<JsonObject> {
         return try {
-            val result = catApi.deleteContent("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,content).await()
+            val result = catApi.deleteContent(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                content
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getProgramListDetail(id: String): UseCaseResult<CourseModelOptionDetailResponse> {
+        return try {
+            val result = catApi.getProgramListDetail(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
+            ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)
