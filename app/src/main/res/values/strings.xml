@@ -34,7 +34,7 @@
     <string name="messages">Messages</string>
     <string name="message">Message</string>
     <string name="note">Note</string>
-    <string name="notes">Notes</string>
+    <string name="notes">Counselor Notes</string>
     <string name="dashboard">Dashboard</string>
     <string name="character">Character</string>
     <string name="careers">Careers</string>
@@ -134,6 +134,8 @@
     <string name="like">Like</string>
     <string name="close">close</string>
     <string name="overview">Overview</string>
+    <string name="college_info">College Information</string>
+    <string name="prog_list">Program List</string>
     <string name="community">Community</string>
     <string name="admission">Admission</string>
     <string name="cost_">Cost &amp; Aid</string>

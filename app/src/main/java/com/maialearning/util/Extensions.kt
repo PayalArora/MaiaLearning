@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.text.TextUtils
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
@@ -239,6 +240,14 @@ fun parseNA(string: String?): String {
         return BaseApplication.applicationContext().getString(R.string.na)
     } else {
         return string
+    }
+}
+
+fun parseEmpty(string: String?): String {
+    if (string == null || string == "null" || string.isNullOrEmpty()) {
+        return ""
+    } else {
+        return string+ "\n"+ "\n"
     }
 }
 

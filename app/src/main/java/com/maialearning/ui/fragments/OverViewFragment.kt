@@ -15,6 +15,8 @@ import com.maialearning.model.FactsheetModelOther
 import com.maialearning.network.BaseApplication
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.VideoFactAdapter
+import com.maialearning.util.parseEmpty
+import com.maialearning.util.parseNA
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.FactSheetModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -84,17 +86,28 @@ class OverViewFragment : Fragment() {
                 mBinding.intsType.text = " ${modelOther?.basicInfo?.basicInfo?.institutionType}"
                 mBinding.degree.text = " ${modelOther?.basicInfo?.basicInfo?.award}"
                 mBinding.locTxt.text =
-                    " ${modelOther?.basicInfo?.basicInfo?.city + "," + modelOther?.basicInfo?.basicInfo?.state + "," + modelOther?.basicInfo?.basicInfo?.zip}"
+                    " ${ parseEmpty(modelOther?.basicInfo?.basicInfo?.addr) + parseEmpty(modelOther?.basicInfo?.basicInfo?.city) +  parseEmpty(modelOther?.basicInfo?.basicInfo?.state) +   parseEmpty(modelOther?.basicInfo?.basicInfo?.zip)}"
                 mModel.getCollegeNid(
                     "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                     "222178"
                 )
-
+                mBinding.aboutdes.visibility = View.VISIBLE
             } else if (modelOther?.providerInfo != null) {
-                mBinding.webUrl.text = " ${modelOther?.providerInfo?.website}"
-                mBinding.locTxt.text =
-                    " ${modelOther?.providerInfo?.address1 + "\n" + modelOther?.providerInfo?.address2 + "\n" + modelOther?.providerInfo?.address3 + "\n" + modelOther?.providerInfo?.address4 + "\n" + modelOther?.providerInfo?.postalCode}"
+                if (modelOther?.providerInfo is FactsheetModelOther.ProviderInfo) {
+                    val providerInfo = modelOther?.providerInfo as FactsheetModelOther.ProviderInfo
+                    mBinding.aboutdes.visibility = View.GONE
+                    mBinding.webUrl.text = " ${providerInfo.website}"
+                    mBinding.locTxt.text =
+                        "${
+                            parseEmpty(providerInfo.address1) + parseEmpty(providerInfo.address2) + parseEmpty(
+                                providerInfo.address3
+                            ) + parseEmpty(providerInfo.address4) + parseEmpty(
+                                providerInfo.postalCode
+                            )
+                        }"
 
+
+                }
             }
         }
     }

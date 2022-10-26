@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
@@ -160,7 +161,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     fun click() {}
-    public fun bottomSheetWork(get: UniversitiesSearchModel) {
+    public fun bottomSheetWork(get: UniversitiesSearchModel, position:Int,click: (position: Int, flag:Int?) -> Unit) {
         dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -184,10 +185,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             )
         } else {
             tabArray = arrayOf(
-                getString(R.string.overview),
-                "Program List",
+                getString(R.string.college_info),
+                getString(R.string.prog_list),
                 getString(R.string.admission),
-                getString(R.string.campus_service)
+                getString(R.string.notes)
             )
         }
         for (item in tabArray) {
@@ -223,7 +224,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         )
         like.setOnClickListener {
-            likeClick()
+            if (get.topPickFlag ?: 0 == 0) {
+                get.topPickFlag = 1
+                like.setImageResource(R.drawable.heart_filled)
+                hitLikeWork(get.nid)
+                click(position, get.topPickFlag)
+            } else {
+                get.topPickFlag = 0
+                like.setImageResource(R.drawable.like)
+                hitUnlikeWork(get.nid)
+                click(position, get.topPickFlag)
+            }
         }
         dialogFacts?.setContentView(view)
         dialogP = showLoadingDialog(this)
@@ -250,9 +261,226 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         } else {
             like.setImageResource(R.drawable.like)
         }
+        dialogFacts?.setOnDismissListener {
+
+        }
     }
 
-    public fun bottomSheetUk(get: UkResponseModel.Data.CollegeData) {
+     fun bottomSheetUk(collegeNid: String, topflag: Int?, collegeName: String?, position: Int,data:UkResponseModel.Data.CollegeData?, click: (position: Int, flag:Int?) -> Unit) {
+        var toppick = topflag
+         dialogFacts = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
+        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+
+        val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
+        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
+        val close = view.findViewById<ImageView>(R.id.close)
+        val imageUniv = view.findViewById<ImageView>(R.id.image)
+        val tabArray: Array<String>
+        if ((SharedHelper(this).country ?: "US") == "US") {
+            tabArray = arrayOf(
+                getString(R.string.overview),
+                getString(R.string.community),
+                getString(R.string.admission),
+                getString(R.string.cost_),
+                getString(R.string.degree),
+                getString(R.string.var_sport),
+                getString(R.string.transfer),
+                getString(R.string.notes),
+                getString(R.string.campus_service)
+            )
+        } else {
+            tabArray = arrayOf(
+                getString(R.string.college_info),
+                "Program List",
+                getString(R.string.admission),
+                getString(R.string.notes)
+            )
+        }
+        for (item in tabArray) {
+            factTabs.addTab(factTabs.newTab().setText(item))
+        }
+        close.setOnClickListener {
+            dialogFacts?.dismiss()
+        }
+        val fm: FragmentManager = supportFragmentManager
+        val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size, this)
+        viewPager.adapter = adapter
+        TabLayoutMediator(factTabs, viewPager) { tab, position ->
+            tab.text = tabArray[position]
+        }.attach()
+        val like = view.findViewById<ImageView>(R.id.like)
+        universityName = view.findViewById<TextView>(R.id.university)
+        universityName.setText(collegeName)
+        like.setOnClickListener {
+            if (toppick ?: 0 == 0) {
+                like.setImageResource(R.drawable.heart_filled)
+                toppick = 1
+                click(position, 1)
+                hitLikeWork(collegeNid)
+
+            } else {
+                like.setImageResource(R.drawable.like)
+                toppick = 0
+                click(position, 0)
+                hitUnlikeWork(collegeNid)
+
+            }
+        }
+        noData = view.findViewById<TextView>(R.id.no_data)
+        factTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (factTabs.selectedTabPosition != 0)
+                    noData.visibility = View.GONE
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        }
+        )
+//        like.setOnClickListener {
+//            likeClick()
+//        }
+        dialogFacts?.setContentView(view)
+        dialogP = showLoadingDialog(this)
+        dialogP.show()
+        if ((SharedHelper(this).country ?: "US").equals("US")) {
+            mModel.getColFactSheet(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                collegeNid.toString()
+            )
+        } else {
+            mModel.getColFactSheetOther(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                collegeNid.toString()
+            )
+        }
+        Picasso.with(this)
+            .load("${UNIV_LOGO_URL}${collegeNid?.toLowerCase()}/${collegeNid}/logo_sm.jpg")
+            .error(R.drawable.static_coll).into(imageUniv)
+
+        //  val likePic = view.findViewById<ImageView>(R.id.like)
+        if (topflag == 1) {
+            like.setImageResource(R.drawable.heart_filled)
+        } else {
+            like.setImageResource(R.drawable.like)
+        }
+    }
+
+    fun bottomSheetEurope(collegeNid: String, topflag: Boolean?, collegeName: String?, position: Int,data:EuropeanUniList.CollegeList?, click: (position: Int, flag:Int?) -> Unit) {
+        var toppick = topflag
+        dialogFacts = BottomSheetDialog(this)
+        val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
+        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+
+        val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
+        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
+        val close = view.findViewById<ImageView>(R.id.close)
+        val imageUniv = view.findViewById<ImageView>(R.id.image)
+        val tabArray: Array<String>
+        if ((SharedHelper(this).country ?: "US") == "US") {
+            tabArray = arrayOf(
+                getString(R.string.overview),
+                getString(R.string.community),
+                getString(R.string.admission),
+                getString(R.string.cost_),
+                getString(R.string.degree),
+                getString(R.string.var_sport),
+                getString(R.string.transfer),
+                getString(R.string.notes),
+                getString(R.string.campus_service)
+            )
+        } else {
+            tabArray = arrayOf(
+                getString(R.string.college_info),
+                "Program List",
+                getString(R.string.admission),
+                getString(R.string.notes)
+            )
+        }
+        for (item in tabArray) {
+            factTabs.addTab(factTabs.newTab().setText(item))
+        }
+        close.setOnClickListener {
+            dialogFacts?.dismiss()
+        }
+        val fm: FragmentManager = supportFragmentManager
+        val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size, this)
+        viewPager.adapter = adapter
+        TabLayoutMediator(factTabs, viewPager) { tab, position ->
+            tab.text = tabArray[position]
+        }.attach()
+        val like = view.findViewById<ImageView>(R.id.like)
+        universityName = view.findViewById<TextView>(R.id.university)
+        universityName.setText(collegeName)
+        like.setOnClickListener {
+            if (toppick ?: false == false) {
+                like.setImageResource(R.drawable.heart_filled)
+                toppick = true
+                click(position, 1)
+                hitLikeWork(collegeNid)
+
+            } else {
+                like.setImageResource(R.drawable.like)
+                toppick = false
+                click(position, 0)
+                hitUnlikeWork(collegeNid)
+
+            }
+        }
+        noData = view.findViewById<TextView>(R.id.no_data)
+        factTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (factTabs.selectedTabPosition != 0)
+                    noData.visibility = View.GONE
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        }
+        )
+//        like.setOnClickListener {
+//            likeClick()
+//        }
+        dialogFacts?.setContentView(view)
+        dialogP = showLoadingDialog(this)
+        dialogP.show()
+        if ((SharedHelper(this).country ?: "US").equals("US")) {
+            mModel.getColFactSheet(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                collegeNid.toString()
+            )
+        } else {
+            mModel.getColFactSheetOther(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                collegeNid.toString()
+            )
+        }
+        Picasso.with(this)
+            .load("${UNIV_LOGO_URL}${collegeNid?.toLowerCase()}/${collegeNid}/logo_sm.jpg")
+            .error(R.drawable.static_coll).into(imageUniv)
+
+        //  val likePic = view.findViewById<ImageView>(R.id.like)
+        if (topflag == true) {
+            like.setImageResource(R.drawable.heart_filled)
+        } else {
+            like.setImageResource(R.drawable.like)
+        }
+    }
+    fun bottomSheetGerman(collegeNid: String, topflag: Int?, collegeName: String?, position: Int,data:GermanUniversitiesResponse.Data.CollegeData?, click: (position: Int, flag:Int?) -> Unit) {
+        var toppick = topflag
         dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -279,7 +507,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 getString(R.string.overview),
                 "Program List",
                 getString(R.string.admission),
-                getString(R.string.campus_service)
+                getString(R.string.notes)
             )
         }
         for (item in tabArray) {
@@ -296,7 +524,22 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }.attach()
         val like = view.findViewById<ImageView>(R.id.like)
         universityName = view.findViewById<TextView>(R.id.university)
-        universityName.setText(get.collegeName)
+        universityName.setText(collegeName)
+        like.setOnClickListener {
+            if (toppick ?: 0 == 0) {
+                like.setImageResource(R.drawable.heart_filled)
+                toppick = 1
+                click(position, 1)
+                hitLikeWork(collegeNid)
+
+            } else {
+                like.setImageResource(R.drawable.like)
+                toppick = 0
+                click(position, 0)
+                hitUnlikeWork(collegeNid)
+
+            }
+        }
         noData = view.findViewById<TextView>(R.id.no_data)
         factTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -314,127 +557,126 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         }
         )
-        like.setOnClickListener {
-            likeClick()
-        }
+//        like.setOnClickListener {
+//            likeClick()
+//        }
         dialogFacts?.setContentView(view)
         dialogP = showLoadingDialog(this)
         dialogP.show()
         if ((SharedHelper(this).country ?: "US").equals("US")) {
             mModel.getColFactSheet(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-                get.collegeNid.toString()
+                collegeNid.toString()
             )
         } else {
             mModel.getColFactSheetOther(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-                get.collegeNid.toString()
+                collegeNid.toString()
             )
         }
         Picasso.with(this)
-            .load("${UNIV_LOGO_URL}${get.collegeNid?.toLowerCase()}/${get.collegeNid}/logo_sm.jpg")
+            .load("${UNIV_LOGO_URL}${collegeNid?.toLowerCase()}/${collegeNid}/logo_sm.jpg")
             .error(R.drawable.static_coll).into(imageUniv)
 
         //  val likePic = view.findViewById<ImageView>(R.id.like)
-
-        if (get.topPickFlag == 1) {
+        if (topflag == 1) {
             like.setImageResource(R.drawable.heart_filled)
         } else {
             like.setImageResource(R.drawable.like)
         }
     }
 
-    public fun bottomSheetGerman(get: GermanUniversitiesResponse.Data.CollegeData) {
-        dialogFacts = BottomSheetDialog(this)
-        val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
-        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-
-        val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
-        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
-        val close = view.findViewById<ImageView>(R.id.close)
-        val imageUniv = view.findViewById<ImageView>(R.id.image)
-        val tabArray: Array<String>
-        if ((SharedHelper(this).country ?: "US") == "US") {
-            tabArray = arrayOf(
-                getString(R.string.overview),
-                getString(R.string.community),
-                getString(R.string.admission),
-                getString(R.string.cost_),
-                getString(R.string.degree),
-                getString(R.string.var_sport),
-                getString(R.string.transfer),
-                getString(R.string.notes),
-                getString(R.string.campus_service)
-            )
-        } else {
-            tabArray = arrayOf(
-                getString(R.string.overview),
-                "Program List",
-                getString(R.string.admission),
-                getString(R.string.campus_service)
-            )
-        }
-        for (item in tabArray) {
-            factTabs.addTab(factTabs.newTab().setText(item))
-        }
-        close.setOnClickListener {
-            dialogFacts?.dismiss()
-        }
-        val fm: FragmentManager = supportFragmentManager
-        val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size, this)
-        viewPager.adapter = adapter
-        TabLayoutMediator(factTabs, viewPager) { tab, position ->
-            tab.text = tabArray[position]
-        }.attach()
-        val like = view.findViewById<ImageView>(R.id.like)
-        universityName = view.findViewById<TextView>(R.id.university)
-        universityName.setText(get.collegeName)
-        noData = view.findViewById<TextView>(R.id.no_data)
-        factTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (factTabs.selectedTabPosition != 0)
-                    noData.visibility = View.GONE
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-
-        }
-        )
-        like.setOnClickListener {
-            likeClick()
-        }
-        dialogFacts?.setContentView(view)
-        dialogP = showLoadingDialog(this)
-        dialogP.show()
-        if ((SharedHelper(this).country ?: "US").equals("US")) {
-            mModel.getColFactSheet(
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-                get.collegeNid.toString()
-            )
-        } else {
-            mModel.getColFactSheetOther(
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-                get.collegeNid.toString()
-            )
-        }
-        Picasso.with(this)
-            .load("${UNIV_LOGO_URL}${get.collegeNid?.toLowerCase()}/${get.collegeNid}/logo_sm.jpg")
-            .error(R.drawable.static_coll).into(imageUniv)
-
-        //  val likePic = view.findViewById<ImageView>(R.id.like)
-
-        if (get.topPickFlag == 1) {
-            like.setImageResource(R.drawable.heart_filled)
-        } else {
-            like.setImageResource(R.drawable.like)
-        }
-    }
+//    public fun bottomSheetGerman(get: GermanUniversitiesResponse.Data.CollegeData) {
+//        dialogFacts = BottomSheetDialog(this)
+//        val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
+//        view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+//
+//        val factTabs = view.findViewById<TabLayout>(R.id.fact_tabs)
+//        val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
+//        val close = view.findViewById<ImageView>(R.id.close)
+//        val imageUniv = view.findViewById<ImageView>(R.id.image)
+//        val tabArray: Array<String>
+//        if ((SharedHelper(this).country ?: "US") == "US") {
+//            tabArray = arrayOf(
+//                getString(R.string.overview),
+//                getString(R.string.community),
+//                getString(R.string.admission),
+//                getString(R.string.cost_),
+//                getString(R.string.degree),
+//                getString(R.string.var_sport),
+//                getString(R.string.transfer),
+//                getString(R.string.notes),
+//                getString(R.string.campus_service)
+//            )
+//        } else {
+//            tabArray = arrayOf(
+//                getString(R.string.overview),
+//                "Program List",
+//                getString(R.string.admission),
+//                getString(R.string.notes)
+//            )
+//        }
+//        for (item in tabArray) {
+//            factTabs.addTab(factTabs.newTab().setText(item))
+//        }
+//        close.setOnClickListener {
+//            dialogFacts?.dismiss()
+//        }
+//        val fm: FragmentManager = supportFragmentManager
+//        val adapter = ViewStateFactAdapter(fm, lifecycle, tabArray.size, this)
+//        viewPager.adapter = adapter
+//        TabLayoutMediator(factTabs, viewPager) { tab, position ->
+//            tab.text = tabArray[position]
+//        }.attach()
+//        val like = view.findViewById<ImageView>(R.id.like)
+//        universityName = view.findViewById<TextView>(R.id.university)
+//        universityName.setText(get.collegeName)
+//        noData = view.findViewById<TextView>(R.id.no_data)
+//        factTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab?) {
+//                if (factTabs.selectedTabPosition != 0)
+//                    noData.visibility = View.GONE
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab?) {
+//
+//            }
+//
+//            override fun onTabReselected(tab: TabLayout.Tab?) {
+//
+//            }
+//
+//        }
+//        )
+//        like.setOnClickListener {
+//            likeClick()
+//        }
+//        dialogFacts?.setContentView(view)
+//        dialogP = showLoadingDialog(this)
+//        dialogP.show()
+//        if ((SharedHelper(this).country ?: "US").equals("US")) {
+//            mModel.getColFactSheet(
+//                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+//                get.collegeNid.toString()
+//            )
+//        } else {
+//            mModel.getColFactSheetOther(
+//                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+//                get.collegeNid.toString()
+//            )
+//        }
+//        Picasso.with(this)
+//            .load("${UNIV_LOGO_URL}${get.collegeNid?.toLowerCase()}/${get.collegeNid}/logo_sm.jpg")
+//            .error(R.drawable.static_coll).into(imageUniv)
+//
+//        //  val likePic = view.findViewById<ImageView>(R.id.like)
+//
+//        if (get.topPickFlag == 1) {
+//            like.setImageResource(R.drawable.heart_filled)
+//        } else {
+//            like.setImageResource(R.drawable.like)
+//        }
+//    }
 
     private val homeModel: HomeViewModel by viewModel()
 
@@ -660,7 +902,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun likeClick() {
-        binding.tabs.selectTab(binding.tabs.getTabAt(1))
+        //  binding.tabs.selectTab(binding.tabs.getTabAt(1))
+
         dialogFacts?.let { it.dismiss() }
         dialog?.let { it.dismiss() }
     }
@@ -683,7 +926,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun observerInit() {
+        homeModel.likeObserver.observe(this) {
+            dialogP.dismiss()
+        }
+        homeModel.unlikeObserver.observe(this) {
+            dialogP.dismiss()
+        }
 
+        homeModel.showError.observe(this) {
+            dialogP.dismiss()
+            Log.e("Error", "err" + it)
+            if (!it.isNullOrEmpty())
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        }
         mModel.getSaveCountryObserver.observe(this) {
             dialogP.dismiss()
             initView()
@@ -905,7 +1160,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //        }
     }
 
-     fun bottomSheetCourseList(
+    fun bottomSheetCourseList(
         get: UkResponseModel.Data.CollegeData?,
         listGerman: GermanUniversitiesResponse.Data.CollegeData?,
         type: String
@@ -919,14 +1174,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             get?.courseList?.sortBy { it.courseName }
             sheetBinding.recyclerList.adapter = CoursesAdapter(
                 this,
-                get?.courseList,null,type
+                get?.courseList, null, type
             )
-        }else{
+        } else {
             listGerman?.courseList?.sortBy { it.courseName }
             sheetBinding.name.text = listGerman?.collegeName
             sheetBinding.recyclerList.adapter = CoursesAdapter(
                 this,
-                null,listGerman?.courseList,type
+                null, listGerman?.courseList, type
             )
         }
         sheetBinding.back.setOnClickListener {
@@ -935,11 +1190,33 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog.show()
 
 
+    }
 
+    private fun hitUnlikeWork(nid: String?) {
+        dialogP.show()
+        SharedHelper(this).id?.let {
+            nid?.let { it1 ->
+                homeModel.hitunlike(
+                    it,
+                    it1
+                )
+            }
+        }
+    }
 
+    private fun hitLikeWork(nid: String?) {
+        dialogP.show()
+
+        SharedHelper(this).id?.let {
+            nid?.let { it1 ->
+                homeModel.hitlike(
+                    it,
+                    it1
+                )
+            }
+        }
     }
 }
-
 interface ClickFilters {
     fun onClick(positiion: Int, type: Int, flagImg: ImageView?)
 }

@@ -136,11 +136,19 @@ class UkFactAdapter(
             }
             viewHolder.binding.university.setOnClickListener {
                 // click
-                (context as UniversitiesActivity).bottomSheetUk(university_list.get(position)!!)
+                university_list.get(position)?.collegeNid?.let { it1 ->
+                    (context as UniversitiesActivity).bottomSheetUk(
+                        it1,university_list.get(position)?.topPickFlag, university_list.get(position)?.collegeName,position, university_list.get(position), ::likeClick)
+                }
             }
             viewHolder.binding.image.setOnClickListener {
                 // click
-                (context as UniversitiesActivity).bottomSheetUk(university_list[position]!!)
+                university_list.get(position)?.collegeNid?.let { it1 ->
+                    (context as UniversitiesActivity).bottomSheetUk(
+                        it1,
+                        university_list.get(position)?.topPickFlag,
+                        university_list.get(position)?.collegeName, position,university_list.get(position),::likeClick)
+                }
             }
             viewHolder.binding.like.setOnClickListener {
 
@@ -190,5 +198,9 @@ class UkFactAdapter(
         this.totalPages = total
         this.currentPages = current
         notifyItemChanged(university_list.size)
+    }
+    fun likeClick(i: Int, flag:Int?) {
+            this.university_list.get(i)?.topPickFlag = flag
+        notifyDataSetChanged()
     }
 }

@@ -32,7 +32,7 @@ class ViewStateFactAdapter(
             if ((SharedHelper(context).country ?: "US") == "US") {
                 return CostFragment()
             } else {
-                return CampusFragment()
+                return FactsNotesFragment()
             }
         } else if (position == 4) {
             return DegreesFragment()

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -227,10 +228,11 @@ class SearchFragment : Fragment() {
         homeModel.showError.observe(requireActivity()) {
             progress.dismiss()
             Log.e("Error", "err" + it)
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun universitySearch() {
+     fun universitySearch() {
         if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
             germanListUpdate = ArrayList()
             germanList = ArrayList()

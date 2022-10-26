@@ -2,13 +2,11 @@ package com.maialearning.viewmodel
 
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
-
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
@@ -18,10 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.descriptors.PrimitiveKind
-import okhttp3.RequestBody
-import org.json.JSONArray
-import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
@@ -183,10 +177,17 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
                 catRepository.hitLikeUniv(studentid, collegeId)
             }
             showLoading.value = false
-            when (result) {
-                is UseCaseResult.Success -> likeObserver.value = result.data
-                is UseCaseResult.Error -> showError.value =
-                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+            if (result is UseCaseResult<JsonArray>) {
+                when (result) {
+                    is UseCaseResult.Success -> likeObserver.value = result.data
+                    is UseCaseResult.Error -> showError.value =
+                        result.exception.response()?.errorBody()?.string()
+                            ?.replaceCrossBracketsComas()
+                    is UseCaseResult.Exception -> showError.value = ""
+
+                }
+            } else {
+                showError.value = "null"
             }
         }
     }

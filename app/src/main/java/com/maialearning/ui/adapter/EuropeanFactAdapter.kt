@@ -12,6 +12,7 @@ import com.maialearning.R
 import com.maialearning.databinding.ProgressLayoutBinding
 import com.maialearning.databinding.UniListItemBinding
 import com.maialearning.model.EuropeanUniList
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.UNIV_LOGO_URL
 import com.maialearning.util.prefhandler.SharedHelper
@@ -103,9 +104,9 @@ class EuropeanFactAdapter(
 //            viewHolder.binding.termValue.setText("ACT Scores")
 //            viewHolder.binding.plan.setText(university_list.get(position)?.acceptance ?: "N/A")
 //            viewHolder.binding.planValue.setText("Acceptance Rate")
-            if (university_list.get(position)?.topPickFlag?:0== 0) {
+            if (university_list.get(position)?.topPickFlag?:false== false) {
                 viewHolder.binding.like.setImageResource(R.drawable.like)
-            } else if (university_list.get(position)?.topPickFlag?:0  == 1) {
+            } else if (university_list.get(position)?.topPickFlag?:false  == true) {
                 viewHolder.binding.like.setImageResource(R.drawable.heart_filled)
             }
 //        https://college-images-staging.maialearning.com/us/488031/logo_sm.jpg
@@ -119,12 +120,18 @@ class EuropeanFactAdapter(
             viewHolder.binding.name.setText("${university_list.get(position)?.programList?.size?:0} Programs")
 
             viewHolder.binding.university.setOnClickListener {
-//                 click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+
+                university_list.get(position)?.collegeNid?.let { it1 ->
+                    (context as UniversitiesActivity).bottomSheetEurope(
+                        it1,university_list.get(position)?.topPickFlag, university_list.get(position)?.collegeName, position,  university_list.get(position),::likeClick)
+                }
             }
             viewHolder.binding.image.setOnClickListener {
                 // click
-//                (context as UniversitiesActivity).bottomSheetWork(university_list.get(position)!!)
+                university_list.get(position)?.collegeNid?.let { it1 ->
+                    (context as UniversitiesActivity).bottomSheetEurope(
+                        it1,university_list.get(position)?.topPickFlag, university_list.get(position)?.collegeName, position,university_list.get(position), ::likeClick )
+                }
             }
             viewHolder.binding.like.setOnClickListener {
 
@@ -169,5 +176,12 @@ class EuropeanFactAdapter(
         this.totalPages = total
         this.currentPages = current
         notifyItemChanged(university_list.size)
+    }
+    fun likeClick(i: Int, flag:Int?) {
+        if (flag == 1)
+        this.university_list.get(i)?.topPickFlag = true
+        else
+            this.university_list.get(i)?.topPickFlag = false
+        notifyDataSetChanged()
     }
 }
