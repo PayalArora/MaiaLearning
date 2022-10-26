@@ -21,14 +21,14 @@
         android:id="@+id/back_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:drawableTint="@color/black_1"
-        android:text="@string/back"
-        android:paddingVertical="@dimen/_15dp"
-        android:drawablePadding="@dimen/_5dp"
+        android:layout_alignParentLeft="true"
         android:drawableLeft="@drawable/ic_baseline_keyboard_arrow_left_24"
-        android:textSize="@dimen/_12sp"
-        android:layout_alignParentLeft="true" />
+        android:drawablePadding="@dimen/_5dp"
+        android:drawableTint="@color/black_1"
+        android:gravity="center"
+        android:paddingVertical="@dimen/_15dp"
+        android:text="@string/back"
+        android:textSize="@dimen/_12sp" />
 
 
     <View

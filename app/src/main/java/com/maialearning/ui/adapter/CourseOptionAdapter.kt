@@ -8,10 +8,12 @@ import com.maialearning.databinding.ProgramListItemLayoutBinding
 import com.maialearning.databinding.ProgramListOptionItemBinding
 import com.maialearning.model.CourseListModel
 import com.maialearning.model.CourseListOptionModel
+import com.maialearning.ui.fragments.OnClickOption
 
 class CourseOptionAdapter(
     var context: Context,
-    val list: List<CourseListOptionModel?>?,
+    val list: List<CourseListOptionModel?>?,val pos:Int,
+     val onClickOption: OnClickOption
 ) :
     RecyclerView.Adapter<CourseOptionAdapter.ViewHolder>() {
     var isSelected = false
@@ -55,6 +57,9 @@ class CourseOptionAdapter(
             viewHolder.binding.ib.text = " -- "
         }
 
+        viewHolder.binding.viewBtn.setOnClickListener {
+            list?.get(position)?.let { it1 -> onClickOption.onViewClick(pos, it1) }
+        }
     }
 
     override fun getItemCount(): Int {

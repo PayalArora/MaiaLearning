@@ -644,4 +644,10 @@ interface AllAPi {
         @Body model: DeleteContent,
     ): Deferred<JsonObject>
 
+    @GET("ucas_course_details/{id}")
+    fun getProgramListDetail(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<CourseModelOptionDetailResponse>
+
 }

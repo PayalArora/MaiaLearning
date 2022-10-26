@@ -6,6 +6,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.CollegeContactModel
 import com.maialearning.model.CollegeFactSheetModel
+import com.maialearning.model.CourseModelOptionDetailResponse
 import com.maialearning.model.FactsheetModelOther
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
@@ -36,6 +37,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val saveCountryObserver = MutableLiveData<JsonArray>()
     val getSaveCountryObserver = MutableLiveData<JsonArray>()
     val showError = SingleLiveEvent<String>()
+    val programDetailObserber = MutableLiveData<CourseModelOptionDetailResponse>()
 
     fun getColFactSheet(token: String, id: String) {
         showLoading.value = true
@@ -247,6 +249,28 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+    fun getProgramsDetail(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getProgramListDetail(id)
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> programDetailObserber.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message
+                }
+
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks

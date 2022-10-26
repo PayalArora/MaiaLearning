@@ -518,6 +518,19 @@
     <string name="culminating_text">Directions: Briefly describe the activity that you completed. Indicate the most important thing you learned about yourself through this activity. Describe how this self knowledge will influence your plans for the future</string>
     <string name="culminating_activity">Culminating Activity</string>
     <string name="top_fiv_career_interest">Top 5 Career Interests</string>
+    <string name="description">Description</string>
+    <string name="heading_txt">Studying Architechture</string>
+    <string name="qualification">Qualification</string>
+    <string name="location">Location</string>
+    <string name="start_date">Start date</string>
+    <string name="duration">Duration</string>
+    <string name="applicatin_codes">Application <font color="#55AC68">Codes</font></string>
+    <string name="course_code">Course code</string>
+    <string name="institute_code">Institution code</string>
+    <string name="campus_name">Campus Name</string>
+    <string name="points_of_entry">Points of <font color="#633593">Entry</font></string>
+    <string name="entry_requirement">Entry Requirements</string>
+    <string name="fees_and_funding">Fees and Funding</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

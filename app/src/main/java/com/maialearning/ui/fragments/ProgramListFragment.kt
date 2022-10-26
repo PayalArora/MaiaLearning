@@ -1,12 +1,17 @@
 package com.maialearning.ui.fragments
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.maialearning.R
+import com.maialearning.databinding.ProgramDetailSheetBinding
 import com.maialearning.databinding.ProgramListLayoutBinding
 import com.maialearning.model.CourseListModel
 import com.maialearning.model.CourseListOptionModel
@@ -15,11 +20,15 @@ import com.maialearning.model.UkResponseModel
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.CoursesAdapter
 import com.maialearning.ui.adapter.ProgramListAdapter
+import com.maialearning.viewmodel.FactSheetModel
 import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProgramListFragment : Fragment() {
+class ProgramListFragment : Fragment(), OnClickOption {
     private lateinit var mBinding: ProgramListLayoutBinding
     var modelOther: FactsheetModelOther? = null
+    private val mModel: FactSheetModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -38,13 +47,10 @@ class ProgramListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mBinding.programList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
         initData()
-
     }
 
     private fun initData() {
-
         modelOther = (context as UniversitiesActivity).getDataOther()
         if (modelOther != null && modelOther?.course_list != null) {
             val courses = JSONObject(modelOther?.course_list.toString())
@@ -86,8 +92,26 @@ class ProgramListFragment : Fragment() {
             courseList.sortBy { it.courseName }
             mBinding.programList.adapter = ProgramListAdapter(
                 requireContext(),
-                courseList
+                courseList, this
             )
         }
     }
+
+    override fun onViewClick(mainPostion: Int, courseListOptionModel: CourseListOptionModel) {
+        courseListOptionModel.courseOptionId?.let { mModel.getProgramsDetail(it) }
+        mModel.programDetailObserber.observe(viewLifecycleOwner) {
+            Log.e("Detail", it.basicInfo.toString())
+            val dialog = BottomSheetDialog(requireContext())
+//            val sheetBinding= ProgramDetailSheetBinding.inflate(inflater, container, false)
+
+            val view = layoutInflater.inflate(R.layout.program_detail_sheet, null)
+            view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+            dialog?.setContentView(view)
+            dialog?.show()
+        }
+    }
+}
+
+interface OnClickOption {
+    fun onViewClick(mainPostion: Int, courseListOptionModel: CourseListOptionModel)
 }
