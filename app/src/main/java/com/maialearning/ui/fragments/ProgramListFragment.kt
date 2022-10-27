@@ -8,18 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
+import com.maialearning.databinding.CommentsSheetBinding
 import com.maialearning.databinding.ProgramDetailSheetBinding
 import com.google.gson.JsonObject
 import com.maialearning.databinding.ProgramListLayoutBinding
-import com.maialearning.model.CourseListModel
-import com.maialearning.model.CourseListOptionModel
-import com.maialearning.model.FactsheetModelOther
-import com.maialearning.model.UkResponseModel
+import com.maialearning.model.*
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.CoursesAdapter
+import com.maialearning.ui.adapter.EntryRequirementAdapter
+import com.maialearning.ui.adapter.FeesAdapter
 import com.maialearning.ui.adapter.ProgramListAdapter
 import com.maialearning.viewmodel.FactSheetModel
 import org.json.JSONObject
@@ -109,11 +110,33 @@ class ProgramListFragment : Fragment(), OnClickOption {
             Log.e("Detail", it.basicInfo.toString())
             val dialog = BottomSheetDialog(requireContext())
 //            val sheetBinding= ProgramDetailSheetBinding.inflate(inflater, container, false)
-
-            val view = layoutInflater.inflate(R.layout.program_detail_sheet, null)
-            view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-            dialog?.setContentView(view)
+            val sheetBinding: ProgramDetailSheetBinding =
+                ProgramDetailSheetBinding.inflate(layoutInflater)
+            sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+            dialog.setContentView(sheetBinding.root)
             dialog?.show()
+            sheetBinding.close.setOnClickListener {
+                dialog.dismiss()
+            }
+            sheetBinding.backBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            sheetBinding.descriptionText.setText(it.basicInfo?.description)
+            sheetBinding.locationTxt.setText(it.basicInfo?.location)
+            sheetBinding.dateTxt.setText(it.basicInfo?.startDate)
+            sheetBinding.qualTxt.setText(it.basicInfo?.qualification)
+            sheetBinding.durationTxt.setText(it.basicInfo?.duration + "/" + it.basicInfo?.studyMode)
+            sheetBinding.courseCode.setText(it.howToApply?.courseCode)
+            sheetBinding.instituteCode.setText(it.howToApply?.providerCode)
+            sheetBinding.campusName.setText(it.howToApply?.locationName)
+            sheetBinding.entryList.layoutManager = GridLayoutManager(requireContext(), 2)
+            sheetBinding.entryList.adapter =
+                EntryRequirementAdapter(it.entryRequirement?.qualificationTable as ArrayList<QualificationTableItem>)
+            sheetBinding.feesList.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            sheetBinding.feesList.adapter =
+                FeesAdapter(it.feesFunding?.tuitionFees as ArrayList<TuitionFeesItem>)
+
         }
     }
 }
