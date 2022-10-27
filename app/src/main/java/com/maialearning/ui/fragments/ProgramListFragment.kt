@@ -6,25 +6,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.maialearning.R
-import com.maialearning.databinding.CommentsSheetBinding
-import com.maialearning.databinding.ProgramDetailSheetBinding
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import com.google.gson.internal.LinkedTreeMap
+import com.maialearning.databinding.ProgramDetailSheetBinding
 import com.maialearning.databinding.ProgramListLayoutBinding
 import com.maialearning.model.*
 import com.maialearning.ui.activity.UniversitiesActivity
-import com.maialearning.ui.adapter.CoursesAdapter
 import com.maialearning.ui.adapter.EntryRequirementAdapter
 import com.maialearning.ui.adapter.FeesAdapter
 import com.maialearning.ui.adapter.ProgramListAdapter
 import com.maialearning.viewmodel.FactSheetModel
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class ProgramListFragment : Fragment(), OnClickOption {
     private lateinit var mBinding: ProgramListLayoutBinding
@@ -56,9 +55,20 @@ class ProgramListFragment : Fragment(), OnClickOption {
 
         modelOther = (context as UniversitiesActivity).getDataOther()
         if (modelOther != null && modelOther?.course_list != null) {
-            if (modelOther?.course_list is JsonObject) {
+            if (modelOther?.course_list.toString().startsWith("{")) {
+//                val response_array: List<MyClass> = Gson().fromJson(
+//                    questions as JsonArray?,
+//                    object : TypeToken<List<MyClass?>?>() {}.type
+//                )
 
-                val courses = JSONObject(modelOther?.course_list.toString())
+                // if response type is object
+
+                // if response type is object
+                val gson = GsonBuilder().create()
+                val jsonObject = gson.toJsonTree(modelOther?.course_list as LinkedTreeMap<String,String>).asJsonObject
+
+                //val jsonObject = JSONTokener(modelOther?.course_list).nextValue() as JSONObject
+               val courses = JSONObject(jsonObject.toString())
                 val courseObj = courses.optJSONObject("course_list")
                 val iteratorObj: Iterator<*> = courseObj.keys()
                 var courseList: ArrayList<CourseListModel> =

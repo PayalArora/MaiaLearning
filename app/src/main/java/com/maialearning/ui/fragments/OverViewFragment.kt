@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.databinding.OverviewLayoutBinding
 import com.maialearning.model.CollegeFactSheetModel
@@ -19,6 +22,7 @@ import com.maialearning.util.parseEmpty
 import com.maialearning.util.parseNA
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.FactSheetModel
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -93,8 +97,11 @@ class OverViewFragment : Fragment() {
                 )
                 mBinding.aboutdes.visibility = View.VISIBLE
             } else if (modelOther?.providerInfo != null) {
-                if (modelOther?.providerInfo is FactsheetModelOther.ProviderInfo) {
-                    val providerInfo = modelOther?.providerInfo as FactsheetModelOther.ProviderInfo
+                val gson = GsonBuilder().create()
+                if (modelOther?.providerInfo?.has ("website") == true){
+                  //  val jsonObject = JSONObject(modelOther?.providerInfo.toString())
+                val providerInfo = gson.fromJson(modelOther?.providerInfo as JsonObject , FactsheetModelOther.ProviderInfo::class.java)
+                    //val providerInfo = modelOther?.providerInfo as FactsheetModelOther.ProviderInfo
                     mBinding.aboutdes.visibility = View.GONE
                     mBinding.webUrl.text = " ${providerInfo.website}"
                     mBinding.locTxt.text =

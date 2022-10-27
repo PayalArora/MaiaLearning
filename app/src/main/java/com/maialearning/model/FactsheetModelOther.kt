@@ -13,7 +13,9 @@ data class FactsheetModelOther(
     @field:SerializedName("title")
     val title: String? = null,
     @field:SerializedName("provider_info")
-    val providerInfo: Any? = null,
+    val providerInfo: JsonObject? = null,
+//    @field:SerializedName("provider_info")
+//    val providerInfo: ProviderInfo? = null,
     @field:SerializedName("course_list")
     val course_list: Any? = null
 ) {
@@ -45,7 +47,7 @@ data class FactsheetModelOther(
         )
     }
 
-    data class ProviderInfo(
+    data class  ProviderInfo(
 
         @field:SerializedName("country")
         val country: String? = null,
