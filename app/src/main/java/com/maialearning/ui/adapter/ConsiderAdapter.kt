@@ -81,6 +81,8 @@ class ConsiderAdapter(
             } else {
                 countTxt.setText(array[position].college_priority_choice)
             }
+//            university.app_by_program_supported === 1 &&
+//                    university.application_mode !== UniversityAppTypeEnum.CommonApp
 
             if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
               //  typeValue.setText(array[position].applicationType)
@@ -90,6 +92,27 @@ class ConsiderAdapter(
                 typeValue.setText("Select")
 
             }
+            if (array[position].applicationType != null && !array[position].applicationType.equals("null")) {
+                //  typeValue.setText(array[position].applicationType)
+                val typeVal = getAppPlan(array[position].applicationType, position)
+                if (typeVal!= null)
+                 planValue.setText(typeVal)
+                else
+                    planValue.setText("Select")
+            } else {
+                planValue.setText("Select")
+            }
+            val is_app_plan = (array[position].appByProgramSupported =="1"&& array[position].applicationMode != "3"   )
+            if (!is_app_plan  ){
+                appPlan.visibility = View.VISIBLE
+            } else {
+                appPlan.visibility = View.GONE
+            }
+//            if (showAppPlan(position)){
+//                appPlan.visibility = View.VISIBLE
+//            } else {
+//                appPlan.visibility = View.GONE
+//            }
             if (array[position].applicationTerm != null && !array[position].applicationTerm.equals("null") && !array[position].applicationTerm.equals("Reset")) {
                 termValue.setText(array[position].applicationTerm)
                 appTerm.visibility = View.VISIBLE
@@ -193,5 +216,56 @@ class ConsiderAdapter(
         }
         return null
     }
+
+    fun getAppPlan(key:String, position: Int):String?{
+        array.get(position).collegeAppLicationType?.collType?.let {
+            for (item in it){
+                if (item?.term?.type == "term" && item?.term?.collTerm!= null) {
+                    for (plan in item?.term?.collTerm!!) {
+                        if ( plan?.collPlan!= null) {
+                            for (planitem in plan?.collPlan!!) {
+                                if (planitem.decision_plan.replaceInvertedComas() == key) {
+                                    return planitem.decision_plan_value
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    if(item?.term?.planList!= null) {
+                        for (i in item?.term?.planList!!) {
+                            if (i.id.replaceInvertedComas() == key) {
+                                return i.label
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null
+    }
+//    fun showAppPlan (position: Int):Boolean{
+//        array.get(position).collegeAppLicationType?.collType?.let {
+//            for (item in it){
+//                if (item?.term?.type == "term" && item?.term?.collTerm!= null) {
+//                    for (plan in item?.term?.collTerm!!) {
+//                        if ( plan?.collPlan!= null) {
+//                            for (planitem in plan?.collPlan!!) {
+//                                return true
+//                            }
+//                        }
+//                    }
+//                }
+//                else {
+//                    if(item?.term?.planList!= null) {
+//                        for (i in item?.term?.planList!!) {
+//                            return true
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return false
+//    }
 }
 

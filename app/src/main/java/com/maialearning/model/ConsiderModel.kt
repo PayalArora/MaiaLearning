@@ -62,6 +62,7 @@ class ConsiderModel {
     class CollTerm {
          var type: String? = null
          var termList: ArrayList<String>? = null
+         var planList: ArrayList<DecisionPlan>? = null
          var collTerm: ArrayList<CollPlan>? = null
 
     }
@@ -76,7 +77,10 @@ class ConsiderModel {
         var decision_plan_value: String,
         var deadline_date: String
     )
-
+    data class DecisionPlan(
+        var id: String,
+        var label: String
+    )
     data class ProgramData(
         @SerializedName("program_id")
         var program_id: Int,

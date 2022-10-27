@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
@@ -228,6 +229,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                     ConsiderModel.CollTerm()
 
                                 collTerm.type = term.optString("type")
+                                if (collTerm.type == "term") {
                                 var termList = ArrayList<String>()
 
                                 val termListArray: JSONArray? = term.optJSONArray("term_list")
@@ -263,6 +265,27 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                         collTerm.collTerm = collPlanList
                                     }
                                     collTerm.termList = termList
+                                }
+                                }
+                                else  {
+                                    val decisionPlans:JSONArray? = term.optJSONArray("data")
+                                    val arrayPlans = arrayListOf<ConsiderModel.DecisionPlan>()
+                                    decisionPlans?.let {
+                                    for (i in 0 until it.length()) {
+                                        val jobj = it.getJSONObject(i)
+                                        val iterator = jobj.keys()
+                                        while (iterator.hasNext()) {
+                                            val id = iterator.next() as String
+                                            val plan: ConsiderModel.DecisionPlan =
+                                                ConsiderModel.DecisionPlan(
+                                                    id,
+                                                    jobj.optString(id))
+                                            arrayPlans.add(plan)
+                                        }
+
+                                    }
+                                    }
+                                    collTerm.planList = arrayPlans
 
                                 }
 //                                println("collTerm " + collTerm.termList.toString())
@@ -293,39 +316,54 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                     jsonUniv.optJSONObject(type.optString("label"))
                                 term?.let {
                                     collTerm.type = term?.optString("type")
-                                    val termListArray: JSONArray? = type?.optJSONArray("term_list")
-                                    val collTermList: ArrayList<ConsiderModel.CollTerm> =
-                                        arrayListOf()
-                                    val collPlanList: ArrayList<ConsiderModel.CollPlan> =
-                                        arrayListOf()
-                                    termListArray?.let { termListArray ->
-                                        for (i in 0 until termListArray.length()) {
-                                            termList.add(termListArray.getString(i))
-                                            val plan: JSONArray? =
-                                                term.optJSONArray(termListArray.getString(i))
-                                            collTerm.termList = termList
-                                            val collPlan = ConsiderModel.CollPlan()
-                                            collPlan.plan = termListArray.getString(i)
-                                            var decision: ArrayList<ConsiderModel.Decision> =
-                                                arrayListOf()
-                                            plan?.let { plan ->
-                                                for (i in 0 until plan.length()) {
-                                                    val json: JSONObject = plan[i] as JSONObject
-                                                    val descisionItem = ConsiderModel.Decision(
-                                                        json.optString("decision_plan"),
-                                                        json.optString("decision_plan_value"),
-                                                        json.optString("deadline_date")
-                                                    )
-                                                    decision?.add(descisionItem)
+                                    if (collTerm.type== "term") {
+                                        val termListArray: JSONArray? =
+                                            type?.optJSONArray("term_list")
+                                        val collTermList: ArrayList<ConsiderModel.CollTerm> =
+                                            arrayListOf()
+                                        val collPlanList: ArrayList<ConsiderModel.CollPlan> =
+                                            arrayListOf()
+                                        termListArray?.let { termListArray ->
+                                            for (i in 0 until termListArray.length()) {
+                                                termList.add(termListArray.getString(i))
+                                                val plan: JSONArray? =
+                                                    term.optJSONArray(termListArray.getString(i))
+                                                collTerm.termList = termList
+                                                val collPlan = ConsiderModel.CollPlan()
+                                                collPlan.plan = termListArray.getString(i)
+                                                var decision: ArrayList<ConsiderModel.Decision> =
+                                                    arrayListOf()
+                                                plan?.let { plan ->
+                                                    for (i in 0 until plan.length()) {
+                                                        val json: JSONObject = plan[i] as JSONObject
+                                                        val descisionItem = ConsiderModel.Decision(
+                                                            json.optString("decision_plan"),
+                                                            json.optString("decision_plan_value"),
+                                                            json.optString("deadline_date")
+                                                        )
+                                                        decision?.add(descisionItem)
+                                                    }
                                                 }
+                                                collPlan.collPlan = decision
+                                                collPlanList.add(collPlan)
+                                                collTerm.termList = termList
+                                                collTerm.collTerm = collPlanList
+                                                collTermList.add(collTerm)
                                             }
-                                            collPlan.collPlan = decision
-                                            collPlanList.add(collPlan)
-                                            collTerm.termList = termList
-                                            collTerm.collTerm = collPlanList
-                                            collTermList.add(collTerm)
-                                        }
 
+                                        }
+                                    }  else{
+                                        val decisionPlans:JSONArray = term?.optJSONArray("data")
+                                        val arrayPlans = arrayListOf<ConsiderModel.DecisionPlan>()
+                                        decisionPlans?.let {
+                                            for (i in 0 until it.length()) {
+
+
+                                                val plan:ConsiderModel.DecisionPlan = ConsiderModel.DecisionPlan(it.getJSONObject(i).optString("id"),
+                                                    it.getJSONObject(i).optString("label") )
+                                                arrayPlans.add(plan)
+                                            }}
+                                        collTerm.planList = arrayPlans
                                     }
                                 }
                                 typeList.add(
