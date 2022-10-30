@@ -62,6 +62,7 @@ const val SEARCH_CLIENT = "&client=serviceinfinity"
 const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
 const val US_SEARCH= "get_military_careers_data?pager=1&service="
 var COLLEGE_JSON = "https://api-gw-staging.maialearning.com/college-json-filter"
+val   CommonApp = "3"
 object URL{
     var BASEURL = 0
 }
@@ -242,6 +243,15 @@ fun parseNA(string: String?): String {
         return string
     }
 }
+
+fun parseEvaluation(string: String?, str1:String?): String {
+    if (string == null || string == "null" ||str1 == null || str1 == "null") {
+        return BaseApplication.applicationContext().getString(R.string.na)
+    } else {
+        return "${string}-${str1}"
+    }
+}
+
 
 fun parseEmpty(string: String?): String {
     if (string == null || string == "null" || string.isNullOrEmpty()) {

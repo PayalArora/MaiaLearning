@@ -349,9 +349,9 @@
                     android:layout_marginVertical="@dimen/_10dp"
                     android:fontFamily="@font/inter_regular"
                     android:text="@string/cr_required"
-                    android:visibility="gone"
                     android:textColor="@color/blue_2"
                     android:textSize="@dimen/_12sp"
+                    android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent" />
 
                 <TextView
@@ -362,7 +362,7 @@
                     android:layout_marginVertical="@dimen/_10dp"
                     android:layout_toRightOf="@+id/text_cr_required"
                     android:drawablePadding="@dimen/_5dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:fontFamily="@font/inter_bold"
 
                     android:paddingStart="@dimen/_10dp"

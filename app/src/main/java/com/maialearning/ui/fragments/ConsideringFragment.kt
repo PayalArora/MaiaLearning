@@ -135,6 +135,13 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
                               }
                           }*/
+                        var requiredRecs: ConsiderModel.RequiredRecommendation? = null
+                        val jobj:JSONObject?=object_.optJSONObject("required_recommendation")
+                        jobj?.let {
+                             requiredRecs = ConsiderModel.RequiredRecommendation(it.optString("teacher_evaluation"),
+                                it.optString("max_teacher_evaluation"), it.optString("counselor_recommendation") )
+                        }
+
 
                         if (!countries.contains(object_.getString("country_name")))
                             countries.add(object_.getString("country_name"))
@@ -162,7 +169,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("application_mode"),
                             object_.getString("application_status_name"),
                             object_.getString("app_by_program_supported"),
-                            object_.getInt("confirm_applied"), null
+                            object_.getInt("confirm_applied"), null, requiredRecs
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -268,24 +275,36 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 }
                                 }
                                 else  {
-                                    val decisionPlans:JSONArray? = term.optJSONArray("data")
                                     val arrayPlans = arrayListOf<ConsiderModel.DecisionPlan>()
-                                    decisionPlans?.let {
-                                    for (i in 0 until it.length()) {
-                                        val jobj = it.getJSONObject(i)
-                                        val iterator = jobj.keys()
-                                        while (iterator.hasNext()) {
-                                            val id = iterator.next() as String
-                                            val plan: ConsiderModel.DecisionPlan =
-                                                ConsiderModel.DecisionPlan(
-                                                    id,
-                                                    jobj.optString(id))
-                                            arrayPlans.add(plan)
-                                        }
+                                    if (term.optJSONArray("data") != null) {
+                                        val decisionPlans:JSONArray = term.optJSONArray("data")
+                                        decisionPlans?.let {
+                                            for (i in 0 until it.length()) {
 
+
+                                                val plan:ConsiderModel.DecisionPlan = ConsiderModel.DecisionPlan(it.getJSONObject(i).optString("id"),
+                                                    it.getJSONObject(i).optString("label") )
+                                                arrayPlans.add(plan)
+                                            }}
+                                        collTerm.planList = arrayPlans
+                                    } else if ( term.optJSONObject("data")!= null){
+                                        val jobj: JSONObject? = term.optJSONObject("data")
+                                        jobj?.let {
+
+                                            val iterator = it.keys()
+                                            while (iterator.hasNext()) {
+                                                val id = iterator.next() as String
+                                                val plan: ConsiderModel.DecisionPlan =
+                                                    ConsiderModel.DecisionPlan(
+                                                        id,
+                                                        it.optString(id)
+                                                    )
+                                                arrayPlans.add(plan)
+                                            }
+                                        }
+                                        collTerm.planList = arrayPlans
                                     }
-                                    }
-                                    collTerm.planList = arrayPlans
+
 
                                 }
 //                                println("collTerm " + collTerm.termList.toString())
@@ -484,7 +503,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 }
         } else if (type == 0) {
             for (i in finalArray[arratlistPosition].collegeAppLicationType?.collType?.indices!!) {
-                if (finalArray[arratlistPosition].applicationMode == finalArray[i].collegeAppLicationType?.collType?.get(
+                if (finalArray[arratlistPosition].applicationMode == finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(
                         i
                     )?.key
                 ) {
@@ -507,21 +526,29 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         } else if (type == 2) {
             for (i in finalArray[arratlistPosition].collegeAppLicationType?.collType?.indices!!) {
                 for (k in finalArray[arratlistPosition].collegeAppLicationType?.collType?.indices!!) {
+                    if (finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.type == "term") {
+//
                     if (finalArray[arratlistPosition].applicationTerm.equals(
-                            finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(
-                                k
-                            )?.term?.collTerm?.get(k)?.plan
+                            finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(k)?.term?.collTerm?.get(k)?.plan
                         )
                     ) {
-//                        finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(k)?.term?.collTerm?.get(k)?.collPlan
-                        finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.collTerm?.get(
-                            k
-                        )?.collPlan?.let {
-                            recyclerView.adapter = ConsiderPlanAdapter(
-                                it, type, this
-                            )
-                            return
-                        }
+                          finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(k)?.term?.collTerm?.get(k)?.collPlan
+                            finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.collTerm?.get(
+                                k
+                            )?.collPlan?.let {
+                                recyclerView.adapter = ConsiderPlanAdapter(
+                                    it, type, this
+                                )
+                                return
+                            }
+                        } }else {
+                            finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.planList?.let {
+                                recyclerView.adapter = ConsiderDecisionAdapter(
+                                    it, type, this
+                                )
+                                return
+                            }
+
                     }
                 }
             }
@@ -533,110 +560,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 type
             )
         }
-//        var univModel = UnivCollegeModel()
-//        var ids = ArrayList<String>()
-//        ids.add(finalArray[arratlistPosition].universityNid)
-//        selectedUnivId = finalArray[arratlistPosition].universityNid
-//        univModel.university_nids = ids
-//
-//        dialogP.show()
-////        val obj = JsonObject()
-////        val jsArray = JSONArray(ids)
-////        obj.addProperty("university_nids", jsArray.toString())
-//        homeModel.getCollegeJsonFilter(COLLEGE_JSON, univModel)
-//        homeModel.univJsonFilter.observe(requireActivity()) {
-//            dialogP.dismiss()
-//            for ( i in finalArray.indices) {
-//                selectedUnivId = finalArray[i].university_nid
-//            val json = JSONObject(it.toString())
-//            if (json.has(selectedUnivId)) {
-//                jsonUniv = json.optJSONObject(selectedUnivId)
-//                if (jsonUniv.has("allowed_application_type")) {
-//                    var typeList = ArrayList<DynamicKeyValue>()
-//
-//                    if (jsonUniv.optJSONObject("allowed_application_type") != null) {
-//                        allowedType = jsonUniv.optJSONObject("allowed_application_type")
-//                        val keys: Iterator<*> = allowedType.keys()
-//                        while (keys.hasNext()) {
-//                            // loop to get the dynamic key
-//                            val currentDynamicKey = keys.next() as String
-//                            // get the value of the dynamic key
-//                            typeList.add(
-//                                DynamicKeyValue(
-//                                    currentDynamicKey,
-//                                    allowedType.getString(currentDynamicKey)
-//                                )
-//                            )
-//                            val term = jsonUniv.optJSONObject( allowedType.getString(currentDynamicKey))
-//                            var termList = ArrayList<String>()
-//                            val termListArray:JSONArray = term.optJSONArray("term_list")
-//                            val collTerm : ConsiderModel.CollTerm = ConsiderModel.CollTerm(termList, decisionPlan)
-//
-//                            for (i in 0 ..termListArray.length()){
-//                                termList.add(termListArray.getString(i))
-//                                val plan = term.optJSONArray(termListArray.getString(i))
-//                               var decision: ArrayList<ConsiderModel.Decision> = arrayListOf()
-//                                for (i in 0 ..plan.length()){
-//                                    val json:JSONObject = plan[i] as JSONObject
-//                                val descisionItem = ConsiderModel.Decision(json.optString("decision_plan"),
-//                                    json.optString("decision_plan_value"), json.optString("deadline_date") )
-//                                    decision.add(descisionItem)
-//                                }
-//                                val decisionPlan: ConsiderModel.DecisionPlan = ConsiderModel.DecisionPlan(decision)
-//                                collTerm.plan = decisionPlan
-//                            }
-//
-//
-//                        }
-//
-//                       finalArray.get(i).collegeAppLicationType = ConsiderModel.CollType(typeList)
-//                    } else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
-//                        allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
-//                        for (i in 0 until allowedTypeArray.length()) {
-//                            val item = allowedTypeArray.getJSONObject(i)
-//                            typeList.add(
-//                                DynamicKeyValue(
-//                                    item.optString("id"),
-//                                    item.optString("label"),
-//                                    false
-//                                )
-//                            )
-//                        }
-//                    }
-//
-//                    if (typeList != null && typeList.size > 0 && type == 1) {
-//                        recyclerView.adapter = ConsideringTypeTermAdapter(typeList, type, this)
-//                    } else if (type == 0) {
-//                        if (selectedValue != null) {
-//                            val selectedJson = jsonUniv.optJSONObject(selectedValue)
-//                            val termListArray = selectedJson.optJSONArray("term_list")
-//                            if (termListArray != null) {
-//                                for (i in 0 until termListArray.length()) {
-//                                    // get the value of the dynamic key
-//                                    termList.add(
-//                                        DynamicKeyValue(
-//                                            "",
-//                                            termListArray.getString(i), false
-//                                        )
-//                                    )
-//
-//
-//                                    recyclerView.adapter =
-//                                        ConsideringTypeTermAdapter(termList, type, this)
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-////        radioAppType.setOnCheckedChangeListener { group, checkedId ->
-////            val radioButton = radioAppType.findViewById(checkedId) as RadioButton     (mBinding.consideringList.adapter as ConsiderAdapter).setValue(
-////                radioButton.text.toString(),
-////                type
-////            )
-////        }
-//                }
-//            }
-//        }
     }
 
 

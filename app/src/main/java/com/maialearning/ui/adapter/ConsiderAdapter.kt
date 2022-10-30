@@ -14,9 +14,7 @@ import com.maialearning.databinding.ItemMilestonesBinding
 import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
-import com.maialearning.util.CommonClass
-import com.maialearning.util.UNIV_LOGO_URL
-import com.maialearning.util.replaceInvertedComas
+import com.maialearning.util.*
 import com.squareup.picasso.Picasso
 
 class ConsiderAdapter(
@@ -90,8 +88,34 @@ class ConsiderAdapter(
                 typeVal.let { typeValue.setText(it) }
             } else {
                 typeValue.setText("Select")
-
             }
+           val supportsMaiaDocs = array[position].slate == 1 || array[position].parchment == 1
+            val canShowTeacherEval = array[position].appByProgramSupported != "1" || array[position].applicationMode == CommonApp
+            if (canShowTeacherEval){
+                textTe.setText("${root.context.resources.getString(R.string.te)} ${parseEvaluation(array[position].requiredRecommendation?.teacherEvaluation,array[position].requiredRecommendation?.maxTeacherEvaluation)}")
+                textTe.visibility = View.VISIBLE
+            }else {
+                textTe.visibility = View.GONE
+            }
+            val canShowCounselorRec  =
+                array[position].appByProgramSupported !="1" ||
+                        array[position].applicationMode == CommonApp
+
+            if (canShowCounselorRec){
+                textCrRequired.visibility = View.VISIBLE
+                val cr =  parseNA(array[position].requiredRecommendation?.counselorRecommendation)
+                    if (cr == "false"){
+                        textCrRequired.setText("${root.context.resources.getString(R.string.cr_required)}: ${root.context.resources.getString(R.string.cr_required_req)}")
+                    } else if (cr == "true"){
+                        textCrRequired.setText("${root.context.resources.getString(R.string.cr_required)}: ${root.context.resources.getString(R.string.cr_required_opt)}")
+                    } else{
+                        textCrRequired.setText("${root.context.resources.getString(R.string.cr_required)}: ${root.context.resources.getString(R.string.na)}")
+                    }
+
+            }else {
+                textCrRequired.visibility = View.GONE
+            }
+
             if (array[position].applicationType != null && !array[position].applicationType.equals("null")) {
                 //  typeValue.setText(array[position].applicationType)
                 val typeVal = getAppPlan(array[position].applicationType, position)
@@ -108,11 +132,6 @@ class ConsiderAdapter(
             } else {
                 appPlan.visibility = View.GONE
             }
-//            if (showAppPlan(position)){
-//                appPlan.visibility = View.VISIBLE
-//            } else {
-//                appPlan.visibility = View.GONE
-//            }
             if (array[position].applicationTerm != null && !array[position].applicationTerm.equals("null") && !array[position].applicationTerm.equals("Reset")) {
                 termValue.setText(array[position].applicationTerm)
                 appTerm.visibility = View.VISIBLE

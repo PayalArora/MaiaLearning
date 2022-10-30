@@ -136,6 +136,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
                                }
                            }*/
+                    var requiredRecs: ConsiderModel.RequiredRecommendation? = null
+                    val jobj:JSONObject?=object_.optJSONObject("required_recommendation")
+                    jobj?.let {
+                        requiredRecs = ConsiderModel.RequiredRecommendation(it.optString("teacher_evaluation"),
+                            it.optString("max_teacher_evaluation"), it.optString("counselor_recommendation") )
+                    }
                     if (!countries.contains(object_.getString("country_name")))
                         countries.add(object_.getString("country_name"))
                     val model: ConsiderModel.Data = ConsiderModel.Data(
@@ -162,7 +168,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.getString("application_mode"),
                         object_.getString("application_status_name"),
                         object_.getString("app_by_program_supported"),
-                        object_.getInt("confirm_applied"), null
+                        object_.getInt("confirm_applied"), null, requiredRecs
                     )
                     array.add(model)
                     array.sortBy { it.naviance_college_name }

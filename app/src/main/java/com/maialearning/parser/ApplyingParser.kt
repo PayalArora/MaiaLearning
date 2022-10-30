@@ -55,6 +55,12 @@ class ApplyingParser(val it:JsonObject, val userId:String,  val statuses : Array
 
                        }
                    }*/
+            var requiredRecs: ConsiderModel.RequiredRecommendation? = null
+            val jobj:JSONObject?=object_.optJSONObject("required_recommendation")
+            jobj?.let {
+                requiredRecs = ConsiderModel.RequiredRecommendation(it.optString("teacher_evaluation"),
+                    it.optString("max_teacher_evaluation"), it.optString("counselor_recommendation") )
+            }
             if (!countries.contains(object_.getString("country_name")))
                 countries.add(object_.getString("country_name"))
             val model: ConsiderModel.Data = ConsiderModel.Data(
@@ -82,7 +88,7 @@ class ApplyingParser(val it:JsonObject, val userId:String,  val statuses : Array
                 object_.getString("application_status_name"),
                 object_.getString("app_by_program_supported"),
                 object_.getInt("confirm_applied"),
-                null
+                null, requiredRecs
             )
             array.add(model)
         }

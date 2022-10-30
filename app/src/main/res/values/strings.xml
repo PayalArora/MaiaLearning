@@ -111,6 +111,8 @@
     <string name="date_by">25 May 2021, 01:20 AM \u0020 \u0020 by: Choudhary, Paul</string>
     <string name="internal">Internal Deadline</string>
     <string name="cr_required">CR: Required</string>
+    <string name="cr_required_req">Req.</string>
+    <string name="cr_required_opt">Opt.</string>
     <string name="to_applying">To Applying</string>
     <string name="likely">Likely</string>
     <string name="program">Program</string>
@@ -533,6 +535,7 @@
     <string name="points_of_entry">Points of <font color="#633593">Entry</font></string>
     <string name="entry_requirement">Entry Requirements</string>
     <string name="fees_and_funding">Fees and Funding</string>
+    <string name="te">TE:</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

@@ -54,9 +54,18 @@ class ConsiderModel {
         var appByProgramSupported: String,
         @SerializedName("confirm_applied")
         var confirmApplied: Int,
-        var collegeAppLicationType: CollType?
+        var collegeAppLicationType: CollType?,
+        @SerializedName("required_recommendation")
+        var requiredRecommendation:RequiredRecommendation?,
+        )
+    data class RequiredRecommendation(
+        @SerializedName("teacher_evaluation")
+        var teacherEvaluation: String?,
+        @SerializedName("max_teacher_evaluation")
+        var maxTeacherEvaluation: String?,
+        @SerializedName("counselor_recommendation")
+        var counselorRecommendation: String?
     )
-
     data class CollType(var collType: ArrayList<DynamicKeyValue>?)
 
     class CollTerm {
