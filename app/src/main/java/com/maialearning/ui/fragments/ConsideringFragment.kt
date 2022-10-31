@@ -5,34 +5,34 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.PopupMenu
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
-import com.maialearning.databinding.*
+import com.maialearning.databinding.CommentsSheetBinding
+import com.maialearning.databinding.ConsideringInfoSheetBinding
+import com.maialearning.databinding.ConsideringLayoutBinding
+import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.COLLEGE_JSON
-import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.replaceInvertedComas
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
@@ -497,8 +497,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         if (type == 1) {
             recyclerView.adapter =
                 finalArray[arratlistPosition].collegeAppLicationType?.collType?.let {
-
-                    ConsideringTypeTermAdapter(it, type, this)
+                    val array = arrayListOf<DynamicKeyValue>()
+                    array.clear()
+                    array.addAll( it)
+                    val term = ConsiderModel.CollTerm()
+                    array!!.add(DynamicKeyValue("Reset", "Reset", term))
+                    ConsideringTypeTermAdapter(array, type, this)
 
                 }
         } else if (type == 0) {
@@ -792,15 +796,29 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
     }
 
-    var selectedKeyType: String = ""
+    var selectedKeyType: String? = null
     override fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue) {
         var updateStudentPlan = UpdateStudentPlan()
         updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
-        updateStudentPlan.college_nid = selectedUnivId
+        updateStudentPlan.college_nid = finalArray.get(typeTermPosition).university_nid
         if (type == 1) {
-            selectedKeyType = dynamicKeyValue.key
-            updateStudentPlan.app_type = dynamicKeyValue.key
-            updateStudentPlan.app_status = "accepted"
+            if (dynamicKeyValue.key == "Reset") {
+                selectedKeyType = null
+                updateStudentPlan.app_type = null
+            } else {
+                selectedKeyType = dynamicKeyValue.key
+                updateStudentPlan.app_type = dynamicKeyValue.key
+                updateStudentPlan.app_status = "accepted"
+            }
+        } else if (type == 0){
+            if (dynamicKeyValue.key == "Reset") {
+                selectedKeyType = null
+                updateStudentPlan.application_term = null
+            } else {
+                selectedKeyType = dynamicKeyValue.key
+                updateStudentPlan.application_term = dynamicKeyValue.key
+                updateStudentPlan.app_status = "accepted"
+            }
         }
         updateStudentPlan.app_status = "3"
         dialogP = showLoadingDialog(requireContext())
@@ -810,10 +828,20 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             dialog?.dismiss()
             dialogP.dismiss()
             if (type == 1) {
-                finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue.value
+                if (dynamicKeyValue.key == "Reset") {
+                    finalArray.get(typeTermPosition).applicationMode = null
+                } else
+                finalArray.get(typeTermPosition).applicationMode = dynamicKeyValue.key
                 mBinding.consideringList.adapter?.notifyDataSetChanged()
 
-            }
+            } else if (type == 0) {
+                    if (dynamicKeyValue.key == "Reset") {
+                        finalArray.get(typeTermPosition).applicationTerm = null
+                    } else
+                        finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue.value
+                    mBinding.consideringList.adapter?.notifyDataSetChanged()
+
+                }
         }
     }
 
@@ -822,9 +850,14 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
         updateStudentPlan.college_nid = finalArray.get(typeTermPosition).university_nid
         updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
-        //updateStudentPlan.app_status = "accepted"
-        if (!dynamicKeyValue.equals("Reset"))
+        if (dynamicKeyValue == "Reset") {
+            selectedKeyType = null
+            updateStudentPlan.application_term = null
+        } else {
+            selectedKeyType = dynamicKeyValue
             updateStudentPlan.application_term = dynamicKeyValue
+          //  updateStudentPlan.app_status = "accepted"
+        }
 
         updateStudentPlan.app_status = "3"
         dialogP = showLoadingDialog(requireContext())
@@ -833,6 +866,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         homeModel.updateStudentPlanObserver.observe(requireActivity()) {
             dialog?.dismiss()
             dialogP.dismiss()
+            if (dynamicKeyValue == "Reset") {
+                finalArray.get(typeTermPosition).applicationTerm = null
+            } else
             finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue
             mBinding.consideringList.adapter?.notifyDataSetChanged()
         }

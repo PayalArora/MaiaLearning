@@ -43,11 +43,11 @@ class ConsiderModel {
         @SerializedName("request_transcript")
         var requestTranscript: String,
         @SerializedName("application_type")
-        var applicationType: String,
-        @SerializedName("application_type")
-        var applicationTerm: String,
+        var applicationType: String? = null,
         @SerializedName("application_term")
-        var applicationMode: String,
+        var applicationTerm: String?,
+        @SerializedName("application_mode")
+        var applicationMode: String?,
         @SerializedName("application_status_name")
         var applicationStatusName: String,
         @SerializedName("app_by_program_supported")

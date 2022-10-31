@@ -28,7 +28,7 @@ class ConsiderAdapter(
      * (custom ViewHolder).
      */
     var typeVal: String = "UCAS"
-    var termVal = "Spring 2022"
+    var termVal = ""
     var planVal = "Early Action"
 
     class ViewHolder(val binding: ConsideringItemLayBinding) :
@@ -84,10 +84,12 @@ class ConsiderAdapter(
 
             if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
               //  typeValue.setText(array[position].applicationType)
-                val typeVal = getAppType(array[position].applicationMode, position)
+                val typeVal = getAppType(array[position].applicationMode!!, position)
                 typeVal.let { typeValue.setText(it) }
+                appTerm.isEnabled = true
             } else {
                 typeValue.setText("Select")
+                appTerm.isEnabled = false
             }
            val supportsMaiaDocs = array[position].slate == 1 || array[position].parchment == 1
             val canShowTeacherEval = array[position].appByProgramSupported != "1" || array[position].applicationMode == CommonApp
@@ -104,9 +106,9 @@ class ConsiderAdapter(
             if (canShowCounselorRec){
                 textCrRequired.visibility = View.VISIBLE
                 val cr =  parseNA(array[position].requiredRecommendation?.counselorRecommendation)
-                    if (cr == "false"){
+                    if (cr == "true"){
                         textCrRequired.setText("${root.context.resources.getString(R.string.cr_required)}: ${root.context.resources.getString(R.string.cr_required_req)}")
-                    } else if (cr == "true"){
+                    } else if (cr == "false"){
                         textCrRequired.setText("${root.context.resources.getString(R.string.cr_required)}: ${root.context.resources.getString(R.string.cr_required_opt)}")
                     } else{
                         textCrRequired.setText("${root.context.resources.getString(R.string.cr_required)}: ${root.context.resources.getString(R.string.na)}")
@@ -118,7 +120,7 @@ class ConsiderAdapter(
 
             if (array[position].applicationType != null && !array[position].applicationType.equals("null")) {
                 //  typeValue.setText(array[position].applicationType)
-                val typeVal = getAppPlan(array[position].applicationType, position)
+                val typeVal = getAppPlan(array[position].applicationType!!, position)
                 if (typeVal!= null)
                  planValue.setText(typeVal)
                 else
@@ -134,32 +136,33 @@ class ConsiderAdapter(
             }
             if (array[position].applicationTerm != null && !array[position].applicationTerm.equals("null") && !array[position].applicationTerm.equals("Reset")) {
                 termValue.setText(array[position].applicationTerm)
-                appTerm.visibility = View.VISIBLE
+            } else {
+                termValue.setText("Select")
             }
-            else if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
-                    val appMode = array[position].applicationMode
-                    for (i in array[position].collegeAppLicationType?.collType?.indices!!) {
-                        if (appMode == array[position].collegeAppLicationType?.collType?.get(
-                                i
-                            )?.key
-                        ) {
-                            array[position].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
-
-                                return
-                            }
-                            if (array[position].collegeAppLicationType?.collType?.get(i)?.term?.type == "decision") {
-                            termValue.setText("Select")
-                            appTerm.visibility = View.VISIBLE}
-                            else {
-                                termValue.setText("Select")
-                               // appTerm.visibility = View.GONE
-                            }
-                        }
-                    }
-                } else {
-                    appTerm.visibility = View.VISIBLE
-                    termValue.setText("Select")
-                }
+//            else if (array[position].applicationMode != null && !array[position].applicationMode.equals("null")) {
+//                    val appMode = array[position].applicationMode
+//                    for (i in array[position].collegeAppLicationType?.collType?.indices!!) {
+//                        if (appMode == array[position].collegeAppLicationType?.collType?.get(
+//                                i
+//                            )?.key
+//                        ) {
+//                            array[position].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
+//
+//                                return
+//                            }
+//                            if (array[position].collegeAppLicationType?.collType?.get(i)?.term?.type == "decision") {
+//                            termValue.setText("Select")
+//                            appTerm.visibility = View.VISIBLE}
+//                            else {
+//                                termValue.setText("Select")
+//                               // appTerm.visibility = View.GONE
+//                            }
+//                        }
+//                    }
+//                } else {
+//                    appTerm.visibility = View.VISIBLE
+//                    termValue.setText("Select")
+//                }
 
 
             Picasso.with(viewHolder.binding.root.context)

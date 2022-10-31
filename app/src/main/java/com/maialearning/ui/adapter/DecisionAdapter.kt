@@ -44,13 +44,13 @@ class DecisionAdapter(var data: ArrayList<ConsiderModel.Data>, val decisionClick
                 .error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
             if (!data.get(position).applicationType.equals("null"))
                 decisionPlan.setText(viewHolder.binding.root.context.resources.getStringArray(R.array.DECISION_PLAN)[data.get(
-                    position).applicationType.toInt()])
+                    position).applicationType!!.toInt()])
             else
                 decisionPlan.setText("")
 
             if (!data.get(position).applicationMode.equals("null"))
                 applicationMode.setText(viewHolder.binding.root.context.resources.getStringArray(R.array.APPLICATION_TYPE)[data.get(
-                    position).applicationMode.toInt()])
+                    position).applicationMode!!.toInt()])
             else
                 applicationMode.setText("")
 

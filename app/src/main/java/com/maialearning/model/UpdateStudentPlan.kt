@@ -5,8 +5,8 @@ class UpdateStudentPlan {
 
     lateinit var student_uid: String
     lateinit var college_nid: String
-    lateinit var app_type: String
-    lateinit var application_term: String
+     var app_type: String?= null
+    var application_term: String?= null
     lateinit var app_plan: String
     lateinit var app_status: String
     lateinit var deadline_date: String
