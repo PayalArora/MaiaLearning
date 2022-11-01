@@ -160,6 +160,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("university_nid"),
                             object_.getString("unitid"),
                             object_.getString("internal_deadline"),
+                            object_.getString("due_date"),
                             arrayProgram,
                             0,
                             object_.getString("notes"),
@@ -169,7 +170,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("application_mode"),
                             object_.getString("application_status_name"),
                             object_.getString("app_by_program_supported"),
-                            object_.getInt("confirm_applied"), null, requiredRecs
+                            object_.getInt("confirm_applied"), null, requiredRecs,
+                            object_.getInt("manual_update")
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -218,6 +220,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 val json = JSONObject(it.toString())
                 if (json.has(selectedUnivId)) {
                     var jsonUniv = json.optJSONObject(selectedUnivId)
+                    var selectedAppModeType:String? = null
                     if (jsonUniv.has("allowed_application_type")) {
                         var typeList = ArrayList<DynamicKeyValue>()
 
@@ -236,6 +239,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                     ConsiderModel.CollTerm()
 
                                 collTerm.type = term.optString("type")
+                                if (finalArray.get(i).applicationMode == currentDynamicKey){
+                                    selectedAppModeType = collTerm.type
+                                }
                                 if (collTerm.type == "term") {
                                 var termList = ArrayList<String>()
 
@@ -319,7 +325,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             }
 
                             finalArray.get(i).collegeAppLicationType =
-                                ConsiderModel.CollType(typeList)
+                                ConsiderModel.CollType(typeList, selectedAppModeType)
 
                         } else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
                             allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
@@ -335,6 +341,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                     jsonUniv.optJSONObject(type.optString("label"))
                                 term?.let {
                                     collTerm.type = term?.optString("type")
+                                    if (  finalArray.get(i).applicationMode ==  type.optString("id")){
+                                        selectedAppModeType = collTerm.type
+                                        }
                                     if (collTerm.type== "term") {
                                         val termListArray: JSONArray? =
                                             type?.optJSONArray("term_list")
@@ -396,7 +405,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             }
 
                             finalArray.get(i).collegeAppLicationType =
-                                ConsiderModel.CollType(typeList)
+                                ConsiderModel.CollType(typeList, selectedAppModeType)
 
                         }
 
@@ -540,13 +549,23 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.collTerm?.get(
                                 k
                             )?.collPlan?.let {
+                                val array = arrayListOf<ConsiderModel.Decision>()
+                                array.clear()
+                                array.addAll( it)
+                                array!!.add(ConsiderModel.Decision("Reset", "Reset", null))
+
                                 recyclerView.adapter = ConsiderPlanAdapter(
-                                    it, type, this
+                                    array, type, this
                                 )
                                 return
                             }
                         } }else {
                             finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.planList?.let {
+                                val array = arrayListOf<ConsiderModel.DecisionPlan>()
+                                array.clear()
+                                array.addAll( it)
+                                array!!.add(ConsiderModel.DecisionPlan("Reset", "Reset"))
+
                                 recyclerView.adapter = ConsiderDecisionAdapter(
                                     it, type, this
                                 )
@@ -877,24 +896,28 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     override fun onPlanOptionClick(
         positiion: Int,
         type: Int,
-        dynamicKeyValue: ConsiderModel.Decision
+        dynamicKey: String, dynamicKeyValue: String
     ) {
         var updateStudentPlan = UpdateStudentPlan()
         updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
         updateStudentPlan.college_nid = finalArray.get(typeTermPosition).university_nid
         updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
-        //updateStudentPlan.app_status = "accepted"
-            updateStudentPlan.app_plan = dynamicKeyValue.decision_plan
+     //  updateStudentPlan.app_status = finalArray.get(typeTermPosition).applicationStatusName
+            updateStudentPlan.app_plan = dynamicKey
         updateStudentPlan.application_term=finalArray.get(typeTermPosition).applicationTerm
+        updateStudentPlan.request_transcript=finalArray.get(typeTermPosition).requestTranscript
 
-        updateStudentPlan.app_status = "3"
+        //updateStudentPlan.app_status = "3"
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
         homeModel.updateStudentPlan(updateStudentPlan)
         homeModel.updateStudentPlanObserver.observe(requireActivity()) {
             dialog?.dismiss()
             dialogP.dismiss()
-            finalArray.get(typeTermPosition).applicationType = dynamicKeyValue.decision_plan_value
+            if (!dynamicKeyValue.equals("Reset"))
+            finalArray.get(typeTermPosition).applicationType = dynamicKey
+            else
+                finalArray.get(typeTermPosition).applicationType = null
             mBinding.consideringList.adapter?.notifyDataSetChanged()
         }
     }
@@ -904,7 +927,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 interface ClickOptionFilters {
     fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue)
     fun onTermItemClick(positiion: Int, type: Int, dynamicKeyValue: String)
-    fun onPlanOptionClick(positiion: Int, type: Int, dynamicKeyValue: ConsiderModel.Decision)
+    fun onPlanOptionClick(positiion: Int, type: Int, dynamicKey:String, dynamicKeyValue: String)
 
 }
 

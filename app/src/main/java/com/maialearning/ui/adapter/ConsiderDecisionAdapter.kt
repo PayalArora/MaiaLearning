@@ -33,7 +33,8 @@ RecyclerView.Adapter<ConsiderDecisionAdapter.ViewHolder>() {
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.valueTxt.text = listData[position].label
         viewHolder.binding.valueTxt.setOnClickListener {
-           // onItemClick.onPlanOptionClick(position,type,listData.get(position))
+
+            onItemClick.onPlanOptionClick(position,type,listData.get(position).id, listData.get(position).label)
         }
     }
 

@@ -159,6 +159,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.getString("university_nid"),
                         object_.getString("unitid"),
                         object_.getString("internal_deadline"),
+                        object_.getString("due_date"),
                         arrayProgram,
                         0,
                         object_.getString("notes"),
@@ -168,7 +169,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.getString("application_mode"),
                         object_.getString("application_status_name"),
                         object_.getString("app_by_program_supported"),
-                        object_.getInt("confirm_applied"), null, requiredRecs
+                        object_.getInt("confirm_applied"), null, requiredRecs,
+
+                        object_.getInt("manual_update")
                     )
                     array.add(model)
                     array.sortBy { it.naviance_college_name }

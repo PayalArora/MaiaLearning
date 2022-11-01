@@ -1,5 +1,6 @@
 package com.maialearning.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -211,6 +212,7 @@ fun getAbbreviatedFromDateTime(dateTime: String, dateFormat: String, field: Stri
 
     return null
 }
+@SuppressLint("SimpleDateFormat")
 fun formateDateFromstring(
     inputFormat: String?,
     outputFormat: String?,
@@ -218,9 +220,9 @@ fun formateDateFromstring(
 ): String? {
     var parsed: Date? = null
     var outputDate = ""
-    val df_input = SimpleDateFormat(inputFormat)
-    val df_output = SimpleDateFormat(outputFormat)
-    try {
+    val df_input = SimpleDateFormat(inputFormat, Locale.getDefault())
+    val df_output = SimpleDateFormat(outputFormat,Locale.getDefault())
+       try {
         parsed = df_input.parse(inputDate)
         outputDate = df_output.format(parsed)
     } catch (e: ParseException) {
@@ -323,4 +325,11 @@ fun String.getMd5Hash(): String? {
         hexString.append(hex)
     }
     return hexString.toString().toUpperCase()
+}
+
+fun checkNonNull(str:String?): Boolean{
+   if( str!= null && !str.equals("null") && !str.isNullOrEmpty()){
+       return true
+   } else
+       return false
 }

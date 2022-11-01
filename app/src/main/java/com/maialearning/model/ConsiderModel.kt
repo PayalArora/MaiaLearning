@@ -32,6 +32,8 @@ class ConsiderModel {
         var unitid: String,
         @SerializedName("internal_deadline")
         var internal_deadline: String?,
+        @SerializedName("due_date")
+        var dueDate: String?,
         @SerializedName("app_by_program_data")
         var program_data: ArrayList<ProgramData>?,
         @SerializedName("count")
@@ -57,6 +59,8 @@ class ConsiderModel {
         var collegeAppLicationType: CollType?,
         @SerializedName("required_recommendation")
         var requiredRecommendation:RequiredRecommendation?,
+        @SerializedName("manual_update")
+        var manualUpdate:Int
         )
     data class RequiredRecommendation(
         @SerializedName("teacher_evaluation")
@@ -66,7 +70,7 @@ class ConsiderModel {
         @SerializedName("counselor_recommendation")
         var counselorRecommendation: String?
     )
-    data class CollType(var collType: ArrayList<DynamicKeyValue>?)
+    data class CollType(var collType: ArrayList<DynamicKeyValue>?, var selectedPlanType:String?)
 
     class CollTerm {
          var type: String? = null
@@ -84,7 +88,7 @@ class ConsiderModel {
     data class Decision(
         var decision_plan: String,
         var decision_plan_value: String,
-        var deadline_date: String
+        var deadline_date: String?
     )
     data class DecisionPlan(
         var id: String,
