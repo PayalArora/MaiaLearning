@@ -324,6 +324,10 @@ interface LoginRepository {
     suspend fun getProgramListDetail(
         id: String
     ): UseCaseResult<CourseModelOptionDetailResponse>
+
+    suspend fun getCollegeEssay(
+        id: String, page: String, sortBy: String, sortOrder: String
+    ): UseCaseResult<CollegeEssayResponse>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1667,6 +1671,25 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.getProgramListDetail(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCollegeEssay(
+        id: String,
+        page: String,
+        sortBy: String,
+        sortOrder: String
+    ): UseCaseResult<CollegeEssayResponse> {
+        return try {
+            val result = catApi.getCollegeEssay(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id, page, sortBy, sortOrder
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

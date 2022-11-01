@@ -650,4 +650,15 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<CourseModelOptionDetailResponse>
 
+    //    page=1&sort_by=essay_colleges&sort_order=asc&uid=9375
+   // ?page={page}&sort_by={sort_by}&sort_order={sort_order}&uid={id}
+    @GET("college_essay")
+    fun getCollegeEssay(
+        @Header("Authorization") AutToken: String,
+        @Query("uid") id: String,
+        @Query("page") page: String,
+        @Query("sort_by") sort_by: String,
+        @Query("sort_order") sort_order: String
+    ): Deferred<CollegeEssayResponse>
+
 }

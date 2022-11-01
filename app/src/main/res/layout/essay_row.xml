@@ -112,8 +112,6 @@
         android:layout_marginHorizontal="@dimen/_15dp"
         android:layout_marginVertical="@dimen/_10dp"
         android:drawablePadding="@dimen/_15dp"
-
-        android:text="@string/review_by"
         android:textColor="@color/black_4"
         android:textSize="@dimen/_12sp"
         app:layout_constraintLeft_toLeftOf="parent"

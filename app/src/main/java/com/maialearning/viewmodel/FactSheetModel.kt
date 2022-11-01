@@ -4,10 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.model.CollegeContactModel
-import com.maialearning.model.CollegeFactSheetModel
-import com.maialearning.model.CourseModelOptionDetailResponse
-import com.maialearning.model.FactsheetModelOther
+import com.maialearning.model.*
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
@@ -38,6 +35,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val getSaveCountryObserver = MutableLiveData<JsonArray>()
     val showError = SingleLiveEvent<String>()
     val programDetailObserber = MutableLiveData<CourseModelOptionDetailResponse>()
+    val collegeEssayObserver = MutableLiveData<CollegeEssayResponse>()
 
     fun getColFactSheet(token: String, id: String) {
         showLoading.value = true
@@ -60,6 +58,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
     fun getColFactSheetOther(token: String, id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -169,6 +168,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
     fun getCountries(token: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -207,6 +207,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
     fun getSaveCountry() {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -228,6 +229,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
     fun setSaveCountry() {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -249,6 +251,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
     fun getProgramsDetail(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -270,6 +273,29 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
+    fun getCollegeEssays(id: String, page: String, sortBy: String, sortOrder: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCollegeEssay(id,page,sortBy,sortOrder)
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> collegeEssayObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message
+                }
+
+            }
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()
