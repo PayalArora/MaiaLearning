@@ -258,7 +258,7 @@
     <string name="uc_pq">UC PIQ Choice 3</string>
     <string name="words_700">700 Words</string>
     <string name="headline_essay">Headline of the Essay</string>
-    <string name="review_by"><b>Reviewed by</b> Philip Roybal</string>
+    <string name="review_by"><b>Reviewed by</b></string>
     <string name="select_teachers">Select Teachers</string>
     <string name="selected_teacher">Abeda Sultana, John Doe...</string>
     <string name="request_rec">Request Recs</string>

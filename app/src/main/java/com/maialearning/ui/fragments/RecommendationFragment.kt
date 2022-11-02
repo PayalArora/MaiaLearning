@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.JsonArray
 import com.maialearning.R
 import com.maialearning.databinding.LayoutTeacherBinding
@@ -73,6 +74,7 @@ class RecommendationFragment : Fragment(), onClick {
     private var json: JSONObject? = null
     private var fileId: String = ""
     private var recoUpdate: Boolean = false
+    private lateinit var tableLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,6 +82,7 @@ class RecommendationFragment : Fragment(), onClick {
     ): View {
         // Inflate the layout for this fragment
         mBinding = RecommendationLayoutBinding.inflate(inflater, container, false)
+        tableLayout = requireActivity().findViewById<TabLayout>(R.id.tabs)
         return mBinding.root
     }
 
@@ -91,68 +94,71 @@ class RecommendationFragment : Fragment(), onClick {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (isAttached)
-            setListeners()
-        progress = showLoadingDialog(requireContext())
-        progress.show()
-        SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
-        listUniversities()
-        homeModel.getRecDeadline()
-        mBinding.send.setOnClickListener {
-            if (typeRecs == REC_TYPE_RECOMENDATION) {
+        if (tableLayout.selectedTabPosition == 4) {
+            if (isAttached)
+                setListeners()
+            progress = showLoadingDialog(requireContext())
+            progress.show()
+            SharedHelper(requireContext()).id?.let { homeModel.getTeachers(it) }
+            listUniversities()
+            homeModel.getRecDeadline()
+            mBinding.send.setOnClickListener {
+                if (typeRecs == REC_TYPE_RECOMENDATION) {
 
-            } else if (typeRecs == BOTH) {
-                if (mBinding.recLetter.isChecked) {
-                    sendRecomendation(typeRecs)
-                }
-                if (mBinding.ucasLetter.isChecked) {
+                } else if (typeRecs == BOTH) {
+                    if (mBinding.recLetter.isChecked) {
+                        sendRecomendation(typeRecs)
+                    }
+                    if (mBinding.ucasLetter.isChecked) {
+                        sendUCASRecomendation()
+                    }
+                } else {
                     sendUCASRecomendation()
                 }
-            } else {
-                sendUCASRecomendation()
             }
-        }
-        mBinding.recipent.setOnClickListener {
-            selectedList.clear()
-            listTeacher(REC_TYPE_RECOMENDATION)
-        }
-        mBinding.ucasLetter.setOnClickListener {
-            showRecs()
-        }
-        mBinding.recLetter.setOnClickListener {
-            showRecs()
-        }
-        mBinding.recipentUcas.setOnClickListener {
-            selectedUcasList.clear()
-            listTeacher(REC_TYPE_UCAS)
-        }
-        mBinding.recipentUniversity.setOnClickListener {
-            universititesBottomSheet()
-        }
-        mBinding.textAddFile.setOnClickListener {
-            checkStoragePermissionAndOpenImageSelection()
-        }
-        mBinding.downloadSheet.setOnClickListener {
-            homeModel.getBragSheet(SharedHelper(requireContext()).id ?: "")
-        }
-        progress.show()
-
-
-        adapter = RecommenderAdapter(requireContext(), requestListNew, this, mBinding.requestList)
-        mBinding.requestList.adapter = adapter
-        adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
-            override fun onLoadMore() {
-                requestListNew.add(null)
-                isLoading = true
-                adapter.notifyItemInserted(requestListNew.size - 1)
-                Handler(Looper.getMainLooper()).postDelayed({
-                    hitAPI(page.toString())
-
-                }, 2000)
+            mBinding.recipent.setOnClickListener {
+                selectedList.clear()
+                listTeacher(REC_TYPE_RECOMENDATION)
             }
-        })
+            mBinding.ucasLetter.setOnClickListener {
+                showRecs()
+            }
+            mBinding.recLetter.setOnClickListener {
+                showRecs()
+            }
+            mBinding.recipentUcas.setOnClickListener {
+                selectedUcasList.clear()
+                listTeacher(REC_TYPE_UCAS)
+            }
+            mBinding.recipentUniversity.setOnClickListener {
+                universititesBottomSheet()
+            }
+            mBinding.textAddFile.setOnClickListener {
+                checkStoragePermissionAndOpenImageSelection()
+            }
+            mBinding.downloadSheet.setOnClickListener {
+                homeModel.getBragSheet(SharedHelper(requireContext()).id ?: "")
+            }
+            progress.show()
 
-        checkRecomType()
+
+            adapter =
+                RecommenderAdapter(requireContext(), requestListNew, this, mBinding.requestList)
+            mBinding.requestList.adapter = adapter
+            adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
+                override fun onLoadMore() {
+                    requestListNew.add(null)
+                    isLoading = true
+                    adapter.notifyItemInserted(requestListNew.size - 1)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        hitAPI(page.toString())
+
+                    }, 2000)
+                }
+            })
+
+            checkRecomType()
+        }
     }
 
     private fun listUniversities() {
@@ -285,13 +291,15 @@ class RecommendationFragment : Fragment(), onClick {
     }
 
     private fun initRecyclerView() {
-        adapterStudent =
-            RecommenderCollegeAdapter(
-                requireContext(),
-                requestSListNew,
-                mBinding.requestList,
-                ::cancelUpdateClick
-            )
+        context?.let {
+            adapterStudent =
+                RecommenderCollegeAdapter(
+                    it,
+                    requestSListNew,
+                    mBinding.requestList,
+                    ::cancelUpdateClick
+                )
+        }
         mBinding.requestList.adapter = adapterStudent
         adapterStudent.setOnLoadMoreListener(object : OnLoadMoreListener {
             override fun onLoadMore() {
@@ -339,9 +347,9 @@ class RecommendationFragment : Fragment(), onClick {
                 request.setDestinationUri(
                     Uri.fromFile(
                         File(
-                            context!!.getExternalFilesDir(
+                            context?.getExternalFilesDir(
                                 Environment.DIRECTORY_DOWNLOADS
-                            ).toString(),File(uri.path).name
+                            ).toString(), File(uri.path).name
                         )
                     )
                 )
@@ -396,11 +404,13 @@ class RecommendationFragment : Fragment(), onClick {
             for (i in 0 until it.size()) {
                 array[i] = getDate(it[i].asLong, "MMM dd,yyyy")
             }
-            val adapter = ArrayAdapter(
-                requireContext(),
-                R.layout.spinner_text, array
-            )
-            mBinding.typeValue.adapter = adapter
+            context?.let {
+                val adapter = ArrayAdapter(
+                    it,
+                    R.layout.spinner_text, array
+                )
+                mBinding.typeValue.adapter = adapter
+            }
 
         }
         homeModel.recommdersObserver.observe(requireActivity()) {
