@@ -118,8 +118,8 @@ data class LoginNewModel(
     @field:SerializedName("scattergram_x_y_values")
     val scattergramXYValues: ScattergramXYValues? = null,
 
-    @field:SerializedName("iec_school")
-    val iecSchool: Int? = null,
+//    @field:SerializedName("iec_school")
+//    val iecSchool: Int? = null,
 
     @field:SerializedName("userName")
     val userName: UserName? = null,
