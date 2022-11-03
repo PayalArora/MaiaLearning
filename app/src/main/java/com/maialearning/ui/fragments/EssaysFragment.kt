@@ -50,7 +50,7 @@ class EssaysFragment : Fragment() {
         mBinding.recyclerList.adapter = adapter
         adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
             override fun onLoadMore() {
-                requestListNew.add(null)
+              //  requestListNew.add(null)
                 isLoading = true
                 adapter.notifyItemInserted(requestListNew.size - 1)
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -67,9 +67,9 @@ class EssaysFragment : Fragment() {
 //        dialogP.show()
 
         setListeners()
-        setAdapter()
-        hitAPI(page.toString())
-        observers()
+        //setAdapter()
+       // hitAPI(page.toString())
+       // observers()
     }
     private var requestListNew = ArrayList<DataItem>()
 

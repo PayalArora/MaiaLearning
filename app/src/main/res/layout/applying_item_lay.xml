@@ -46,7 +46,7 @@
                 android:textSize="@dimen/_16sp" />
 
             <TextView
-                android:id="@+id/count"
+                android:id="@+id/countUniv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -400,7 +400,7 @@
 
                 <LinearLayout
                     android:id="@+id/app_type"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/white_rect_15"
@@ -427,6 +427,8 @@
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
                         android:text="@string/ucas"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sp" />
 
@@ -434,7 +436,7 @@
 
                 <LinearLayout
                     android:id="@+id/app_term"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_10dp"
                     android:paddingVertical="@dimen/_5dp"
@@ -462,7 +464,8 @@
                         android:layout_marginStart="@dimen/_15dp"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
-
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:text="@string/spring_2022"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sp" />
@@ -471,7 +474,7 @@
 
                 <LinearLayout
                     android:id="@+id/app_plan"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_10dp"
                     android:layout_toRightOf="@+id/app_term"
@@ -497,6 +500,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_15dp"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:fontFamily="@font/inter_regular"
                         android:gravity="center_horizontal|top"
                         android:text="Regular Admission"
@@ -514,7 +519,94 @@
 
                 android:background="@color/divider_color" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_5dp"
+                android:weightSum="1"
 
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_weight="0.5"
+                    android:layout_width="0dp"
+                    android:id="@+id/app_deadline"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray_2"
+                    android:background="@drawable/white_rect_15"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/deadline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/_15dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/deadline"
+                        android:textColor="@color/black_1"
+                        android:textSize="@dimen/_12sp" />
+
+                    <TextView
+                        android:id="@+id/deadline_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_15dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/select"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:id="@+id/app_round"
+                    android:layout_weight="0.5"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/app_type"
+                    android:layout_marginLeft="@dimen/_10dp"
+                    android:backgroundTint="@color/gray_2"
+                    android:background="@drawable/white_rect_15"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/round"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginStart="@dimen/_15dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/round"
+                        android:textColor="@color/black_1"
+                        android:textSize="@dimen/_12sp" />
+
+                    <TextView
+                        android:id="@+id/round_value"
+
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_15dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:text="@string/select"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                android:id="@+id/view7"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:layout_marginTop="@dimen/_5dp"
+
+                android:background="@color/divider_color" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -524,11 +616,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/add_button"
-                    android:gravity="center_vertical"
-                    android:paddingVertical="@dimen/_5dp"
                     android:background="@drawable/white_rect_15"
                     android:backgroundTint="@color/gray_2"
-                    android:orientation="vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingVertical="@dimen/_5dp">
 
                     <TextView
                         android:id="@+id/program"
@@ -546,15 +638,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_20dp"
                         android:layout_marginStart="@dimen/_5dp"
-                        android:fontFamily="@font/inter_regular"
-                        android:gravity="center_horizontal|top"
                         android:background="@drawable/white_rect_15"
                         android:backgroundTint="@color/gray_2"
                         android:dropDownVerticalOffset="20dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:gravity="center_horizontal|top"
                         android:overlapAnchor="false"
-                        android:theme="@style/MatchSpinnerTheme"
                         android:spinnerMode="dropdown"
-                        />
+                        android:theme="@style/MatchSpinnerTheme" />
                 </LinearLayout>
 
                 <ImageButton

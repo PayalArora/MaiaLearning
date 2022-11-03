@@ -60,7 +60,9 @@ class ConsiderModel {
         @SerializedName("required_recommendation")
         var requiredRecommendation:RequiredRecommendation?,
         @SerializedName("manual_update")
-        var manualUpdate:Int
+        var manualUpdate:Int,
+        @SerializedName("application_round")
+        var applicationRound: String?,
         )
     data class RequiredRecommendation(
         @SerializedName("teacher_evaluation")

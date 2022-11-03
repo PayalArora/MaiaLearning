@@ -4,14 +4,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ConsideringItemLayBinding
-import com.maialearning.databinding.ItemMilestonesBinding
-import com.maialearning.databinding.ItemShorcutsBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.ui.fragments.OnItemClickOption
 import com.maialearning.util.*
@@ -27,9 +23,10 @@ class ConsiderAdapter(
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    var typeVal: String = "UCAS"
+    var typeVal: String = ""
     var termVal = ""
     var planVal = "Early Action"
+    var positio:Int = 0
 
     class ViewHolder(val binding: ConsideringItemLayBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -77,28 +74,34 @@ class ConsiderAdapter(
                             ?.let { CommonClass.getDateOnly(it) })
 
                     if (checkNonNull(dueDate))
-                    textDate.setText(dueDate
+                        deadlineValue.setText(dueDate
                         ?.let {   formateDateFromstring("yyyy-MM-dd hh:mm:ss","MMM dd yyyy", it) })
+                    else
+                        deadlineValue.setText("Select")
 
                    val canShowAppDeadline= isAppByPlan
                     if (canShowAppDeadline) {
-                        textDate.visibility = View.VISIBLE
-                        textDeadline.visibility = View.VISIBLE
+                        deadlineValue.visibility = View.VISIBLE
+                        appDeadline.visibility = View.VISIBLE
+                        view7.visibility = View.VISIBLE
                     }
                     else {
-                        textDate.visibility = View.GONE
-                        textDeadline.visibility = View.GONE
+                        deadlineValue.visibility = View.GONE
+                        appDeadline.visibility = View.GONE
+                        view7.visibility = View.GONE
                     }
                     if (isAppDeadlineDisabled){
-                        textDate.isEnabled = false
+                        appDeadline.isEnabled = false
+
                     } else {
-                        textDate.isEnabled = true
+                        appDeadline.isEnabled = true
                     }
-
-
+                    appDeadline.setOnClickListener {
+                       positio = position
+                        deadlineValue.showDatePicker(root.context, ::deadlineClick)
+                    }
                             //|| (if selected plan has a deadline)
                     name.setText(created_name)
-                    typeValue.setText(typeVal)
 
                     if (college_priority_choice.equals("null")) {
                         countTxt.setText("?")
@@ -334,5 +337,10 @@ class ConsiderAdapter(
 //        }
 //        return false
 //    }
+
+    fun deadlineClick(string: String){
+        onItemClickOption.onDeadlineClick(positio,string)
+    }
 }
+
 

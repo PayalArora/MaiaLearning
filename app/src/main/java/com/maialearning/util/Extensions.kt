@@ -2,6 +2,7 @@ package com.maialearning.util
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -9,11 +10,14 @@ import android.text.TextUtils
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.viewbinding.BuildConfig
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.maialearning.R
+import com.maialearning.model.ConsiderModel
 import com.maialearning.network.AllAPi
 import com.maialearning.network.AllMessageAPi
 import com.maialearning.network.BaseApplication
@@ -333,3 +337,28 @@ fun checkNonNull(str:String?): Boolean{
    } else
        return false
 }
+
+ fun TextView.showDatePicker(con: Context,  deadlineClick: (date:String) -> Unit) {
+
+    val date =
+        DatePickerDialog.OnDateSetListener { _, year, month, day ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH, month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, day)
+               val myFormat = "MMM dd yyyy"
+               val dateFormat = SimpleDateFormat(myFormat, Locale.US)
+               this.setText(dateFormat.format(myCalendar.time))
+            deadlineClick(dateFormat.format(myCalendar.time))
+
+        }
+    DatePickerDialog(
+        con,
+        date,
+        myCalendar[Calendar.YEAR],
+        myCalendar[Calendar.MONTH],
+        myCalendar[Calendar.DAY_OF_MONTH]
+    ).show()
+
+}
+
+private val myCalendar = Calendar.getInstance()

@@ -26,6 +26,8 @@ import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.COLLEGE_JSON
+import com.maialearning.util.checkNonNull
+import com.maialearning.util.formateDateFromstring
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
@@ -171,7 +173,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("application_status_name"),
                             object_.getString("app_by_program_supported"),
                             object_.getInt("confirm_applied"), null, requiredRecs,
-                            object_.getInt("manual_update")
+                            object_.getInt("manual_update"),
+                            object_.optString("applicaton_round")
+
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -510,6 +514,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     array.clear()
                     array.addAll( it)
                     val term = ConsiderModel.CollTerm()
+                    if (checkNonNull(finalArray[arratlistPosition].applicationMode))
                     array!!.add(DynamicKeyValue("Reset", "Reset", term))
                     ConsideringTypeTermAdapter(array, type, this)
 
@@ -521,15 +526,26 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     )?.key
                 ) {
                     if (finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.type == "term") {
-                        finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
-                            recyclerView.adapter = ConsideringTermAdapter(
-                                it, type, this
+
+                             finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.termList?.let {
+                                 val array = arrayListOf<String>()
+                                 array.clear()
+                                 array.addAll( it)
+                                 if (checkNonNull(finalArray[arratlistPosition].applicationTerm))
+                                     array!!.add("Reset")
+                                 recyclerView.adapter = ConsideringTermAdapter(
+                                array, type, this
                             )
                             return
                         }
                     } else {
+                        val array = arrayListOf<String>()
+                        array.clear()
+                        array.addAll( resources.getStringArray(R.array.APPLICATION_TERM))
+                        if (checkNonNull(finalArray[arratlistPosition].applicationTerm))
+                        array!!.add("Reset")
                         recyclerView.adapter = ConsideringTermAdapter(
-                            ArrayList(Arrays.asList(* resources.getStringArray(R.array.APPLICATION_TERM))),
+                           array,
                             type,
                             this
                         )
@@ -552,6 +568,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 val array = arrayListOf<ConsiderModel.Decision>()
                                 array.clear()
                                 array.addAll( it)
+                                if (checkNonNull(finalArray[arratlistPosition].applicationType))
                                 array!!.add(ConsiderModel.Decision("Reset", "Reset", null))
 
                                 recyclerView.adapter = ConsiderPlanAdapter(
@@ -564,6 +581,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 val array = arrayListOf<ConsiderModel.DecisionPlan>()
                                 array.clear()
                                 array.addAll( it)
+                                if (checkNonNull(finalArray[arratlistPosition].applicationType))
                                 array!!.add(ConsiderModel.DecisionPlan("Reset", "Reset"))
 
                                 recyclerView.adapter = ConsiderDecisionAdapter(
@@ -651,7 +669,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             updateStudentPlan.school_within_university =
                 sheetBinding.schoolWithinUniv.text.toString()
             updateStudentPlan.app_type = "4"
-            updateStudentPlan.request_transcript = "0"
+            updateStudentPlan.request_transcript = finalArray.get(typeTermPosition).requestTranscript
             if (sheetBinding.rateSpinner.selectedItemPosition != 0) {
                 updateStudentPlan.college_interest =
                     sheetBinding.rateSpinner.selectedItemPosition.toString()
@@ -761,6 +779,28 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     override fun onTranscriptRequest(postion: Int, chcked: String) {
     }
 
+    override fun onDeadlineClick(postion: Int, deadline: String) {
+        typeTermPosition = postion
+        var updateStudentPlan = UpdateStudentPlan()
+        updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+        updateStudentPlan.college_nid = finalArray.get(typeTermPosition).university_nid
+        updateStudentPlan.application_term = finalArray.get(typeTermPosition).applicationTerm
+        updateStudentPlan.request_transcript = finalArray.get(typeTermPosition).requestTranscript
+        updateStudentPlan.app_plan = finalArray.get(typeTermPosition).applicationType
+        updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
+        updateStudentPlan.deadline_date = formateDateFromstring("MMM dd yyyy", "MM/dd/yyyy", deadline)
+
+        dialogP = showLoadingDialog(requireContext())
+        dialogP.show()
+        homeModel.updateStudentPlan(updateStudentPlan)
+        homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+
+            finalArray.get(typeTermPosition).dueDate = formateDateFromstring("MMM dd yyyy", "yyyy-MM-dd hh:mm:ss", deadline)
+            mBinding.consideringList.adapter?.notifyDataSetChanged()
+        }
+    }
+
     override fun onMenuClick(postion: Int, it: View?) {
         menuPopUp(postion, it)
     }
@@ -824,6 +864,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             if (dynamicKeyValue.key == "Reset") {
                 selectedKeyType = null
                 updateStudentPlan.app_type = null
+                updateStudentPlan.application_term = null
+                updateStudentPlan.app_plan = null
             } else {
                 selectedKeyType = dynamicKeyValue.key
                 updateStudentPlan.app_type = dynamicKeyValue.key
@@ -833,6 +875,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             if (dynamicKeyValue.key == "Reset") {
                 selectedKeyType = null
                 updateStudentPlan.application_term = null
+                updateStudentPlan.app_plan = null
             } else {
                 selectedKeyType = dynamicKeyValue.key
                 updateStudentPlan.application_term = dynamicKeyValue.key
@@ -849,6 +892,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             if (type == 1) {
                 if (dynamicKeyValue.key == "Reset") {
                     finalArray.get(typeTermPosition).applicationMode = null
+                    finalArray.get(typeTermPosition).applicationTerm = null
+                    finalArray.get(typeTermPosition).applicationType = null
                 } else
                 finalArray.get(typeTermPosition).applicationMode = dynamicKeyValue.key
                 mBinding.consideringList.adapter?.notifyDataSetChanged()
@@ -856,6 +901,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             } else if (type == 0) {
                     if (dynamicKeyValue.key == "Reset") {
                         finalArray.get(typeTermPosition).applicationTerm = null
+                        finalArray.get(typeTermPosition).applicationType = null
                     } else
                         finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue.value
                     mBinding.consideringList.adapter?.notifyDataSetChanged()
@@ -941,4 +987,5 @@ interface OnItemClickOption {
     fun onApplyingClick(postion: Int)
     fun onMenuClick(postion: Int, it: View?)
     fun onTranscriptRequest(postion: Int, checked: String)
+    fun onDeadlineClick(postion: Int, deadline: String)
 }
