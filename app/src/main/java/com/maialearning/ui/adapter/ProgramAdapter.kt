@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -16,6 +17,10 @@ import com.maialearning.databinding.ItemCommentBinding
 import com.maialearning.databinding.ProgramItemBinding
 import com.maialearning.databinding.ReciepentItemBinding
 import com.maialearning.model.AddProgramConsider
+import com.maialearning.util.checkNonNull
+import com.maialearning.util.convertDateToLong
+import com.maialearning.util.getDate
+import com.maialearning.util.showDatePicker
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
@@ -23,11 +28,12 @@ import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventList
 class ProgramAdapter(
     private var programs: ArrayList<AddProgramConsider.Programs?>?,
     var deletedPrograms: ArrayList<String>,
-    val onItemClick: OnItemClick
+    val onItemClick: OnItemClick, val canShowProgramWithDeadline:Boolean
 ) :
     RecyclerView.Adapter<ProgramAdapter.ViewHolder>() {
     var mCount = 0
     var position1 = -1
+    var clickedPos = -1
     var txt = ""
 
     /**
@@ -50,7 +56,7 @@ class ProgramAdapter(
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        // position1=position
+
         viewHolder.binding.root.setOnClickListener { onItemClick.onClick(position) }
 
         viewHolder.binding.program.setText(programs?.get(position)?.program_name)
@@ -61,12 +67,26 @@ class ProgramAdapter(
                 notifyDataSetChanged()
             }
         }
+        if (canShowProgramWithDeadline) {
+            viewHolder.binding.deadline.visibility = View.VISIBLE
+            if (checkNonNull(programs?.get(position)?.program_deadline)){
+                viewHolder.binding.deadline.setText( getDate(programs?.get(position)?.program_deadline?.toLong()!!, "MMM dd, yyyy")  )
+            }
+
+        } else {
+            viewHolder.binding.deadline.visibility = View.GONE
+        }
+        viewHolder.binding.deadline.setOnClickListener {
+            clickedPos = position
+            viewHolder.binding.deadline.showDatePicker(  viewHolder.binding.root.context, ::deadlineClick)
+        }
 
         viewHolder.binding.program.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (event != null && event.keyCode === KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
                 var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
                 programData.program_name = viewHolder.binding.program.text.toString()
                 programData.program_id = programs?.get(position)?.program_id
+                programData.program_deadline = programs?.get(position)?.program_deadline
                 programs?.set(position, programData)
             }
             false
@@ -96,6 +116,7 @@ class ProgramAdapter(
                         var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
                         programData.program_name = viewHolder.binding.program.text.toString()
                         programData.program_id = programs?.get(position)?.program_id
+                        programData.program_deadline = programs?.get(position)?.program_deadline
                         programs?.set(position, programData)
                     }
                 } else {
@@ -125,6 +146,16 @@ class ProgramAdapter(
     fun save(): ArrayList<AddProgramConsider.Programs?>? {
         return programs
     }
-
+    fun deadlineClick(s: String) {
+        programs?.get(clickedPos)?.program_name?.let {
+            var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+            programData.program_deadline = convertDateToLong(s).toString()
+            programData.program_name = it
+            programData.program_id = programs?.get(clickedPos)?.program_id
+            programs?.set(clickedPos, programData)
+        }
+    }
 }
+
+
 

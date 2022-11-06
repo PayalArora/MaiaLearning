@@ -181,6 +181,12 @@ fun getDate(timestamp: Long, format: String): String {
     return date
 }
 
+fun convertDateToLong(date: String, format: String = "MMM dd yyyy"): Long {
+    val df = SimpleDateFormat(format)
+    return df.parse(date).time/1000L
+
+}
+
 fun getDateTime(s: String, format: String): String? {
     try {
         val sdf = SimpleDateFormat(format)
@@ -347,6 +353,7 @@ fun checkNonNull(str:String?): Boolean{
             myCalendar.set(Calendar.DAY_OF_MONTH, day)
                val myFormat = "MMM dd yyyy"
                val dateFormat = SimpleDateFormat(myFormat, Locale.US)
+               println("TIME " + myCalendar.time)
                this.setText(dateFormat.format(myCalendar.time))
             deadlineClick(dateFormat.format(myCalendar.time))
 

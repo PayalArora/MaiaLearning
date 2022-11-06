@@ -233,7 +233,7 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginRight="@dimen/_2dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_edit"
+                    android:src="@drawable/comment"
                     app:tint="@color/black_4" />
 
                 <TextView
@@ -244,7 +244,7 @@
                     android:background="@drawable/black_circle"
                     android:gravity="center"
                     android:text="2"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_7sp" />
 
@@ -690,6 +690,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginStart="@dimen/_5dp"
                         android:orientation="vertical">
 
@@ -699,6 +700,7 @@
                             android:background="@drawable/white_rect_15"
                             android:backgroundTint="@color/green_3"
                             android:gravity="center"
+
                             android:paddingVertical="5dp"
                             android:text="@string/transcript_request"
                             android:textAllCaps="false"
@@ -712,6 +714,7 @@
                             android:background="@drawable/white_rect_15"
                             android:paddingVertical="5dp"
                             android:text="Nov 12,2022"
+                            android:visibility="gone"
                             android:textAllCaps="false"
                             android:textSize="@dimen/_12sp"
                             android:textStyle="bold" />
@@ -724,6 +727,7 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginVertical="@dimen/_10dp"
+                    android:layout_gravity="center"
                     android:layout_marginStart="@dimen/_5dp"
                     android:layout_marginEnd="@dimen/_5dp"
                     android:background="@color/divider_color" />
@@ -731,6 +735,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -744,6 +749,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_marginStart="@dimen/_5dp"
+                        android:layout_gravity="center"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
@@ -766,6 +772,7 @@
                             android:background="@drawable/white_rect_15"
                             android:paddingVertical="5dp"
                             android:text="Nov 12,2022"
+                            android:visibility="gone"
                             android:textAllCaps="false"
                             android:textSize="@dimen/_12sp"
                             android:textStyle="bold" />

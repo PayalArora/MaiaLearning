@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ConsideringItemLayBinding
@@ -57,7 +59,7 @@ class ConsiderAdapter(
                     val isAppDeadlineDisabled =(
                             !isAppMode ||
                                     (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm) ||
-                                    !isAppByPlan
+                                    !isAppPlan
                             )
                     if (country_name == "") {
                         top.visibility = View.GONE
@@ -180,7 +182,7 @@ class ConsiderAdapter(
 
                     if (applicationType != null && !applicationType.equals("null")) {
                         //  typeValue.setText(applicationType)
-                        val typeVal = getAppPlan(applicationType!!, position)
+                        val typeVal = getAppPlan(applicationType!!, position,appDeadline,deadlineValue)
                         if (typeVal != null)
                             planValue.setText(typeVal)
                         else
@@ -212,6 +214,7 @@ class ConsiderAdapter(
                     } else {
                         termValue.setText("Select")
                     }
+
                     Picasso.with(viewHolder.binding.root.context)
                         .load("${UNIV_LOGO_URL}${country?.toLowerCase()}/${unitid}/logo_sm.jpg")
                         .error(R.drawable.static_coll).into(viewHolder.binding.univIcon)
@@ -259,6 +262,8 @@ class ConsiderAdapter(
                 }
             }
         }
+
+
     }
 
 
@@ -287,7 +292,7 @@ class ConsiderAdapter(
         return null
     }
 
-    fun getAppPlan(key:String, position: Int):String?{
+    fun getAppPlan(key:String, position: Int, appDeadline: LinearLayout, deadlineValue: TextView):String?{
         array.get(position).collegeAppLicationType?.collType?.let {
             for (item in it){
                 if (item?.term?.type == "term" && item?.term?.collTerm!= null) {
@@ -295,6 +300,12 @@ class ConsiderAdapter(
                         if ( plan?.collPlan!= null) {
                             for (planitem in plan?.collPlan!!) {
                                 if (planitem.decision_plan.replaceInvertedComas() == key) {
+                                    if (checkNonNull(planitem.deadline_date)){
+                                        appDeadline.isEnabled = false
+                                        deadlineValue.setText(planitem.deadline_date
+                                            ?.let {   formateDateFromstring("MM/dd/yyyy","MMM dd yyyy", it) })
+
+                                    }
                                     return planitem.decision_plan_value
                                 }
                             }

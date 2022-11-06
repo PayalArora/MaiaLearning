@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ApplyingItemLayBinding
@@ -56,7 +58,7 @@ class ApplyingAdapter(
                 val isAppDeadlineDisabled =(
                         !isAppMode ||
                                 (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm) ||
-                                !isAppByPlan
+                                !isAppPlan
                         )
                 if (country_name == "") {
                     top.visibility = View.GONE
@@ -174,7 +176,7 @@ class ApplyingAdapter(
 
                 if (applicationType != null && !applicationType.equals("null")) {
                     //  typeValue.setText(applicationType)
-                    val typeVal = getAppPlan(applicationType!!, position)
+                    val typeVal = getAppPlan(applicationType!!, position,appDeadline, deadlineValue)
                     if (typeVal != null)
                         planValue.setText(typeVal)
                     else
@@ -246,6 +248,18 @@ class ApplyingAdapter(
                         onItemClickOption.onTranscriptRequest(position, "0")
                     }
                 }
+                appliedBtn.setOnClickListener {
+                    if (appliedBtn.isChecked) {
+
+                    } else {
+
+                    }
+                }
+                if (confirmApplied == 1) {
+                    appliedBtn.isChecked = true
+                } else {
+                    appliedBtn.isChecked = false
+                }
                 if (requestTranscript == "1") {
                     transcriptBtn.isChecked = true
                 } else {
@@ -297,7 +311,7 @@ class ApplyingAdapter(
         considerarray = consider
         notifyDataSetChanged()
     }
-    fun getAppPlan(key:String, position: Int):String?{
+    fun getAppPlan(key:String, position: Int, appDeadline:LinearLayout, deadlineValue:TextView):String?{
         considerarray.get(position).collegeAppLicationType?.collType?.let {
             for (item in it){
                 if (item?.term?.type == "term" && item?.term?.collTerm!= null) {
@@ -305,6 +319,12 @@ class ApplyingAdapter(
                         if ( plan?.collPlan!= null) {
                             for (planitem in plan?.collPlan!!) {
                                 if (planitem.decision_plan.replaceInvertedComas() == key) {
+                                    if (checkNonNull(planitem.deadline_date)){
+                                        appDeadline.isEnabled = false
+                                        deadlineValue.setText(planitem.deadline_date
+                                            ?.let {   formateDateFromstring("yyyy-MM-dd hh:mm:ss","MMM dd yyyy", it) })
+
+                                    }
                                     return planitem.decision_plan_value
                                 }
                             }

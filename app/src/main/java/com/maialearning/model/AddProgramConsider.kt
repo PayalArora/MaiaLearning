@@ -12,7 +12,7 @@ class AddProgramConsider {
         var program_id: Int? = null
 
         @SerializedName("program_deadline")
-        lateinit var program_deadline: String
+         var program_deadline: String?=null
         @SerializedName("program_status")
        lateinit var program_status: String
     }

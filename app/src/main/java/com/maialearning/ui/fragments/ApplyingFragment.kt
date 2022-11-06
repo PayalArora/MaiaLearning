@@ -637,6 +637,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     ((Resources.getSystem().displayMetrics.heightPixels))
                 dialog.setContentView(sheetBinding.root)
                 dialog.show()
+                val isAppByProgram = (finalArray[postion].appByProgramSupported == "1" && finalArray[postion].applicationMode != "3")
+                val canShowProgramWithDeadline= isAppByProgram
                 var addedPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
                 for (i in finalArray[postion].program_data?.indices!!) {
                     var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
@@ -647,7 +649,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 }
                 var deletedPrograms: ArrayList<String> = ArrayList()
                 sheetBinding.addMoreLayout.adapter =
-                    ProgramAdapter(addedPrograms, deletedPrograms, this)
+                    ProgramAdapter(addedPrograms, deletedPrograms, this,canShowProgramWithDeadline)
                 sheetBinding.addMore.setOnClickListener {
                     ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).addMore()
                 }
@@ -763,6 +765,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 updateStudentPlan.app_type = null
                 updateStudentPlan.application_term = null
                 updateStudentPlan.app_plan = null
+                updateStudentPlan.deadline_date = null
             } else {
                 selectedKeyType = dynamicKeyValue.key
                 updateStudentPlan.app_type = dynamicKeyValue.key
@@ -773,6 +776,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 selectedKeyType = null
                 updateStudentPlan.application_term = null
                 updateStudentPlan.app_plan = null
+                updateStudentPlan.deadline_date = null
             } else {
                 selectedKeyType = dynamicKeyValue.key
                 updateStudentPlan.application_term = dynamicKeyValue.key
@@ -791,6 +795,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     finalArray.get(typeTermPosition).applicationMode = null
                     finalArray.get(typeTermPosition).applicationTerm = null
                     finalArray.get(typeTermPosition).applicationType = null
+                    finalArray.get(typeTermPosition).dueDate = null
                 } else
                     finalArray.get(typeTermPosition).applicationMode = dynamicKeyValue.key
                 mBinding.applyingList.adapter?.notifyDataSetChanged()
@@ -799,6 +804,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 if (dynamicKeyValue.key == "Reset") {
                     finalArray.get(typeTermPosition).applicationTerm = null
                     finalArray.get(typeTermPosition).applicationType = null
+                    finalArray.get(typeTermPosition).dueDate = null
                 } else
                     finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue.value
                 mBinding.applyingList.adapter?.notifyDataSetChanged()
@@ -815,6 +821,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         if (dynamicKeyValue == "Reset") {
             selectedKeyType = null
             updateStudentPlan.application_term = null
+            updateStudentPlan.app_plan = null
+            updateStudentPlan.deadline_date = null
         } else {
             selectedKeyType = dynamicKeyValue
             updateStudentPlan.application_term = dynamicKeyValue
@@ -830,6 +838,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             dialogP.dismiss()
             if (dynamicKeyValue == "Reset") {
                 finalArray.get(typeTermPosition).applicationTerm = null
+                finalArray.get(typeTermPosition).applicationType = null
+                finalArray.get(typeTermPosition).dueDate = null
             } else
                 finalArray.get(typeTermPosition).applicationTerm = dynamicKeyValue
             mBinding.applyingList.adapter?.notifyDataSetChanged()
@@ -849,7 +859,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         updateStudentPlan.app_plan = dynamicKey
         updateStudentPlan.application_term=finalArray.get(typeTermPosition).applicationTerm
         updateStudentPlan.request_transcript=finalArray.get(typeTermPosition).requestTranscript
-
+        if (dynamicKeyValue == "Reset") {
+            finalArray.get(typeTermPosition).dueDate = null
+        }
         //updateStudentPlan.app_status = "3"
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
@@ -859,8 +871,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             dialogP.dismiss()
             if (!dynamicKeyValue.equals("Reset"))
                 finalArray.get(typeTermPosition).applicationType = dynamicKey
-            else
+            else {
                 finalArray.get(typeTermPosition).applicationType = null
+                finalArray.get(typeTermPosition).dueDate = null
+            }
             mBinding.applyingList.adapter?.notifyDataSetChanged()
         }
     }
