@@ -328,6 +328,10 @@ interface LoginRepository {
     suspend fun getCollegeEssay(
         id: String, page: String, sortBy: String, sortOrder: String
     ): UseCaseResult<CollegeEssayResponse>
+
+    suspend fun deleteCollegeEssay(
+        id: String
+    ): UseCaseResult<Unit>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1690,6 +1694,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.getCollegeEssay(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id, page, sortBy, sortOrder
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun deleteCollegeEssay(id: String): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.deleteCollegeEssay(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

@@ -36,6 +36,8 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val showError = SingleLiveEvent<String>()
     val programDetailObserber = MutableLiveData<CourseModelOptionDetailResponse>()
     val collegeEssayObserver = MutableLiveData<CollegeEssayResponse>()
+    val deleteCollegeEssayObserver = MutableLiveData<Unit>()
+
 
     fun getColFactSheet(token: String, id: String) {
         showLoading.value = true
@@ -296,6 +298,27 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
         }
     }
 
+    fun deleteCollegeEssay(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.deleteCollegeEssay(id)
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> deleteCollegeEssayObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message
+                }
+
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()

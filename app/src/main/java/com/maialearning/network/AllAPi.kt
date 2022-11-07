@@ -661,4 +661,10 @@ interface AllAPi {
         @Query("sort_order") sort_order: String
     ): Deferred<CollegeEssayResponse>
 
+    @DELETE("college_essay/{id}")
+    fun deleteCollegeEssay(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<Unit>
+
 }

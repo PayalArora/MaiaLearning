@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item
+        android:id="@+id/writing"
+        android:iconTint="@color/black_4"
+        android:title="@string/continue_writing" />
+    <item
+        android:id="@+id/send_review"
+        android:iconTint="@color/black_4"
+        android:title="@string/send_review" />
+    <item
+        android:id="@+id/download_comment"
+        android:iconTint="@color/black_4"
+        android:title="@string/download_With_comments" />
+    <item
+        android:id="@+id/download_without_comment"
+        android:iconTint="@color/black_4"
+        android:title="@string/download_without_comment" />
+    <item
+        android:id="@+id/delete"
+        android:iconTint="@color/black_4"
+        android:title="@string/delete" />
+</menu>

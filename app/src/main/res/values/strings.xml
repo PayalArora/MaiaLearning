@@ -536,7 +536,6 @@
     <string name="entry_requirement">Entry Requirements</string>
     <string name="fees_and_funding">Fees and Funding</string>
     <string name="te">TE:</string>
-    <string name="round">Round</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
@@ -571,6 +570,7 @@
         <item>Winter</item>
         <item>Spring</item>
         <item>Summer</item>
+        <item>Reset</item>
     </string-array>
     <string-array name="DECISION_PLAN">
         <item>Early Action</item>

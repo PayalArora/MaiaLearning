@@ -470,8 +470,8 @@ class RecommendationFragment : Fragment(), onClick {
             } else if (json?.optInt("exist") == 1) {
                 saveWork(1, json, "")
             }
-
         }
+
         homeModel.uploadImageObserver.observe(requireActivity()) {
             url?.let { it1 -> homeModel.checkFileVirus(ANTI_VIRUS, it1) }
         }
