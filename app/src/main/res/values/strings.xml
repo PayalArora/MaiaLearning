@@ -536,6 +536,13 @@
     <string name="entry_requirement">Entry Requirements</string>
     <string name="fees_and_funding">Fees and Funding</string>
     <string name="te">TE:</string>
+    <string name="continue_writing">Continue Writing</string>
+    <string name="send_review">Send For Review</string>
+    <string name="download_With_comments">Download with comments</string>
+    <string name="download_without_comment">Download without comments</string>
+    <string name="round">Round</string>
+    <string name="delete_essay">Delete Essay</string>
+    <string name="not_reverted">This action cannot be reverted</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

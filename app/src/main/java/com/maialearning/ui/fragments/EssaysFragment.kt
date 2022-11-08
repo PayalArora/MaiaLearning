@@ -70,11 +70,11 @@ class EssaysFragment : Fragment(), onMenuClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialogP = showLoadingDialog(requireContext())
-//        dialogP.show()
+       dialogP.show()
         setListeners()
-        //setAdapter()
-       // hitAPI(page.toString())
-       // observers()
+      setAdapter()
+        hitAPI(page.toString())
+        observers()
     }
 
     private var requestListNew = ArrayList<DataItem?>()
