@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Enter Submitted Date"
+        android:textSize="@dimen/_16sp"
+        android:layout_margin="@dimen/_10dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter_bold"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Enter the date you submitted your application."
+        android:textSize="@dimen/_12sp"
+        android:layout_marginHorizontal="@dimen/_10dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/inter"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:padding="@dimen/_10dp"
+        android:layout_width="match_parent"
+        android:id="@+id/calender_edt"
+        android:layout_margin="@dimen/_10dp"
+        android:background="@drawable/white_rect_border"
+        android:drawableRight="@drawable/calender"
+        android:drawableTint="@color/grey"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/_15dp"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:id="@+id/btn_cancel"
+            android:layout_marginRight="@dimen/_10dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@color/blue_alpha"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/blue" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:id="@+id/btn_submit"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@color/blue"
+            android:layout_centerHorizontal="true"
+            android:textColor="#ffffffff" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

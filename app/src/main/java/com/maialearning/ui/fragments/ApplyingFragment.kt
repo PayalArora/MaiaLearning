@@ -3,12 +3,12 @@ package com.maialearning.ui.fragments
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,17 +22,14 @@ import com.maialearning.databinding.FragmentApplyingBinding
 import com.maialearning.databinding.LayoutProgramsBinding
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.*
-import com.maialearning.util.COLLEGE_JSON
-import com.maialearning.util.formateDateFromstring
+import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.showLoadingDialog
-import com.maialearning.util.showToast
 import com.maialearning.viewmodel.HomeViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnItemClick, ClickOptionFilters {
     var selectedValue = ""
@@ -587,11 +584,109 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             }
 
             override fun onApplyingClick(postion: Int) {
-                TODO("Not yet implemented")
+                if(finalArray.get(postion).confirmApplied==1){
+showConfirmDialog(postion)
+                }else{
+                    showDialogDate(postion)
+                }
             }
 
+    private fun showConfirmDialog(postion: Int) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Confirm")
+            .setMessage("Confirm Not Applied")
+            .setCancelable(false)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton(
+                "Confirm"
+            ) { dialog, whichButton ->
+                var updateStudentPlan = UpdateStudentPlan()
+                updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+                updateStudentPlan.college_nid = finalArray[postion].university_nid
 
-            override fun onTranscriptRequest(postion: Int, checked: String) {
+                updateStudentPlan.confirm_applied = 0
+
+                dialogP.show()
+                homeModel.updateStudentPlan(updateStudentPlan)
+                homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+                    finalArray.get(postion).confirmApplied=0
+                    mBinding.applyingList.adapter?.notifyDataSetChanged()
+                    dialogP.dismiss()
+                    context?.resources?.getString(R.string.updated)
+                        ?.let { it1 -> context?.showToast(it1) }
+
+                    dialog?.dismiss()
+                }
+                homeModel.showError.observe(requireActivity()) {
+                    updateStudentPlan.confirm_applied = finalArray[postion].confirmApplied
+                    mBinding.applyingList.adapter?.notifyDataSetChanged()
+                    dialogP.dismiss()
+                }
+            }
+            .setNegativeButton("Cancel"){ dialog, whichButton ->
+                mBinding.applyingList.adapter?.notifyDataSetChanged()
+            }.show()
+    }
+
+
+    fun showDialogDate(postion: Int) {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val width:Int =
+            (requireContext().getResources().getDisplayMetrics().widthPixels) -30 //<-- int width=400;
+        dialog.setContentView(R.layout.submitted_date_lay)
+        dialog.window?.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
+        val back = ColorDrawable(Color.WHITE)
+        val inset = InsetDrawable(back, 16, -8, 16, -8)
+        dialog.window!!.setBackgroundDrawable(inset)
+        dialog.setCancelable(false)
+
+       // dialog.setContentView(R.layout.submitted_date_lay)
+        val text = dialog.findViewById<View>(R.id.calender_edt) as TextView
+        text.setOnClickListener {
+            text.showDatePicker(requireContext(),::setDate)
+        }
+        val dialogButton = dialog.findViewById<View>(R.id.btn_submit) as Button
+        dialogButton.setOnClickListener { if (!text.text.toString().isNullOrEmpty()) {
+                var updateStudentPlan = UpdateStudentPlan()
+                updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+                updateStudentPlan.college_nid = finalArray[postion].university_nid
+
+                updateStudentPlan.confirm_applied = 1
+                updateStudentPlan.confirm_applied_time =convertDateToLong(text.text.toString()).toString()
+                dialogP.show()
+                homeModel.updateStudentPlan(updateStudentPlan)
+                homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+                    finalArray.get(postion).confirmApplied=1
+                    mBinding.applyingList.adapter?.notifyDataSetChanged()
+                    dialogP.dismiss()
+                    context?.resources?.getString(R.string.updated)
+                        ?.let { it1 -> context?.showToast(it1) }
+
+                    dialog?.dismiss()
+                }
+                homeModel.showError.observe(requireActivity()) {
+                    updateStudentPlan.confirm_applied = finalArray[postion].confirmApplied
+                    mBinding.applyingList.adapter?.notifyDataSetChanged()
+                    dialogP.dismiss()
+                }
+        } else{
+            mBinding.applyingList.adapter?.notifyDataSetChanged()
+           dialog?.dismiss()
+        }
+        }
+        val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_cancel) as Button
+        dialogButtonCancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
+    }
+
+    private fun setDate(s: String) {
+
+    }
+
+
+    override fun onTranscriptRequest(postion: Int, checked: String) {
                 var updateStudentPlan = UpdateStudentPlan()
                 updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
                 updateStudentPlan.college_nid = finalArray[postion].university_nid
