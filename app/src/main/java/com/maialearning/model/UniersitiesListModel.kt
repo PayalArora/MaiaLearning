@@ -23,6 +23,7 @@ data class UniersitiesListModel(
     var school: String? = null,
     @SerializedName("district_scope")
     var districtScope: String? = null,
+    var selected: Boolean
 //    @SerializedName("universities")
 //    var universities: ArrayList<Universities> = ArrayList()
 ) {

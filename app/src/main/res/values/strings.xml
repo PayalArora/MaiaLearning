@@ -171,6 +171,7 @@
     <string-array name="UnivFilters">
         <item>Country</item>
         <item>Region</item>
+        <item>State</item>
         <item>List</item>
         <item>Type</item>
         <item>Selectivity</item>

@@ -149,11 +149,11 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
         }
     }
 
-    fun getUniversityList(token: String) {
+    fun getUniversityList(status: String,uid:String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getUniversityList(token)
+                catRepository.getUniversityList(status,uid)
             }
             // showLoading.value = false
             when (result) {

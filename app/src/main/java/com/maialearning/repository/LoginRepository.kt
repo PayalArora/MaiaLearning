@@ -81,7 +81,7 @@ interface LoginRepository {
     ): UseCaseResult<JsonObject>
 
     suspend fun getUniversityList(
-        token: String
+        status: String,uid: String
     ): UseCaseResult<JsonArray>
     //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
@@ -788,12 +788,11 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     }
 
     override suspend fun getUniversityList(
-        token: String
+        status: String,uid: String
     ): UseCaseResult<JsonArray> {
         return try {
             val result = catApi.getUniversityListAsync(
-                "https://app-www-maia.maialearning.com/ajs-services/university-list?status=1&uid=9375",
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,status,uid
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

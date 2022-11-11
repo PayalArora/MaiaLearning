@@ -60,6 +60,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val sportList: ArrayList<String> = ArrayList()
     private val selectivity: ArrayList<String> = ArrayList()
     private var savedCountry = ""
+    private var selectedList = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,7 +162,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     fun click() {}
-    public fun bottomSheetWork(get: UniversitiesSearchModel, position:Int,click: (position: Int, flag:Int?) -> Unit) {
+    public fun bottomSheetWork(
+        get: UniversitiesSearchModel,
+        position: Int,
+        click: (position: Int, flag: Int?) -> Unit
+    ) {
         dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -266,9 +271,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
     }
 
-     fun bottomSheetUk(collegeNid: String, topflag: Int?, collegeName: String?, position: Int,data:UkResponseModel.Data.CollegeData?, click: (position: Int, flag:Int?) -> Unit) {
+    fun bottomSheetUk(
+        collegeNid: String,
+        topflag: Int?,
+        collegeName: String?,
+        position: Int,
+        data: UkResponseModel.Data.CollegeData?,
+        click: (position: Int, flag: Int?) -> Unit
+    ) {
         var toppick = topflag
-         dialogFacts = BottomSheetDialog(this)
+        dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
         view.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
 
@@ -373,7 +385,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
     }
 
-    fun bottomSheetEurope(collegeNid: String, topflag: Boolean?, collegeName: String?, position: Int,data:EuropeanUniList.CollegeList?, click: (position: Int, flag:Int?) -> Unit) {
+    fun bottomSheetEurope(
+        collegeNid: String,
+        topflag: Boolean?,
+        collegeName: String?,
+        position: Int,
+        data: EuropeanUniList.CollegeList?,
+        click: (position: Int, flag: Int?) -> Unit
+    ) {
         var toppick = topflag
         dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
@@ -479,7 +498,15 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             like.setImageResource(R.drawable.like)
         }
     }
-    fun bottomSheetGerman(collegeNid: String, topflag: Int?, collegeName: String?, position: Int,data:GermanUniversitiesResponse.Data.CollegeData?, click: (position: Int, flag:Int?) -> Unit) {
+
+    fun bottomSheetGerman(
+        collegeNid: String,
+        topflag: Int?,
+        collegeName: String?,
+        position: Int,
+        data: GermanUniversitiesResponse.Data.CollegeData?,
+        click: (position: Int, flag: Int?) -> Unit
+    ) {
         var toppick = topflag
         dialogFacts = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.layout_uni_factsheets, null)
@@ -794,7 +821,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     resources.getString(R.string.reigon),
                     positiion
                 )
-            } else if (positiion == 2) {
+            } else if (positiion == 3) {
                 if (listUni.size > 0) {
                     SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
                         View.VISIBLE,
@@ -805,33 +832,33 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else {
                     dialogP = showLoadingDialog(this)
                     dialogP.show()
-                    mModel.getUniversityList("Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey)
+                    SharedHelper(this).id?.let { mModel.getUniversityList("1", it) }
 
                 }
-            } else if (positiion == 3) {
-                typeFilter()
             } else if (positiion == 4) {
+                typeFilter()
+            } else if (positiion == 5) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(
                     selectivity,
                     View.GONE,
                     resources.getString(R.string.selectivity),
                     positiion
                 )
-            } else if (positiion == 5) {
+            } else if (positiion == 6) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(
                     region,
                     View.VISIBLE,
                     resources.getString(R.string.programs),
                     positiion
                 )
-            } else if (positiion == 6) {
+            } else if (positiion == 7) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(
                     sportList,
                     View.GONE,
                     resources.getString(R.string.sports),
                     positiion, View.VISIBLE
                 )
-            } else if (positiion == 7) {
+            } else if (positiion == 8) {
                 moreFilter()
             }
         }
@@ -901,6 +928,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
+    fun listFilterDone() {
+
+    }
+
     private fun likeClick() {
         //  binding.tabs.selectTab(binding.tabs.getTabAt(1))
 
@@ -937,7 +968,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             dialogP.dismiss()
             Log.e("Error", "err" + it)
             if (!it.isNullOrEmpty())
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
         mModel.getSaveCountryObserver.observe(this) {
             dialogP.dismiss()
@@ -1116,7 +1147,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         "",
                         objectProgram.getAsJsonPrimitive("status").toString(),
                         "",
-                        objectProgram.getAsJsonPrimitive("district_scope").toString()
+                        objectProgram.getAsJsonPrimitive("district_scope").toString(),
+                        false
                     )
                 )
             }
@@ -1217,6 +1249,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
     }
 }
+
 interface ClickFilters {
     fun onClick(positiion: Int, type: Int, flagImg: ImageView?)
 }

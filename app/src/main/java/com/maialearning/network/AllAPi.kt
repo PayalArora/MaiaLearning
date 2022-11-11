@@ -271,10 +271,11 @@ interface AllAPi {
         @Header("Authorization") Authorization: String,
     ): Deferred<JsonArray>
 
-    @GET
+    @GET("university-list")
     fun getUniversityListAsync(
-        @Url url: String,
-        @Header("Authorization") Authorization: String
+        @Header("Authorization") Authorization: String,
+        @Query("status") status: String,
+        @Query("uid") uid: String
     ): Deferred<JsonArray>
 
 
@@ -651,7 +652,7 @@ interface AllAPi {
     ): Deferred<CourseModelOptionDetailResponse>
 
     //    page=1&sort_by=essay_colleges&sort_order=asc&uid=9375
-   // ?page={page}&sort_by={sort_by}&sort_order={sort_order}&uid={id}
+    // ?page={page}&sort_by={sort_by}&sort_order={sort_order}&uid={id}
     @GET("college_essay")
     fun getCollegeEssay(
         @Header("Authorization") AutToken: String,

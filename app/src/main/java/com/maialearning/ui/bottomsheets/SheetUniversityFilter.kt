@@ -34,14 +34,22 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
             con.refreshTab()
             dialog.dismiss()
         }
-        sheetBinding.backBtn.setOnClickListener {  con.refreshTab()
-            dialog.dismiss() }
+        sheetBinding.backBtn.setOnClickListener {
+            con.refreshTab()
+            dialog.dismiss()
+        }
         sheetBinding.reciepentList.adapter =
             CountryAdapter(list, ::selectCountry, context, flagImg)
 
     }
 
-    fun regionFilter(list: ArrayList<String>,visibility: Int, title: String, positiion: Int, visibility_spinner: Int = 0) {
+    fun regionFilter(
+        list: ArrayList<String>,
+        visibility: Int,
+        title: String,
+        positiion: Int,
+        visibility_spinner: Int = 0
+    ) {
         val dialog = BottomSheetDialog(con)
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
@@ -116,7 +124,10 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.spinnerLay.visibility = visibility_spinner
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
-        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        sheetBinding.clearText.setOnClickListener {
+            dialog.dismiss()
+            con.listFilterDone()
+        }
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.reciepentList.adapter =
             UniversityListAdapter(listUni, con)

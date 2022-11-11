@@ -7,7 +7,10 @@ import com.maialearning.databinding.ItemListFilterBinding
 import com.maialearning.model.UniersitiesListModel
 import com.maialearning.ui.activity.ClickFilters
 
-class UniversityListAdapter (val arr:MutableList<UniersitiesListModel>, val onItemClick: ClickFilters) : RecyclerView.Adapter<UniversityListAdapter.ViewHolder>() {
+class UniversityListAdapter(
+    val arr: MutableList<UniersitiesListModel>,
+    val onItemClick: ClickFilters
+) : RecyclerView.Adapter<UniversityListAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -30,7 +33,10 @@ class UniversityListAdapter (val arr:MutableList<UniersitiesListModel>, val onIt
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             check.setText(arr.get(position).name)
+
+            check.setOnCheckedChangeListener { compoundButton, b -> arr.get(position).selected = b }
         }
+
 
     }
 
