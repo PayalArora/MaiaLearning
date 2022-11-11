@@ -6,6 +6,8 @@ class UpdateStudentPlan {
     lateinit var student_uid: String
     lateinit var college_nid: String
      var app_type: String?= null
+    var confirm_applied: Int?= null
+    var confirm_applied_time: String?= null
     var application_term: String?= null
      var app_plan: String? = null
     lateinit var app_status: String

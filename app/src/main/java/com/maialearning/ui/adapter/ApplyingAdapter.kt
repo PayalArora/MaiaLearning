@@ -1,5 +1,6 @@
 package com.maialearning.ui.adapter
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -46,6 +47,7 @@ class ApplyingAdapter(
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
         viewHolder.binding.apply {
@@ -250,9 +252,11 @@ class ApplyingAdapter(
                 }
                 appliedBtn.setOnClickListener {
                     if (appliedBtn.isChecked) {
-
+                        notifyDataSetChanged()
+                        onItemClickOption.onApplyingClick(position)
                     } else {
-
+                        notifyDataSetChanged()
+                        onItemClickOption.onApplyingClick(position)
                     }
                 }
                 if (confirmApplied == 1) {

@@ -544,6 +544,7 @@
     <string name="round">Round</string>
     <string name="delete_essay">Delete Essay</string>
     <string name="not_reverted">This action cannot be reverted</string>
+    <string name="updated">Updated successfully</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
