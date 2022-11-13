@@ -2,13 +2,13 @@ package com.maialearning.model
 
 class UniversitySearchPayload {
     lateinit var country: String
-    var region: ArrayList<String?>? = null
-    var state: ArrayList<String?>? = null
+    var region: ArrayList<String>? = null
+    var state: ArrayList<String>? = null
     var public_private: ArrayList<String?>? = null
     var type_of_env: ArrayList<String?>? = null
     lateinit var ug_size: String
     lateinit var religious: String
-    var selectivity: ArrayList<String?>? = null
+    var selectivity: ArrayList<String>? = null
     lateinit var cipcode: String
     lateinit var athletic_associations: String
     lateinit var sports: String
@@ -22,7 +22,7 @@ class UniversitySearchPayload {
     lateinit var sat_math_max: String
     lateinit var act_composite_min: String
     lateinit var act_composite_max: String
-    var university_list: ArrayList<String?>? = null
+    var university_list: ArrayList<String>? = null
     lateinit var sort_order: String
     lateinit var sort_parameter: String
     lateinit var search: String

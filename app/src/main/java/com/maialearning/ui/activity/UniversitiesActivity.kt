@@ -55,12 +55,15 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private lateinit var universityName: TextView
     private lateinit var noData: TextView
     var listUni = ArrayList<UniersitiesListModel>()
+    var listStates = ArrayList<KeyVal>()
     private val countries: ArrayList<FilterUSModelClass.CountryList> = ArrayList()
     private val region: ArrayList<String> = ArrayList()
     private val sportList: ArrayList<String> = ArrayList()
-    private val selectivity: ArrayList<String> = ArrayList()
+    private val selectivity: ArrayList<KeyVal> = ArrayList()
+    private val campusAcivities: ArrayList<KeyVal> = ArrayList()
     private var savedCountry = ""
     private var selectedList = ""
+    var selType = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,11 +82,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         binding.toolbarProf.setOnClickListener {
             ProfileFilter(this, layoutInflater).showDialog()
         }
+        resetFilters()
         dialogP = showLoadingDialog(this)
         dialogP.show()
         mModel.getSaveCountry()
         observerInit()
 
+    }
+
+    private fun resetFilters() {
+        selectedListFilter.clear()
+        selectedRegion.clear()
+        selectedStateFilter.clear()
+        selectedSelectivityFilter.clear()
     }
 
     private fun initView() {
@@ -780,6 +791,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
                 mModel.setSaveCountry()
+            } else {
+                initView()
             }
             mainDialog?.dismiss()
         }
@@ -788,6 +801,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
                 mModel.setSaveCountry()
+            } else
+            {
+                initView()
             }
             mainDialog?.dismiss()
         }
@@ -805,6 +821,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     override fun onClick(positiion: Int, type: Int, flagImg: ImageView?) {
+        selType = positiion
+        println("TYPE"+selType)
         if (type == 2) {
             if (positiion == 0) {
                 if (countries.size > 0) {
@@ -815,6 +833,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     mModel.getFilterCollege()
                 }
             } else if (positiion == 1) {
+
                 SheetUniversityFilter(this, layoutInflater).regionFilter(
                     region,
                     View.VISIBLE,
@@ -835,14 +854,23 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     SharedHelper(this).id?.let { mModel.getUniversityList("1", it) }
 
                 }
-            } else if (positiion == 4) {
+            }
+            else if (positiion == 2) {
+                if (listStates.size>0){
+                    SheetUniversityFilter(this, layoutInflater).stateFilter(
+                        View.VISIBLE,
+                        resources.getString(R.string.list),
+                        listStates, View.GONE, positiion
+                    )
+                }
+            }
+            else if (positiion == 4) {
                 typeFilter()
             } else if (positiion == 5) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
-                    selectivity,
-                    View.GONE,
-                    resources.getString(R.string.selectivity),
-                    positiion
+                SheetUniversityFilter(this, layoutInflater).stateFilter(
+                    View.VISIBLE,
+                    resources.getString(R.string.selectivity),selectivity,
+                     View.GONE, positiion
                 )
             } else if (positiion == 6) {
                 SheetUniversityFilter(this, layoutInflater).regionFilter(
@@ -875,11 +903,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
         dialog.show()
         sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
-        val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.capmpus_activity,
-            android.R.layout.simple_spinner_item
-        )
+        val adapter =
+            ArrayAdapter<KeyVal>(this, android.R.layout.simple_spinner_item, campusAcivities)
+       // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        val adapter = ArrayAdapter.createFromResource(
+//            this,
+//            R.array.capmpus_activity,
+//            android.R.layout.simple_spinner_item
+//        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         //sheetBinding.spinner.setPrompt("Campus Activities")
 
@@ -928,8 +959,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
-    fun listFilterDone() {
-
+    fun listFilterDone(list : MutableList<UniersitiesListModel>) {
+        selectedListFilter.clear()
+        for (i in list){
+            if (i.selected)
+                selectedListFilter.add(i.id.toString())
+        }
     }
 
     private fun likeClick() {
@@ -992,10 +1027,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             val jsonRegion = JSONObject(it.toString()).getJSONObject("region")
             val jsonSports = JSONObject(it.toString()).getJSONObject("sport_list")
             val jsonSelectivity = JSONObject(it.toString()).getJSONObject("selectivity")
+
             val keyList = ArrayList<String>()
             val jsonArray = JSONArray()
             val jsonArraySports = JSONArray()
-            val jsonArraySelect = JSONArray()
             val x = json.keys() as Iterator<String>
             val xSports = jsonSports.keys() as Iterator<String>
             val xRegion = jsonRegion.keys() as Iterator<String>
@@ -1012,8 +1047,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             while (xSelect.hasNext()) {
                 val key: String = xSelect.next()
-                jsonArraySelect.put(jsonSelectivity.get(key))
-
+                selectivity.add(KeyVal(key,jsonSelectivity.get(key).toString(), false ))
             }
             while (x.hasNext()) {
                 val key: String = x.next()
@@ -1033,8 +1067,26 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             for (i in 0 until jsonArraySports.length()) {
                 sportList.add(jsonArraySports.get(i).toString())
             }
-            for (i in 0 until jsonArraySelect.length()) {
-                selectivity.add(jsonArraySelect.get(i).toString())
+
+            listStates = arrayListOf()
+            //States
+            val jsonStates:JSONObject?= JSONObject(it.toString()).optJSONObject("states")
+            jsonStates.let {   val keys = jsonStates?.keys() as Iterator<String>
+                while (keys.hasNext()){
+                    val key = keys.next()
+                    if (key!="0")
+                   listStates.add(KeyVal(key, jsonStates.getString(key), false))
+                }
+            }
+
+            //More Campus Activities
+            val jsonCampusAcivities:JSONObject? = JSONObject(it.toString()).optJSONObject("campus_activies")
+            jsonCampusAcivities?.let {   val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()){
+                    val key = keys.next()
+                    if (key!="0")
+                   campusAcivities.add(KeyVal(key, it.getString(key), false))
+                }
             }
         }
         mModel.factSheetOtherObserver.observe(this) {
@@ -1248,9 +1300,42 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
         }
     }
+
+    fun reigonFilterDone(list:ArrayList<Region>) {
+        selectedRegion.clear()
+        for (i in list){
+            if (i.checked)
+                i.reigon?.let { selectedRegion.add(it) }
+        }
+
+    }
+
+    fun stateFilterDone(list: MutableList<KeyVal>) {
+        selectedStateFilter.clear()
+        for (i in list){
+            if (i.checked)
+                selectedStateFilter.add(i.key)
+        }
+    }
+
+    fun selectivityFilterDone(list: ArrayList<KeyVal>) {
+        selectedSelectivityFilter.clear()
+        for (i in list){
+            if (i.checked)
+                selectedSelectivityFilter.add(i.key)
+        }
+    }
+
+    companion object Filters{
+        var selectedRegion:ArrayList<String> = arrayListOf()
+        var selectedListFilter:ArrayList<String> = arrayListOf()
+        var selectedStateFilter:ArrayList<String> = arrayListOf()
+        var selectedSelectivityFilter:ArrayList<String> = arrayListOf()
+    }
 }
 
 interface ClickFilters {
     fun onClick(positiion: Int, type: Int, flagImg: ImageView?)
 }
+
 

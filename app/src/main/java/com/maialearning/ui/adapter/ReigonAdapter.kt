@@ -6,18 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemReigonBinding
+import com.maialearning.model.IndustryModel
+import com.maialearning.model.Region
 import com.maialearning.ui.activity.ClickFilters
 
 
-class ReigonAdapter(val arr:ArrayList<String>, val onItemClick: ClickFilters) : RecyclerView.Adapter<ReigonAdapter.ViewHolder>() {
+class ReigonAdapter( val arr:ArrayList<Region>,  var click:(ArrayList<Region>)->Unit ) : RecyclerView.Adapter<ReigonAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    var checked:Array<Boolean> = arrayOf(false, false, false,false,false,false,false,false)
+
+
     class ViewHolder(val binding: ItemReigonBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
+
         }
     }
 
@@ -33,9 +37,9 @@ class ReigonAdapter(val arr:ArrayList<String>, val onItemClick: ClickFilters) : 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
        // viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position, 1) }
         viewHolder.binding.apply {
-            filters.setText(arr.get(position))
+            filters.setText(arr.get(position).reigon)
 
-            if (checked.get(position)){
+            if (arr.get(position).checked){
                 imgCheck.visibility = View.VISIBLE
                 filters.setTypeface(filters.typeface, Typeface.BOLD)
             } else {
@@ -44,12 +48,15 @@ class ReigonAdapter(val arr:ArrayList<String>, val onItemClick: ClickFilters) : 
 
             }
             root.setOnClickListener {
-                for (i in checked.indices) {
-                    checked[i] = false
+                if (arr.get(position).checked){
+                    arr.get(position).checked = false
+                }  else {
+                    arr.get(position).checked = true
                 }
-                checked[position] =true
                 notifyDataSetChanged()
+               click(arr)
             }
+
         }
 
     }

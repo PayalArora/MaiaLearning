@@ -21,6 +21,7 @@ import com.maialearning.R
 import com.maialearning.databinding.SearchLayoutBinding
 import com.maialearning.model.*
 import com.maialearning.parser.SearchParser
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.EuropeanFactAdapter
 import com.maialearning.ui.adapter.GermanFactAdapter
 import com.maialearning.ui.adapter.UkFactAdapter
@@ -345,6 +346,10 @@ class SearchFragment : Fragment() {
         payload.country = country
         payload.pager = pageNo
         payload.search = search
+        payload.region = UniversitiesActivity.selectedRegion
+        payload.university_list = UniversitiesActivity.selectedListFilter
+        payload.state = UniversitiesActivity.selectedStateFilter
+        payload.selectivity = UniversitiesActivity.selectedSelectivityFilter
         payload.sort_parameter = "college_name"
         payload.sort_order = "asc"
         universityList?.clear()

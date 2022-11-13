@@ -4,13 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemListFilterBinding
+import com.maialearning.model.KeyVal
 import com.maialearning.model.UniersitiesListModel
 import com.maialearning.ui.activity.ClickFilters
 
-class UniversityListAdapter(
-    val arr: MutableList<UniersitiesListModel>,
+class UniversitySelectivityAdapter(
+    val arr: MutableList<KeyVal>,
     val onItemClick: ClickFilters
-) : RecyclerView.Adapter<UniversityListAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<UniversitySelectivityAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -32,8 +33,8 @@ class UniversityListAdapter(
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
-            check.setText(arr.get(position).name)
-            if (arr.get(position).selected){
+            check.setText(arr.get(position).value)
+            if (arr.get(position).checked == true){
                 check.isChecked = true
             } else
             {
@@ -41,7 +42,10 @@ class UniversityListAdapter(
             }
 
 
-            check.setOnCheckedChangeListener { compoundButton, b -> arr.get(position).selected = b }
+//            check.setOnCheckedChangeListener { compoundButton, b -> arr.get(position).checked = b }
+            check.setOnClickListener{
+                arr.get(position).checked = check.isChecked
+            }
         }
 
 
