@@ -50,11 +50,11 @@ class SearchFragment : Fragment() {
 
     private var euroListUpdate: ArrayList<EuropeanUniList.CollegeList?>? = null
     private var euroList: ArrayList<EuropeanUniList.CollegeList?>? = null
-    private lateinit var euroListNew : ArrayList<EuropeanUniList.CollegeList?>
+    private lateinit var euroListNew: ArrayList<EuropeanUniList.CollegeList?>
 
     private var ukListUpdate: ArrayList<UkResponseModel.Data.CollegeData?>? = null
     private var ukList: ArrayList<UkResponseModel.Data.CollegeData?>? = null
-    private lateinit var ukListNew : ArrayList<UkResponseModel.Data.CollegeData?>
+    private lateinit var ukListNew: ArrayList<UkResponseModel.Data.CollegeData?>
     private var euCountries = arrayListOf<String>()
     private var isLoading = false
     private var isEuropean = false
@@ -82,8 +82,8 @@ class SearchFragment : Fragment() {
             mBinding.rvUniv
         )
         if (euCountries.isEmpty()) {
-        homeModel.getCountriesContinentBased("EU")}
-        else {
+            homeModel.getCountriesContinentBased("EU")
+        } else {
             universitySearch()
         }
         return mBinding.root
@@ -133,11 +133,11 @@ class SearchFragment : Fragment() {
                 val last = univ.pager?.last
                 progress.dismiss()
 
-               for (item in univ.data?.collegeData!!){
-                   item.courseList.sortBy { it.courseName }
-                   germanList?.add(item)
-                   germanListUpdate?.add(item)
-               }
+                for (item in univ.data?.collegeData!!) {
+                    item.courseList.sortBy { it.courseName }
+                    germanList?.add(item)
+                    germanListUpdate?.add(item)
+                }
 
 
                 if (isLoading) {
@@ -158,7 +158,7 @@ class SearchFragment : Fragment() {
                 val totalPage = univ.pager?.total
                 val last = univ.pager?.last
                 progress.dismiss()
-                for (item in univ.data?.collegeData!!){
+                for (item in univ.data?.collegeData!!) {
                     item.courseList.sortBy { it.courseName }
                     ukList?.add(item)
                     ukListUpdate?.add(item)
@@ -197,7 +197,7 @@ class SearchFragment : Fragment() {
                         euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
                     }
                 }
-               euroAdapter.setLoaded()
+                euroAdapter.setLoaded()
             } else {
                 val univ = SearchParser(it).parseJson()
                 page = (univ.pager!! + 1)
@@ -233,7 +233,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-     fun universitySearch() {
+    fun universitySearch() {
         if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
             germanListUpdate = ArrayList()
             germanList = ArrayList()
@@ -258,7 +258,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else if ((SharedHelper(requireContext()).country ?: "US").equals("GB")) {
-            ukListUpdate= ArrayList()
+            ukListUpdate = ArrayList()
             ukList = ArrayList()
             ukListNew = ArrayList<UkResponseModel.Data.CollegeData?>()
             ukAdapter = UkFactAdapter(
@@ -332,7 +332,7 @@ class SearchFragment : Fragment() {
 
     private fun clickEuropean(id: String?, boolean: Boolean) {
         if (boolean)
-        hitLikeWork(id)
+            hitLikeWork(id)
         else
             hitUnlikeWork(id)
     }
@@ -348,6 +348,8 @@ class SearchFragment : Fragment() {
         payload.search = search
         payload.region = UniversitiesActivity.selectedRegion
         payload.university_list = UniversitiesActivity.selectedListFilter
+        payload.campus_activities = UniversitiesActivity.selectedCampusActivity
+        payload.special = UniversitiesActivity.selectedDiversity
         payload.state = UniversitiesActivity.selectedStateFilter
         payload.selectivity = UniversitiesActivity.selectedSelectivityFilter
         payload.sort_parameter = "college_name"
@@ -408,7 +410,7 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun hitLikeWork(nid:String?) {
+    private fun hitLikeWork(nid: String?) {
         progress.show()
 
         SharedHelper(requireContext()).id?.let {

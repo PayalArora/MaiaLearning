@@ -190,12 +190,17 @@
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/diversity_list"
+                android:layout_height="wrap_content"/>
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15dp"
                 android:layout_marginVertical="@dimen/_5dp"
                 android:layout_marginTop="@dimen/_5dp"
+                android:visibility="gone"
                 android:buttonTint="@color/checkbutton"
                 android:fontFamily="@font/inter_regular"
                 android:text="@string/history_black" />
@@ -203,10 +208,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1dp"
+                android:visibility="gone"
                 android:layout_below="@+id/filters"
                 android:background="@color/divider_color" />
 
             <CheckBox
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15dp"
