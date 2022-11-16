@@ -60,6 +60,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val selectivity: ArrayList<KeyVal> = ArrayList()
     private val campusAcivities: ArrayList<KeyVal> = ArrayList()
     private val diversities: ArrayList<KeyVal> = ArrayList()
+    private val twoFourYear: ArrayList<KeyVal> = ArrayList()
+    private val publicPrivate: ArrayList<KeyVal> = ArrayList()
+    private val typeEnvironMent: ArrayList<KeyVal> = ArrayList()
+    private val religious: ArrayList<KeyVal> = ArrayList()
+    private val sizeList: ArrayList<KeyVal> = ArrayList()
+
+
     private var savedCountry = ""
     private var selectedList = ""
     var selType = 0
@@ -100,6 +107,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sat_erbw = ""
         sat_math = ""
         act = ""
+        selectedTwoFour.clear()
+        selectedPublicPrivate.clear()
+        selectedTypeEnv.clear()
+        selectedSize.clear()
+        selectedReligious = ""
     }
 
     private fun initView() {
@@ -995,6 +1007,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         //   selectedDiversity = diversities.get(position).key
     }
 
+    override fun onTypeClick(position: Int, type: String) {
+
+    }
+
 
     private fun moreFilter() {
         val dialog = BottomSheetDialog(this)
@@ -1117,13 +1133,55 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog.setContentView(sheetBinding.root)
         sheetBinding.filters.setText(getString(R.string.type))
         dialog.show()
-        sheetBinding.clearText.setOnClickListener { dialog.dismiss() }
+        sheetBinding.clearText.setOnClickListener {
+            selectedTwoFour.clear()
+            selectedPublicPrivate.clear()
+            selectedTypeEnv.clear()
+            selectedSize.clear()
+            selectedReligious=""
+
+            for (i in twoFourYear.indices) {
+                if (twoFourYear.get(i).checked) {
+                    selectedTwoFour.add(twoFourYear.get(i).key)
+                }
+            }
+            for (i in publicPrivate.indices) {
+                if (publicPrivate.get(i).checked) {
+                    selectedPublicPrivate.add(publicPrivate.get(i).key)
+                }
+            }
+            for (i in typeEnvironMent.indices) {
+                if (typeEnvironMent.get(i).checked) {
+                    selectedTypeEnv.add(typeEnvironMent.get(i).key)
+                }
+            }
+            for (i in sizeList.indices) {
+                if (sizeList.get(i).checked) {
+                    selectedSize.add(sizeList.get(i).key)
+                }
+            }
+
+            dialog.dismiss()
+        }
         sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
-        val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.religious_affilation,
-            android.R.layout.simple_spinner_item
-        )
+
+        sheetBinding.twoFourList.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        sheetBinding.publicList.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        sheetBinding.sizeList.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        sheetBinding.typeEnvList.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        sheetBinding.twoFourList.adapter = TypeFilterAdapter(twoFourYear, "2-4", this)
+        sheetBinding.publicList.adapter = TypeFilterAdapter(publicPrivate, "Public", this)
+        sheetBinding.typeEnvList.adapter = TypeFilterAdapter(typeEnvironMent, "Type", this)
+        sheetBinding.sizeList.adapter = TypeFilterAdapter(sizeList, "Size", this)
+
+
+        val adapter =
+            MoreFilterSpinnerAdapter(this, religious, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sheetBinding.spinner.setAdapter(
             NothingSelectedSpinnerAdapter(
@@ -1133,7 +1191,24 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             )
         )
         sheetBinding.religous.setOnClickListener { sheetBinding.spinner.performClick() }
+        sheetBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                // println("position ${sheetBinding.spinner.selectedItemPosition -1}")
+                if (sheetBinding.spinner.selectedItemPosition > 1)
+                    selectedReligious =
+                        religious.get(sheetBinding.spinner.selectedItemPosition - 1).key
+                else
+                    selectedReligious = ""
 
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
     }
 
@@ -1280,6 +1355,68 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
             }
 
+            //Type of school Activities
+            twoFourYear.clear()
+            val jsontwoFourAcivities: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("2_4_year")
+            jsontwoFourAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    twoFourYear.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+
+            //Type of school Activities
+            publicPrivate.clear()
+            val jsonPublicAcivities: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("public_private")
+            jsonPublicAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    publicPrivate.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+
+            //Type of school Activities
+            typeEnvironMent.clear()
+            val jsontypeEnvAcivities: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("type_of_env")
+            jsontypeEnvAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    typeEnvironMent.add(KeyVal(key, it.getJSONObject(key).optString("name"), false))
+                }
+            }
+
+            sizeList.clear()
+            val jsonSizeAcivities: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("size")
+            jsonSizeAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    sizeList.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+
+            religious.clear()
+            val jsonReligiousAcivities: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("religious")
+            jsonReligiousAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    religious.add(KeyVal(key, it.getString(key), false))
+                }
+            }
 
             val jsonSportsAcivities: JSONObject? =
                 JSONObject(it.toString()).optJSONObject("sport_list")
@@ -1542,12 +1679,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var sat_erbw: String = ""
         var sat_math: String = ""
         var act: String = ""
+        var selectedTwoFour: ArrayList<String> = arrayListOf()
+        var selectedPublicPrivate: ArrayList<String> = arrayListOf()
+        var selectedTypeEnv: ArrayList<String> = arrayListOf()
+        var selectedSize: ArrayList<String> = arrayListOf()
+        var selectedReligious: String = ""
+
     }
 }
 
 interface ClickFilters {
     fun onClick(positiion: Int, type: Int, flagImg: ImageView?)
     fun onDiversityClick(position: Int)
+    fun onTypeClick(position: Int, type: String)
 }
 
 

@@ -4,10 +4,11 @@ class UniversitySearchPayload {
     lateinit var country: String
     var region: ArrayList<String>? = null
     var state: ArrayList<String>? = null
-    var public_private: ArrayList<String?>? = null
-    var type_of_env: ArrayList<String?>? = null
-    lateinit var ug_size: String
+    var public_private: ArrayList<String>? = null
+    var type_of_env: ArrayList<String>? = null
+    var ug_size:  ArrayList<String>? = null
     lateinit var religious: String
+    var twoFourYear: ArrayList<String>? = null
     var selectivity: ArrayList<String>? = null
     lateinit var cipcode: String
     lateinit var athletic_associations: String

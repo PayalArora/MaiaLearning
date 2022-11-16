@@ -551,6 +551,8 @@
     <string name="participants">Participants</string>
     <string name="male">Men</string>
     <string name="women">Women</string>
+    <string name="type_of_environment">Type of Environment</string>
+    <string name="size">Size(Undergraduate Students)</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
