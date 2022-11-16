@@ -221,9 +221,12 @@
 
             </RadioGroup>
         </RelativeLayout>
+
         <RelativeLayout
+            android:id="@+id/invisibleLay"
             android:layout_width="match_parent"
-            android:layout_below="@+id/participant_lay"
-            android:layout_height="@dimen/_200dp"></RelativeLayout>
+            android:visibility="gone"
+            android:layout_height="@dimen/_200dp"
+            android:layout_below="@+id/participant_lay"></RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

@@ -58,6 +58,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         dialog.show()
 
         sheetBinding.spinnerLay.visibility = visibility_spinner
+        sheetBinding.invisibleLay.visibility = visibility_spinner
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener {
@@ -137,6 +138,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         dialog.show()
 
         sheetBinding.spinnerLay.visibility = visibility_spinner
+        sheetBinding.invisibleLay.visibility = visibility_spinner
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener {
@@ -169,6 +171,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         dialog.show()
 
         sheetBinding.spinnerLay.visibility = visibility_spinner
+        sheetBinding.invisibleLay.visibility = visibility_spinner
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener {
@@ -196,7 +199,6 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
             }}
         }
 
-        sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.reciepentList.adapter =
             UniversityStateAdapter(listUni, con)
         sheetBinding.close.setOnClickListener {

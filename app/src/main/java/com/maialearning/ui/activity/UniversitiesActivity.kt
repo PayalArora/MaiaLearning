@@ -902,6 +902,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog.show()
 
         sheetBinding.spinnerLay.visibility = View.VISIBLE
+        sheetBinding.invisibleLay.visibility = View.VISIBLE
 
         sheetBinding.backBtn.setOnClickListener {
             dialog.dismiss()
