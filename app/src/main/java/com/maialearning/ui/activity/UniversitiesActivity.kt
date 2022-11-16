@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
@@ -23,7 +24,6 @@ import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.databinding.*
 import com.maialearning.model.*
-import com.maialearning.model.LoginNewModel.User
 import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
@@ -56,7 +56,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var listStates = ArrayList<KeyVal>()
     private val countries: ArrayList<FilterUSModelClass.CountryList> = ArrayList()
     private val region: ArrayList<String> = ArrayList()
-    private val sportList: ArrayList<String> = ArrayList()
+    private val sportList: ArrayList<KeyVal> = ArrayList()
     private val selectivity: ArrayList<KeyVal> = ArrayList()
     private val campusAcivities: ArrayList<KeyVal> = ArrayList()
     private val diversities: ArrayList<KeyVal> = ArrayList()
@@ -95,7 +95,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selectedStateFilter.clear()
         selectedSelectivityFilter.clear()
         selectedCampusActivity = ""
+        selectedSports = ""
         selectedDiversity = ""
+        sat_erbw = ""
+        sat_math = ""
+        act = ""
     }
 
     private fun initView() {
@@ -878,12 +882,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     positiion
                 )
             } else if (positiion == 7) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
-                    sportList,
-                    View.GONE,
-                    resources.getString(R.string.sports),
-                    positiion, View.VISIBLE
-                )
+                sportsFilter()
             } else if (positiion == 8) {
                 moreFilter()
             }
@@ -891,8 +890,108 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
+    fun sportsFilter(
+
+    ) {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.search.visibility = View.GONE
+        sheetBinding.filters.setText(title)
+        dialog.show()
+
+        sheetBinding.spinnerLay.visibility = View.VISIBLE
+
+        sheetBinding.backBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        sheetBinding.clearText.setOnClickListener {
+            if (sheetBinding.spinner.selectedItemPosition > 1)
+                selectedSports = sportList.get(sheetBinding.spinner.selectedItemPosition - 1).key
+            else
+                selectedSports = ""
+            if (sheetBinding.rbFemale.isChecked) {
+                selectedParticipants = getString(R.string.women)
+            } else if (sheetBinding.rbMale.isChecked) {
+                selectedParticipants = getString(R.string.male)
+            } else {
+                selectedParticipants = ""
+            }
+            dialog.dismiss()
+        }
+
+
+        sheetBinding.reciepentList.adapter =
+            SportsFilterAdapter(
+                sheetBinding.root.context.resources.getStringArray(R.array.sports)
+                    .toList() as ArrayList<String>
+            )
+        sheetBinding.close.setOnClickListener {
+            sheetBinding.searchText.setText("")
+        }
+        val adapter =
+            MoreFilterSpinnerAdapter(this, sportList, android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        sheetBinding.spinner.setAdapter(
+            NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.nothing_adapter_sports,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                this
+            )
+        )
+
+        for (i in sportList.indices) {
+            if (sportList.get(i).key == selectedSports) {
+                println("position ${i}")
+                sheetBinding.spinner.setSelection(i + 1)
+            }
+        }
+        if (selectedSports.isNullOrEmpty()) {
+            sheetBinding.rbMale.isChecked = false
+            sheetBinding.rbFemale.isChecked = false
+        } else if (selectedSports == getString(R.string.women)) {
+            sheetBinding.rbMale.isChecked = false
+            sheetBinding.rbFemale.isChecked = true
+        } else {
+            sheetBinding.rbMale.isChecked = true
+            sheetBinding.rbFemale.isChecked = false
+        }
+
+
+        if (selectedSports.isNullOrEmpty()) {
+            sheetBinding.spinner.setSelection(0)
+        }
+
+        sheetBinding.spinnerLay.setOnClickListener { sheetBinding.spinner.performClick() }
+
+        sheetBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                // println("position ${sheetBinding.spinner.selectedItemPosition -1}")
+                if (position > 1) {
+                    sheetBinding.participantLay.visibility = View.VISIBLE
+                }
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+    }
+
+    fun selectedReigon(list: ArrayList<Region>) {
+
+    }
+
     override fun onDiversityClick(position: Int) {
-        selectedDiversity = diversities.get(position).key
+        //   selectedDiversity = diversities.get(position).key
     }
 
 
@@ -902,27 +1001,44 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         sheetBinding.filters.setText(getString(R.string.more))
-        sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
+        sheetBinding.backTxt.setOnClickListener {
+//             selectedDiversity = ""
+//            selectedCampusActivity = ""
+//            sat_erbw =""
+//            sat_math = ""
+//            act = ""
+
+            dialog.dismiss()
+        }
         dialog.show()
         sheetBinding.clearText.setOnClickListener {
-            dialog.dismiss()
-            selectedCampusActivity = ""
             selectedDiversity = ""
+            selectedCampusActivity = ""
+            sat_erbw = ""
+            sat_math = ""
+            act = ""
+            sheetBinding.minMath.setText("200")
+            sheetBinding.minErbw.setText("200")
+            sheetBinding.minAct.setText("36")
+            //dialog.dismiss()
+            sheetBinding.spinner.setSelection(0)
+            for (i in diversities) {
+                i.checked = false
+            }
+
         }
+        for (i in diversities) {
+            i.checked = i.key == selectedDiversity
+        }
+
+
         sheetBinding.diversityList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         sheetBinding.diversityList.adapter = DiversityAdapter(diversities, this)
 
         val adapter =
             MoreFilterSpinnerAdapter(this, campusAcivities, android.R.layout.simple_spinner_item)
-        // adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        val adapter = ArrayAdapter.createFromResource(
-//            this,
-//            R.array.capmpus_activity,
-//            android.R.layout.simple_spinner_item
-//        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        //sheetBinding.spinner.setPrompt("Campus Activities")
 
         sheetBinding.spinner.setAdapter(
             NothingSelectedSpinnerAdapter(
@@ -931,6 +1047,15 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 this
             )
         )
+        for (i in campusAcivities.indices) {
+            if (campusAcivities.get(i).key == selectedCampusActivity) {
+                println("position ${i}")
+                sheetBinding.spinner.setSelection(i + 1)
+            }
+        }
+        if (selectedCampusActivity.isNullOrEmpty()) {
+            sheetBinding.spinner.setSelection(0)
+        }
         sheetBinding.campusActivity.setOnClickListener { sheetBinding.spinner.performClick() }
 
         sheetBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -940,13 +1065,48 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 position: Int,
                 id: Long
             ) {
-                if (position != 0)
-                    selectedCampusActivity = campusAcivities.get(position - 1).key
+                // println("position ${sheetBinding.spinner.selectedItemPosition -1}")
+                if (sheetBinding.spinner.selectedItemPosition > 1)
+                    selectedCampusActivity =
+                        campusAcivities.get(sheetBinding.spinner.selectedItemPosition - 1).key
+                else
+                    selectedCampusActivity = ""
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        sheetBinding.seekAct.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                var progress = progress
+                sheetBinding.minAct.setText(progress.toString())
+                act = progress.toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+        sheetBinding.seekErbw.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                var progress = progress
+                sheetBinding.minErbw.setText(progress.toString())
+                sat_erbw = progress.toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+        sheetBinding.seekMath.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                var progress = progress
+                sheetBinding.minMath.setText(progress.toString())
+                sat_math = progress.toString()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
     }
 
     private fun typeFilter() {
@@ -1048,14 +1208,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             selectivity.clear()
             val json = JSONObject(it.toString()).getJSONObject("country_list")
             val jsonRegion = JSONObject(it.toString()).getJSONObject("region")
-            val jsonSports = JSONObject(it.toString()).getJSONObject("sport_list")
             val jsonSelectivity = JSONObject(it.toString()).getJSONObject("selectivity")
 
             val keyList = ArrayList<String>()
             val jsonArray = JSONArray()
-            val jsonArraySports = JSONArray()
             val x = json.keys() as Iterator<String>
-            val xSports = jsonSports.keys() as Iterator<String>
             val xRegion = jsonRegion.keys() as Iterator<String>
             val xSelect = jsonSelectivity.keys() as Iterator<String>
             val jsonArrayRegion = JSONArray()
@@ -1063,11 +1220,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 val key: String = xRegion.next()
                 jsonArrayRegion.put(jsonRegion.get(key))
             }
-            while (xSports.hasNext()) {
-                val key: String = xSports.next()
-                jsonArraySports.put(jsonSports.get(key))
 
-            }
             while (xSelect.hasNext()) {
                 val key: String = xSelect.next()
                 selectivity.add(KeyVal(key, jsonSelectivity.get(key).toString(), false))
@@ -1086,9 +1239,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             for (i in 0 until jsonArrayRegion.length()) {
                 region.add(jsonArrayRegion.get(i).toString())
-            }
-            for (i in 0 until jsonArraySports.length()) {
-                sportList.add(jsonArraySports.get(i).toString())
             }
 
             listStates = arrayListOf()
@@ -1128,6 +1278,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     diversities.add(KeyVal(key, it.getString(key), false))
                 }
             }
+
+
+            val jsonSportsAcivities: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("sport_list")
+            jsonSportsAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    sportList.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+
         }
         mModel.factSheetOtherObserver.observe(this) {
             dialogP.dismiss()
@@ -1373,6 +1536,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedSelectivityFilter: ArrayList<String> = arrayListOf()
         var selectedCampusActivity: String = ""
         var selectedDiversity: String = ""
+        var selectedSports: String = ""
+        var selectedParticipants: String = ""
+        var sat_erbw: String = ""
+        var sat_math: String = ""
+        var act: String = ""
     }
 }
 

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemListFilterBinding
 import com.maialearning.model.KeyVal
 import com.maialearning.ui.activity.ClickFilters
+import com.maialearning.ui.activity.UniversitiesActivity
 
 class DiversityAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters) :
     RecyclerView.Adapter<DiversityAdapter.ViewHolder>() {
@@ -42,10 +43,11 @@ class DiversityAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters
                 if (arr.get(position).checked) {
                     arr.get(position).checked = false
                     check.isChecked=false
+                    UniversitiesActivity.selectedDiversity = ""
                 } else {
                     arr.get(position).checked = true
                     check.isChecked=false
-                    onItemClick.onDiversityClick(position)
+                    UniversitiesActivity.selectedDiversity =  arr.get(position).key
                 }
                 notifyDataSetChanged();
             })

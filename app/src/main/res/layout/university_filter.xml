@@ -132,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_25dp"
-            android:layout_marginBottom="@dimen/_200dp"
+
             android:background="@drawable/white_rounded_withboundary"
             android:visibility="gone">
 
@@ -167,5 +167,63 @@
 
             </LinearLayout>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/participant_lay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/spinner_lay"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_10dp"
+           >
+
+            <TextView
+                android:id="@+id/participant_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_10dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:text="@string/participants"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/radio_participants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@+id/participant_txt"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_50dp"
+                    android:layout_marginLeft="@dimen/_10dp"
+                    android:button="@drawable/radiobutton"
+                    android:paddingStart="@dimen/_10dp"
+                    android:text="@string/male"
+                    android:textSize="@dimen/_16sp" />
+
+
+                <RadioButton
+                    android:id="@+id/rb_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_50dp"
+                    android:layout_marginLeft="@dimen/_10dp"
+                    android:button="@drawable/radiobutton"
+                    android:paddingStart="@dimen/_10dp"
+                    android:text="@string/women"
+                    android:textSize="@dimen/_16sp" />
+
+            </RadioGroup>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_below="@+id/participant_lay"
+            android:layout_height="@dimen/_200dp"></RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

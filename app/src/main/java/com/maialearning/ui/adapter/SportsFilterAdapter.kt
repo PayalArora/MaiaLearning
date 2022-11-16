@@ -37,8 +37,8 @@ class SportsFilterAdapter(val arr: ArrayList<String>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             rbInenr.setText(arr.get(position))
-//            if(position>=2)
-//                arrow.visibility = visibility[position]
+            if(position>=2)
+                arrow.visibility = visibility[position]
 
            arrow.setOnClickListener {
               if(position>=2) {

@@ -20,6 +20,7 @@ class MoreFilterSpinnerAdapter(context:Context, val list:ArrayList<KeyVal>, reso
         val label = super.getDropDownView(position, convertView, parent) as TextView
         label.setTextColor(Color.BLACK)
         label.setText(list.get(position).value)
+
         return label
     }
     override fun getCount(): Int {

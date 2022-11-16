@@ -84,10 +84,10 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
 //                sheetBinding.searchText.setText("")
 //            }
 
-        } else if (positiion == 6) {
+        } else if (positiion == 7) {
             sheetBinding.spinnerLay.visibility = View.VISIBLE
             sheetBinding.reciepentList.adapter =
-                SportsFilterAdapter(list)
+                SportsFilterAdapter(sheetBinding.root.context.resources.getStringArray(R.array.sports).toList() as ArrayList<String>)
             sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
             }

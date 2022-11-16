@@ -10,10 +10,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:padding="@dimen/_15dp"
-        android:drawablePadding="@dimen/_10dp"
-        android:text="@string/back"
         android:drawableStart="@drawable/back_arrow"
+        android:drawablePadding="@dimen/_10dp"
+        android:padding="@dimen/_15dp"
+        android:text="@string/back"
         android:textSize="@dimen/_16sp" />
 
     <TextView
@@ -61,8 +61,11 @@
                 android:textStyle="bold" />
 
             <SeekBar
+                android:id="@+id/seek_erbw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:min="200"
+                android:max="800"
                 android:layout_marginHorizontal="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_5dp" />
 
@@ -72,6 +75,7 @@
                 android:layout_marginHorizontal="@dimen/_15dp">
 
                 <TextView
+                    android:id="@+id/min_erbw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -95,14 +99,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_20dp"
-                android:text="@string/sat_ebrw"
+                android:text="@string/sat_math"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
 
             <SeekBar
+                android:id="@+id/seek_math"
                 android:layout_width="match_parent"
+                android:min="200"
+                android:max="800"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_5dp" />
@@ -113,6 +120,7 @@
                 android:layout_marginHorizontal="@dimen/_15dp">
 
                 <TextView
+                    android:id="@+id/min_math"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -135,14 +143,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_20dp"
-                android:text="@string/sat_ebrw"
+                android:text="@string/act"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
 
             <SeekBar
+                android:id="@+id/seek_act"
                 android:layout_width="match_parent"
+                android:min="1"
+                android:max="36"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_5dp" />
@@ -153,11 +164,12 @@
                 android:layout_marginHorizontal="@dimen/_15dp">
 
                 <TextView
+                    android:id="@+id/min_act"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:padding="@dimen/_5dp"
-                    android:text="@string/twohundred"
+                    android:text="1"
                     android:textColor="@color/black" />
 
                 <TextView
@@ -166,7 +178,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:padding="@dimen/_5dp"
-                    android:text="@string/eight_hundred" />
+                    android:text="36" />
 
             </RelativeLayout>
 

@@ -351,7 +351,9 @@ class SearchFragment : Fragment() {
         payload.campus_activities = UniversitiesActivity.selectedCampusActivity
         payload.special = UniversitiesActivity.selectedDiversity
         payload.state = UniversitiesActivity.selectedStateFilter
+        payload.sports = UniversitiesActivity.selectedSports
         payload.selectivity = UniversitiesActivity.selectedSelectivityFilter
+        payload.sports_participants = UniversitiesActivity.selectedParticipants.toLowerCase()
         payload.sort_parameter = "college_name"
         payload.sort_order = "asc"
         universityList?.clear()
