@@ -337,6 +337,12 @@ class SearchFragment : Fragment() {
             hitUnlikeWork(id)
     }
 
+
+    //    "2_4_year": ["At least 2 but less than 4 years"],
+//    "public_private": ["Public"],
+//    "type_of_env": ["City:"],
+//    "ug_size": ["Medium"],
+//    "religious": "African Methodist Episcopal",
     private fun hitAPI(pageNo: Int, search: String) {
         if (!isLoading)
             progress.show()
@@ -356,6 +362,11 @@ class SearchFragment : Fragment() {
         payload.sports_participants = UniversitiesActivity.selectedParticipants.toLowerCase()
         payload.sort_parameter = "college_name"
         payload.sort_order = "asc"
+        payload.type_of_env=UniversitiesActivity.selectedTypeEnv
+        payload.twoFourYear=UniversitiesActivity.selectedTwoFour
+        payload.ug_size=UniversitiesActivity.selectedSize
+        payload.public_private=UniversitiesActivity.selectedPublicPrivate
+
         universityList?.clear()
         germanList?.clear()
         euroList?.clear()

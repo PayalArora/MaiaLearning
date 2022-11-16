@@ -78,6 +78,10 @@ class SportsFilterAdapter(val arr: ArrayList<String>) :
     override fun onDiversityClick(position: Int) {
     }
 
+    override fun onTypeClick(position: Int, type: String) {
+
+    }
+
 }
 
 

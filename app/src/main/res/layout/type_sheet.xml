@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -26,9 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_bold"
             android:padding="@dimen/_15dp"
             android:text="@string/type"
-            android:fontFamily="@font/inter_bold"
             android:textColor="@color/black_1"
             android:textSize="@dimen/_16sp"
             android:textStyle="bold" />
@@ -40,125 +41,150 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:padding="@dimen/_15dp"
-            android:text="@string/clear"
+            android:text="@string/done"
             android:textSize="@dimen/_16sp" />
     </RelativeLayout>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:layout_below="@+id/filters"
-        android:background="@color/divider_color" />
-    <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:layout_below="@+id/filters"
+                android:background="@color/divider_color" />
 
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:id="@+id/search"
-        android:layout_below="@+id/view1"
-        android:layout_height="@dimen/_55dp">
+            <RelativeLayout
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_55dp"
+                android:layout_below="@+id/view1"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-        <RelativeLayout
-            android:id="@+id/close"
-            android:layout_width="@dimen/_30dp"
-            android:layout_alignParentTop="true"
-            android:layout_height="@dimen/_30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_margin="@dimen/_15dp"
-            android:background="@drawable/circle_lay">
+                <RelativeLayout
+                    android:id="@+id/close"
+                    android:layout_width="@dimen/_30dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/_15dp"
+                    android:background="@drawable/circle_lay">
 
-            <ImageView
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/cross" />
+                </RelativeLayout>
+
+
+                <EditText
+                    android:id="@+id/searchText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="start"
+                    android:layout_toLeftOf="@+id/close"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/ic_baseline_search_24"
+                    android:drawablePadding="@dimen/_5dp"
+                    android:hint="@string/search"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textFilter"
+
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/_15dp"
+                    android:paddingRight="@dimen/_10dp"
+                    android:textColorHint="@color/grey" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/divider_color" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/cross" />
-        </RelativeLayout>
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_15dp"
+                android:text="@string/two_years_of"
+                android:textColor="@color/black_1"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/divider_color" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15dp"
+                android:layout_marginVertical="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_5dp"
+                android:buttonTint="@color/checkbutton"
+                android:fontFamily="@font/inter_regular"
+                android:text="@string/four_year"
+                android:visibility="gone" />
+            <!--   <View
+                   android:layout_width="match_parent"
+                   android:layout_height="@dimen/_1dp"
+                   android:visibility="gone"
+                   android:background="@color/divider_color" />
+               <CheckBox
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginVertical="@dimen/_10dp"
+                   android:fontFamily="@font/inter_regular"
+                   android:buttonTint="@color/checkbutton"
+                   android:visibility="gone"
+                   android:layout_marginHorizontal="@dimen/_15dp"
+                   android:layout_marginTop="@dimen/_5dp"
+                   android:text="@string/two_year" />
+               <View
+                   android:layout_width="match_parent"
+                   android:layout_height="@dimen/_1dp"
+                   android:visibility="gone"
+                   android:background="@color/divider_color" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/two_four_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_15dp"
+                android:text="@string/public_or_private"
+                android:textColor="@color/black_1"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/divider_color" />
 
 
-        <EditText
-            android:id="@+id/searchText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="start"
-            android:layout_toLeftOf="@+id/close"
-            android:background="@android:color/transparent"
-            android:drawableLeft="@drawable/ic_baseline_search_24"
-            android:drawablePadding="@dimen/_5dp"
-            android:hint="@string/search"
-            android:imeOptions="actionSearch"
-            android:inputType="textFilter"
-
-            android:maxLines="1"
-            android:paddingLeft="@dimen/_15dp"
-            android:paddingRight="@dimen/_10dp"
-            android:textColorHint="@color/grey" />
-
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:background="@color/divider_color" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/_15dp"
-        android:text="@string/two_years_of"
-        android:fontFamily="@font/inter_bold"
-        android:textColor="@color/black_1"
-        android:textSize="@dimen/_16sp"
-        android:textStyle="bold" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:background="@color/divider_color" />
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_10dp"
-        android:fontFamily="@font/inter_regular"
-        android:buttonTint="@color/checkbutton"
-        android:layout_marginHorizontal="@dimen/_15dp"
-        android:layout_marginTop="@dimen/_5dp"
-        android:text="@string/four_year" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:background="@color/divider_color" />
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/_10dp"
-        android:fontFamily="@font/inter_regular"
-        android:buttonTint="@color/checkbutton"
-        android:layout_marginHorizontal="@dimen/_15dp"
-        android:layout_marginTop="@dimen/_5dp"
-        android:text="@string/two_year" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:background="@color/divider_color" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/_15dp"
-        android:text="@string/public_or_private"
-        android:fontFamily="@font/inter_bold"
-        android:textColor="@color/black_1"
-        android:textSize="@dimen/_16sp"
-        android:textStyle="bold" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:background="@color/divider_color" />
-    <CheckBox
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/public_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <!--  <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10dp"
@@ -183,46 +209,88 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1dp"
-        android:background="@color/divider_color" />
-    <RelativeLayout
+        android:background="@color/divider_color" />-->
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_25dp"
-        android:layout_marginTop="@dimen/_25dp"
-        android:background="@drawable/white_rounded_withboundary">
-
-        <LinearLayout
-            android:id="@+id/religous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:orientation="horizontal"
-            android:padding="@dimen/_5dp">
-
-            <Spinner
-                android:id="@+id/spinner"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/_30dp"
-                android:dropDownVerticalOffset="20dp"
-                android:fontFamily="@font/inter_regular"
-                android:gravity="center_horizontal|top"
-                android:overlapAnchor="false"
-                android:background="@android:color/transparent"
-                android:spinnerMode="dropdown"
-                android:theme="@style/MatchSpinnerTheme" />
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_15dp"
+                android:text="@string/type_of_environment"
+                android:textColor="@color/black_1"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="@dimen/_20dp"
-                android:layout_height="@dimen/_20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
-                android:padding="@dimen/_5dp"
-                android:rotation="270"
-                android:src="@drawable/back_arrow" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/divider_color" />
 
-        </LinearLayout>
-    </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/type_env_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_15dp"
+                android:text="@string/size"
+                android:textColor="@color/black_1"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/divider_color" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/size_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RelativeLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_25dp"
+                android:layout_marginTop="@dimen/_25dp"
+                android:background="@drawable/white_rounded_withboundary">
+
+                <LinearLayout
+                    android:id="@+id/religous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_5dp">
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_30dp"
+                        android:background="@android:color/transparent"
+                        android:dropDownVerticalOffset="20dp"
+                        android:fontFamily="@font/inter_regular"
+                        android:gravity="center_horizontal|top"
+                        android:overlapAnchor="false"
+                        android:spinnerMode="dropdown"
+                        android:theme="@style/MatchSpinnerTheme" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5dp"
+                        android:padding="@dimen/_5dp"
+                        android:rotation="270"
+                        android:src="@drawable/back_arrow" />
+
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
