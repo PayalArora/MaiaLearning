@@ -258,6 +258,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_25dp"
                 android:layout_marginTop="@dimen/_25dp"
+                android:layout_marginBottom="@dimen/_30dp"
                 android:background="@drawable/white_rounded_withboundary">
 
                 <LinearLayout
@@ -291,6 +292,7 @@
 
                 </LinearLayout>
             </RelativeLayout>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

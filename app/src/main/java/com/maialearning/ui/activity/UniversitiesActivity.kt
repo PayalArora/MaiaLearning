@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
 import com.maialearning.R
 import com.maialearning.databinding.*
 import com.maialearning.model.*
@@ -28,6 +29,9 @@ import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
+import com.maialearning.ui.model.AthleticAsociations
+import com.maialearning.ui.model.ChildrenItem
+import com.maialearning.ui.model.ResponseItem
 import com.maialearning.util.UNIV_LOGO_URL
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.replaceInvertedComas
@@ -70,6 +74,93 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private var savedCountry = ""
     private var selectedList = ""
     var selType = 0
+    private val listData: String
+        get() = (" [\n" +
+                "        {\n" +
+                "                key: 'CCCAA',\n" +
+                "                value: 'CCCAA'\n" +
+                "        },\n" +
+                "        {\n" +
+                "                key: 'Independent',\n" +
+                "                value: 'Independent'\n" +
+                "        },\n" +
+                "        {\n" +
+                "            key: 'NAIA',\n" +
+                "            value: 'NAIA',\n" +
+                "            children: [\n" +
+                "            {\n" +
+                "                    key: 'NAIA Division I',\n" +
+                "                    value: 'Division I'\n" +
+                "            },\n" +
+                "            {\n" +
+                "                    key: 'NAIA Division II',\n" +
+                "                    value: 'Division II'\n" +
+                "            }\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "            key: 'NCAA',\n" +
+                "            value: 'NCAA',\n" +
+                "            children: [\n" +
+                "            {\n" +
+                "                    key: 'NCAA Division I',\n" +
+                "                    value: 'Division I'\n" +
+                "            },\n" +
+                "            {\n" +
+                "                    key: 'NCAA Division II',\n" +
+                "                    value: 'Division II'\n" +
+                "            },\n" +
+                "            {\n" +
+                "                    key: 'NCAA Division III',\n" +
+                "                    value: 'Division III'\n" +
+                "            }\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "            key: 'NCCAA',\n" +
+                "            value: 'NCCAA',\n" +
+                "            children: [\n" +
+                "            {\n" +
+                "                    key: 'NCCAA Division I',\n" +
+                "                    value: 'Division I'\n" +
+                "            },\n" +
+                "            {\n" +
+                "                    key: 'NCCAA Division II',\n" +
+                "                    value: 'Division II'\n" +
+                "            }\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "            key: 'NJCAA',\n" +
+                "            value: 'NJCAA',\n" +
+                "            children: [\n" +
+                "            {\n" +
+                "                    key: 'NJCAA Division I',\n" +
+                "                    value: 'Division I'\n" +
+                "            },\n" +
+                "            {\n" +
+                "                    key: 'NJCAA Division II',\n" +
+                "                    value: 'Division II'\n" +
+                "            },\n" +
+                "            {\n" +
+                "                    key: 'NJCAA Division III',\n" +
+                "                    value: 'Division III'\n" +
+                "            }\n" +
+                "            ]\n" +
+                "        },\n" +
+                "        {\n" +
+                "                key: 'NWAC',\n" +
+                "                value: 'NWAC'\n" +
+                "        },\n" +
+                "        {\n" +
+                "                key: 'Other',\n" +
+                "                value: 'Other'\n" +
+                "        },\n" +
+                "        {\n" +
+                "                key: 'USCAA',\n" +
+                "                value: 'USCAA'\n" +
+                "        }\n" +
+                "    ]")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,6 +187,36 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
+    fun parseJSON(): AthleticAsociations {
+        val athleticAsociations = AthleticAsociations()
+        val items: List<String> = ArrayList()
+        val jsonArray = JSONArray(listData)
+        val list: ArrayList<ResponseItem> = arrayListOf()
+
+        for (i in 0 until jsonArray.length()) {
+            var childArr: ArrayList<ChildrenItem>? = null
+            val jarray: JSONArray? = jsonArray.getJSONObject(i).optJSONArray("children")
+            jarray?.let {
+                childArr = arrayListOf()
+                for (i in 0 until jarray.length()) {
+                    val child = ChildrenItem(
+                        jarray.getJSONObject(i).optString("value"),
+                        jarray.getJSONObject(i).optString("key")
+                    )
+                    childArr?.add(child)
+                }
+            }
+            val res = ResponseItem(
+                jsonArray.getJSONObject(i).optString("value"),
+                jsonArray.getJSONObject(i).optString("key"),
+                childArr
+            )
+            list.add(res)
+            athleticAsociations.response = list
+        }
+        return athleticAsociations
+    }
+
     private fun resetFilters() {
         selectedListFilter.clear()
         selectedRegion.clear()
@@ -112,6 +233,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selectedTypeEnv.clear()
         selectedSize.clear()
         selectedReligious = ""
+        selectedAthleticAsociations.clear()
     }
 
     private fun initView() {
@@ -906,15 +1028,40 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     ) {
         val dialog = BottomSheetDialog(this)
-        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
+        val sheetBinding: SportsFilterBinding = SportsFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         sheetBinding.search.visibility = View.GONE
         sheetBinding.filters.setText(title)
         dialog.show()
+        val list = parseJSON().response
+
+        list?.let {
+            for(i in it) {
+                if (selectedAthleticAsociations.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.children?.let {
+                        for (j in it){
+                            i.checked =  true
+                            if (selectedAthleticAsociations.contains(j.key)){
+                                j.checked = true
+                            } else {
+                                i.checked = false
+                                j.checked = false
+                            }
+                        }
+                    }
+                }
+
+            }
+            sheetBinding.reciepentList.adapter =
+                SportsFilterAdapter(
+                    it
+                )
+        }
 
         sheetBinding.spinnerLay.visibility = View.VISIBLE
-        sheetBinding.invisibleLay.visibility = View.VISIBLE
 
         sheetBinding.backBtn.setOnClickListener {
             dialog.dismiss()
@@ -932,15 +1079,26 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             } else {
                 selectedParticipants = ""
             }
+            selectedAthleticAsociations.clear()
+            list?.let {
+                for (i in it) {
+                    if (i.children != null && i.children.size > 0) {
+                        for (j in i.children){
+                            if (j.checked){
+                                j.key?.let { it1 -> selectedAthleticAsociations.add(it1) }
+                            }
+                        }
+                    } else {
+                        if (i.checked) {
+                            i.key?.let { it1 -> selectedAthleticAsociations.add(it1) }
+                        }
+                    }
+                }
+            }
+
             dialog.dismiss()
         }
 
-
-        sheetBinding.reciepentList.adapter =
-            SportsFilterAdapter(
-                sheetBinding.root.context.resources.getStringArray(R.array.sports)
-                    .toList() as ArrayList<String>
-            )
         sheetBinding.close.setOnClickListener {
             sheetBinding.searchText.setText("")
         }
@@ -1094,16 +1252,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        sheetBinding.seekAct.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                var progress = progress
-                sheetBinding.minAct.setText(progress.toString())
-                act = progress.toString()
-            }
+        sheetBinding.seekAct.addOnChangeListener { slider, value, fromUser ->
+            if (slider.values[0].toInt() != 0)
+                sheetBinding.minAct.setText("${slider.values[0].toInt()}")
+            if (slider.values[1].toInt() != 0)
+                act = "${slider.values[0].toInt()} - ${slider.values[1].toInt()}"
+            sheetBinding.maxAct.setText("${slider.values[1].toInt()}")
+        }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
         sheetBinding.seekErbw.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 var progress = progress
@@ -1133,13 +1289,25 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog.setContentView(sheetBinding.root)
         sheetBinding.filters.setText(getString(R.string.type))
         dialog.show()
+        for (i in twoFourYear) {
+            i.checked = selectedTwoFour.contains(i.key)
+        }
+        for (i in publicPrivate) {
+            i.checked = selectedPublicPrivate.contains(i.key)
+        }
+        for (i in typeEnvironMent) {
+            i.checked = selectedTypeEnv.contains(i.key)
+        }
+        for (i in sizeList) {
+            i.checked = selectedSize.contains(i.key)
+        }
+
         sheetBinding.clearText.setOnClickListener {
             selectedTwoFour.clear()
             selectedPublicPrivate.clear()
             selectedTypeEnv.clear()
             selectedSize.clear()
-            selectedReligious=""
-
+            selectedReligious = ""
             for (i in twoFourYear.indices) {
                 if (twoFourYear.get(i).checked) {
                     selectedTwoFour.add(twoFourYear.get(i).key)
@@ -1160,10 +1328,22 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     selectedSize.add(sizeList.get(i).key)
                 }
             }
+            if (sheetBinding.spinner.selectedItemPosition > 1)
+                selectedReligious =
+                    religious.get(sheetBinding.spinner.selectedItemPosition - 1).key
+            else
+                selectedReligious = ""
 
             dialog.dismiss()
         }
-        sheetBinding.backTxt.setOnClickListener { dialog.dismiss() }
+        sheetBinding.backTxt.setOnClickListener {
+            selectedTwoFour.clear()
+            selectedPublicPrivate.clear()
+            selectedTypeEnv.clear()
+            selectedSize.clear()
+            selectedReligious = ""
+            dialog.dismiss()
+        }
 
         sheetBinding.twoFourList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -1186,10 +1366,20 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.spinner.setAdapter(
             NothingSelectedSpinnerAdapter(
                 adapter,
-                R.layout.nothing_adapter,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                R.layout.nothing_adapter_type,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
                 this
             )
         )
+        if (selectedReligious.isNullOrEmpty()) {
+            sheetBinding.spinner.setSelection(0)
+        } else {
+            for (i in religious.indices) {
+                if (religious.get(i).key == selectedReligious) {
+                    println("position ${i}")
+                    sheetBinding.spinner.setSelection(i + 1)
+                }
+            }
+        }
         sheetBinding.religous.setOnClickListener { sheetBinding.spinner.performClick() }
         sheetBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -1199,11 +1389,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 id: Long
             ) {
                 // println("position ${sheetBinding.spinner.selectedItemPosition -1}")
-                if (sheetBinding.spinner.selectedItemPosition > 1)
-                    selectedReligious =
-                        religious.get(sheetBinding.spinner.selectedItemPosition - 1).key
-                else
-                    selectedReligious = ""
 
             }
 
@@ -1684,6 +1869,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedTypeEnv: ArrayList<String> = arrayListOf()
         var selectedSize: ArrayList<String> = arrayListOf()
         var selectedReligious: String = ""
+        var selectedAthleticAsociations: ArrayList<String> = arrayListOf()
 
     }
 }

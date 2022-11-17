@@ -366,6 +366,8 @@ class SearchFragment : Fragment() {
         payload.twoFourYear=UniversitiesActivity.selectedTwoFour
         payload.ug_size=UniversitiesActivity.selectedSize
         payload.public_private=UniversitiesActivity.selectedPublicPrivate
+        payload.religious=UniversitiesActivity.selectedReligious
+        payload.athletic_associations = UniversitiesActivity.selectedAthleticAsociations
 
         universityList?.clear()
         germanList?.clear()

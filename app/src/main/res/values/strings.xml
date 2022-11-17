@@ -455,7 +455,11 @@
         <item>Independent</item>
         <item>NAIA</item>
         <item>NCAA</item>
-        <item>NCCAA e</item>
+        <item>NCCAA</item>
+        <item>NJCAA</item>
+        <item>NWAC</item>
+        <item>Other</item>
+        <item>USCAA</item>
     </string-array>
 
     <string-array name="spinner_sports">
@@ -553,6 +557,7 @@
     <string name="women">Women</string>
     <string name="type_of_environment">Type of Environment</string>
     <string name="size">Size(Undergraduate Students)</string>
+    <string name="athletic">Athletic associations</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
@@ -623,5 +628,9 @@
         <item>Relationship</item>
         <item>Support</item>
         <item>Working Condition</item>
+    </string-array>
+    <string-array name="slider_values">
+        <item>0.99</item>
+        <item>0.99</item>
     </string-array>
 </resources>

@@ -1,5 +1,7 @@
 package com.maialearning.model
 
+import com.google.gson.annotations.SerializedName
+
 class UniversitySearchPayload {
     lateinit var country: String
     var region: ArrayList<String>? = null
@@ -8,10 +10,11 @@ class UniversitySearchPayload {
     var type_of_env: ArrayList<String>? = null
     var ug_size:  ArrayList<String>? = null
     lateinit var religious: String
+    @SerializedName("2_4_year")
     var twoFourYear: ArrayList<String>? = null
     var selectivity: ArrayList<String>? = null
     lateinit var cipcode: String
-    lateinit var athletic_associations: String
+    var athletic_associations: ArrayList<String>? = null
     lateinit var sports: String
     lateinit var sports_participants: String
     lateinit var special: String
@@ -29,6 +32,7 @@ class UniversitySearchPayload {
     lateinit var search: String
      var pager: Int = 0
     lateinit var student_uid: String
+    var cipcode_search_type = "or"
 
 /*    {
         "country": "US",
