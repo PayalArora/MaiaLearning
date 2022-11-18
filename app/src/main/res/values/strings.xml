@@ -179,6 +179,13 @@
         <item>Sports</item>
         <item>More</item>
     </string-array>
+
+    <string-array name="EUFilters">
+        <item>Country</item>
+        <item>University List</item>
+        <item>Discipline</item>
+        <item>Sub Discipline</item>
+    </string-array>
     <string-array name="Country">
         <item>United States</item>
         <item>United Kingdom</item>
@@ -558,6 +565,7 @@
     <string name="type_of_environment">Type of Environment</string>
     <string name="size">Size(Undergraduate Students)</string>
     <string name="athletic">Athletic associations</string>
+    <string name="discipline">Discipline</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

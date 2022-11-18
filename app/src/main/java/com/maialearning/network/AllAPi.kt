@@ -668,4 +668,10 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<Unit>
 
+    @POST("get_unicas_sub_discipline")
+    @FormUrlEncoded
+    fun getSubDiscipline(
+        @Header("Authorization") AutToken: String,
+        @Field("discipline_id") id: String
+    ): Deferred<JsonObject>
 }

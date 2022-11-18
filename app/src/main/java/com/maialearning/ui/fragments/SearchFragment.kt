@@ -368,6 +368,7 @@ class SearchFragment : Fragment() {
         payload.public_private=UniversitiesActivity.selectedPublicPrivate
         payload.religious=UniversitiesActivity.selectedReligious
         payload.athletic_associations = UniversitiesActivity.selectedAthleticAsociations
+        payload.foscode = UniversitiesActivity.selectedSubDiscipline
 
         universityList?.clear()
         germanList?.clear()
