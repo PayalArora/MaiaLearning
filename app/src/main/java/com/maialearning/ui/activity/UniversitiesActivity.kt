@@ -3,6 +3,7 @@ package com.maialearning.ui.activity
 import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -69,6 +70,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val typeEnvironMent: ArrayList<KeyVal> = ArrayList()
     private val religious: ArrayList<KeyVal> = ArrayList()
     private val sizeList: ArrayList<KeyVal> = ArrayList()
+    private val disciplines: ArrayList<KeyVal> = ArrayList()
+    private val subDisciplines: ArrayList<KeyVal> = ArrayList()
 
 
     private var savedCountry = ""
@@ -234,6 +237,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selectedSize.clear()
         selectedReligious = ""
         selectedAthleticAsociations.clear()
+        selectedDiscipline = ""
+        selectedSubDiscipline.clear()
     }
 
     private fun initView() {
@@ -945,8 +950,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             mainDialog?.dismiss()
         }
-        sheetBinding.reciepentList.adapter =
-            UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
+        Log.e("Selected Country >>", SharedHelper(this).country.toString())
+        if ((SharedHelper(this).country ?: "US") == "US")
+            sheetBinding.reciepentList.adapter =
+                UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
+        else if (SharedHelper(this).country == "BE")
+            sheetBinding.reciepentList.adapter =
+                UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
+
 
     }
 
@@ -962,67 +973,142 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selType = positiion
         println("TYPE" + selType)
         if (type == 2) {
-            if (positiion == 0) {
-                if (countries.size > 0) {
-                    flagImg?.let { countryFilter(it) }
-                } else {
-                    dialogP = showLoadingDialog(this)
-                    dialogP.show()
-                    mModel.getFilterCollege()
-                }
-            } else if (positiion == 1) {
+            if ((SharedHelper(this).country ?: "US") == "US") {
+                if (positiion == 0) {
+                    if (countries.size > 0) {
+                        flagImg?.let { countryFilter(it) }
+                    } else {
+                        dialogP = showLoadingDialog(this)
+                        dialogP.show()
+                        mModel.getFilterCollege()
+                    }
+                } else if (positiion == 1) {
 
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
-                    region,
-                    View.VISIBLE,
-                    resources.getString(R.string.reigon),
-                    positiion
-                )
-            } else if (positiion == 3) {
-                if (listUni.size > 0) {
-                    SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
+                    SheetUniversityFilter(this, layoutInflater).regionFilter(
+                        region,
                         View.VISIBLE,
-                        resources.getString(R.string.list),
-                        listUni, View.GONE
+                        resources.getString(R.string.reigon),
+                        positiion
                     )
+                } else if (positiion == 3) {
+                    if (listUni.size > 0) {
+                        SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
+                            View.VISIBLE,
+                            resources.getString(R.string.list),
+                            listUni, View.GONE
+                        )
 
-                } else {
-                    dialogP = showLoadingDialog(this)
-                    dialogP.show()
-                    SharedHelper(this).id?.let { mModel.getUniversityList("1", it) }
-
-                }
-            } else if (positiion == 2) {
-                if (listStates.size > 0) {
+                    } else {
+                        dialogP = showLoadingDialog(this)
+                        dialogP.show()
+                        SharedHelper(this).id?.let { mModel.getUniversityList("1", it) }
+                    }
+                } else if (positiion == 2) {
+                    if (listStates.size > 0) {
+                        SheetUniversityFilter(this, layoutInflater).stateFilter(
+                            View.VISIBLE,
+                            resources.getString(R.string.list),
+                            listStates, View.GONE, positiion
+                        )
+                    }
+                } else if (positiion == 4) {
+                    typeFilter()
+                } else if (positiion == 5) {
                     SheetUniversityFilter(this, layoutInflater).stateFilter(
                         View.VISIBLE,
-                        resources.getString(R.string.list),
-                        listStates, View.GONE, positiion
+                        resources.getString(R.string.selectivity), selectivity,
+                        View.GONE, positiion
                     )
+                } else if (positiion == 6) {
+                    SheetUniversityFilter(this, layoutInflater).regionFilter(
+                        region,
+                        View.VISIBLE,
+                        resources.getString(R.string.programs),
+                        positiion
+                    )
+                } else if (positiion == 7) {
+                    sportsFilter()
+                } else if (positiion == 8) {
+                    moreFilter()
                 }
-            } else if (positiion == 4) {
-                typeFilter()
-            } else if (positiion == 5) {
-                SheetUniversityFilter(this, layoutInflater).stateFilter(
-                    View.VISIBLE,
-                    resources.getString(R.string.selectivity), selectivity,
-                    View.GONE, positiion
-                )
-            } else if (positiion == 6) {
-                SheetUniversityFilter(this, layoutInflater).regionFilter(
-                    region,
-                    View.VISIBLE,
-                    resources.getString(R.string.programs),
-                    positiion
-                )
-            } else if (positiion == 7) {
-                sportsFilter()
-            } else if (positiion == 8) {
-                moreFilter()
+            } else if (SharedHelper(this).country == "BE") {
+                if (positiion == 0) {
+                    if (countries.size > 0) {
+                        flagImg?.let { countryFilter(it) }
+                    } else {
+                        dialogP = showLoadingDialog(this)
+                        dialogP.show()
+                        mModel.getFilterCollege()
+                    }
+                } else if (positiion == 1) {
+                    if (listUni.size > 0) {
+                        SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
+                            View.VISIBLE,
+                            resources.getString(R.string.list),
+                            listUni, View.GONE
+                        )
+
+                    } else {
+                        dialogP = showLoadingDialog(this)
+                        dialogP.show()
+                        SharedHelper(this).id?.let { mModel.getUniversityList("1", it) }
+                    }
+                } else if (positiion == 2) {
+                    disciplineFilter("Discipline")
+                } else if (positiion == 3) {
+                    disciplineFilter("Subdiscipline")
+                }
+
             }
         }
 
     }
+
+    private fun disciplineFilter(type: String) {
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.search.visibility = View.GONE
+        sheetBinding.filters.setText(type)
+        dialog.show()
+
+        sheetBinding.spinnerLay.visibility = View.GONE
+        sheetBinding.invisibleLay.visibility = View.GONE
+        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+
+        sheetBinding.clearText.setOnClickListener {
+            dialog.dismiss()
+            if (type.equals("Discipline")) {
+                for (i in disciplines.indices) {
+                    if (disciplines.get(i).checked)
+                        selectedDiscipline = disciplines.get(i).key
+                }
+                dialogP.show()
+                mModel.getSubDiscipline(selectedDiscipline)
+            } else {
+                for (i in subDisciplines.indices) {
+                    if (subDisciplines.get(i).checked)
+                        selectedSubDiscipline.add(subDisciplines.get(i).key)
+                }
+            }
+
+        }
+
+        sheetBinding.spinnerLay.visibility = View.GONE
+        if (type.equals("Discipline")) {
+            sheetBinding.reciepentList.adapter =
+                DiversityAdapter(disciplines, this)
+        } else if (type.equals("Subdiscipline") && subDisciplines != null && subDisciplines.size > 0) {
+            sheetBinding.reciepentList.adapter =
+                DiversityAdapter(subDisciplines, this)
+        }
+        sheetBinding.close.setOnClickListener {
+            sheetBinding.searchText.setText("")
+        }
+
+    }
+
 
     fun sportsFilter(
 
@@ -1037,14 +1123,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val list = parseJSON().response
 
         list?.let {
-            for(i in it) {
-                if (selectedAthleticAsociations.contains(i.key)){
+            for (i in it) {
+                if (selectedAthleticAsociations.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.children?.let {
-                        for (j in it){
-                            i.checked =  true
-                            if (selectedAthleticAsociations.contains(j.key)){
+                        for (j in it) {
+                            i.checked = true
+                            if (selectedAthleticAsociations.contains(j.key)) {
                                 j.checked = true
                             } else {
                                 i.checked = false
@@ -1083,8 +1169,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             list?.let {
                 for (i in it) {
                     if (i.children != null && i.children.size > 0) {
-                        for (j in i.children){
-                            if (j.checked){
+                        for (j in i.children) {
+                            if (j.checked) {
                                 j.key?.let { it1 -> selectedAthleticAsociations.add(it1) }
                             }
                         }
@@ -1647,7 +1733,21 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
             }
 
+            disciplines.clear()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("unicas_discipline")
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    disciplines.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+
         }
+        disciplines.sortBy { it.key }
+
         mModel.factSheetOtherObserver.observe(this) {
             dialogP.dismiss()
             loadDataOther(it)
@@ -1655,6 +1755,20 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
 
 
+        mModel.subDisciplineObserver.observe(this) {
+            dialogP.dismiss()
+            subDisciplines.clear()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    subDisciplines.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+        }
         mModel.factSheetObserver.observe(this) {
             dialogP.dismiss()
             val gson = GsonBuilder().create()
@@ -1747,21 +1861,36 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             dialogP.dismiss()
             for (i in 0 until it.size()) {
                 val objectProgram = it.get(i).asJsonObject
-                listUni.add(
-                    UniersitiesListModel(
-                        objectProgram.getAsJsonPrimitive("id").toString().replace("\"", ""),
-                        objectProgram.getAsJsonPrimitive("name").toString().replace("\"", ""),
-                        "",
-                        objectProgram.getAsJsonPrimitive("type").toString(),
-                        objectProgram.getAsJsonPrimitive("created").toString(),
-                        objectProgram.getAsJsonPrimitive("changed").toString(),
-                        "",
-                        objectProgram.getAsJsonPrimitive("status").toString(),
-                        "",
-                        objectProgram.getAsJsonPrimitive("district_scope").toString(),
-                        false
-                    )
-                )
+                val json = JSONObject(it.get(i).toString())
+
+                val arrayProgram = json.optJSONArray("universities")
+                if (arrayProgram != null) {
+                    for (i in 0 until arrayProgram.length()) {
+                        if (arrayProgram.optJSONObject(i).optString("country")
+                                .equals(SharedHelper(this).country)
+                        ) {
+                            listUni.add(
+                                UniersitiesListModel(
+                                    objectProgram.getAsJsonPrimitive("id").toString()
+                                        .replace("\"", ""),
+                                    objectProgram.getAsJsonPrimitive("name").toString()
+                                        .replace("\"", ""),
+                                    "",
+                                    objectProgram.getAsJsonPrimitive("type").toString(),
+                                    objectProgram.getAsJsonPrimitive("created").toString(),
+                                    objectProgram.getAsJsonPrimitive("changed").toString(),
+                                    "",
+                                    objectProgram.getAsJsonPrimitive("status").toString(),
+                                    "",
+                                    objectProgram.getAsJsonPrimitive("district_scope").toString(),
+                                    false
+                                )
+                            )
+                            break
+                        }
+                    }
+                }
+
             }
 //            val sortedList: MutableList<UniersitiesListModel> =
 //               listUni.groupBy { it.name }
@@ -1777,6 +1906,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 listUni, View.GONE
             )
         }
+
 //        mModel.countryObserver.observe(this) {
 //            Log.e("Response: ", " $it")
 //            dialogP.dismiss()
@@ -1903,6 +2033,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedSize: ArrayList<String> = arrayListOf()
         var selectedReligious: String = ""
         var selectedAthleticAsociations: ArrayList<String> = arrayListOf()
+        var selectedDiscipline: String = ""
+        var selectedSubDiscipline: ArrayList<String> = arrayListOf()
 
     }
 }

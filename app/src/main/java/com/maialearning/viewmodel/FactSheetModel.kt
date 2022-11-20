@@ -37,7 +37,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val programDetailObserber = MutableLiveData<CourseModelOptionDetailResponse>()
     val collegeEssayObserver = MutableLiveData<CollegeEssayResponse>()
     val deleteCollegeEssayObserver = MutableLiveData<Unit>()
-
+    val subDisciplineObserver = MutableLiveData<JsonObject>()
 
     fun getColFactSheet(token: String, id: String) {
         showLoading.value = true
@@ -324,5 +324,19 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
         super.onCleared()
         // Clear our job when the linked activity is destroyed to avoid memory leaks
         job.cancel()
+    }
+
+    fun getSubDiscipline(selected: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getSubDiscipline(selected)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> subDisciplineObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
     }
 }

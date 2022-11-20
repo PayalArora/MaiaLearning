@@ -81,7 +81,7 @@ interface LoginRepository {
     ): UseCaseResult<JsonObject>
 
     suspend fun getUniversityList(
-        status: String,uid: String
+        status: String, uid: String
     ): UseCaseResult<JsonArray>
     //  suspend fun getSearchResults(search: UniversitySearch): UseCaseResult<DashboardOverdueResponse>
 
@@ -332,6 +332,10 @@ interface LoginRepository {
     suspend fun deleteCollegeEssay(
         id: String
     ): UseCaseResult<Unit>
+
+    suspend fun getSubDiscipline(
+        id: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -788,11 +792,11 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     }
 
     override suspend fun getUniversityList(
-        status: String,uid: String
+        status: String, uid: String
     ): UseCaseResult<JsonArray> {
         return try {
             val result = catApi.getUniversityListAsync(
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,status,uid
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, status, uid
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -1705,6 +1709,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun deleteCollegeEssay(id: String): UseCaseResult<Unit> {
         return try {
             val result = catApi.deleteCollegeEssay(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getSubDiscipline(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getSubDiscipline(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
             ).await()

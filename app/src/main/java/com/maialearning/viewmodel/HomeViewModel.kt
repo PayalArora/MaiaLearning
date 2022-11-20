@@ -58,6 +58,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val univJsonFilter = MutableLiveData<JsonObject>()
     val getcontinentFilter = MutableLiveData<JsonObject>()
 
+
     fun getConsiderList(id: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -661,4 +662,6 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
+
 }

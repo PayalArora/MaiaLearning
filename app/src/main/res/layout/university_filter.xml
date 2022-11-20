@@ -102,12 +102,12 @@
             android:textColorHint="@color/grey" />
 
     </RelativeLayout>
+
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1dp"
         android:layout_below="@+id/search"
-
         android:background="@color/divider_color" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -32,6 +32,7 @@ class UniversitySearchPayload {
     lateinit var search: String
      var pager: Int = 0
     lateinit var student_uid: String
+    var foscode: ArrayList<String>? = null
     var cipcode_search_type = "or"
 
 /*    {

@@ -368,6 +368,8 @@ class SearchFragment : Fragment() {
         payload.public_private=UniversitiesActivity.selectedPublicPrivate
         payload.religious=UniversitiesActivity.selectedReligious
         payload.athletic_associations = UniversitiesActivity.selectedAthleticAsociations
+        payload.foscode = UniversitiesActivity.selectedSubDiscipline
+
         if (!UniversitiesActivity.sat_erbw.isNullOrEmpty()){
         payload.sat_ebrw_max = UniversitiesActivity.sat_erbw.split(" - ")[1]
         payload.sat_ebrw_min = UniversitiesActivity.sat_erbw.split(" - ")[0]
