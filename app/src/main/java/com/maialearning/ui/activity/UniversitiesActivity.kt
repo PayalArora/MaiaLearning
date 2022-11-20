@@ -3,12 +3,10 @@ package com.maialearning.ui.activity
 import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
-import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
@@ -22,7 +20,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonArray
 import com.maialearning.R
 import com.maialearning.databinding.*
 import com.maialearning.model.*
@@ -164,7 +161,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 "                value: 'USCAA'\n" +
                 "        }\n" +
                 "    ]")
-
+     var sheetBindingUniv: UniversityFilterBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUniversitiesBinding.inflate(layoutInflater)
@@ -921,16 +918,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private fun univFilter() {
         mainDialog = BottomSheetDialog(this)
 
-        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        mainDialog?.setContentView(sheetBinding.root)
-        sheetBinding.search.visibility = View.GONE
-        sheetBinding.filters.setText(resources.getString(R.string.filters))
+         sheetBindingUniv = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBindingUniv?.root?.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        mainDialog?.setContentView(sheetBindingUniv!!.root)
+        sheetBindingUniv?.search?.visibility = View.GONE
+        sheetBindingUniv?.filters?.setText(resources.getString(R.string.filters))
         dialogP = showLoadingDialog(this)
         dialogP.show()
         mModel.getFilterCollege()
         mainDialog?.show()
-        sheetBinding.clearText.setOnClickListener {
+        sheetBindingUniv!!.clearText.setOnClickListener {
             if (savedCountry != SharedHelper(this).country) {
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
@@ -938,9 +935,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             } else {
                 initView()
             }
+
             mainDialog?.dismiss()
         }
-        sheetBinding.backBtn.setOnClickListener {
+        sheetBindingUniv!!.backBtn.setOnClickListener {
             if (savedCountry != SharedHelper(this).country) {
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
@@ -952,10 +950,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         Log.e("Selected Country >>", SharedHelper(this).country.toString())
         if ((SharedHelper(this).country ?: "US") == "US")
-            sheetBinding.reciepentList.adapter =
+            sheetBindingUniv!!.reciepentList.adapter =
                 UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
-        else if (SharedHelper(this).country == "BE")
-            sheetBinding.reciepentList.adapter =
+        else if (SharedHelper(this).continent == "EU")
+            sheetBindingUniv!!.reciepentList.adapter =
                 UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
 
 
@@ -1078,19 +1076,41 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener {
+            val ar = resources.getStringArray(R.array.EUFilters)
+
             dialog.dismiss()
             if (type.equals("Discipline")) {
+                selectedDiscipline = ""
+                selectedSubDiscipline.clear()
                 for (i in disciplines.indices) {
-                    if (disciplines.get(i).checked)
+                    if (disciplines.get(i).checked) {
                         selectedDiscipline = disciplines.get(i).key
+                        selectedSubDiscipline.add(disciplines.get(i).key)
+                        if (SharedHelper(this).continent == "EU"){
+                            ar[selType] = disciplines.get(i).value
+                            sheetBindingUniv!!.reciepentList.adapter =
+                                UnivFilterAdapter(ar, this)
+
+                        }
+                    }
                 }
+
                 dialogP.show()
                 mModel.getSubDiscipline(selectedDiscipline)
             } else {
+                selectedSubDiscipline.clear()
                 for (i in subDisciplines.indices) {
-                    if (subDisciplines.get(i).checked)
+                    if (subDisciplines.get(i).checked) {
                         selectedSubDiscipline.add(subDisciplines.get(i).key)
+                        if (SharedHelper(this).continent == "EU"){
+                            ar[selType] =subDisciplines.get(i).value
+                            sheetBindingUniv!!.reciepentList.adapter =
+                                UnivFilterAdapter(ar, this)
+                        }
+
+                    }
                 }
+
             }
 
         }

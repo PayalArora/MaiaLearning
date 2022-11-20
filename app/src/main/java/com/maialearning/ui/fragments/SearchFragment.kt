@@ -235,6 +235,7 @@ class SearchFragment : Fragment() {
 
     fun universitySearch() {
         if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
+            SharedHelper(requireContext()).continent= "DE"
             germanListUpdate = ArrayList()
             germanList = ArrayList()
             germanListNew = ArrayList<GermanUniversitiesResponse.Data.CollegeData?>()
@@ -258,6 +259,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else if ((SharedHelper(requireContext()).country ?: "US").equals("GB")) {
+            SharedHelper(requireContext()).continent= "GB"
             ukListUpdate = ArrayList()
             ukList = ArrayList()
             ukListNew = ArrayList<UkResponseModel.Data.CollegeData?>()
@@ -280,6 +282,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else if (euCountries.contains(SharedHelper(requireContext()).country ?: "US")) {
+            SharedHelper(requireContext()).continent= "EU"
             euroListUpdate = ArrayList()
             euroList = ArrayList()
             euroListNew = ArrayList()
@@ -303,6 +306,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else {
+            SharedHelper(requireContext()).continent= "EU"
             universityListUpdate = ArrayList()
             universityList = ArrayList()
             universityListNew = ArrayList()
