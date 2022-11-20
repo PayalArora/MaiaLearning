@@ -630,7 +630,11 @@
         <item>Working Condition</item>
     </string-array>
     <string-array name="slider_values">
-        <item>0.99</item>
-        <item>0.99</item>
+        <item>1</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="slider_values_sat">
+        <item>200</item>
+        <item>200</item>
     </string-array>
 </resources>

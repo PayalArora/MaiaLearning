@@ -1171,41 +1171,63 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
 
     private fun moreFilter() {
+        var local_act = ""
+        var local_math = ""
+        var local_erbw = ""
+
         val dialog = BottomSheetDialog(this)
         val sheetBinding: MoreSheetBinding = MoreSheetBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         sheetBinding.filters.setText(getString(R.string.more))
         sheetBinding.backTxt.setOnClickListener {
-//             selectedDiversity = ""
-//            selectedCampusActivity = ""
-//            sat_erbw =""
-//            sat_math = ""
-//            act = ""
-
             dialog.dismiss()
         }
         dialog.show()
         sheetBinding.clearText.setOnClickListener {
-            selectedDiversity = ""
-            selectedCampusActivity = ""
-            sat_erbw = ""
-            sat_math = ""
-            act = ""
-            sheetBinding.minMath.setText("200")
-            sheetBinding.minErbw.setText("200")
-            sheetBinding.minAct.setText("36")
-            //dialog.dismiss()
-            sheetBinding.spinner.setSelection(0)
-            for (i in diversities) {
-                i.checked = false
-            }
+
+            if (sheetBinding.spinner.selectedItemPosition > 1)
+                selectedCampusActivity =
+                    campusAcivities.get(sheetBinding.spinner.selectedItemPosition - 1).key
+            else
+                selectedCampusActivity = ""
+
+            sat_erbw = local_erbw
+            sat_math = local_math
+            act = local_act
+            dialog.dismiss()
 
         }
         for (i in diversities) {
             i.checked = i.key == selectedDiversity
         }
-
+        if (!act.isNullOrEmpty()){
+            sheetBinding.seekAct.values = mutableListOf(act.split(" - ")[0].toFloat(), act.split(" - ")[1].toFloat())
+            sheetBinding.maxAct.text =   "${sheetBinding.seekAct.values[1].toInt()}"
+            sheetBinding.minAct.text =   "${sheetBinding.seekAct.values[0].toInt()}"
+            sheetBinding.actCross.visibility = View.VISIBLE
+            local_act = act
+        } else {
+            sheetBinding.seekAct.values = mutableListOf(1F, 1F)
+        }
+        if (!sat_math.isNullOrEmpty()){
+            sheetBinding.seekMath.values = mutableListOf(sat_math.split(" - ")[0].toFloat(),  sat_math.split(" - ")[1].toFloat())
+            sheetBinding.maxMath.text =   "${sheetBinding.seekMath.values[1].toInt()}"
+            sheetBinding.minMath.text =   "${sheetBinding.seekMath.values[0].toInt()}"
+            sheetBinding.mathCross.visibility = View.VISIBLE
+            local_math = sat_math
+        }else {
+            sheetBinding.seekMath.values = mutableListOf(200F, 200F)
+        }
+        if (!sat_erbw.isNullOrEmpty()){
+            sheetBinding.seekErbw.values = mutableListOf( sat_erbw.split(" - ")[0].toFloat(),sat_erbw.split(" - ")[1].toFloat() )
+            sheetBinding.maxErbw.text =   "${sheetBinding.seekErbw.values[1].toInt()}"
+            sheetBinding.minErbw.text =   "${sheetBinding.seekErbw.values[0].toInt()}"
+            sheetBinding.erbwCross.visibility = View.VISIBLE
+            local_erbw = sat_erbw
+        }else {
+            sheetBinding.seekErbw.values = mutableListOf(200F, 200F)
+        }
 
         sheetBinding.diversityList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -1241,11 +1263,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 id: Long
             ) {
                 // println("position ${sheetBinding.spinner.selectedItemPosition -1}")
-                if (sheetBinding.spinner.selectedItemPosition > 1)
-                    selectedCampusActivity =
-                        campusAcivities.get(sheetBinding.spinner.selectedItemPosition - 1).key
-                else
-                    selectedCampusActivity = ""
 
             }
 
@@ -1253,33 +1270,49 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
 
         sheetBinding.seekAct.addOnChangeListener { slider, value, fromUser ->
-            if (slider.values[0].toInt() != 0)
-                sheetBinding.minAct.setText("${slider.values[0].toInt()}")
-            if (slider.values[1].toInt() != 0)
-                act = "${slider.values[0].toInt()} - ${slider.values[1].toInt()}"
+            sheetBinding.minAct.setText("${slider.values[0].toInt()}")
             sheetBinding.maxAct.setText("${slider.values[1].toInt()}")
+            local_act = "${sheetBinding.minAct.text} - ${sheetBinding.maxAct.text}"
+            sheetBinding.maxAct.setText("${slider.values[1].toInt()}")
+            sheetBinding.actCross.visibility = View.VISIBLE
+        }
+        sheetBinding.actCross.setOnClickListener {
+            sheetBinding.minAct.setText("1")
+            sheetBinding.seekAct.values = mutableListOf(1F, 1F)
+            sheetBinding.actCross.visibility = View.GONE
+            local_act = ""
+            sheetBinding.minAct.setText("1")
+            sheetBinding.maxAct.setText("36")
         }
 
-        sheetBinding.seekErbw.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                var progress = progress
-                sheetBinding.minErbw.setText(progress.toString())
-                sat_erbw = progress.toString()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
-        sheetBinding.seekMath.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                var progress = progress
-                sheetBinding.minMath.setText(progress.toString())
-                sat_math = progress.toString()
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
+        sheetBinding.seekMath.addOnChangeListener { slider, value, fromUser ->
+            sheetBinding.minMath.setText("${slider.values[0].toInt()}")
+            sheetBinding.maxMath.setText("${slider.values[1].toInt()}")
+            local_math = "${sheetBinding.minMath.text} - ${sheetBinding.maxMath.text}"
+            sheetBinding.mathCross.visibility = View.VISIBLE
+        }
+        sheetBinding.mathCross.setOnClickListener {
+            sheetBinding.minMath.setText("1")
+            sheetBinding.seekMath.values = mutableListOf(200F, 200F)
+            sheetBinding.mathCross.visibility = View.GONE
+            local_math = ""
+            sheetBinding.minMath.setText("200")
+            sheetBinding.maxMath.setText("800")
+        }
+        sheetBinding.seekErbw.addOnChangeListener { slider, value, fromUser ->
+            sheetBinding.minErbw.setText("${slider.values[0].toInt()}")
+            sheetBinding.maxErbw.setText("${slider.values[1].toInt()}")
+            local_erbw = "${sheetBinding.minErbw.text} - ${sheetBinding.maxErbw.text}"
+            sheetBinding.erbwCross.visibility = View.VISIBLE
+        }
+        sheetBinding.erbwCross.setOnClickListener {
+            sheetBinding.minErbw.setText("1")
+            sheetBinding.seekErbw.values = mutableListOf(200F, 200F)
+            sheetBinding.erbwCross.visibility = View.GONE
+            local_erbw = ""
+            sheetBinding.minErbw.setText("200")
+            sheetBinding.maxErbw.setText("800")
+        }
     }
 
     private fun typeFilter() {

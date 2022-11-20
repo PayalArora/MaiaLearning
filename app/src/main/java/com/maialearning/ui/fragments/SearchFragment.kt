@@ -368,7 +368,18 @@ class SearchFragment : Fragment() {
         payload.public_private=UniversitiesActivity.selectedPublicPrivate
         payload.religious=UniversitiesActivity.selectedReligious
         payload.athletic_associations = UniversitiesActivity.selectedAthleticAsociations
-
+        if (!UniversitiesActivity.sat_erbw.isNullOrEmpty()){
+        payload.sat_ebrw_max = UniversitiesActivity.sat_erbw.split(" - ")[1]
+        payload.sat_ebrw_min = UniversitiesActivity.sat_erbw.split(" - ")[0]
+        }
+        if (!UniversitiesActivity.sat_math.isNullOrEmpty()){
+            payload.sat_math_max = UniversitiesActivity.sat_math.split(" - ")[1]
+            payload.sat_math_min = UniversitiesActivity.sat_math.split(" - ")[0]
+        }
+        if (!UniversitiesActivity.act.isNullOrEmpty()){
+            payload.act_composite_max = UniversitiesActivity.act.split(" - ")[1]
+            payload.act_composite_min = UniversitiesActivity.act.split(" - ")[0]
+        }
         universityList?.clear()
         germanList?.clear()
         euroList?.clear()

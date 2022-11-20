@@ -35,7 +35,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:padding="@dimen/_15dp"
-        android:text="@string/clear"
+        android:text="@string/done"
         android:textSize="@dimen/_16sp" />
 
     <androidx.core.widget.NestedScrollView
@@ -47,7 +47,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,15 +62,31 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/erbw_cross"
+                android:layout_width="@dimen/_20dp"
+                android:visibility="gone"
+                android:layout_height="@dimen/_20dp"
+                android:paddingVertical="@dimen/_5dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginStart="@dimen/_5dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/cross"
 
-            <SeekBar
+                />
+        </LinearLayout>
+
+            <com.google.android.material.slider.RangeSlider
                 android:id="@+id/seek_erbw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_5dp"
-                android:max="800"
-                android:min="200" />
+                android:valueFrom="200"
+                android:numStars="1"
+                app:labelBehavior="gone"
+
+                android:valueTo="800"
+                 />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -85,6 +104,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/max_erbw"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -93,7 +113,10 @@
                     android:text="@string/eight_hundred" />
 
             </RelativeLayout>
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,15 +127,30 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/math_cross"
+                android:layout_height="@dimen/_20dp"
+                android:layout_width="@dimen/_20dp"
+                android:visibility="gone"
+                android:paddingVertical="@dimen/_5dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:layout_marginStart="@dimen/_5dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/cross"
 
-            <SeekBar
+                />
+        </LinearLayout>
+            <com.google.android.material.slider.RangeSlider
                 android:id="@+id/seek_math"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10dp"
-                android:layout_marginTop="@dimen/_5dp"
-                android:max="800"
-                android:min="200" />
+                android:valueFrom="200"
+                android:numStars="1"
+                app:labelBehavior="gone"
+
+                android:valueTo="800" />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -129,6 +167,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/max_math"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -137,7 +176,10 @@
                     android:text="@string/eight_hundred" />
 
             </RelativeLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -148,18 +190,30 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold" />
+    <ImageView
+        android:layout_width="@dimen/_20dp"
+        android:id="@+id/act_cross"
+        android:layout_height="@dimen/_20dp"
+        android:paddingVertical="@dimen/_5dp"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_10dp"
+        android:layout_marginStart="@dimen/_5dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/cross"
 
+        />
+</LinearLayout>
             <com.google.android.material.slider.RangeSlider
                 android:id="@+id/seek_act"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10dp"
-                android:valueFrom="0.99"
+                android:valueFrom="1"
                 android:numStars="1"
                 app:labelBehavior="gone"
 
                 android:valueTo="36"
-                app:values="@array/slider_values" />
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
