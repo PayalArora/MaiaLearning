@@ -186,6 +186,19 @@
         <item>Discipline</item>
         <item>Sub Discipline</item>
     </string-array>
+
+    <string-array name="DEFilters">
+        <item>Country</item>
+        <item>University List</item>
+        <item>Subject Group</item>
+        <item>Area of Study</item>
+        <item>Field of Study</item>
+        <item>Mode of admission</item>
+        <item>Mode of study</item>
+        <item>Admission Semester</item>
+        <item>Instruction Language</item>
+    </string-array>
+
     <string-array name="Country">
         <item>United States</item>
         <item>United Kingdom</item>

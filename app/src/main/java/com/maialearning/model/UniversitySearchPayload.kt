@@ -35,6 +35,13 @@ class UniversitySearchPayload {
     var foscode: ArrayList<String>? = null
     var cipcode_search_type = "or"
 
+    var subject_code: ArrayList<String>? = null
+    lateinit var mode_of_admission:String
+    lateinit var mode_of_study:String
+    lateinit var admission_semester:String
+    lateinit var instruction_language:String
+
+
 /*    {
         "country": "US",
         "region": [],

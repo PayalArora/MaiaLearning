@@ -674,4 +674,13 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Field("discipline_id") id: String
     ): Deferred<JsonObject>
+
+    @POST("get_german_child_subject_levels")
+    @FormUrlEncoded
+    fun getSubChildSubject(
+        @Header("Authorization") AutToken: String,
+        @Field("subject_code") id: String
+    ): Deferred<JsonObject>
+
+
 }

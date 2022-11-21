@@ -373,6 +373,12 @@ class SearchFragment : Fragment() {
         payload.religious=UniversitiesActivity.selectedReligious
         payload.athletic_associations = UniversitiesActivity.selectedAthleticAsociations
         payload.foscode = UniversitiesActivity.selectedSubDiscipline
+        payload.subject_code=UniversitiesActivity.selectedGermanSubject
+        payload.mode_of_admission=UniversitiesActivity.selectedModeAdmission
+        payload.mode_of_study=UniversitiesActivity.selectedModeStudy
+        payload.admission_semester=UniversitiesActivity.selectedAdmissionSem
+        payload.instruction_language=UniversitiesActivity.selectedInstructionLanguage
+
 
         if (!UniversitiesActivity.sat_erbw.isNullOrEmpty()){
         payload.sat_ebrw_max = UniversitiesActivity.sat_erbw.split(" - ")[1]
