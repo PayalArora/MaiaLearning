@@ -306,7 +306,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else {
-            SharedHelper(requireContext()).continent= "EU"
+            SharedHelper(requireContext()).continent= "US"
             universityListUpdate = ArrayList()
             universityList = ArrayList()
             universityListNew = ArrayList()

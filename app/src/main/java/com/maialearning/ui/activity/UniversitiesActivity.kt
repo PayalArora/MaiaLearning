@@ -940,10 +940,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         mainDialog?.show()
         sheetBindingUniv!!.clearText.setOnClickListener {
             if (savedCountry != SharedHelper(this).country) {
-                dialogP = showLoadingDialog(this)
-                dialogP.show()
-                mModel.setSaveCountry()
+//                dialogP = showLoadingDialog(this)
+//                dialogP.show()
+//                mModel.setSaveCountry()
+                SharedHelper(this).country?.let {   savedCountry = it }
             } else {
+                resetFilters()
                 initView()
             }
 
@@ -967,10 +969,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBindingUniv!!.reciepentList.adapter =
                 UnivFilterAdapter(resources.getStringArray(R.array.DEFilters), this)
         } else if (SharedHelper(this).continent == "EU") {
-            if ((SharedHelper(this).country ?: "US") == "BG") {
+
                 sheetBindingUniv!!.reciepentList.adapter =
                     UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
-            }
+        } else {
+            sheetBindingUniv!!.reciepentList.adapter =
+                UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
         }
     }
 
@@ -1002,9 +1006,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         resources.getString(R.string.reigon),
                         positiion
                     )
-                } else if (SharedHelper(this).country == "BE") {
-                    universityList()
-                } else if (SharedHelper(this).country == "DE") {
+                } else if (SharedHelper(this).continent == "EU"||SharedHelper(this).country == "DE") {
                     universityList()
                 }
             } else if (positiion == 2) {
@@ -1016,15 +1018,15 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                             listStates, View.GONE, positiion
                         )
                     }
-                } else if (SharedHelper(this).country == "BE") {
-                    disciplineFilter("Discipline")
-                } else if (SharedHelper(this).country == "DE") {
+                }  else if (SharedHelper(this).country == "DE") {
                     disciplineFilter("Subject")
+                } else if (SharedHelper(this).continent == "EU") {
+                    disciplineFilter("Discipline")
                 }
             } else if (positiion == 3) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
                     universityList()
-                } else if (SharedHelper(this).country == "BE") {
+                } else if (SharedHelper(this).continent == "EU") {
                     disciplineFilter("Subdiscipline")
                 } else if (SharedHelper(this).country == "DE") {
 //                    disciplineFilter("Subdiscipline")
@@ -1100,7 +1102,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.invisibleLay.visibility = View.GONE
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
-
+        sheetBinding.clearText.setText(resources.getString(R.string.done))
         sheetBinding.clearText.setOnClickListener {
             var ar = resources.getStringArray(R.array.EUFilters)
             if (SharedHelper(this).country == "DE") {
@@ -1202,24 +1204,73 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         sheetBinding.spinnerLay.visibility = View.GONE
         if (type.equals("Discipline")) {
+            for (i in disciplines){
+                if (selectedSubDiscipline.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(disciplines, this)
         } else if (type.equals("Subdiscipline") && subDisciplines != null && subDisciplines.size > 0) {
+            for (i in subDisciplines){
+                if (selectedSubDiscipline.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(subDisciplines, this)
         } else if (type.equals("Subject") && germanSubject != null && germanSubject.size > 0) {
+            for (i in germanSubject){
+                if (selectedGermanSubject.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanSubject, this)
         } else if (type.equals("Mode of Admission") && germanModeAdmission != null && germanModeAdmission.size > 0) {
+            for (i in germanModeAdmission){
+                if (selectedModeAdmission.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanModeAdmission, this)
         } else if (type.equals("Mode of Study") && germanStudyMode != null && germanStudyMode.size > 0) {
+            for (i in germanStudyMode){
+                if (selectedModeStudy.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanStudyMode, this)
         } else if (type.equals("Admission Semester") && germanAdmissionSem != null && germanAdmissionSem.size > 0) {
+            for (i in germanAdmissionSem){
+                if (selectedAdmissionSem.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanAdmissionSem, this)
         } else if (type.equals("Instruction Language") && germanInstLang != null && germanInstLang.size > 0) {
+            for (i in germanInstLang){
+                if (selectedInstructionLanguage.contains(i.key)){
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanInstLang, this)
         }
@@ -1394,7 +1445,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         dialog.show()
         sheetBinding.clearText.setOnClickListener {
-
+            for (i in diversities) {
+                if (i.checked)
+                    selectedDiversity = i.key
+            }
             if (sheetBinding.spinner.selectedItemPosition > 1)
                 selectedCampusActivity =
                     campusAcivities.get(sheetBinding.spinner.selectedItemPosition - 1).key

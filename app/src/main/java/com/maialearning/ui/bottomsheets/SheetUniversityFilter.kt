@@ -2,6 +2,7 @@ package com.maialearning.ui.bottomsheets
 
 import android.content.Context
 import android.content.res.Resources
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
@@ -28,6 +29,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         dialog.show()
         sheetBinding.search.visibility = View.GONE
         sheetBinding.filters.setText(con.resources.getString(R.string.country))
+        sheetBinding.clearText.setText(con.resources.getString(R.string.done))
         sheetBinding.clearText.setOnClickListener {
             con.refreshTab()
             dialog.dismiss()
@@ -53,6 +55,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
+        sheetBinding.clearText.setText(con.resources.getString(R.string.done))
         sheetBinding.search.visibility = visibility
         sheetBinding.filters.setText(title)
         dialog.show()
@@ -134,6 +137,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
+        sheetBinding.clearText.setText(con.resources.getString(R.string.done))
         sheetBinding.search.visibility = visibility
         sheetBinding.filters.setText(title)
         dialog.show()
@@ -167,6 +171,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
+        sheetBinding.clearText.setText(con.resources.getString(R.string.done))
         sheetBinding.search.visibility = visibility
         sheetBinding.filters.setText(title)
         dialog.show()

@@ -43,11 +43,11 @@ class DiversityAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters
                 if (arr.get(position).checked) {
                     arr.get(position).checked = false
                     check.isChecked=false
-                    UniversitiesActivity.selectedDiversity = ""
+                   // UniversitiesActivity.selectedDiversity = ""
                 } else {
                     arr.get(position).checked = true
                     check.isChecked=false
-                    UniversitiesActivity.selectedDiversity =  arr.get(position).key
+                   // UniversitiesActivity.selectedDiversity =  arr.get(position).key
                 }
                 notifyDataSetChanged();
             })
