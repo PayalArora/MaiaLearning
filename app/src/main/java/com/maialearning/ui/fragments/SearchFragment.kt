@@ -235,7 +235,7 @@ class SearchFragment : Fragment() {
 
     fun universitySearch() {
         if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
-            SharedHelper(requireContext()).continent= "DE"
+            SharedHelper(requireContext()).continent = "DE"
             germanListUpdate = ArrayList()
             germanList = ArrayList()
             germanListNew = ArrayList<GermanUniversitiesResponse.Data.CollegeData?>()
@@ -259,7 +259,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else if ((SharedHelper(requireContext()).country ?: "US").equals("GB")) {
-            SharedHelper(requireContext()).continent= "GB"
+            SharedHelper(requireContext()).continent = "GB"
             ukListUpdate = ArrayList()
             ukList = ArrayList()
             ukListNew = ArrayList<UkResponseModel.Data.CollegeData?>()
@@ -282,7 +282,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else if (euCountries.contains(SharedHelper(requireContext()).country ?: "US")) {
-            SharedHelper(requireContext()).continent= "EU"
+            SharedHelper(requireContext()).continent = "EU"
             euroListUpdate = ArrayList()
             euroList = ArrayList()
             euroListNew = ArrayList()
@@ -306,7 +306,7 @@ class SearchFragment : Fragment() {
                 }
             })
         } else {
-            SharedHelper(requireContext()).continent= "US"
+            SharedHelper(requireContext()).continent = "US"
             universityListUpdate = ArrayList()
             universityList = ArrayList()
             universityListNew = ArrayList()
@@ -366,29 +366,36 @@ class SearchFragment : Fragment() {
         payload.sports_participants = UniversitiesActivity.selectedParticipants.toLowerCase()
         payload.sort_parameter = "college_name"
         payload.sort_order = "asc"
-        payload.type_of_env=UniversitiesActivity.selectedTypeEnv
-        payload.twoFourYear=UniversitiesActivity.selectedTwoFour
-        payload.ug_size=UniversitiesActivity.selectedSize
-        payload.public_private=UniversitiesActivity.selectedPublicPrivate
-        payload.religious=UniversitiesActivity.selectedReligious
+        payload.type_of_env = UniversitiesActivity.selectedTypeEnv
+        payload.twoFourYear = UniversitiesActivity.selectedTwoFour
+        payload.ug_size = UniversitiesActivity.selectedSize
+        payload.public_private = UniversitiesActivity.selectedPublicPrivate
+        payload.religious = UniversitiesActivity.selectedReligious
         payload.athletic_associations = UniversitiesActivity.selectedAthleticAsociations
         payload.foscode = UniversitiesActivity.selectedSubDiscipline
-        payload.subject_code=UniversitiesActivity.selectedGermanSubject
-        payload.mode_of_admission=UniversitiesActivity.selectedModeAdmission
-        payload.mode_of_study=UniversitiesActivity.selectedModeStudy
-        payload.admission_semester=UniversitiesActivity.selectedAdmissionSem
-        payload.instruction_language=UniversitiesActivity.selectedInstructionLanguage
+
+        if (UniversitiesActivity.selectedGermanSubject != null && UniversitiesActivity.selectedGermanSubject.size > 0)
+            payload.subject_code = UniversitiesActivity.selectedGermanSubject
+        if (UniversitiesActivity.selectedAreaStudy != null && UniversitiesActivity.selectedAreaStudy.size > 0)
+            payload.subject_code = UniversitiesActivity.selectedAreaStudy
+        if (UniversitiesActivity.selectedFieldSubject != null && UniversitiesActivity.selectedFieldSubject.size > 0)
+            payload.subject_code = UniversitiesActivity.selectedFieldSubject
+
+        payload.mode_of_admission = UniversitiesActivity.selectedModeAdmission
+        payload.mode_of_study = UniversitiesActivity.selectedModeStudy
+        payload.admission_semester = UniversitiesActivity.selectedAdmissionSem
+        payload.instruction_language = UniversitiesActivity.selectedInstructionLanguage
 
 
-        if (!UniversitiesActivity.sat_erbw.isNullOrEmpty()){
-        payload.sat_ebrw_max = UniversitiesActivity.sat_erbw.split(" - ")[1]
-        payload.sat_ebrw_min = UniversitiesActivity.sat_erbw.split(" - ")[0]
+        if (!UniversitiesActivity.sat_erbw.isNullOrEmpty()) {
+            payload.sat_ebrw_max = UniversitiesActivity.sat_erbw.split(" - ")[1]
+            payload.sat_ebrw_min = UniversitiesActivity.sat_erbw.split(" - ")[0]
         }
-        if (!UniversitiesActivity.sat_math.isNullOrEmpty()){
+        if (!UniversitiesActivity.sat_math.isNullOrEmpty()) {
             payload.sat_math_max = UniversitiesActivity.sat_math.split(" - ")[1]
             payload.sat_math_min = UniversitiesActivity.sat_math.split(" - ")[0]
         }
-        if (!UniversitiesActivity.act.isNullOrEmpty()){
+        if (!UniversitiesActivity.act.isNullOrEmpty()) {
             payload.act_composite_max = UniversitiesActivity.act.split(" - ")[1]
             payload.act_composite_min = UniversitiesActivity.act.split(" - ")[0]
         }

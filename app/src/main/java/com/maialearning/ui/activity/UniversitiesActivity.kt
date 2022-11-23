@@ -74,6 +74,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val germanAdmissionSem: ArrayList<KeyVal> = ArrayList()
     private val germanInstLang: ArrayList<KeyVal> = ArrayList()
     private val germanStudyMode: ArrayList<KeyVal> = ArrayList()
+    private val areaStudy: ArrayList<KeyVal> = ArrayList()
+    private val fieldStudy: ArrayList<KeyVal> = ArrayList()
 
 
     private var savedCountry = ""
@@ -242,10 +244,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selectedDiscipline = ""
         selectedSubDiscipline.clear()
         selectedGermanSubject.clear()
+        selectedAreaStudy.clear()
+        selectedFieldSubject.clear()
         selectedModeAdmission = ""
         selectedModeStudy = ""
         selectedAdmissionSem = ""
         selectedInstructionLanguage = ""
+        areaStudy.clear()
+        fieldStudy.clear()
     }
 
     private fun initView() {
@@ -943,7 +949,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //                dialogP = showLoadingDialog(this)
 //                dialogP.show()
 //                mModel.setSaveCountry()
-                SharedHelper(this).country?.let {   savedCountry = it }
+                SharedHelper(this).country?.let { savedCountry = it }
             } else {
                 resetFilters()
                 initView()
@@ -970,8 +976,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 UnivFilterAdapter(resources.getStringArray(R.array.DEFilters), this)
         } else if (SharedHelper(this).continent == "EU") {
 
-                sheetBindingUniv!!.reciepentList.adapter =
-                    UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
+            sheetBindingUniv!!.reciepentList.adapter =
+                UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
         } else {
             sheetBindingUniv!!.reciepentList.adapter =
                 UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
@@ -1006,7 +1012,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         resources.getString(R.string.reigon),
                         positiion
                     )
-                } else if (SharedHelper(this).continent == "EU"||SharedHelper(this).country == "DE") {
+                } else if (SharedHelper(this).continent == "EU" || SharedHelper(this).country == "DE") {
                     universityList()
                 }
             } else if (positiion == 2) {
@@ -1018,7 +1024,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                             listStates, View.GONE, positiion
                         )
                     }
-                }  else if (SharedHelper(this).country == "DE") {
+                } else if (SharedHelper(this).country == "DE") {
                     disciplineFilter("Subject")
                 } else if (SharedHelper(this).continent == "EU") {
                     disciplineFilter("Discipline")
@@ -1029,13 +1035,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else if (SharedHelper(this).continent == "EU") {
                     disciplineFilter("Subdiscipline")
                 } else if (SharedHelper(this).country == "DE") {
-//                    disciplineFilter("Subdiscipline")
+                    if (areaStudy != null && areaStudy.size > 0) {
+                        disciplineFilter("Area of Study")
+                    }
                 }
             } else if (positiion == 4) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
                     typeFilter()
                 } else if (SharedHelper(this).country == "DE") {
-//                    disciplineFilter("Subdiscipline")
+                    if (fieldStudy != null && fieldStudy.size > 0) {
+                        disciplineFilter("Field of Study")
+                    }
                 }
             } else if (positiion == 5) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1150,16 +1160,18 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                             UnivFilterAdapter(ar, this)
                     }
                 }
+                if (selectedGermanSubject != null && selectedGermanSubject.size > 0) {
+                    dialogP.show()
+                    mModel.getGermanSubSubject(selectedGermanSubject.get(0), true)
+                }
             } else if (type.equals("Mode of Admission")) {
                 selectedModeAdmission = ""
                 for (i in germanModeAdmission.indices) {
                     if (germanModeAdmission.get(i).checked) {
                         selectedModeAdmission = germanModeAdmission.get(i).key
-                        if (SharedHelper(this).continent == "EU") {
-                            ar[selType] = germanModeAdmission.get(i).value
-                            sheetBindingUniv!!.reciepentList.adapter =
-                                UnivFilterAdapter(ar, this)
-                        }
+                        ar[selType] = germanModeAdmission.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
                     }
                 }
             } else if (type.equals("Mode of Study")) {
@@ -1167,11 +1179,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 for (i in germanStudyMode.indices) {
                     if (germanStudyMode.get(i).checked) {
                         selectedModeStudy = germanStudyMode.get(i).key
-                        if (SharedHelper(this).continent == "EU") {
-                            ar[selType] = germanStudyMode.get(i).value
-                            sheetBindingUniv!!.reciepentList.adapter =
-                                UnivFilterAdapter(ar, this)
-                        }
+                        ar[selType] = germanStudyMode.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
                     }
                 }
             } else if (type.equals("Admission Semester")) {
@@ -1179,11 +1189,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 for (i in germanAdmissionSem.indices) {
                     if (germanAdmissionSem.get(i).checked) {
                         selectedAdmissionSem = germanAdmissionSem.get(i).key
-                        if (SharedHelper(this).continent == "EU") {
-                            ar[selType] = germanAdmissionSem.get(i).value
-                            sheetBindingUniv!!.reciepentList.adapter =
-                                UnivFilterAdapter(ar, this)
-                        }
+                        ar[selType] = germanAdmissionSem.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
                     }
                 }
             } else if (type.equals("Instruction Language")) {
@@ -1191,11 +1199,33 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 for (i in germanInstLang.indices) {
                     if (germanInstLang.get(i).checked) {
                         selectedInstructionLanguage = germanInstLang.get(i).key
-                        if (SharedHelper(this).continent == "EU") {
-                            ar[selType] = germanInstLang.get(i).value
-                            sheetBindingUniv!!.reciepentList.adapter =
-                                UnivFilterAdapter(ar, this)
-                        }
+                        ar[selType] = germanInstLang.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
+                    }
+                }
+            } else if (type.equals("Area of Study")) {
+                for (i in areaStudy.indices) {
+                    if (areaStudy.get(i).checked) {
+                        selectedAreaStudy.clear()
+                        selectedAreaStudy.add(areaStudy.get(i).key)
+                        ar[selType] = areaStudy.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
+                    }
+                }
+                if (selectedAreaStudy != null && selectedAreaStudy.size > 0) {
+                    dialogP.show()
+                    mModel.getGermanSubSubject(selectedAreaStudy.get(0), false)
+                }
+            } else if (type.equals("Field of Study")) {
+                for (i in fieldStudy.indices) {
+                    if (fieldStudy.get(i).checked) {
+                        selectedFieldSubject.clear()
+                        selectedFieldSubject.add(fieldStudy.get(i).key)
+                        ar[selType] = fieldStudy.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
                     }
                 }
             }
@@ -1204,8 +1234,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         sheetBinding.spinnerLay.visibility = View.GONE
         if (type.equals("Discipline")) {
-            for (i in disciplines){
-                if (selectedSubDiscipline.contains(i.key)){
+            for (i in disciplines) {
+                if (selectedSubDiscipline.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1214,8 +1244,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(disciplines, this)
         } else if (type.equals("Subdiscipline") && subDisciplines != null && subDisciplines.size > 0) {
-            for (i in subDisciplines){
-                if (selectedSubDiscipline.contains(i.key)){
+            for (i in subDisciplines) {
+                if (selectedSubDiscipline.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1224,8 +1254,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(subDisciplines, this)
         } else if (type.equals("Subject") && germanSubject != null && germanSubject.size > 0) {
-            for (i in germanSubject){
-                if (selectedGermanSubject.contains(i.key)){
+            for (i in germanSubject) {
+                if (selectedGermanSubject.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1234,8 +1264,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanSubject, this)
         } else if (type.equals("Mode of Admission") && germanModeAdmission != null && germanModeAdmission.size > 0) {
-            for (i in germanModeAdmission){
-                if (selectedModeAdmission.contains(i.key)){
+            for (i in germanModeAdmission) {
+                if (selectedModeAdmission.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1244,8 +1274,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanModeAdmission, this)
         } else if (type.equals("Mode of Study") && germanStudyMode != null && germanStudyMode.size > 0) {
-            for (i in germanStudyMode){
-                if (selectedModeStudy.contains(i.key)){
+            for (i in germanStudyMode) {
+                if (selectedModeStudy.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1254,8 +1284,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanStudyMode, this)
         } else if (type.equals("Admission Semester") && germanAdmissionSem != null && germanAdmissionSem.size > 0) {
-            for (i in germanAdmissionSem){
-                if (selectedAdmissionSem.contains(i.key)){
+            for (i in germanAdmissionSem) {
+                if (selectedAdmissionSem.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1264,8 +1294,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanAdmissionSem, this)
         } else if (type.equals("Instruction Language") && germanInstLang != null && germanInstLang.size > 0) {
-            for (i in germanInstLang){
-                if (selectedInstructionLanguage.contains(i.key)){
+            for (i in germanInstLang) {
+                if (selectedInstructionLanguage.contains(i.key)) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1273,6 +1303,26 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(germanInstLang, this)
+        } else if (type.equals("Area of Study") && areaStudy != null && areaStudy.size > 0) {
+            for (i in areaStudy) {
+                if (selectedAreaStudy.contains(i.key)) {
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
+            sheetBinding.reciepentList.adapter =
+                DiversityAdapter(areaStudy, this)
+        } else if (type.equals("Field of Study") && fieldStudy != null && fieldStudy.size > 0) {
+            for (i in fieldStudy) {
+                if (selectedFieldSubject.contains(i.key)) {
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
+            sheetBinding.reciepentList.adapter =
+                DiversityAdapter(fieldStudy, this)
         }
 
 
@@ -2026,6 +2076,34 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
             }
         }
+        areaStudy.clear()
+        mModel.areaStudyObserver.observe(this) {
+            dialogP.dismiss()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    areaStudy.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+        }
+        fieldStudy.clear()
+        mModel.fieldStudyObserver.observe(this) {
+            dialogP.dismiss()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    fieldStudy.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+        }
         mModel.factSheetObserver.observe(this) {
             dialogP.dismiss()
             val gson = GsonBuilder().create()
@@ -2298,6 +2376,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedDiscipline: String = ""
         var selectedSubDiscipline: ArrayList<String> = arrayListOf()
         var selectedGermanSubject: ArrayList<String> = arrayListOf()
+        var selectedAreaStudy: ArrayList<String> = arrayListOf()
+        var selectedFieldSubject: ArrayList<String> = arrayListOf()
         var selectedModeAdmission: String = ""
         var selectedModeStudy: String = ""
         var selectedAdmissionSem: String = ""

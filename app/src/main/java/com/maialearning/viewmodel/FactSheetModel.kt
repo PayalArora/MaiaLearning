@@ -38,6 +38,9 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val collegeEssayObserver = MutableLiveData<CollegeEssayResponse>()
     val deleteCollegeEssayObserver = MutableLiveData<Unit>()
     val subDisciplineObserver = MutableLiveData<JsonObject>()
+    val areaStudyObserver = MutableLiveData<JsonObject>()
+    val fieldStudyObserver = MutableLiveData<JsonObject>()
+
 
     fun getColFactSheet(token: String, id: String) {
         showLoading.value = true
@@ -149,11 +152,11 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
         }
     }
 
-    fun getUniversityList(status: String,uid:String) {
+    fun getUniversityList(status: String, uid: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getUniversityList(status,uid)
+                catRepository.getUniversityList(status, uid)
             }
             // showLoading.value = false
             when (result) {
@@ -280,7 +283,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getCollegeEssay(id,page,sortBy,sortOrder)
+                catRepository.getCollegeEssay(id, page, sortBy, sortOrder)
             }
             // showLoading.value = false
             when (result) {
@@ -335,6 +338,26 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> subDisciplineObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getGermanSubSubject(selected: String, areaStudy: Boolean) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getGermanChildSubject(selected)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> {
+                    if (areaStudy) {
+                        areaStudyObserver.value = result.data
+                    } else {
+                        fieldStudyObserver.value = result.data
+                    }
+                }
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
