@@ -40,6 +40,9 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val subDisciplineObserver = MutableLiveData<JsonObject>()
     val areaStudyObserver = MutableLiveData<JsonObject>()
     val fieldStudyObserver = MutableLiveData<JsonObject>()
+    val gbAreaStudy = MutableLiveData<JsonObject>()
+    val gbProgramObserver = MutableLiveData<JsonObject>()
+
 
 
     fun getColFactSheet(token: String, id: String) {
@@ -356,6 +359,26 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
                         areaStudyObserver.value = result.data
                     } else {
                         fieldStudyObserver.value = result.data
+                    }
+                }
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getGbSubchild(selected: String, areaStudy: Boolean) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getGbSubChild(selected)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> {
+                    if (areaStudy) {
+                        gbAreaStudy.value = result.data
+                    } else {
+                        gbProgramObserver.value = result.data
                     }
                 }
                 is UseCaseResult.Error -> showError.value = result.exception.message

@@ -682,5 +682,10 @@ interface AllAPi {
         @Field("subject_code") id: String
     ): Deferred<JsonObject>
 
-
+    @POST("get_ucas_child_Subject_levels")
+    @FormUrlEncoded
+    fun getGBSubChildSubject(
+        @Header("Authorization") AutToken: String,
+        @Field("subject_code") id: String
+    ): Deferred<JsonObject>
 }

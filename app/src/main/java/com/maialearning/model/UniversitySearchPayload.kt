@@ -40,6 +40,8 @@ class UniversitySearchPayload {
     lateinit var mode_of_study:String
     lateinit var admission_semester:String
     lateinit var instruction_language:String
+    var college_list: ArrayList<String>? = null
+    lateinit var ucas_college_type: String
 
 
 /*    {

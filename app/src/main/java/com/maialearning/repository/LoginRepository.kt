@@ -340,6 +340,10 @@ interface LoginRepository {
     suspend fun getGermanChildSubject(
         id: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun getGbSubChild(
+        id: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1741,6 +1745,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getGermanChildSubject(id: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.getSubChildSubject(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getGbSubChild(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getGBSubChildSubject(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
             ).await()

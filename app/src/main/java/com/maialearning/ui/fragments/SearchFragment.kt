@@ -385,6 +385,8 @@ class SearchFragment : Fragment() {
         payload.mode_of_study = UniversitiesActivity.selectedModeStudy
         payload.admission_semester = UniversitiesActivity.selectedAdmissionSem
         payload.instruction_language = UniversitiesActivity.selectedInstructionLanguage
+        payload.college_list=UniversitiesActivity.selectedGbUniversity
+        payload.ucas_college_type=UniversitiesActivity.selectedGbCollege
 
 
         if (!UniversitiesActivity.sat_erbw.isNullOrEmpty()) {
