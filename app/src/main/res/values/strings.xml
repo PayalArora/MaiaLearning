@@ -591,6 +591,7 @@
     <string name="size">Size(Undergraduate Students)</string>
     <string name="athletic">Athletic associations</string>
     <string name="discipline">Discipline</string>
+    <string name="university">University</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

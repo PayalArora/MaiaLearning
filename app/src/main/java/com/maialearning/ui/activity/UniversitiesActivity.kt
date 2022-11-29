@@ -1408,7 +1408,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
             }
             sheetBinding.reciepentList.adapter =
-                DiversityAdapter(gbUniversityList, this)
+                MultiSelectionAdapter(gbUniversityList, this)
         } else if (type.equals("Colleges") && gbCollegeList != null && gbCollegeList.size > 0) {
             for (i in gbCollegeList) {
                 if (selectedGbCollege.contains(i.key)) {
@@ -1438,7 +1438,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
             }
             sheetBinding.reciepentList.adapter =
-                DiversityAdapter(programGBStudy, this)
+                MultiSelectionAdapter(programGBStudy, this)
         }
 
 
