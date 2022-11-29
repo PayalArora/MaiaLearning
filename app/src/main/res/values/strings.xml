@@ -180,6 +180,13 @@
         <item>More</item>
     </string-array>
 
+    <string-array name="consideringFilters">
+        <item>Actively Considering</item>
+        <item>Deleted</item>
+        <item>Country</item>
+        <item>Applying with</item>
+    </string-array>
+
     <string-array name="EUFilters">
         <item>Country</item>
         <item>University List</item>

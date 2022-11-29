@@ -27,6 +27,7 @@ import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
+import com.maialearning.ui.fragments.ConsideringFragment
 import com.maialearning.ui.model.AthleticAsociations
 import com.maialearning.ui.model.ChildrenItem
 import com.maialearning.ui.model.ResponseItem
@@ -974,22 +975,27 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             mainDialog?.dismiss()
         }
         Log.e("Selected Country >>", SharedHelper(this).country.toString())
-        if ((SharedHelper(this).country ?: "US") == "US") {
-            sheetBindingUniv!!.reciepentList.adapter =
-                UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
-        } else if ((SharedHelper(this).country ?: "US") == "DE") {
-            sheetBindingUniv!!.reciepentList.adapter =
-                UnivFilterAdapter(resources.getStringArray(R.array.DEFilters), this)
-        } else if ((SharedHelper(this).country ?: "US") == "GB") {
-            sheetBindingUniv!!.reciepentList.adapter =
-                UnivFilterAdapter(resources.getStringArray(R.array.GBFilters), this)
-        } else if (SharedHelper(this).continent == "EU") {
+        if (binding.viewPager.currentItem == 0) {
+            if ((SharedHelper(this).country ?: "US") == "US") {
+                sheetBindingUniv!!.reciepentList.adapter =
+                    UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
+            } else if ((SharedHelper(this).country ?: "US") == "DE") {
+                sheetBindingUniv!!.reciepentList.adapter =
+                    UnivFilterAdapter(resources.getStringArray(R.array.DEFilters), this)
+            } else if ((SharedHelper(this).country ?: "US") == "GB") {
+                sheetBindingUniv!!.reciepentList.adapter =
+                    UnivFilterAdapter(resources.getStringArray(R.array.GBFilters), this)
+            } else if (SharedHelper(this).continent == "EU") {
 
-            sheetBindingUniv!!.reciepentList.adapter =
-                UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
-        } else {
-            sheetBindingUniv!!.reciepentList.adapter =
-                UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
+                sheetBindingUniv!!.reciepentList.adapter =
+                    UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
+            } else {
+                sheetBindingUniv!!.reciepentList.adapter =
+                    UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
+            }
+        } else if (binding.viewPager.currentItem == 1) {
+//            sheetBindingUniv!!.reciepentList.adapter =
+//                ConsiderFilterAdapter(resources.getStringArray(R.array.consideringFilters), this)
         }
     }
 
@@ -1104,6 +1110,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else if (SharedHelper(this).country == "DE") {
                     disciplineFilter("Instruction Language")
                 }
+            }
+        } else if (type == 1) {
+            if (positiion == 2) {
+//                if (countries.size > 0) {
+//                    flagImg?.let { countryFilter(it) }
+//                } else {
+//                    dialogP = showLoadingDialog(this)
+//                    dialogP.show()
+//                    mModel.getFilterCollege()
+//                }
+                disciplineFilter("Country")
             }
         }
     }

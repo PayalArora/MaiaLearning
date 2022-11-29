@@ -973,5 +973,8 @@ showConfirmDialog(postion)
             mBinding.applyingList.adapter?.notifyDataSetChanged()
         }
     }
+
+    override fun onFilterDialog(positiion: Int, type: Int, flagImg: ImageView?) {
+    }
 }
 
