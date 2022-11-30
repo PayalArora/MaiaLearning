@@ -974,7 +974,5 @@ showConfirmDialog(postion)
         }
     }
 
-    override fun onFilterDialog(positiion: Int, type: Int, flagImg: ImageView?) {
-    }
 }
 

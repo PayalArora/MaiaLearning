@@ -31,8 +31,6 @@ class ConsiderCountryFilterAdapter (val arr: ArrayList<KeyVal>) :
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             check.setText(arr.get(position).value)
-
-
             check.setOnClickListener({
                 for (i in arr.indices) {
                     if (i != position) {
@@ -42,11 +40,9 @@ class ConsiderCountryFilterAdapter (val arr: ArrayList<KeyVal>) :
                 if (arr.get(position).checked) {
                     arr.get(position).checked = false
                     check.isChecked=false
-                    // UniversitiesActivity.selectedDiversity = ""
                 } else {
                     arr.get(position).checked = true
                     check.isChecked=false
-                    // UniversitiesActivity.selectedDiversity =  arr.get(position).key
                 }
                 notifyDataSetChanged();
             })

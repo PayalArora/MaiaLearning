@@ -181,8 +181,8 @@
     </string-array>
 
     <string-array name="consideringFilters">
-        <item>Actively Considering</item>
-        <item>Deleted</item>
+<!--        <item>Actively Considering</item>-->
+<!--        <item>Deleted</item>-->
         <item>Country</item>
         <item>Applying with</item>
     </string-array>
@@ -599,6 +599,10 @@
     <string name="athletic">Athletic associations</string>
     <string name="discipline">Discipline</string>
     <string name="university">University</string>
+    <string name="applying_with">Applying with</string>
+    <string name="show">Show</string>
+    <string name="active_consider">Active Considering</string>
+    <string name="deleted_consider">Deleted</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

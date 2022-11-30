@@ -34,7 +34,7 @@ interface LoginRepository {
     suspend fun getForgetPassword(email: String): UseCaseResult<ForgetModel>
 
     suspend fun getUserProfile(id_token: String, id: String): UseCaseResult<ProfileResponse>
-    suspend fun getConsiderList(id: String): UseCaseResult<JsonObject>
+    suspend fun getConsiderList(id: String, status: String): UseCaseResult<JsonObject>
     suspend fun getNotes(id: String): UseCaseResult<NotesModel>
     suspend fun getApplyList(id: String): UseCaseResult<JsonObject>
     suspend fun getJWTToken(): UseCaseResult<String>
@@ -419,11 +419,11 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getConsiderList(id: String): UseCaseResult<JsonObject> {
+    override suspend fun getConsiderList(id: String, status: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.considerListAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-                id
+                id, status
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

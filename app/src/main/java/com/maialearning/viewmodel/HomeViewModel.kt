@@ -59,11 +59,11 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val getcontinentFilter = MutableLiveData<JsonObject>()
 
 
-    fun getConsiderList(id: String) {
+    fun getConsiderList(id: String, status: String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getConsiderList(id)
+                catRepository.getConsiderList(id, status)
             }
             showLoading.value = false
             when (result) {

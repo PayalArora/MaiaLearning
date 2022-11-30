@@ -54,10 +54,11 @@ interface AllAPi {
 //        @Header("status") status: String
 //    ):  Deferred<JSONObject>
 
-    @GET("counselor_college/{id}?status=considering")
+    @GET("counselor_college/{id}")
     fun considerListAsync(
         @Header("Authorization") AutToken: String,
-        @Path("id") id: String
+        @Path("id") id: String,
+        @Query("status")status: String
     ): Deferred<JsonObject>
 
     @GET("counselor_college/{id}?status=applying")

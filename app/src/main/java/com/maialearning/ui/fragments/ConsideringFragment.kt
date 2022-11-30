@@ -45,8 +45,14 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     private val homeModel: HomeViewModel by viewModel()
     lateinit var userid: String
     val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
-    val countryArray: ArrayList<KeyVal> = ArrayList()
+    var deletedArray: ArrayList<ConsiderModel.Data> = ArrayList()
+    var activeArray: ArrayList<ConsiderModel.Data> = ArrayList()
+    val countryArrayActive: ArrayList<KeyVal> = ArrayList()
+    val countryArrayDeleted: ArrayList<KeyVal> = ArrayList()
     var mainDialog: BottomSheetDialog? = null
+    var selectedCountryActive = ""
+    var selectedCountryDeleted = ""
+    var selectedConsider = ACTIVE_CONSIDER
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,36 +87,88 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
     }
 
-    var sheetBindingUniv: UniversityFilterBinding? = null
+    var sheetBindingUniv: ConsideringFilterBinding? = null
 
     private fun filterWork() {
         mainDialog = activity?.let { BottomSheetDialog(it) }
 
-        sheetBindingUniv = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBindingUniv = ConsideringFilterBinding.inflate(layoutInflater)
         sheetBindingUniv?.root?.minimumHeight =
             ((Resources.getSystem().displayMetrics.heightPixels))
         mainDialog?.setContentView(sheetBindingUniv!!.root)
-        sheetBindingUniv?.search?.visibility = View.GONE
+       // sheetBindingUniv?.search?.visibility = View.GONE
         sheetBindingUniv?.filters?.setText(resources.getString(R.string.filters))
         mainDialog?.show()
         sheetBindingUniv!!.clearText.setOnClickListener {
 
+            selectedCountryActive ==""
+            selectedCountryDeleted ==""
             mainDialog?.dismiss()
         }
         sheetBindingUniv!!.backBtn.setOnClickListener {
-
+            if (selectedConsider == ACTIVE_CONSIDER){
+                mBinding.consideringList.adapter =
+                    ConsiderAdapter(this, countryFilterEvaluationActive(activeArray, selectedCountryActive), ::notesClick)
+            } else {
+                if (deletedArray.size>0) {
+                    mBinding.consideringList.adapter =
+                        ConsiderAdapter(
+                            this,
+                            countryFilterEvaluationActive(deletedArray, selectedCountryDeleted),
+                            ::notesClick
+                        )
+                } else {
+                    getConsideringList()
+                }
+            }
             mainDialog?.dismiss()
+
         }
+        sheetBindingUniv!!.countryItem.setOnClickListener {
+            subFilter("Country")
+        }
+        sheetBindingUniv!!.activeConsider.setOnClickListener {
+          selectedConsider = ACTIVE_CONSIDER
+        }
+        sheetBindingUniv!!.deletedConsider.setOnClickListener {
+            selectedConsider = DELETED
+        }
+//        sheetBindingUniv!!.reciepentList.adapter =
+//            ConsiderFilterAdapter(resources.getStringArray(R.array.consideringFilters), ::onConsideringMainFilterClick)
 
-        sheetBindingUniv!!.reciepentList.adapter =
-            ConsiderFilterAdapter(resources.getStringArray(R.array.consideringFilters), this)
+    }
 
+    private  fun countryFilterEvaluationActive(finalArray:ArrayList<ConsiderModel.Data>, selectedCountry:String): ArrayList<ConsiderModel.Data>{
+        var filteredArray: ArrayList<ConsiderModel.Data> = ArrayList()
+        if (selectedCountry =="" || selectedCountry == "All"){
+            filteredArray = finalArray
+
+        } else {
+            for (i in finalArray){
+                var checkSame = false
+                if (i.country == selectedCountry){
+                    checkSame = true
+                    filteredArray.add(i)
+                } else if (i.country == "" && checkSame){
+                    filteredArray.add(i)
+                } else{
+                    checkSame = false
+                }
+            }
+        }
+        return filteredArray
+    }
+
+    private fun onConsideringMainFilterClick(position: Int, imageView: ImageView) {
+        if (position == 0) {
+            subFilter("Country")
+        }
     }
 
     private fun getConsideringList() {
         SharedHelper(requireContext()).id?.let {
             userid = SharedHelper(requireContext()).id!!
-            homeModel.getConsiderList(userid)
+            homeModel.getConsiderList(userid, selectedConsider)
         }
     }
 
@@ -129,6 +187,24 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                     val countries = ArrayList<String>()
                     val array: ArrayList<ConsiderModel.Data> = ArrayList()
+                    if (jsonArray.length()>0){
+                        if (selectedConsider == ACTIVE_CONSIDER){
+                    countryArrayActive.add(
+                        KeyVal(
+                            "All",
+                            "All",
+                            false
+                        )
+                    )} else{
+                            countryArrayDeleted.add(
+                                KeyVal(
+                                    "All",
+                                    "All",
+                                    false
+                                )
+                            )
+
+                        }                    }
                     for (i in 0 until jsonArray.length()) {
                         val object_ = jsonArray.getJSONObject(i)
                         val arrayProgram: ArrayList<ConsiderModel.ProgramData> = arrayListOf()
@@ -178,13 +254,22 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
                         if (!countries.contains(object_.getString("country_name"))) {
                             countries.add(object_.getString("country_name"))
-                            countryArray.add(
+                            if (selectedConsider == ACTIVE_CONSIDER){
+                            countryArrayActive.add(
                                 KeyVal(
                                     object_.getString("country"),
                                     object_.getString("country_name"),
                                     false
                                 )
-                            )
+                            )} else{
+                                countryArrayDeleted.add(
+                                    KeyVal(
+                                        object_.getString("country"),
+                                        object_.getString("country_name"),
+                                        false
+                                    )
+                                )
+                            }
                         }
 
                         val model: ConsiderModel.Data = ConsiderModel.Data(
@@ -496,8 +581,16 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
             }
-            mBinding.consideringList.adapter =
-                ConsiderAdapter(this, finalArray, ::notesClick)
+            if (selectedConsider == ACTIVE_CONSIDER){
+                activeArray = finalArray
+                mBinding.consideringList.adapter =
+                    ConsiderAdapter(this, activeArray, ::notesClick)
+            } else{
+                deletedArray = finalArray
+                mBinding.consideringList.adapter =
+                    ConsiderAdapter(this, deletedArray, ::notesClick)
+            }
+
         }
         homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
@@ -1043,14 +1136,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
     }
 
-    override fun onFilterDialog(positiion: Int, type: Int, flagImg: ImageView?) {
-        if (type == 2) {
-            if (positiion == 2) {
-                subFilter("Country")
-            }
-        }
-    }
-
     private fun subFilter(type: String) {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: UniversityFilterBinding =
@@ -1063,22 +1148,54 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.invisibleLay.visibility = View.GONE
-        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+        sheetBinding.backBtn.setOnClickListener {
+            dialog.dismiss() }
         sheetBinding.clearText.setText(resources.getString(R.string.done))
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.clearText.setOnClickListener {
+            when (selectedConsider){
+              ACTIVE_CONSIDER ->{
+                  for (i in countryArrayActive){
+                      if (i.checked) {
+                          selectedCountryActive = i.key
+                      }
+                  }
+              }
+                DELETED->{
+                    for (i in countryArrayDeleted){
+                        if (i.checked) {
+                            selectedCountryDeleted = i.key
+                        }
+                    }
+                }
+            }
 
+
+            dialog.dismiss()
         }
         sheetBinding.close.setOnClickListener {
             sheetBinding.searchText.setText("")
         }
 
         if (type.equals("Country")) {
-            sheetBinding.reciepentList.adapter =
-                ConsiderCountryFilterAdapter(countryArray)
+            when (selectedConsider){
+                ACTIVE_CONSIDER ->{
+                    sheetBinding.reciepentList.adapter =
+                        ConsiderCountryFilterAdapter(countryArrayActive)
+                }
+                DELETED->{
+                    sheetBinding.reciepentList.adapter =
+                        ConsiderCountryFilterAdapter(countryArrayDeleted)
+                }
+            }
+
         }
 
     }
+companion object {
+    const val ACTIVE_CONSIDER = "considering"
+    const val DELETED = "considered"
+}
 
 }
 
@@ -1086,7 +1203,6 @@ interface ClickOptionFilters {
     fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue)
     fun onTermItemClick(positiion: Int, type: Int, dynamicKeyValue: String)
     fun onPlanOptionClick(positiion: Int, type: Int, dynamicKey: String, dynamicKeyValue: String)
-    fun onFilterDialog(positiion: Int, type: Int, flagImg: ImageView?)
 }
 
 interface OnItemClickOption {
