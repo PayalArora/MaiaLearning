@@ -181,8 +181,8 @@
     </string-array>
 
     <string-array name="consideringFilters">
-<!--        <item>Actively Considering</item>-->
-<!--        <item>Deleted</item>-->
+        <!--        <item>Actively Considering</item>-->
+        <!--        <item>Deleted</item>-->
         <item>Country</item>
         <item>Applying with</item>
     </string-array>
@@ -681,5 +681,18 @@
     <string-array name="slider_values_sat">
         <item>200</item>
         <item>200</item>
+    </string-array>
+    <string-array name="static_applying_with">
+        <item>UC Application</item>
+        <item>Common App</item>
+        <item>Other Application</item>
+        <item>Coalition App</item>
+        <item>Online App / Mail</item>
+        <item>Mail Application</item>
+        <item>UCAS</item>
+        <item>California State App</item>
+        <item>Apply Texas</item>
+        <item>CSU Application</item>
+        <item>Universal App</item>
     </string-array>
 </resources>

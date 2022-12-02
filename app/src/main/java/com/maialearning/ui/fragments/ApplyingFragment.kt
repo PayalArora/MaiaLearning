@@ -31,7 +31,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnItemClick, ClickOptionFilters {
+class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnItemClick,
+    ClickOptionFilters {
     var selectedValue = ""
     var dialog: BottomSheetDialog? = null
     var typeTermPosition = -1
@@ -41,7 +42,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
     lateinit var userid: String
     var selectedUnivId: String = ""
-    var positio:Int = 0
+    var positio: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -177,7 +178,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.getInt("confirm_applied"), null, requiredRecs,
 
                         object_.getInt("manual_update"),
-                        object_.optString("application_round")
+                        object_.optString("application_round"),
+                        object_.optString("status")
 
                     )
                     array.add(model)
@@ -342,7 +344,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                             finalArray.get(i).collegeAppLicationType =
                                 ConsiderModel.CollType(typeList, selectedAppModeType)
 
-                      }
+                        }
 //                        else if (jsonUniv.optJSONArray("allowed_application_type") != null) {
 //                            allowedTypeArray = jsonUniv.optJSONArray("allowed_application_type")
 //                            for (i in 0 until allowedTypeArray.length()) {
@@ -435,9 +437,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
     }
 
-            private fun setAdapter() {
-                mBinding.applyingList.adapter = ApplyingAdapter(this, arrayListOf())
-            }
+    private fun setAdapter() {
+        mBinding.applyingList.adapter = ApplyingAdapter(this, arrayListOf())
+    }
 
     private fun bottomSheetType(
         layoutId: Int,
@@ -464,7 +466,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 finalArray[arratlistPosition].collegeAppLicationType?.collType?.let {
                     val array = arrayListOf<DynamicKeyValue>()
                     array.clear()
-                    array.addAll( it)
+                    array.addAll(it)
                     val term = ConsiderModel.CollTerm()
                     array!!.add(DynamicKeyValue("Reset", "Reset", term))
                     ConsideringTypeTermAdapter(array, type, this)
@@ -498,16 +500,20 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     if (finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.type == "term") {
 //
                         if (finalArray[arratlistPosition].applicationTerm.equals(
-                                finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(k)?.term?.collTerm?.get(k)?.plan
+                                finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(
+                                    k
+                                )?.term?.collTerm?.get(k)?.plan
                             )
                         ) {
-                            finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(k)?.term?.collTerm?.get(k)?.collPlan
+                            finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(k)?.term?.collTerm?.get(
+                                k
+                            )?.collPlan
                             finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.collTerm?.get(
                                 k
                             )?.collPlan?.let {
                                 val array = arrayListOf<ConsiderModel.Decision>()
                                 array.clear()
-                                array.addAll( it)
+                                array.addAll(it)
                                 array!!.add(ConsiderModel.Decision("Reset", "Reset", null))
 
                                 recyclerView.adapter = ConsiderPlanAdapter(
@@ -515,11 +521,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 )
                                 return
                             }
-                        } }else {
+                        }
+                    } else {
                         finalArray[arratlistPosition].collegeAppLicationType?.collType?.get(i)?.term?.planList?.let {
                             val array = arrayListOf<ConsiderModel.DecisionPlan>()
                             array.clear()
-                            array.addAll( it)
+                            array.addAll(it)
                             array!!.add(ConsiderModel.DecisionPlan("Reset", "Reset"))
 
                             recyclerView.adapter = ConsiderDecisionAdapter(
@@ -559,37 +566,37 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
 
     override fun onCommentClick() {
-                //     bottomSheetComment()
-            }
+        //     bottomSheetComment()
+    }
 
-            private fun bottomSheetComment() {
-                val dialog = BottomSheetDialog(requireContext())
-                val sheetBinding: com.maialearning.databinding.CommentsSheetBinding =
-                    CommentsSheetBinding.inflate(layoutInflater)
-                sheetBinding.root.minimumHeight =
-                    ((Resources.getSystem().displayMetrics.heightPixels))
-                dialog.setContentView(sheetBinding.root)
-                dialog.show()
-                sheetBinding.close.setOnClickListener {
-                    dialog.dismiss()
-                }
-                sheetBinding.commentList.adapter = CommentAdapter(this)
-            }
+    private fun bottomSheetComment() {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: com.maialearning.databinding.CommentsSheetBinding =
+            CommentsSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =
+            ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.close.setOnClickListener {
+            dialog.dismiss()
+        }
+        sheetBinding.commentList.adapter = CommentAdapter(this)
+    }
 
-            override fun onClick(positiion: Int) {
+    override fun onClick(positiion: Int) {
 
-            }
+    }
 
-            override fun onInfoClick(postion: Int) {
-            }
+    override fun onInfoClick(postion: Int) {
+    }
 
-            override fun onApplyingClick(postion: Int) {
-                if(finalArray.get(postion).confirmApplied==1){
-showConfirmDialog(postion)
-                }else{
-                    showDialogDate(postion)
-                }
-            }
+    override fun onApplyingClick(postion: Int) {
+        if (finalArray.get(postion).confirmApplied == 1) {
+            showConfirmDialog(postion)
+        } else {
+            showDialogDate(postion)
+        }
+    }
 
     private fun showConfirmDialog(postion: Int) {
         AlertDialog.Builder(requireContext())
@@ -609,7 +616,7 @@ showConfirmDialog(postion)
                 dialogP.show()
                 homeModel.updateStudentPlan(updateStudentPlan)
                 homeModel.updateStudentPlanObserver.observe(requireActivity()) {
-                    finalArray.get(postion).confirmApplied=0
+                    finalArray.get(postion).confirmApplied = 0
                     mBinding.applyingList.adapter?.notifyDataSetChanged()
                     dialogP.dismiss()
                     context?.resources?.getString(R.string.updated)
@@ -623,7 +630,7 @@ showConfirmDialog(postion)
                     dialogP.dismiss()
                 }
             }
-            .setNegativeButton("Cancel"){ dialog, whichButton ->
+            .setNegativeButton("Cancel") { dialog, whichButton ->
                 mBinding.applyingList.adapter?.notifyDataSetChanged()
             }.show()
     }
@@ -632,8 +639,9 @@ showConfirmDialog(postion)
     fun showDialogDate(postion: Int) {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val width:Int =
-            (requireContext().getResources().getDisplayMetrics().widthPixels) -30 //<-- int width=400;
+        val width: Int =
+            (requireContext().getResources()
+                .getDisplayMetrics().widthPixels) - 30 //<-- int width=400;
         dialog.setContentView(R.layout.submitted_date_lay)
         dialog.window?.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
         val back = ColorDrawable(Color.WHITE)
@@ -641,23 +649,25 @@ showConfirmDialog(postion)
         dialog.window!!.setBackgroundDrawable(inset)
         dialog.setCancelable(false)
 
-       // dialog.setContentView(R.layout.submitted_date_lay)
+        // dialog.setContentView(R.layout.submitted_date_lay)
         val text = dialog.findViewById<View>(R.id.calender_edt) as TextView
         text.setOnClickListener {
-            text.showDatePicker(requireContext(),::setDate)
+            text.showDatePicker(requireContext(), ::setDate)
         }
         val dialogButton = dialog.findViewById<View>(R.id.btn_submit) as Button
-        dialogButton.setOnClickListener { if (!text.text.toString().isNullOrEmpty()) {
+        dialogButton.setOnClickListener {
+            if (!text.text.toString().isNullOrEmpty()) {
                 var updateStudentPlan = UpdateStudentPlan()
                 updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
                 updateStudentPlan.college_nid = finalArray[postion].university_nid
 
                 updateStudentPlan.confirm_applied = 1
-                updateStudentPlan.confirm_applied_time =convertDateToLong(text.text.toString()).toString()
+                updateStudentPlan.confirm_applied_time =
+                    convertDateToLong(text.text.toString()).toString()
                 dialogP.show()
                 homeModel.updateStudentPlan(updateStudentPlan)
                 homeModel.updateStudentPlanObserver.observe(requireActivity()) {
-                    finalArray.get(postion).confirmApplied=1
+                    finalArray.get(postion).confirmApplied = 1
                     mBinding.applyingList.adapter?.notifyDataSetChanged()
                     dialogP.dismiss()
                     context?.resources?.getString(R.string.updated)
@@ -670,10 +680,10 @@ showConfirmDialog(postion)
                     mBinding.applyingList.adapter?.notifyDataSetChanged()
                     dialogP.dismiss()
                 }
-        } else{
-            mBinding.applyingList.adapter?.notifyDataSetChanged()
-           dialog?.dismiss()
-        }
+            } else {
+                mBinding.applyingList.adapter?.notifyDataSetChanged()
+                dialog?.dismiss()
+            }
         }
         val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_cancel) as Button
         dialogButtonCancel.setOnClickListener { dialog.dismiss() }
@@ -687,20 +697,20 @@ showConfirmDialog(postion)
 
 
     override fun onTranscriptRequest(postion: Int, checked: String) {
-                var updateStudentPlan = UpdateStudentPlan()
-                updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
-                updateStudentPlan.college_nid = finalArray[postion].university_nid
-                updateStudentPlan.app_type = "4"
-                updateStudentPlan.request_transcript = checked
-                dialogP.show()
-                homeModel.updateStudentPlan(updateStudentPlan)
-                homeModel.updateStudentPlanObserver.observe(requireActivity()) {
-                    dialogP.dismiss()
-                }
-                homeModel.showError.observe(requireActivity()) {
-                    dialogP.dismiss()
-                }
-            }
+        var updateStudentPlan = UpdateStudentPlan()
+        updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+        updateStudentPlan.college_nid = finalArray[postion].university_nid
+        updateStudentPlan.app_type = "4"
+        updateStudentPlan.request_transcript = checked
+        dialogP.show()
+        homeModel.updateStudentPlan(updateStudentPlan)
+        homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+        }
+        homeModel.showError.observe(requireActivity()) {
+            dialogP.dismiss()
+        }
+    }
 
     override fun onDeadlineClick(postion: Int, deadline: String) {
         typeTermPosition = postion
@@ -711,7 +721,8 @@ showConfirmDialog(postion)
         updateStudentPlan.request_transcript = finalArray.get(typeTermPosition).requestTranscript
         updateStudentPlan.app_plan = finalArray.get(typeTermPosition).applicationType
         updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
-        updateStudentPlan.deadline_date = formateDateFromstring("MMM dd yyyy", "MM/dd/yyyy", deadline)
+        updateStudentPlan.deadline_date =
+            formateDateFromstring("MMM dd yyyy", "MM/dd/yyyy", deadline)
 
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
@@ -719,39 +730,41 @@ showConfirmDialog(postion)
         homeModel.updateStudentPlanObserver.observe(requireActivity()) {
             dialogP.dismiss()
 
-            finalArray.get(typeTermPosition).dueDate = formateDateFromstring("MMM dd yyyy", "yyyy-MM-dd hh:mm:ss", deadline)
+            finalArray.get(typeTermPosition).dueDate =
+                formateDateFromstring("MMM dd yyyy", "yyyy-MM-dd hh:mm:ss", deadline)
             mBinding.applyingList.adapter?.notifyDataSetChanged()
         }
     }
 
-            private fun bottomSheetProgram(postion: Int) {
-                val dialog = BottomSheetDialog(requireContext())
-                val sheetBinding: LayoutProgramsBinding =
-                    LayoutProgramsBinding.inflate(layoutInflater)
-                sheetBinding.root.minimumHeight =
-                    ((Resources.getSystem().displayMetrics.heightPixels))
-                dialog.setContentView(sheetBinding.root)
-                dialog.show()
-                val isAppByProgram = (finalArray[postion].appByProgramSupported == "1" && finalArray[postion].applicationMode != "3")
-                val canShowProgramWithDeadline= isAppByProgram
-                var addedPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
-                for (i in finalArray[postion].program_data?.indices!!) {
-                    var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
-                    programData.program_name =
-                        finalArray[postion].program_data?.get(i)?.program_name.toString()
-                    programData.program_id = finalArray[postion].program_data?.get(i)?.program_id
-                    addedPrograms?.add(programData)
-                }
-                var deletedPrograms: ArrayList<String> = ArrayList()
-                sheetBinding.addMoreLayout.adapter =
-                    ProgramAdapter(addedPrograms, deletedPrograms, this,canShowProgramWithDeadline)
-                sheetBinding.addMore.setOnClickListener {
-                    ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).addMore()
-                }
-                sheetBinding.save.setOnClickListener {
+    private fun bottomSheetProgram(postion: Int) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: LayoutProgramsBinding =
+            LayoutProgramsBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =
+            ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        val isAppByProgram =
+            (finalArray[postion].appByProgramSupported == "1" && finalArray[postion].applicationMode != "3")
+        val canShowProgramWithDeadline = isAppByProgram
+        var addedPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
+        for (i in finalArray[postion].program_data?.indices!!) {
+            var programData: AddProgramConsider.Programs = AddProgramConsider.Programs()
+            programData.program_name =
+                finalArray[postion].program_data?.get(i)?.program_name.toString()
+            programData.program_id = finalArray[postion].program_data?.get(i)?.program_id
+            addedPrograms?.add(programData)
+        }
+        var deletedPrograms: ArrayList<String> = ArrayList()
+        sheetBinding.addMoreLayout.adapter =
+            ProgramAdapter(addedPrograms, deletedPrograms, this, canShowProgramWithDeadline)
+        sheetBinding.addMore.setOnClickListener {
+            ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).addMore()
+        }
+        sheetBinding.save.setOnClickListener {
 
-                    addedPrograms = ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).save()
-                    dialogP.show()
+            addedPrograms = ((sheetBinding.addMoreLayout.adapter) as ProgramAdapter).save()
+            dialogP.show()
 //            var newPrograms: ArrayList<AddProgramConsider.Programs?>? = ArrayList()
 //
 //            for (i in addedPrograms!!.indices) {
@@ -759,95 +772,95 @@ showConfirmDialog(postion)
 //                programData.program_name = addedPrograms.get(i).toString()
 //                newPrograms?.add(programData)
 //            }
-                    if (deletedPrograms.size > 0) {
-                        for (i in deletedPrograms.indices) {
-                            homeModel.deleteMlProgram(deletedPrograms.get(i))
-                        }
-                    }
+            if (deletedPrograms.size > 0) {
+                for (i in deletedPrograms.indices) {
+                    homeModel.deleteMlProgram(deletedPrograms.get(i))
+                }
+            }
 
-                    var newPrograms: ArrayList<AddProgramConsider.Programs?> = ArrayList()
+            var newPrograms: ArrayList<AddProgramConsider.Programs?> = ArrayList()
 
-                    if (addedPrograms != null) {
-                        for (i in addedPrograms!!.indices) {
-                            if ((addedPrograms!![i]?.program_name ?: "").isEmpty()) {
-                                newPrograms.add(addedPrograms!![i])
-                            }
-                        }
-                        addedPrograms!!.removeAll(newPrograms)
-                    }
-
-                    var addProgramConsider = AddProgramConsider()
-                    addProgramConsider.trans_req_nid = finalArray[postion].transcriptNid.toString()
-                    addProgramConsider.program_data = addedPrograms
-                    homeModel.addProgramToConsidering(addProgramConsider)
-
-                    homeModel.addProgramObserver.observe(requireActivity()) {
-                        dialogP.dismiss()
-                        dialog.dismiss()
-                        SharedHelper(requireContext()).id?.let {
-                            val userid = SharedHelper(requireContext()).id!!
-                            homeModel.getApplyList(userid)
-                        }
-
+            if (addedPrograms != null) {
+                for (i in addedPrograms!!.indices) {
+                    if ((addedPrograms!![i]?.program_name ?: "").isEmpty()) {
+                        newPrograms.add(addedPrograms!![i])
                     }
                 }
-
+                addedPrograms!!.removeAll(newPrograms)
             }
 
-            override fun onAddClick(position: Int) {
-                bottomSheetProgram(position)
-            }
+            var addProgramConsider = AddProgramConsider()
+            addProgramConsider.trans_req_nid = finalArray[postion].transcriptNid.toString()
+            addProgramConsider.program_data = addedPrograms
+            homeModel.addProgramToConsidering(addProgramConsider)
 
-            override fun onMenuClick(postion: Int, it: View?) {
-                menuPopUp(postion, it)
-            }
-
-            private fun menuPopUp(position: Int, it: View?) {
-
-                val popupMenu = PopupMenu(requireContext(), it)
-                popupMenu.inflate(R.menu.consider_popup)
-                popupMenu.show()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    popupMenu.setForceShowIcon(true)
-                };
-
-                popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
-
-                    when (item!!.itemId) {
-                        R.id.del_coll -> {
-                            confirmPopup(position)
-                        }
-                    }
-
-                    true
-
-                })
-            }
-
-            private fun confirmPopup(position: Int) {
-                AlertDialog.Builder(requireContext())
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setMessage(getString(R.string.move_to_applying))
-                    .setPositiveButton(
-                        "Yes"
-                    ) { dialog, _ -> deleteWork(position) }
-                    .setNegativeButton("Cancel", null)
-                    .show()
-            }
-
-            private fun deleteWork(position: Int) {
+            homeModel.addProgramObserver.observe(requireActivity()) {
+                dialogP.dismiss()
+                dialog.dismiss()
                 SharedHelper(requireContext()).id?.let {
-                    dialogP.show()
-                    homeModel.moveToApplying(
-                        it,
-                        finalArray.get(position).university_nid,
-                        "0"
-                    )
+                    val userid = SharedHelper(requireContext()).id!!
+                    homeModel.getApplyList(userid)
                 }
-                homeModel.applyingObserver.observe(requireActivity()) {
-                    getApplyingList()
+
+            }
+        }
+
+    }
+
+    override fun onAddClick(position: Int) {
+        bottomSheetProgram(position)
+    }
+
+    override fun onMenuClick(postion: Int, it: View?) {
+        menuPopUp(postion, it)
+    }
+
+    private fun menuPopUp(position: Int, it: View?) {
+
+        val popupMenu = PopupMenu(requireContext(), it)
+        popupMenu.inflate(R.menu.consider_popup)
+        popupMenu.show()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            popupMenu.setForceShowIcon(true)
+        };
+
+        popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
+
+            when (item!!.itemId) {
+                R.id.del_coll -> {
+                    confirmPopup(position)
                 }
             }
+
+            true
+
+        })
+    }
+
+    private fun confirmPopup(position: Int) {
+        AlertDialog.Builder(requireContext())
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setMessage(getString(R.string.move_to_applying))
+            .setPositiveButton(
+                "Yes"
+            ) { dialog, _ -> deleteWork(position) }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteWork(position: Int) {
+        SharedHelper(requireContext()).id?.let {
+            dialogP.show()
+            homeModel.moveToApplying(
+                it,
+                finalArray.get(position).university_nid,
+                "0"
+            )
+        }
+        homeModel.applyingObserver.observe(requireActivity()) {
+            getApplyingList()
+        }
+    }
 
     var selectedKeyType: String? = null
     override fun onItemClick(positiion: Int, type: Int, dynamicKeyValue: DynamicKeyValue) {
@@ -866,7 +879,7 @@ showConfirmDialog(postion)
                 updateStudentPlan.app_type = dynamicKeyValue.key
                 updateStudentPlan.app_status = "accepted"
             }
-        } else if (type == 0){
+        } else if (type == 0) {
             if (dynamicKeyValue.key == "Reset") {
                 selectedKeyType = null
                 updateStudentPlan.application_term = null
@@ -952,8 +965,8 @@ showConfirmDialog(postion)
         updateStudentPlan.app_type = finalArray.get(typeTermPosition).applicationMode
         //  updateStudentPlan.app_status = finalArray.get(typeTermPosition).applicationStatusName
         updateStudentPlan.app_plan = dynamicKey
-        updateStudentPlan.application_term=finalArray.get(typeTermPosition).applicationTerm
-        updateStudentPlan.request_transcript=finalArray.get(typeTermPosition).requestTranscript
+        updateStudentPlan.application_term = finalArray.get(typeTermPosition).applicationTerm
+        updateStudentPlan.request_transcript = finalArray.get(typeTermPosition).requestTranscript
         if (dynamicKeyValue == "Reset") {
             finalArray.get(typeTermPosition).dueDate = null
         }

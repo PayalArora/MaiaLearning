@@ -44,7 +44,7 @@ class ConsiderCountryFilterAdapter (val arr: ArrayList<KeyVal>) :
                     arr.get(position).checked = true
                     check.isChecked=false
                 }
-                notifyDataSetChanged();
+                notifyDataSetChanged()
             })
             if (arr.get(position).checked) {
                 check.isChecked = true

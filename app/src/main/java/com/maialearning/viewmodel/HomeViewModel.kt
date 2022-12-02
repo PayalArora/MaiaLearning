@@ -57,6 +57,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val uncheckItaskObserver = MutableLiveData<Unit>()
     val univJsonFilter = MutableLiveData<JsonObject>()
     val getcontinentFilter = MutableLiveData<JsonObject>()
+    val getApplyingWithObserver = MutableLiveData<JsonObject>()
 
 
     fun getConsiderList(id: String, status: String) {
@@ -663,5 +664,18 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
+    fun getConsideringApplyingWith() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getApplyingWIth()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getApplyingWithObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
 
 }

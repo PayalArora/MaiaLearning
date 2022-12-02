@@ -52,7 +52,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     var mainDialog: BottomSheetDialog? = null
     var selectedCountryActive = ""
     var selectedCountryDeleted = ""
+    var selectedApplyingActive = ""
+    var selectedApplyingDeleted = ""
     var selectedConsider = ACTIVE_CONSIDER
+    val applyingWithList: ArrayList<KeyVal> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,21 +100,27 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         sheetBindingUniv?.root?.minimumHeight =
             ((Resources.getSystem().displayMetrics.heightPixels))
         mainDialog?.setContentView(sheetBindingUniv!!.root)
-       // sheetBindingUniv?.search?.visibility = View.GONE
+        // sheetBindingUniv?.search?.visibility = View.GONE
         sheetBindingUniv?.filters?.setText(resources.getString(R.string.filters))
         mainDialog?.show()
         sheetBindingUniv!!.clearText.setOnClickListener {
 
-            selectedCountryActive ==""
-            selectedCountryDeleted ==""
+            selectedCountryActive == ""
+            selectedCountryDeleted == ""
+            selectedApplyingActive=""
+            selectedApplyingActive=""
             mainDialog?.dismiss()
         }
         sheetBindingUniv!!.backBtn.setOnClickListener {
-            if (selectedConsider == ACTIVE_CONSIDER){
+            if (selectedConsider == ACTIVE_CONSIDER) {
                 mBinding.consideringList.adapter =
-                    ConsiderAdapter(this, countryFilterEvaluationActive(activeArray, selectedCountryActive), ::notesClick)
+                    ConsiderAdapter(
+                        this,
+                        countryFilterEvaluationActive(activeArray, selectedCountryActive),
+                        ::notesClick
+                    )
             } else {
-                if (deletedArray.size>0) {
+                if (deletedArray.size > 0) {
                     mBinding.consideringList.adapter =
                         ConsiderAdapter(
                             this,
@@ -124,34 +134,45 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             mainDialog?.dismiss()
 
         }
+
+        dialogP.show()
+        homeModel.getConsideringApplyingWith()
+
         sheetBindingUniv!!.countryItem.setOnClickListener {
             subFilter("Country")
         }
         sheetBindingUniv!!.activeConsider.setOnClickListener {
-          selectedConsider = ACTIVE_CONSIDER
+            selectedConsider = ACTIVE_CONSIDER
         }
         sheetBindingUniv!!.deletedConsider.setOnClickListener {
             selectedConsider = DELETED
+        }
+
+        sheetBindingUniv!!.applyingItem.setOnClickListener {
+            subFilter("Applying")
         }
 //        sheetBindingUniv!!.reciepentList.adapter =
 //            ConsiderFilterAdapter(resources.getStringArray(R.array.consideringFilters), ::onConsideringMainFilterClick)
 
     }
 
-    private  fun countryFilterEvaluationActive(finalArray:ArrayList<ConsiderModel.Data>, selectedCountry:String): ArrayList<ConsiderModel.Data>{
+    private fun countryFilterEvaluationActive(
+        finalArray: ArrayList<ConsiderModel.Data>,
+        selectedCountry: String
+    ): ArrayList<ConsiderModel.Data> {
         var filteredArray: ArrayList<ConsiderModel.Data> = ArrayList()
-        if (selectedCountry =="" || selectedCountry == "All"){
+        if (selectedCountry == "" || selectedCountry == "All") {
             filteredArray = finalArray
 
         } else {
-            for (i in finalArray){
+            for (i in finalArray) {
                 var checkSame = false
-                if (i.country == selectedCountry){
+                if (i.country == selectedCountry) {
                     checkSame = true
                     filteredArray.add(i)
-                } else if (i.country == "" && checkSame){
+                } else if (i.country == "" && checkSame) {
                     filteredArray.add(i)
-                } else{
+                } else {
                     checkSame = false
                 }
             }
@@ -187,15 +208,16 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                     val countries = ArrayList<String>()
                     val array: ArrayList<ConsiderModel.Data> = ArrayList()
-                    if (jsonArray.length()>0){
-                        if (selectedConsider == ACTIVE_CONSIDER){
-                    countryArrayActive.add(
-                        KeyVal(
-                            "All",
-                            "All",
-                            false
-                        )
-                    )} else{
+                    if (jsonArray.length() > 0) {
+                        if (selectedConsider == ACTIVE_CONSIDER) {
+                            countryArrayActive.add(
+                                KeyVal(
+                                    "All",
+                                    "All",
+                                    false
+                                )
+                            )
+                        } else {
                             countryArrayDeleted.add(
                                 KeyVal(
                                     "All",
@@ -204,7 +226,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 )
                             )
 
-                        }                    }
+                        }
+                    }
                     for (i in 0 until jsonArray.length()) {
                         val object_ = jsonArray.getJSONObject(i)
                         val arrayProgram: ArrayList<ConsiderModel.ProgramData> = arrayListOf()
@@ -254,14 +277,15 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
                         if (!countries.contains(object_.getString("country_name"))) {
                             countries.add(object_.getString("country_name"))
-                            if (selectedConsider == ACTIVE_CONSIDER){
-                            countryArrayActive.add(
-                                KeyVal(
-                                    object_.getString("country"),
-                                    object_.getString("country_name"),
-                                    false
+                            if (selectedConsider == ACTIVE_CONSIDER) {
+                                countryArrayActive.add(
+                                    KeyVal(
+                                        object_.getString("country"),
+                                        object_.getString("country_name"),
+                                        false
+                                    )
                                 )
-                            )} else{
+                            } else {
                                 countryArrayDeleted.add(
                                     KeyVal(
                                         object_.getString("country"),
@@ -299,8 +323,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("app_by_program_supported"),
                             object_.getInt("confirm_applied"), null, requiredRecs,
                             object_.getInt("manual_update"),
-                            object_.optString("applicaton_round")
-
+                            object_.optString("applicaton_round"),
+                            object_.optString("status")
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -581,11 +605,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
             }
-            if (selectedConsider == ACTIVE_CONSIDER){
+            if (selectedConsider == ACTIVE_CONSIDER) {
                 activeArray = finalArray
                 mBinding.consideringList.adapter =
                     ConsiderAdapter(this, activeArray, ::notesClick)
-            } else{
+            } else {
                 deletedArray = finalArray
                 mBinding.consideringList.adapter =
                     ConsiderAdapter(this, deletedArray, ::notesClick)
@@ -594,6 +618,33 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
         homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
+        }
+
+        homeModel.getApplyingWithObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            dialogP.dismiss()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            applyingWithList.clear()
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    applyingWithList.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+            applyingWithList.add(KeyVal("All", "All", false))
+            for (i in resources.getStringArray(R.array.static_applying_with).indices) {
+                applyingWithList.add(
+                    KeyVal(
+                        "AppType",
+                        resources.getStringArray(R.array.static_applying_with)[i],
+                        false
+                    )
+                )
+            }
+            applyingWithList.sortBy { it.value }
         }
     }
 
@@ -779,13 +830,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     }
 
     override fun onApplyingClick(postion: Int) {
-        SharedHelper(requireContext()).id?.let {
-            dialogP.show()
-            homeModel.moveToApplying(
-                it,
-                finalArray.get(postion).university_nid,
-                "1"
-            )
+        if (finalArray.get(postion).status.equals("Considered")) {
+            confirmConsiderPopup(postion)
+        } else {
+            SharedHelper(requireContext()).id?.let {
+                dialogP.show()
+                homeModel.moveToApplying(
+                    it,
+                    finalArray.get(postion).university_nid,
+                    "1"
+                )
+            }
         }
         homeModel.applyingObserver.observe(requireActivity()) {
 //            finalArray.removeAt(postion)
@@ -796,6 +851,29 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             dialogP.dismiss()
             getConsideringList()
         }
+    }
+
+    private fun confirmConsiderPopup(postion: Int) {
+        AlertDialog.Builder(requireContext())
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setMessage("Do you want to move this university to considering list?")
+            .setPositiveButton(
+                "Confirm"
+            ) { dialog, _ ->
+                dialogP.show()
+
+                SharedHelper(requireContext()).id?.let {
+                    dialogP.show()
+                    homeModel.moveToApplying(
+                        it,
+                        finalArray.get(postion).university_nid,
+                        "0"
+                    )
+                }
+
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun bottonSheetInfo(postion: Int) {
@@ -1149,28 +1227,37 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.invisibleLay.visibility = View.GONE
         sheetBinding.backBtn.setOnClickListener {
-            dialog.dismiss() }
+            dialog.dismiss()
+        }
         sheetBinding.clearText.setText(resources.getString(R.string.done))
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.clearText.setOnClickListener {
-            when (selectedConsider){
-              ACTIVE_CONSIDER ->{
-                  for (i in countryArrayActive){
-                      if (i.checked) {
-                          selectedCountryActive = i.key
-                      }
-                  }
-              }
-                DELETED->{
-                    for (i in countryArrayDeleted){
+            when (selectedConsider) {
+                ACTIVE_CONSIDER -> {
+                    for (i in countryArrayActive) {
+                        if (i.checked) {
+                            selectedCountryActive = i.key
+                        }
+                    }
+                    for (i in applyingWithList) {
+                        if (i.checked) {
+                            selectedApplyingActive = i.value
+                        }
+                    }
+                }
+                DELETED -> {
+                    for (i in countryArrayDeleted) {
                         if (i.checked) {
                             selectedCountryDeleted = i.key
                         }
                     }
+                    for (i in applyingWithList) {
+                        if (i.checked) {
+                            selectedApplyingDeleted = i.value
+                        }
+                    }
                 }
             }
-
-
             dialog.dismiss()
         }
         sheetBinding.close.setOnClickListener {
@@ -1178,24 +1265,27 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
 
         if (type.equals("Country")) {
-            when (selectedConsider){
-                ACTIVE_CONSIDER ->{
+            when (selectedConsider) {
+                ACTIVE_CONSIDER -> {
                     sheetBinding.reciepentList.adapter =
                         ConsiderCountryFilterAdapter(countryArrayActive)
                 }
-                DELETED->{
+                DELETED -> {
                     sheetBinding.reciepentList.adapter =
                         ConsiderCountryFilterAdapter(countryArrayDeleted)
                 }
             }
-
+        } else if (type.equals("Applying")) {
+            sheetBinding.reciepentList.adapter =
+                ConsiderCountryFilterAdapter(applyingWithList)
         }
 
     }
-companion object {
-    const val ACTIVE_CONSIDER = "considering"
-    const val DELETED = "considered"
-}
+
+    companion object {
+        const val ACTIVE_CONSIDER = "considering"
+        const val DELETED = "considered"
+    }
 
 }
 

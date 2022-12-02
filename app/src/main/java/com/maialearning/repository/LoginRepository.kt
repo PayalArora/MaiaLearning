@@ -344,6 +344,9 @@ interface LoginRepository {
     suspend fun getGbSubChild(
         id: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun getApplyingWIth(
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1761,6 +1764,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.getGBSubChildSubject(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getApplyingWIth(): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getApplyingWith(
+                CONSIDERING_APPLYING_WITH
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

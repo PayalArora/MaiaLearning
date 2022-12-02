@@ -58,7 +58,7 @@ interface AllAPi {
     fun considerListAsync(
         @Header("Authorization") AutToken: String,
         @Path("id") id: String,
-        @Query("status")status: String
+        @Query("status") status: String
     ): Deferred<JsonObject>
 
     @GET("counselor_college/{id}?status=applying")
@@ -688,5 +688,10 @@ interface AllAPi {
     fun getGBSubChildSubject(
         @Header("Authorization") AutToken: String,
         @Field("subject_code") id: String
+    ): Deferred<JsonObject>
+
+    @GET
+    fun getApplyingWith(
+        @Url() url: String
     ): Deferred<JsonObject>
 }

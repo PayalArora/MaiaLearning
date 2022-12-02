@@ -117,6 +117,9 @@ class ConsiderAdapter(
 //            university.app_by_program_supported === 1 &&
 //                    university.application_mode !== UniversityAppTypeEnum.CommonApp
 
+                    if(status.equals("Considered")){
+                        applyingTxt.setText("To Considering")
+                    }
 
                     if (isAppMode) {
                         //  typeValue.setText(applicationType)
@@ -228,7 +231,6 @@ class ConsiderAdapter(
                     }
                     appType.setOnClickListener {
                         onItemClickOption.onTypeClick(position)
-
                     }
                     menuDots.setOnClickListener {
                         onItemClickOption.onMenuClick(position, it)
