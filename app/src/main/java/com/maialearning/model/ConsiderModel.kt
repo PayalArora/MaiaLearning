@@ -64,7 +64,9 @@ class ConsiderModel {
         @SerializedName("application_round")
         var applicationRound: String?,
         @SerializedName("status")
-        var status: String?
+        var status: String?,
+        var selectedAppModeValue:String? = null,
+        var selectedAppPlanValue:String? = null
         )
     data class RequiredRecommendation(
         @SerializedName("teacher_evaluation")

@@ -160,37 +160,78 @@
         android:text="@string/show"
         android:textColor="@color/black_1"
         android:textSize="@dimen/_16sp" />
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_below="@+id/show"
 
-    <TextView
-        android:id="@+id/active_consider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/show"
-        android:layout_centerInParent="true"
-        android:layout_marginHorizontal="@dimen/_15dp"
-        android:background="@drawable/white_rect_border_20dp"
-        android:fontFamily="@font/inter"
-        android:gravity="center"
-        android:paddingHorizontal="@dimen/_15dp"
-        android:paddingVertical="@dimen/_8dp"
-        android:text="@string/active_consider"
-        android:textColor="@color/black_1"
-        android:textSize="@dimen/_16sp" />
-    <TextView
-        android:id="@+id/deleted_consider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/active_consider"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginHorizontal="@dimen/_15dp"
-        android:background="@drawable/white_rect_border_20dp"
-        android:fontFamily="@font/inter"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/_10dp"
-        android:paddingHorizontal="@dimen/_15dp"
-        android:paddingVertical="@dimen/_8dp"
-        android:text="@string/deleted_consider"
-        android:textColor="@color/black_1"
-        android:textSize="@dimen/_16sp" />
+        android:id="@+id/radio_group_consider"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="@dimen/_15dp"
+
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/active_consider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:buttonTint="@color/checkbutton"
+            android:background="@drawable/radiobutton_consider"
+            android:textColor="@color/black_1"
+            android:textSize="@dimen/_16sp"
+            android:gravity="center"
+            android:button="@null"
+            android:checked="true"
+            android:paddingVertical="@dimen/_8dp"
+            android:paddingStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_5dp"
+            android:text="@string/active_consider" />
+        <RadioButton
+            android:id="@+id/deleted_consider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:buttonTint="@color/checkbutton"
+            android:background="@drawable/radiobutton_consider"
+            android:textColor="@color/black_1"
+            android:textSize="@dimen/_16sp"
+            android:gravity="center"
+            android:button="@null"
+            android:paddingHorizontal="@dimen/_15dp"
+            android:paddingVertical="@dimen/_8dp"
+            android:paddingStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_5dp"
+            android:text="@string/deleted_consider" />
+    </RadioGroup>
+<!--    <TextView-->
+<!--        android:id="@+id/active_consider"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/show"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_marginHorizontal="@dimen/_15dp"-->
+<!--        android:background="@drawable/white_rect_border_20dp"-->
+<!--        android:fontFamily="@font/inter"-->
+<!--        android:gravity="center"-->
+<!--        android:paddingHorizontal="@dimen/_15dp"-->
+<!--        android:paddingVertical="@dimen/_8dp"-->
+<!--        android:text="@string/active_consider"-->
+<!--        android:textColor="@color/black_1"-->
+<!--        android:textSize="@dimen/_16sp" />-->
+<!--    <TextView-->
+<!--        android:id="@+id/deleted_consider"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/active_consider"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginHorizontal="@dimen/_15dp"-->
+<!--        android:background="@drawable/white_rect_border_20dp"-->
+<!--        android:fontFamily="@font/inter"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_marginTop="@dimen/_10dp"-->
+<!--        android:paddingHorizontal="@dimen/_15dp"-->
+<!--        android:paddingVertical="@dimen/_8dp"-->
+<!--        android:text="@string/deleted_consider"-->
+<!--        android:textColor="@color/black_1"-->
+<!--        android:textSize="@dimen/_16sp" />-->
 </RelativeLayout>

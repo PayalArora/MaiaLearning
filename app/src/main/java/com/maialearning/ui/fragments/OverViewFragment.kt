@@ -11,6 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import com.google.gson.internal.LinkedTreeMap
 import com.maialearning.R
 import com.maialearning.databinding.OverviewLayoutBinding
 import com.maialearning.model.CollegeFactSheetModel
@@ -98,20 +99,26 @@ class OverViewFragment : Fragment() {
                 mBinding.aboutdes.visibility = View.VISIBLE
             } else if (modelOther?.providerInfo != null) {
                 val gson = GsonBuilder().create()
-                if (modelOther?.providerInfo?.has ("website") == true){
-                  //  val jsonObject = JSONObject(modelOther?.providerInfo.toString())
-                val providerInfo = gson.fromJson(modelOther?.providerInfo as JsonObject , FactsheetModelOther.ProviderInfo::class.java)
-                    //val providerInfo = modelOther?.providerInfo as FactsheetModelOther.ProviderInfo
-                    mBinding.aboutdes.visibility = View.GONE
-                    mBinding.webUrl.text = " ${providerInfo.website}"
-                    mBinding.locTxt.text =
-                        "${
-                            parseEmpty(providerInfo.address1) + parseEmpty(providerInfo.address2) + parseEmpty(
-                                providerInfo.address3
-                            ) + parseEmpty(providerInfo.address4) + parseEmpty(
-                                providerInfo.postalCode
-                            )
-                        }"
+                val jsonObject = gson.toJsonTree(modelOther?.providerInfo as LinkedTreeMap<String, String>).asJsonObject
+
+                if (jsonObject.has("website") == true) {
+                        //  val jsonObject = JSONObject(modelOther?.providerInfo.toString())
+                        val providerInfo = gson.fromJson(
+                            jsonObject,
+                            FactsheetModelOther.ProviderInfo::class.java
+                        )
+                        //val providerInfo = modelOther?.providerInfo as FactsheetModelOther.ProviderInfo
+                        mBinding.aboutdes.visibility = View.GONE
+                        mBinding.webUrl.text = " ${providerInfo.website}"
+                        mBinding.locTxt.text =
+                            "${
+                                parseEmpty(providerInfo.address1) + parseEmpty(providerInfo.address2) + parseEmpty(
+                                    providerInfo.address3
+                                ) + parseEmpty(providerInfo.address4) + parseEmpty(
+                                    providerInfo.postalCode
+                                )
+                            }"
+
 
 
                 }

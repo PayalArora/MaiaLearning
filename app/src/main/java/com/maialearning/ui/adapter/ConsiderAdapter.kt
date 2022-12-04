@@ -29,6 +29,8 @@ class ConsiderAdapter(
     var termVal = ""
     var planVal = "Early Action"
     var positio:Int = 0
+    var prev = ""
+    var count_n:Int= 1
 
     class ViewHolder(val binding: ConsideringItemLayBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -61,13 +63,16 @@ class ConsiderAdapter(
                                     (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm) ||
                                     !isAppPlan
                             )
-                    if (country_name == "") {
+
+                    if (prev == country_name) {
                         top.visibility = View.GONE
                     } else {
+                        prev = country_name
                         top.visibility = View.VISIBLE
                         countryTxt.text = country_name
-                        countUniv.text = count.toString()
                     }
+                    countUniv.text = count.toString()
+
                     uniName.text = naviance_college_name
                     if (created_date != null)
                         date.setText(CommonClass.getDate(created_date.toLong()))
@@ -287,6 +292,7 @@ class ConsiderAdapter(
         array.get(position).collegeAppLicationType?.collType?.let {
             for (item in it){
                 if (item.key.replaceInvertedComas().equals(key)){
+                    //array.get(position).selectedAppModeValue = item.value
                     return item.value
                 }
             }
@@ -308,6 +314,7 @@ class ConsiderAdapter(
                                             ?.let {   formateDateFromstring("MM/dd/yyyy","MMM dd yyyy", it) })
 
                                     }
+                                   // array.get(position).selectedAppPlanValue = item.value
                                     return planitem.decision_plan_value
                                 }
                             }
@@ -318,6 +325,7 @@ class ConsiderAdapter(
                     if(item?.term?.planList!= null) {
                         for (i in item?.term?.planList!!) {
                             if (i.id.replaceInvertedComas() == key) {
+                               // array.get(position).selectedAppPlanValue = i.label
                                 return i.label
                             }
                         }

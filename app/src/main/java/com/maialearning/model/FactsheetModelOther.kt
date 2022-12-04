@@ -13,7 +13,7 @@ data class FactsheetModelOther(
     @field:SerializedName("title")
     val title: String? = null,
     @field:SerializedName("provider_info")
-    val providerInfo: JsonObject? = null,
+    val providerInfo: Any? = null,
 //    @field:SerializedName("provider_info")
 //    val providerInfo: ProviderInfo? = null,
     @field:SerializedName("course_list")

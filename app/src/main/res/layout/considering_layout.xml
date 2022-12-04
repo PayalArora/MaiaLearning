@@ -15,17 +15,27 @@
             android:id="@+id/universitis_counte"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="left"
             android:layout_marginStart="@dimen/_15dp"
-            android:layout_marginTop="@dimen/_15dp"
+            android:layout_marginTop="@dimen/_25dp"
             android:layout_marginEnd="@dimen/_15dp"
             android:layout_marginBottom="@dimen/_15dp"
             android:fontFamily="@font/inter_bold"
-            android:gravity="center_horizontal|top"
+            android:gravity="left|top"
             android:text="@string/universities_5650"
             android:textColor="@color/greytext"
             android:textSize="@dimen/_14sp" />
+        <CheckBox
+            android:layout_width="@dimen/_100dp"
+            android:layout_alignParentRight="true"
+            android:button="@null"
+            android:text="@string/select"
+            android:layout_margin="@dimen/_10dp"
+            android:gravity="center"
+            android:background="@drawable/radiobutton_select"
+            android:layout_height="@dimen/_30dp"/>
+
     </RelativeLayout>
 
     <View

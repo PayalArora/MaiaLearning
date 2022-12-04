@@ -541,7 +541,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         radioAppType.setOnCheckedChangeListener { group, checkedId ->
             val radioButton = radioAppType.findViewById(checkedId) as RadioButton
-            (mBinding.applyingList.adapter as ConsiderAdapter).setValue(
+            (mBinding.applyingList.adapter as ApplyingAdapter).setValue(
                 radioButton.text.toString(),
                 type
             )
