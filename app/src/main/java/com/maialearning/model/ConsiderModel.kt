@@ -65,6 +65,7 @@ class ConsiderModel {
         var applicationRound: String?,
         @SerializedName("status")
         var status: String?,
+        var selected:Boolean=false,
         var selectedAppModeValue:String? = null,
         var selectedAppPlanValue:String? = null
         )

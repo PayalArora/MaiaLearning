@@ -21,6 +21,7 @@ import kotlin.coroutines.CoroutineContext
 class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
     // Coroutine's background job
     private val job = Job()
+
     // Define default thread for Coroutine as Main and add job
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
     val showLoading = MutableLiveData<Boolean>()
@@ -58,6 +59,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val univJsonFilter = MutableLiveData<JsonObject>()
     val getcontinentFilter = MutableLiveData<JsonObject>()
     val getApplyingWithObserver = MutableLiveData<JsonObject>()
+    val bulkCollegeMoveObserver = MutableLiveData<Unit>()
 
 
     fun getConsiderList(id: String, status: String) {
@@ -158,6 +160,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     fun euroUniversities(payload: UniversitySearchPayload) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -673,6 +676,22 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> getApplyingWithObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun bulkCollegeMove(
+      payload: BulkCollegeMovePayload
+    ) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.bulkCollegeMoving(payload)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> bulkCollegeMoveObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

@@ -26,17 +26,66 @@
             android:text="@string/universities_5650"
             android:textColor="@color/greytext"
             android:textSize="@dimen/_14sp" />
+
         <CheckBox
+            android:id="@+id/select_all"
             android:layout_width="@dimen/_100dp"
+            android:layout_height="@dimen/_30dp"
+            android:layout_marginTop="@dimen/_25dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"
+            android:layout_toLeftOf="@+id/selected"
+            android:layout_toRightOf="@+id/universitis_counte"
+            android:text="@string/select_all"
+            android:textSize="10sp"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/selected"
+            android:layout_width="@dimen/_100dp"
+            android:layout_height="@dimen/_30dp"
             android:layout_alignParentRight="true"
-            android:button="@null"
-            android:text="@string/select"
-            android:layout_margin="@dimen/_10dp"
-            android:gravity="center"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_25dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"
             android:background="@drawable/radiobutton_select"
-            android:layout_height="@dimen/_30dp"/>
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/select"
+            android:textSize="10sp" />
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/_10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/transcript_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/unsel_rect"
+            android:padding="@dimen/_10dp"
+            android:text="@string/request_transcript"
+            android:textColor="@color/blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:background="@drawable/unsel_rect"
+            android:padding="@dimen/_10dp"
+            android:text="@string/delete_selected"
+            android:textColor="@color/blue"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -44,9 +93,9 @@
         android:background="@color/divider_color" />
 
     <RelativeLayout
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
 
         <RelativeLayout

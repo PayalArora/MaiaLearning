@@ -694,4 +694,10 @@ interface AllAPi {
     fun getApplyingWith(
         @Url() url: String
     ): Deferred<JsonObject>
+
+    @POST("bulk-college-moving")
+    fun bulkCollegeMoving(
+        @Header("Authorization") AutToken: String,
+        @Body payload: BulkCollegeMovePayload
+    ): Deferred<Unit>
 }

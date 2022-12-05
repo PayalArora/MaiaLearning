@@ -28,9 +28,10 @@ class ConsiderAdapter(
     var typeVal: String = ""
     var termVal = ""
     var planVal = "Early Action"
-    var positio:Int = 0
+    var positio: Int = 0
     var prev = ""
-    var count_n:Int= 1
+    var count_n: Int = 1
+    var selectionVisiblility: Boolean = false
 
     class ViewHolder(val binding: ConsideringItemLayBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -58,7 +59,7 @@ class ConsiderAdapter(
                     val isAppPlan = checkNonNull(applicationType)
                     val isAppByProgram = (appByProgramSupported == "1" && applicationMode != "3")
                     val isAppByPlan = !isAppByProgram
-                    val isAppDeadlineDisabled =(
+                    val isAppDeadlineDisabled = (
                             !isAppMode ||
                                     (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm) ||
                                     !isAppPlan
@@ -82,32 +83,37 @@ class ConsiderAdapter(
 
                     if (checkNonNull(dueDate))
                         deadlineValue.setText(dueDate
-                        ?.let {   formateDateFromstring("yyyy-MM-dd hh:mm:ss","MMM dd yyyy", it) })
+                            ?.let {
+                                formateDateFromstring(
+                                    "yyyy-MM-dd hh:mm:ss",
+                                    "MMM dd yyyy",
+                                    it
+                                )
+                            })
                     else
                         deadlineValue.setText("Select")
 
-                   val canShowAppDeadline= isAppByPlan
+                    val canShowAppDeadline = isAppByPlan
                     if (canShowAppDeadline) {
                         deadlineValue.visibility = View.VISIBLE
                         appDeadline.visibility = View.VISIBLE
                         view7.visibility = View.VISIBLE
-                    }
-                    else {
+                    } else {
                         deadlineValue.visibility = View.GONE
                         appDeadline.visibility = View.GONE
                         view7.visibility = View.GONE
                     }
-                    if (isAppDeadlineDisabled){
+                    if (isAppDeadlineDisabled) {
                         appDeadline.isEnabled = false
 
                     } else {
                         appDeadline.isEnabled = true
                     }
                     appDeadline.setOnClickListener {
-                       positio = position
+                        positio = position
                         deadlineValue.showDatePicker(root.context, ::deadlineClick)
                     }
-                            //|| (if selected plan has a deadline)
+                    //|| (if selected plan has a deadline)
                     name.setText(created_name)
 
                     if (college_priority_choice.equals("null")) {
@@ -122,7 +128,7 @@ class ConsiderAdapter(
 //            university.app_by_program_supported === 1 &&
 //                    university.application_mode !== UniversityAppTypeEnum.CommonApp
 
-                    if(status.equals("Considered")){
+                    if (status.equals("Considered")) {
                         applyingTxt.setText("To Considering")
                     }
 
@@ -190,7 +196,8 @@ class ConsiderAdapter(
 
                     if (applicationType != null && !applicationType.equals("null")) {
                         //  typeValue.setText(applicationType)
-                        val typeVal = getAppPlan(applicationType!!, position,appDeadline,deadlineValue)
+                        val typeVal =
+                            getAppPlan(applicationType!!, position, appDeadline, deadlineValue)
                         if (typeVal != null)
                             planValue.setText(typeVal)
                         else
@@ -205,7 +212,7 @@ class ConsiderAdapter(
                             !isAppMode ||
                             (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm))
                     Log.e("TERMTYP", collegeAppLicationType?.selectedPlanType.toString())
-                    if (isAppPlanDdDisabled){
+                    if (isAppPlanDdDisabled) {
                         appPlan.isEnabled = false
                     } else {
                         appPlan.isEnabled = true
@@ -267,6 +274,23 @@ class ConsiderAdapter(
                         onItemClickOption.onApplyingClick(position)
                     })
                 }
+                if (selectionVisiblility) {
+                    selection.visibility = View.VISIBLE
+                } else {
+                    selection.visibility = View.GONE
+
+                }
+                if (selected== true){
+                    selection.isChecked = true
+                } else
+                {
+                    selection.isChecked= false
+                }
+
+
+                selection.setOnClickListener{
+                    selected = selection.isChecked
+                }
             }
         }
 
@@ -288,10 +312,10 @@ class ConsiderAdapter(
         notifyDataSetChanged()
     }
 
-    fun getAppType(key:String, position: Int):String?{
+    fun getAppType(key: String, position: Int): String? {
         array.get(position).collegeAppLicationType?.collType?.let {
-            for (item in it){
-                if (item.key.replaceInvertedComas().equals(key)){
+            for (item in it) {
+                if (item.key.replaceInvertedComas().equals(key)) {
                     //array.get(position).selectedAppModeValue = item.value
                     return item.value
                 }
@@ -300,32 +324,42 @@ class ConsiderAdapter(
         return null
     }
 
-    fun getAppPlan(key:String, position: Int, appDeadline: LinearLayout, deadlineValue: TextView):String?{
+    fun getAppPlan(
+        key: String,
+        position: Int,
+        appDeadline: LinearLayout,
+        deadlineValue: TextView
+    ): String? {
         array.get(position).collegeAppLicationType?.collType?.let {
-            for (item in it){
-                if (item?.term?.type == "term" && item?.term?.collTerm!= null) {
+            for (item in it) {
+                if (item?.term?.type == "term" && item?.term?.collTerm != null) {
                     for (plan in item?.term?.collTerm!!) {
-                        if ( plan?.collPlan!= null) {
+                        if (plan?.collPlan != null) {
                             for (planitem in plan?.collPlan!!) {
                                 if (planitem.decision_plan.replaceInvertedComas() == key) {
-                                    if (checkNonNull(planitem.deadline_date)){
+                                    if (checkNonNull(planitem.deadline_date)) {
                                         appDeadline.isEnabled = false
                                         deadlineValue.setText(planitem.deadline_date
-                                            ?.let {   formateDateFromstring("MM/dd/yyyy","MMM dd yyyy", it) })
+                                            ?.let {
+                                                formateDateFromstring(
+                                                    "MM/dd/yyyy",
+                                                    "MMM dd yyyy",
+                                                    it
+                                                )
+                                            })
 
                                     }
-                                   // array.get(position).selectedAppPlanValue = item.value
+                                    // array.get(position).selectedAppPlanValue = item.value
                                     return planitem.decision_plan_value
                                 }
                             }
                         }
                     }
-                }
-                else {
-                    if(item?.term?.planList!= null) {
+                } else {
+                    if (item?.term?.planList != null) {
                         for (i in item?.term?.planList!!) {
                             if (i.id.replaceInvertedComas() == key) {
-                               // array.get(position).selectedAppPlanValue = i.label
+                                // array.get(position).selectedAppPlanValue = i.label
                                 return i.label
                             }
                         }
@@ -359,8 +393,14 @@ class ConsiderAdapter(
 //        return false
 //    }
 
-    fun deadlineClick(string: String){
-        onItemClickOption.onDeadlineClick(positio,string)
+    fun deadlineClick(string: String) {
+        onItemClickOption.onDeadlineClick(positio, string)
+    }
+
+    fun selectionVisibility(b: Boolean): Any {
+        selectionVisiblility = b
+        notifyDataSetChanged()
+        return b
     }
 }
 

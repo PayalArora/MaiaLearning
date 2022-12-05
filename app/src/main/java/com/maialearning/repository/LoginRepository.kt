@@ -347,6 +347,10 @@ interface LoginRepository {
 
     suspend fun getApplyingWIth(
     ): UseCaseResult<JsonObject>
+
+    suspend fun bulkCollegeMoving(
+        payload: BulkCollegeMovePayload
+    ): UseCaseResult<Unit>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1777,6 +1781,22 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.getApplyingWith(
                 CONSIDERING_APPLYING_WITH
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun bulkCollegeMoving(
+       payload: BulkCollegeMovePayload
+    ): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.bulkCollegeMoving(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+               payload
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

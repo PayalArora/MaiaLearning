@@ -603,6 +603,8 @@
     <string name="show">Show</string>
     <string name="active_consider">Active Considering</string>
     <string name="deleted_consider">Deleted</string>
+    <string name="request_transcript">Request Transcript</string>
+    <string name="delete_selected">Delete Selected</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>

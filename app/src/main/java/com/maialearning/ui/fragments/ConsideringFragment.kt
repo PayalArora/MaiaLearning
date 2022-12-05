@@ -52,7 +52,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     var selectedApplyingDeleted = ""
     var selectedConsider = ACTIVE_CONSIDER
     val applyingWithList: ArrayList<KeyVal> = ArrayList()
+    val bulkMoveList: ArrayList<String> = ArrayList()
 
+    lateinit var considerAdapter: ConsiderAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +75,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         super.onViewCreated(view, savedInstanceState)
         setListeners()
         init()
-//        setAdapter()
     }
 
     private fun init() {
@@ -103,8 +104,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
             selectedCountryActive == ""
             selectedCountryDeleted == ""
-            selectedApplyingActive=""
-            selectedApplyingDeleted=""
+            selectedApplyingActive = ""
+            selectedApplyingDeleted = ""
             mainDialog?.dismiss()
         }
         sheetBindingUniv!!.backBtn.setOnClickListener {
@@ -140,7 +141,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     ): ArrayList<ConsiderModel.Data> {
         var filteredArray: MutableList<ConsiderModel.Data> = arrayListOf()
         if (selectedCountry == "" || selectedCountry == "All") {
-           filteredArray.addAll(finalArray)
+            filteredArray.addAll(finalArray)
 
         } else {
             for (i in finalArray) {
@@ -155,19 +156,19 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 }
             }
         }
-        if (selectedApplying == "" || selectedApplying =="All"){
+        if (selectedApplying == "" || selectedApplying == "All") {
             return filteredArray as ArrayList<ConsiderModel.Data>
         } else {
             filteredArray = filteredArray.filter {
-              //  Log.e("APPPlan",  it.selectedAppPlanValue.toString())
+                //  Log.e("APPPlan",  it.selectedAppPlanValue.toString())
                 it.selectedAppModeValue == selectedApplying ||
                         it.selectedAppPlanValue == selectedApplying
             } as ArrayList<ConsiderModel.Data>
             var count = 1
             var prev = ""
 
-            for (i in filteredArray){
-                if (prev == i.country_name){
+            for (i in filteredArray) {
+                if (prev == i.country_name) {
                     count++
                 } else {
                     prev = i.country_name
@@ -324,6 +325,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getInt("manual_update"),
                             object_.optString("applicaton_round"),
                             object_.optString("status")
+
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -392,7 +394,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 collTerm.type = term.optString("type")
                                 if (finalArray.get(final_index).applicationMode == currentDynamicKey) {
                                     selectedAppModeType = collTerm.type
-                                    finalArray.get(final_index).selectedAppModeValue = allowedType.getString(currentDynamicKey)
+                                    finalArray.get(final_index).selectedAppModeValue =
+                                        allowedType.getString(currentDynamicKey)
                                 }
                                 if (collTerm.type == "term") {
                                     var termList = ArrayList<String>()
@@ -422,8 +425,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                                         json.optString("decision_plan_value"),
                                                         json.optString("deadline_date")
                                                     )
-                                                    if (finalArray.get(final_index).applicationType?.replaceInvertedComas()  == json.optString("decision_plan")?.replaceInvertedComas() ){
-                                                        finalArray.get(final_index).selectedAppPlanValue =  json.optString("decision_plan_value")
+                                                    if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == json.optString(
+                                                            "decision_plan"
+                                                        )?.replaceInvertedComas()
+                                                    ) {
+                                                        finalArray.get(final_index).selectedAppPlanValue =
+                                                            json.optString("decision_plan_value")
                                                     }
                                                     decision?.add(descisionItem)
                                                 }
@@ -448,8 +455,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                                         it.getJSONObject(j).optString("id"),
                                                         it.getJSONObject(j).optString("label")
                                                     )
-                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas()  ==    it.getJSONObject(j).optString("id")?.replaceInvertedComas() ){
-                                                    finalArray.get(final_index).selectedAppPlanValue =   it.getJSONObject(j).optString("label")
+                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == it.getJSONObject(
+                                                        j
+                                                    ).optString("id")?.replaceInvertedComas()
+                                                ) {
+                                                    finalArray.get(final_index).selectedAppPlanValue =
+                                                        it.getJSONObject(j).optString("label")
                                                 }
                                                 arrayPlans.add(plan)
                                             }
@@ -467,8 +478,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                                         id,
                                                         it.optString(id)
                                                     )
-                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas()  ==    id?.replaceInvertedComas() ){
-                                                    finalArray.get(final_index).selectedAppPlanValue = it.optString(id)
+                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == id?.replaceInvertedComas()) {
+                                                    finalArray.get(final_index).selectedAppPlanValue =
+                                                        it.optString(id)
                                                 }
                                                 arrayPlans.add(plan)
                                             }
@@ -506,9 +518,13 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                     jsonUniv.optJSONObject(type.optString("label"))
                                 term?.let {
                                     collTerm.type = term?.optString("type")
-                                    if (finalArray.get(final_index).applicationMode == type.optString("id")) {
+                                    if (finalArray.get(final_index).applicationMode == type.optString(
+                                            "id"
+                                        )
+                                    ) {
                                         selectedAppModeType = collTerm.type
-                                        finalArray.get(final_index).selectedAppModeValue = type.optString("label")
+                                        finalArray.get(final_index).selectedAppModeValue =
+                                            type.optString("label")
                                     }
                                     if (collTerm.type == "term") {
                                         val termListArray: JSONArray? =
@@ -535,8 +551,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                                             json.optString("decision_plan_value"),
                                                             json.optString("deadline_date")
                                                         )
-                                                        if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == json.optString("decision_plan").replaceInvertedComas()){
-                                                            finalArray.get(final_index).selectedAppPlanValue =  json.optString("decision_plan_value")
+                                                        if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == json.optString(
+                                                                "decision_plan"
+                                                            ).replaceInvertedComas()
+                                                        ) {
+                                                            finalArray.get(final_index).selectedAppPlanValue =
+                                                                json.optString("decision_plan_value")
                                                         }
                                                         decision?.add(descisionItem)
                                                     }
@@ -561,8 +581,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                                         it.getJSONObject(j).optString("id"),
                                                         it.getJSONObject(j).optString("label")
                                                     )
-                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas()  ==   it.getJSONObject(j).optString("id")?.replaceInvertedComas() ){
-                                                    finalArray.get(final_index).selectedAppPlanValue =  it.getJSONObject(j).optString("label")
+                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == it.getJSONObject(
+                                                        j
+                                                    ).optString("id")?.replaceInvertedComas()
+                                                ) {
+                                                    finalArray.get(final_index).selectedAppPlanValue =
+                                                        it.getJSONObject(j).optString("label")
                                                 }
                                                 arrayPlans.add(plan)
                                             }
@@ -589,13 +613,13 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             }
             if (selectedConsider == ACTIVE_CONSIDER) {
                 activeArray = finalArray
-                mBinding.consideringList.adapter =
-                    ConsiderAdapter(this, activeArray, ::notesClick)
+                considerAdapter = ConsiderAdapter(this, activeArray, ::notesClick)
+                mBinding.consideringList.adapter = considerAdapter
                 mBinding.universitisCounte.text = activeArray.size.toString() + " Universities"
             } else {
                 deletedArray = finalArray
-                mBinding.consideringList.adapter =
-                    ConsiderAdapter(this, deletedArray, ::notesClick)
+                considerAdapter = ConsiderAdapter(this, deletedArray, ::notesClick)
+                mBinding.consideringList.adapter = considerAdapter
                 mBinding.universitisCounte.text = deletedArray.size.toString() + " Universities"
             }
 
@@ -630,6 +654,74 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             }
             applyingWithList.sortBy { it.value }
         }
+        mBinding.selected.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                mBinding.selected.setText("Cancel Selection")
+                considerAdapter.selectionVisibility(true)
+                mBinding.selectAll.visibility = View.VISIBLE
+                mBinding.btnLay.visibility = View.VISIBLE
+            } else {
+                mBinding.selected.setText("Select")
+                considerAdapter.selectionVisibility(false)
+                mBinding.selectAll.visibility = View.GONE
+                mBinding.btnLay.visibility = View.GONE
+            }
+        }
+
+        mBinding.deleteBtn.setOnClickListener {
+            bulkMoveList.clear()
+            for (i in finalArray.indices) {
+                if (finalArray.get(i).selected) {
+                    bulkMoveList.add("" + finalArray.get(i).transcriptNid)
+                }
+            }
+            if (bulkMoveList != null && bulkMoveList.size > 0) {
+                confirmSelectedDeletePopup(
+                    true,
+                    "Do you want to remove this university to applying list?"
+                )
+            }
+        }
+        mBinding.transcriptBtn.setOnClickListener {
+            bulkMoveList.clear()
+            for (i in finalArray.indices) {
+                if (finalArray.get(i).selected) {
+                    bulkMoveList.add("" + finalArray.get(i).transcriptNid)
+                }
+            }
+            if (bulkMoveList != null && bulkMoveList.size > 0) {
+                confirmSelectedDeletePopup(
+                    false,
+                    "Do you want to move this university to applying list?"
+                )
+            }
+        }
+        homeModel.bulkCollegeMoveObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            getConsideringList()
+        }
+    }
+
+    private fun confirmSelectedDeletePopup(delete: Boolean, msg: String) {
+        AlertDialog.Builder(requireContext())
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setMessage(msg)
+            .setPositiveButton(
+                "Confirm"
+            ) { dialog, _ ->
+                var payload = BulkCollegeMovePayload()
+                payload.student_uid = SharedHelper(requireContext()).id.toString()
+                if (delete) {
+                    payload.status = "considered"
+                } else {
+                    payload.status = "applying"
+                }
+                payload.transcript_nids = bulkMoveList
+                dialogP.show()
+                homeModel.bulkCollegeMove(payload)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun notesClick(data: ConsiderModel.Data) {
@@ -643,10 +735,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 //            //notesAddedby.setText(data.c)
 //        }
 
-    }
-
-    private fun setAdapter() {
-        mBinding.consideringList.adapter = ConsiderAdapter(this, arrayListOf(), ::notesClick)
     }
 
 
@@ -835,6 +923,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             dialogP.dismiss()
             getConsideringList()
         }
+
+
     }
 
     private fun confirmConsiderPopup(postion: Int) {
@@ -1248,7 +1338,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             }
 
             if (selectedConsider == ACTIVE_CONSIDER) {
-                val arr = countryFilterEvaluation(activeArray, selectedCountryActive, selectedApplyingActive)
+                val arr = countryFilterEvaluation(
+                    activeArray,
+                    selectedCountryActive,
+                    selectedApplyingActive
+                )
                 mBinding.consideringList.adapter =
                     ConsiderAdapter(
                         this,
@@ -1259,11 +1353,15 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
             } else {
                 if (deletedArray.size > 0) {
-                    val arr =  countryFilterEvaluation(deletedArray, selectedCountryDeleted, selectedApplyingDeleted)
+                    val arr = countryFilterEvaluation(
+                        deletedArray,
+                        selectedCountryDeleted,
+                        selectedApplyingDeleted
+                    )
                     mBinding.consideringList.adapter =
                         ConsiderAdapter(
                             this,
-                            arr ,
+                            arr,
                             ::notesClick
                         )
                     mBinding.universitisCounte.text = arr.size.toString() + " Universities"
@@ -1292,12 +1390,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         } else if (type.equals("Applying")) {
             when (selectedConsider) {
                 ACTIVE_CONSIDER -> {
-                    for (i in applyingWithList){
+                    for (i in applyingWithList) {
                         i.checked = selectedApplyingActive == i.value
                     }
                 }
                 DELETED -> {
-                    for (i in applyingWithList){
+                    for (i in applyingWithList) {
                         i.checked = selectedApplyingDeleted == i.value
                     }
                 }
