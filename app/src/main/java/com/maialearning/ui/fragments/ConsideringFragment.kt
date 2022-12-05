@@ -43,6 +43,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
     var deletedArray: ArrayList<ConsiderModel.Data> = ArrayList()
     var activeArray: ArrayList<ConsiderModel.Data> = ArrayList()
+    var filteredArray: ArrayList<ConsiderModel.Data> = ArrayList()
     val countryArrayActive: ArrayList<KeyVal> = ArrayList()
     val countryArrayDeleted: ArrayList<KeyVal> = ArrayList()
     var mainDialog: BottomSheetDialog? = null
@@ -100,6 +101,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         // sheetBindingUniv?.search?.visibility = View.GONE
         sheetBindingUniv?.filters?.setText(resources.getString(R.string.filters))
         mainDialog?.show()
+        when (selectedConsider) {
+
+            ACTIVE_CONSIDER -> {
+                sheetBindingUniv!!.activeConsider.isChecked = true
+                sheetBindingUniv!!.deletedConsider.isChecked = false
+            }
+            DELETED -> {
+                sheetBindingUniv!!.activeConsider.isChecked = false
+                sheetBindingUniv!!.deletedConsider.isChecked = true
+            }
+        }
         sheetBindingUniv!!.clearText.setOnClickListener {
 
             selectedCountryActive == ""
@@ -122,9 +134,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
         sheetBindingUniv!!.activeConsider.setOnClickListener {
             selectedConsider = ACTIVE_CONSIDER
+            activeConsideringWork()
+
         }
         sheetBindingUniv!!.deletedConsider.setOnClickListener {
             selectedConsider = DELETED
+            deletedConsideringWork()
         }
 
         sheetBindingUniv!!.applyingItem.setOnClickListener {
@@ -613,9 +628,10 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             }
             if (selectedConsider == ACTIVE_CONSIDER) {
                 activeArray = finalArray
-                considerAdapter = ConsiderAdapter(this, activeArray, ::notesClick)
-                mBinding.consideringList.adapter = considerAdapter
+               // considerAdapter = ConsiderAdapter(this, activeArray, ::notesClick)
+              //  mBinding.consideringList.adapter = considerAdapter
                 mBinding.universitisCounte.text = activeArray.size.toString() + " Universities"
+                activeConsideringWork()
             } else {
                 deletedArray = finalArray
                 considerAdapter = ConsiderAdapter(this, deletedArray, ::notesClick)
@@ -667,37 +683,57 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 mBinding.btnLay.visibility = View.GONE
             }
         }
-
-        mBinding.deleteBtn.setOnClickListener {
-            bulkMoveList.clear()
-            for (i in finalArray.indices) {
-                if (finalArray.get(i).selected) {
-                    bulkMoveList.add("" + finalArray.get(i).transcriptNid)
+        mBinding.selectAll.setOnClickListener {
+            mBinding.btnLay.visibility = View.VISIBLE
+            if (mBinding.selectAll.isChecked){
+                for (i in filteredArray){
+                    i.selected = true
+                }
+            } else {
+                for (i in filteredArray){
+                    i.selected = false
                 }
             }
-            if (bulkMoveList != null && bulkMoveList.size > 0) {
-                confirmSelectedDeletePopup(
-                    true,
-                    "Do you want to remove this university to applying list?"
-                )
+
+            considerAdapter.notifyDataSetChanged()
+            considerAdapter.selectionVisibility(true)
+        }
+        mBinding.deleteBtn.setOnClickListener {
+            bulkMoveList.clear()
+            if (selectedConsider== ACTIVE_CONSIDER) {
+                for (i in filteredArray.indices) {
+                    if (filteredArray.get(i).selected) {
+                        bulkMoveList.add("" + filteredArray.get(i).transcriptNid)
+                    }
+                }
             }
+                if (bulkMoveList != null && bulkMoveList.size > 0) {
+                    confirmSelectedDeletePopup(
+                        true,
+                        resources.getString(R.string.delete_considering)
+                    )
+                }
+
         }
         mBinding.transcriptBtn.setOnClickListener {
-            bulkMoveList.clear()
-            for (i in finalArray.indices) {
-                if (finalArray.get(i).selected) {
-                    bulkMoveList.add("" + finalArray.get(i).transcriptNid)
+            if (selectedConsider== ACTIVE_CONSIDER) {
+                bulkMoveList.clear()
+                for (i in filteredArray.indices) {
+                    if (filteredArray.get(i).selected) {
+                        bulkMoveList.add("" + filteredArray.get(i).transcriptNid)
+                    }
                 }
             }
             if (bulkMoveList != null && bulkMoveList.size > 0) {
                 confirmSelectedDeletePopup(
                     false,
-                    "Do you want to move this university to applying list?"
+                    resources.getString(R.string.to_applying_consider)
                 )
             }
         }
         homeModel.bulkCollegeMoveObserver.observe(requireActivity()) {
             dialogP.dismiss()
+            resetSelection()
             getConsideringList()
         }
     }
@@ -1311,7 +1347,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             selectedApplyingDeleted = ""
             selectedApplyingActive = ""
             when (selectedConsider) {
+
                 ACTIVE_CONSIDER -> {
+                    activeSelection()
                     for (i in countryArrayActive) {
                         if (i.checked) {
                             selectedCountryActive = i.key
@@ -1324,6 +1362,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
                 DELETED -> {
+                   resetSelection()
                     for (i in countryArrayDeleted) {
                         if (i.checked) {
                             selectedCountryDeleted = i.key
@@ -1338,36 +1377,10 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             }
 
             if (selectedConsider == ACTIVE_CONSIDER) {
-                val arr = countryFilterEvaluation(
-                    activeArray,
-                    selectedCountryActive,
-                    selectedApplyingActive
-                )
-                mBinding.consideringList.adapter =
-                    ConsiderAdapter(
-                        this,
-                        arr,
-                        ::notesClick
-                    )
-                mBinding.universitisCounte.text = arr.size.toString() + " Universities"
+               activeConsideringWork()
 
             } else {
-                if (deletedArray.size > 0) {
-                    val arr = countryFilterEvaluation(
-                        deletedArray,
-                        selectedCountryDeleted,
-                        selectedApplyingDeleted
-                    )
-                    mBinding.consideringList.adapter =
-                        ConsiderAdapter(
-                            this,
-                            arr,
-                            ::notesClick
-                        )
-                    mBinding.universitisCounte.text = arr.size.toString() + " Universities"
-                } else {
-                    getConsideringList()
-                }
+                deletedConsideringWork()
             }
             dialog.dismiss()
             mainDialog?.dismiss()
@@ -1405,6 +1418,60 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 ConsiderCountryFilterAdapter(applyingWithList)
         }
 
+    }
+
+    private fun activeSelection() {
+        mBinding.selectAll.visibility = View.GONE
+        mBinding.selected.visibility = View.VISIBLE
+        mBinding.selectAll.isChecked = false
+        mBinding.selected.isChecked = false
+        mBinding.btnLay.visibility = View.GONE
+    }
+
+    private fun activeConsideringWork() {
+        activeSelection()
+        filteredArray = countryFilterEvaluation(
+            activeArray,
+            selectedCountryActive,
+            selectedApplyingActive
+        )
+        considerAdapter = ConsiderAdapter(this, filteredArray, ::notesClick)
+//        mBinding.consideringList.adapter =
+//            ConsiderAdapter(
+//                this,
+//                filteredArray,
+//                ::notesClick
+//            )
+        mBinding.consideringList.adapter = considerAdapter
+        mBinding.universitisCounte.text = filteredArray.size.toString() + " Universities"
+    }
+
+    private fun deletedConsideringWork() {
+        resetSelection()
+        if (deletedArray.size > 0) {
+            filteredArray = countryFilterEvaluation(
+                deletedArray,
+                selectedCountryDeleted,
+                selectedApplyingDeleted
+            )
+            mBinding.consideringList.adapter =
+                ConsiderAdapter(
+                    this,
+                    filteredArray,
+                    ::notesClick
+                )
+            mBinding.universitisCounte.text = filteredArray.size.toString() + " Universities"
+        } else {
+            getConsideringList()
+        }
+    }
+
+    private fun resetSelection() {
+        mBinding.selectAll.visibility = View.GONE
+        mBinding.selected.visibility = View.GONE
+        mBinding.btnLay.visibility = View.GONE
+        mBinding.selectAll.isChecked = false
+        mBinding.selected.isChecked = false
     }
 
     companion object {

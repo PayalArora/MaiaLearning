@@ -1,5 +1,6 @@
 package com.maialearning.ui.adapter
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -280,7 +281,7 @@ class ConsiderAdapter(
                     selection.visibility = View.GONE
 
                 }
-                if (selected== true){
+                if (selected == true){
                     selection.isChecked = true
                 } else
                 {
@@ -397,10 +398,10 @@ class ConsiderAdapter(
         onItemClickOption.onDeadlineClick(positio, string)
     }
 
-    fun selectionVisibility(b: Boolean): Any {
+    fun selectionVisibility(b: Boolean) : Boolean{
         selectionVisiblility = b
         notifyDataSetChanged()
-        return b
+        return  b
     }
 }
 
