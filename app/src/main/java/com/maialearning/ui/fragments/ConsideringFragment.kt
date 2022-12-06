@@ -689,7 +689,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 for (i in filteredArray){
                     i.selected = true
                 }
-            } else {
+             } else {
                 for (i in filteredArray){
                     i.selected = false
                 }

@@ -186,6 +186,7 @@
         android:id="@+id/view4"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1dp"
+        android:visibility="gone"
         android:layout_below="@+id/missing_item"
         android:background="@color/divider_color" />
 
@@ -193,6 +194,7 @@
         android:layout_below="@+id/view4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:backgroundTint="@color/blue_alpha"
         android:orientation="horizontal">
 
@@ -240,6 +242,7 @@
             android:layout_height="match_parent"
             android:layout_marginVertical="@dimen/_10dp"
             android:layout_gravity="center"
+
             android:layout_marginStart="@dimen/_5dp"
             android:layout_marginEnd="@dimen/_5dp"
             android:background="@color/divider_color" />

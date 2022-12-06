@@ -109,7 +109,7 @@ class ApplyingParser(val it:JsonObject, val userId:String,  val statuses : Array
                         firstTime = false
                         array[k].country_name = countries[j]
                     } else {
-                        array[k].country_name = ""
+                        array[k].country_name =  countries[j]
                     }
                     finalArray.add(array[k])
                     finalArray[pos].count = count

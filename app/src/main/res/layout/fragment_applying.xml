@@ -27,6 +27,7 @@
         <CheckBox
             android:id="@+id/selected"
             android:layout_width="@dimen/_100dp"
+            android:visibility="gone"
             android:layout_height="@dimen/_30dp"
             android:layout_alignParentRight="true"
             android:layout_marginStart="@dimen/_10dp"

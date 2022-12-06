@@ -45,7 +45,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     val missingList: ArrayList<KeyVal> = ArrayList()
     lateinit var applyingAdapter: ApplyingAdapter
     val bulkMoveList: ArrayList<String> = ArrayList()
-
+    var selectedCountry= ""
+    var selectedApplying= ""
+    var selectedMissing = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +82,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         filter?.setOnClickListener {
             filterWork()
         }
+    }
+
+    private fun resetFilters() {
+        selectedCountry = ""
+        selectedApplying = ""
+        selectedMissing = ""
     }
 
     private fun init() {
@@ -174,6 +182,13 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 }
                 val countries = ArrayList<String>()
                 countryArray.clear()
+                countryArray.add(
+                    KeyVal(
+                        "All",
+                        "All",
+                        false
+                    )
+                )
                 val array: ArrayList<ConsiderModel.Data> = ArrayList()
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
@@ -306,8 +321,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         lateinit var allowedTypeArray: JSONArray
         homeModel.univJsonFilter.observe(requireActivity()) {
             dialogP.dismiss()
-            for (i in finalArray.indices) {
-                selectedUnivId = finalArray[i].university_nid
+            for (final_index in finalArray.indices) {
+                selectedUnivId = finalArray[final_index].university_nid
                 val json = JSONObject(it.toString())
                 if (json.has(selectedUnivId)) {
                     var jsonUniv = json.optJSONObject(selectedUnivId)
@@ -330,8 +345,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                     ConsiderModel.CollTerm()
 
                                 collTerm.type = term.optString("type")
-                                if (finalArray.get(i).applicationMode == currentDynamicKey) {
+
+                                if (finalArray.get(final_index).applicationMode == currentDynamicKey) {
                                     selectedAppModeType = collTerm.type
+                                    finalArray.get(final_index).selectedAppModeValue =
+                                        allowedType.getString(currentDynamicKey)
                                 }
                                 if (collTerm.type == "term") {
                                     var termList = java.util.ArrayList<String>()
@@ -361,6 +379,13 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                                         json.optString("decision_plan_value"),
                                                         json.optString("deadline_date")
                                                     )
+                                                    if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == json.optString(
+                                                            "decision_plan"
+                                                        )?.replaceInvertedComas()
+                                                    ) {
+                                                        finalArray.get(final_index).selectedAppPlanValue =
+                                                            json.optString("decision_plan_value")
+                                                    }
                                                     decision?.add(descisionItem)
                                                 }
                                             }
@@ -384,6 +409,13 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                                         it.getJSONObject(i).optString("id"),
                                                         it.getJSONObject(i).optString("label")
                                                     )
+                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == it.getJSONObject(
+                                                        i
+                                                    ).optString("id")?.replaceInvertedComas()
+                                                ) {
+                                                    finalArray.get(final_index).selectedAppPlanValue =
+                                                        it.getJSONObject(i).optString("label")
+                                                }
                                                 arrayPlans.add(plan)
                                             }
                                         }
@@ -400,6 +432,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                                         id,
                                                         it.optString(id)
                                                     )
+                                                if (finalArray.get(final_index).applicationType?.replaceInvertedComas() == id?.replaceInvertedComas()) {
+                                                    finalArray.get(final_index).selectedAppPlanValue =
+                                                        it.optString(id)
+                                                }
                                                 arrayPlans.add(plan)
                                             }
                                         }
@@ -419,7 +455,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
                             }
 
-                            finalArray.get(i).collegeAppLicationType =
+                            finalArray.get(final_index).collegeAppLicationType =
                                 ConsiderModel.CollType(typeList, selectedAppModeType)
 
                         }
@@ -1127,6 +1163,24 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         sheetBinding.clearText.setText(resources.getString(R.string.done))
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.clearText.setOnClickListener {
+            resetFilters()
+            for (i in countryArray) {
+                if (i.checked) {
+                    selectedCountry = i.key
+                }
+            }
+            for (i in applyingWithList) {
+                if (i.checked) {
+                    selectedApplying = i.value
+                }
+            }
+            for (i in missingList) {
+                if (i.checked) {
+                    selectedMissing = i.value
+                }
+            }
+            val filteredArray = countryFilterEvaluation(finalArray)
+            (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(filteredArray)
 
             dialog.dismiss()
             mainDialog?.dismiss()
@@ -1142,9 +1196,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(applyingWithList)
         } else if (type.equals("Missing")) {
-            missingList.add(KeyVal("", "Missing: Application Plan", false))
-            missingList.add(KeyVal("", "Missing: Application Type", false))
-            missingList.add(KeyVal("", "Missing: Transcript Request", false))
+            missingList.add(KeyVal("", MISSING_NONE, false))
+            missingList.add(KeyVal("", MISSING_APP_PLAN, false))
+            missingList.add(KeyVal("", MISSING_APP_TYPE, false))
+            missingList.add(KeyVal("", MISSING_TRANSCRIPT, false))
 
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(missingList)
@@ -1167,14 +1222,15 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         mainDialog?.show()
 
         sheetBindingUniv!!.clearText.setOnClickListener {
-
             mainDialog?.dismiss()
         }
-        sheetBindingUniv!!.backBtn.setOnClickListener {
+
+            sheetBindingUniv!!.backBtn.setOnClickListener {
 
             mainDialog?.dismiss()
 
         }
+         // mBinding.universitisCounte.text = filteredArray.size.toString() + " Universities"
 
         dialogP.show()
         homeModel.getConsideringApplyingWith()
@@ -1192,7 +1248,74 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             subFilter("Missing")
         }
     }
+    private fun countryFilterEvaluation(
+        finalArray: ArrayList<ConsiderModel.Data>
+    ): ArrayList<ConsiderModel.Data> {
+        var filteredArray: MutableList<ConsiderModel.Data> = arrayListOf()
+        if (selectedCountry == "" || selectedCountry == "All") {
+            filteredArray.addAll(finalArray)
 
+        } else {
+            for (i in finalArray) {
+                var checkSame = false
+                if (i.country == selectedCountry) {
+                    checkSame = true
+                    filteredArray.add(i)
+                } else if (i.country == "" && checkSame) {
+                    filteredArray.add(i)
+                } else {
+                    checkSame = false
+                }
+            }
+        }
+        if (selectedMissing == "" || selectedMissing == "None" ){
+            filteredArray = filteredArray as ArrayList<ConsiderModel.Data>
+        } else {
+            if (selectedMissing == MISSING_TRANSCRIPT) {
+                filteredArray = filteredArray.filter {
+                   it.requestTranscript == "0"
+                } as ArrayList<ConsiderModel.Data>
+            } else if (selectedMissing == MISSING_APP_TYPE){
+                filteredArray = filteredArray.filter {
+                    !checkNonNull(it.applicationMode)
+                } as ArrayList<ConsiderModel.Data>
+            }else if (selectedMissing == MISSING_NONE){
+                filteredArray = filteredArray
+            }else if (selectedMissing == MISSING_APP_PLAN){
+                filteredArray = filteredArray.filter {
+                    !checkNonNull(it.applicationType) && (it.appByProgramSupported == "0" || it.applicationMode == CommonApp)
+                } as ArrayList<ConsiderModel.Data>
+            }
+        }
+        if (selectedApplying == "" || selectedApplying == "All") {
+            filteredArray =  filteredArray as ArrayList<ConsiderModel.Data>
+        } else {
+            filteredArray = filteredArray.filter {
+                it.selectedAppModeValue == selectedApplying ||
+                        it.selectedAppPlanValue == selectedApplying
+            } as ArrayList<ConsiderModel.Data>
+        }
+        var count = 1
+        var prev = ""
+
+        for (i in filteredArray) {
+            if (prev == i.country_name) {
+                count++
+            } else {
+                prev = i.country_name
+                count = 1
+            }
+            i.count = count
+        }
+        return filteredArray
+    }
+companion object{
+    const val MISSING_NONE = "Missing: None"
+    const val MISSING_APP_PLAN = "Missing: Application Plan"
+    const val MISSING_APP_TYPE = "Missing: Application Type"
+    const val MISSING_TRANSCRIPT = "Missing: Transcript Request"
+
+}
 
 }
 

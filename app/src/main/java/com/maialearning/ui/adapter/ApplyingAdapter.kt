@@ -31,6 +31,7 @@ class ApplyingAdapter(
     var planVal = "Early Action"
     var positio:Int = 0
     var selectionVisiblility: Boolean = false
+    var prev = ""
 
     class ViewHolder(val binding: ApplyingItemLayBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -63,13 +64,16 @@ class ApplyingAdapter(
                                 (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm) ||
                                 !isAppPlan
                         )
-                if (country_name == "") {
+
+                if (prev == country_name) {
                     top.visibility = View.GONE
                 } else {
+                    prev = country_name
                     top.visibility = View.VISIBLE
                     countryTxt.text = country_name
-                    countUniv.text = count.toString()
                 }
+                    countUniv.text = count.toString()
+
                 uniName.text = naviance_college_name
                 if (created_date != null)
                     date.setText(CommonClass.getDate(created_date.toLong()))
