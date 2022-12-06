@@ -605,8 +605,10 @@
     <string name="deleted_consider">Deleted</string>
     <string name="request_transcript">Request Transcript</string>
     <string name="delete_selected">Delete Selected</string>
-    <string name="delete_considering">\"Do you want to remove this university from considering list?\"</string>
-    <string name="to_applying_consider">\"Do you want to move these university to applying list?\"</string>
+    <string name="delete_considering">Do you want to remove this university from considering list?</string>
+    <string name="to_applying_consider">Do you want to move these university to applying list?</string>
+    <string name="delete_applying">Do you want to move this university from applying list to considering list?</string>
+    <string name="missing">Missing</string>
 
     <string-array name="rate_college">
         <item>How much do you like college?</item>
@@ -699,4 +701,8 @@
         <item>CSU Application</item>
         <item>Universal App</item>
     </string-array>
+
+    <string name="request_trans">Request Transcripts</string>
+    <string name="transcript_ncaa">Transcript NCAA</string>
+
 </resources>

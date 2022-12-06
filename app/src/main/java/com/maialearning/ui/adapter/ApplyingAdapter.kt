@@ -30,6 +30,7 @@ class ApplyingAdapter(
     var termVal = "Spring 2022"
     var planVal = "Early Action"
     var positio:Int = 0
+    var selectionVisiblility: Boolean = false
 
     class ViewHolder(val binding: ApplyingItemLayBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -291,7 +292,23 @@ class ApplyingAdapter(
                     appRound.visibility = View.GONE
                     roundValue.text = root.context.resources.getString(R.string.na)
                 }
+                if (selectionVisiblility) {
+                    selection.visibility = View.VISIBLE
+                } else {
+                    selection.visibility = View.GONE
 
+                }
+                if (selected == true){
+                    selection.isChecked = true
+                } else
+                {
+                    selection.isChecked= false
+                }
+
+
+                selection.setOnClickListener{
+                    selected = selection.isChecked
+                }
         }
 
     }
@@ -360,6 +377,11 @@ class ApplyingAdapter(
             }
         }
         return null
+    }
+    fun selectionVisibility(b: Boolean) : Boolean{
+        selectionVisiblility = b
+        notifyDataSetChanged()
+        return  b
     }
 }
 

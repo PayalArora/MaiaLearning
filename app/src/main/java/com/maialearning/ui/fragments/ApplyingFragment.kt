@@ -17,9 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
-import com.maialearning.databinding.CommentsSheetBinding
-import com.maialearning.databinding.FragmentApplyingBinding
-import com.maialearning.databinding.LayoutProgramsBinding
+import com.maialearning.databinding.*
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.*
@@ -43,6 +41,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     lateinit var userid: String
     var selectedUnivId: String = ""
     var positio: Int = 0
+    val applyingWithList: ArrayList<KeyVal> = ArrayList()
+    val missingList: ArrayList<KeyVal> = ArrayList()
+    lateinit var applyingAdapter: ApplyingAdapter
+    val bulkMoveList: ArrayList<String> = ArrayList()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,7 +76,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
         init()
         setAdapter()
-
+        val filter = activity?.findViewById<ImageView>(R.id.toolbar_messanger)
+        filter?.setOnClickListener {
+            filterWork()
+        }
     }
 
     private fun init() {
@@ -80,6 +87,69 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         dialogP.show()
         initObserver()
         getApplyingList()
+        mBinding.selected.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                mBinding.selected.setText("Cancel Selection")
+                applyingAdapter.selectionVisibility(true)
+                mBinding.selectAll.visibility = View.VISIBLE
+                mBinding.deleteBtn.visibility = View.VISIBLE
+            } else {
+                mBinding.selected.setText("Select")
+                applyingAdapter.selectionVisibility(false)
+                mBinding.selectAll.visibility = View.GONE
+                mBinding.deleteBtn.visibility = View.GONE
+            }
+        }
+        mBinding.selectAll.setOnClickListener {
+            mBinding.deleteBtn.visibility = View.VISIBLE
+            if (mBinding.selectAll.isChecked) {
+                for (i in finalArray) {
+                    i.selected = true
+                }
+            } else {
+                for (i in finalArray) {
+                    i.selected = false
+                }
+            }
+
+            applyingAdapter.notifyDataSetChanged()
+            applyingAdapter.selectionVisibility(true)
+        }
+        mBinding.deleteBtn.setOnClickListener {
+            bulkMoveList.clear()
+            for (i in finalArray.indices) {
+                if (finalArray.get(i).selected) {
+                    bulkMoveList.add("" + finalArray.get(i).transcriptNid)
+                }
+            }
+
+            if (bulkMoveList != null && bulkMoveList.size > 0) {
+                confirmSelectedDeletePopup(
+                    true,
+                    resources.getString(R.string.delete_applying)
+                )
+            }
+        }
+    }
+
+    private fun confirmSelectedDeletePopup(b: Boolean, string: String) {
+        AlertDialog.Builder(requireContext())
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setMessage(string)
+            .setPositiveButton(
+                "Confirm"
+            ) { dialog, _ ->
+                var payload = BulkCollegeMovePayload()
+                payload.student_uid = SharedHelper(requireContext()).id.toString()
+                if (b) {
+                    payload.status = "considering"
+                }
+                payload.transcript_nids = bulkMoveList
+                dialogP.show()
+                homeModel.bulkCollegeMove(payload)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     private fun getApplyingList() {
@@ -103,6 +173,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     jsonArray.put(json.get(key))
                 }
                 val countries = ArrayList<String>()
+                countryArray.clear()
                 val array: ArrayList<ConsiderModel.Data> = ArrayList()
                 for (i in 0 until jsonArray.length()) {
                     val object_ = jsonArray.getJSONObject(i)
@@ -148,8 +219,15 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                             it.optString("counselor_recommendation")
                         )
                     }
-                    if (!countries.contains(object_.getString("country_name")))
+                    if (!countries.contains(object_.getString("country_name"))) {
                         countries.add(object_.getString("country_name"))
+                        countryArray.add(
+                            KeyVal(
+                                object_.getString("country"),
+                                object_.getString("country_name"), false
+                            )
+                        )
+                    }
                     val model: ConsiderModel.Data = ConsiderModel.Data(
                         object_.getInt("contact_info"),
                         object_.getInt("parchment"),
@@ -297,7 +375,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                     val arrayPlans = arrayListOf<ConsiderModel.DecisionPlan>()
                                     if (term.optJSONArray("data") != null) {
                                         val decisionPlans: JSONArray = term.optJSONArray("data")
-                                        decisionPlans?.let {
+                                        decisionPlans.let {
                                             for (i in 0 until it.length()) {
 
 
@@ -435,10 +513,51 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 }
             }
         }
+
+        homeModel.getApplyingWithObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            dialogP.dismiss()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            applyingWithList.clear()
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    applyingWithList.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+            applyingWithList.add(KeyVal("All", "All", false))
+            for (i in resources.getStringArray(R.array.static_applying_with).indices) {
+                applyingWithList.add(
+                    KeyVal(
+                        "AppType",
+                        resources.getStringArray(R.array.static_applying_with)[i],
+                        false
+                    )
+                )
+            }
+            applyingWithList.sortBy { it.value }
+        }
+        homeModel.bulkCollegeMoveObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            resetSelection()
+            getApplyingList()
+        }
+    }
+
+    private fun resetSelection() {
+        mBinding.selectAll.visibility = View.GONE
+        mBinding.selected.visibility = View.GONE
+        mBinding.deleteBtn.visibility = View.GONE
+        mBinding.selectAll.isChecked = false
+        mBinding.selected.isChecked = false
     }
 
     private fun setAdapter() {
-        mBinding.applyingList.adapter = ApplyingAdapter(this, arrayListOf())
+        applyingAdapter = ApplyingAdapter(this, arrayListOf())
+        mBinding.applyingList.adapter = applyingAdapter
     }
 
     private fun bottomSheetType(
@@ -986,6 +1105,94 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             mBinding.applyingList.adapter?.notifyDataSetChanged()
         }
     }
+
+    // Filter Work
+    val countryArray: ArrayList<KeyVal> = ArrayList()
+
+    private fun subFilter(type: String) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: UniversityFilterBinding =
+            UniversityFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.search.visibility = View.GONE
+        sheetBinding.filters.setText(type)
+        dialog.show()
+
+        sheetBinding.spinnerLay.visibility = View.GONE
+        sheetBinding.invisibleLay.visibility = View.GONE
+        sheetBinding.backBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+        sheetBinding.clearText.setText(resources.getString(R.string.done))
+        sheetBinding.spinnerLay.visibility = View.GONE
+        sheetBinding.clearText.setOnClickListener {
+
+            dialog.dismiss()
+            mainDialog?.dismiss()
+        }
+        sheetBinding.close.setOnClickListener {
+            sheetBinding.searchText.setText("")
+        }
+
+        if (type.equals("Country")) {
+            sheetBinding.reciepentList.adapter =
+                ConsiderCountryFilterAdapter(countryArray)
+        } else if (type.equals("Applying")) {
+            sheetBinding.reciepentList.adapter =
+                ConsiderCountryFilterAdapter(applyingWithList)
+        } else if (type.equals("Missing")) {
+            missingList.add(KeyVal("", "Missing: Application Plan", false))
+            missingList.add(KeyVal("", "Missing: Application Type", false))
+            missingList.add(KeyVal("", "Missing: Transcript Request", false))
+
+            sheetBinding.reciepentList.adapter =
+                ConsiderCountryFilterAdapter(missingList)
+        }
+
+    }
+
+    var mainDialog: BottomSheetDialog? = null
+    var sheetBindingUniv: ApplyingFilterLayoutBinding? = null
+
+    private fun filterWork() {
+        mainDialog = activity?.let { BottomSheetDialog(it) }
+
+        sheetBindingUniv = ApplyingFilterLayoutBinding.inflate(layoutInflater)
+        sheetBindingUniv?.root?.minimumHeight =
+            ((Resources.getSystem().displayMetrics.heightPixels))
+        mainDialog?.setContentView(sheetBindingUniv!!.root)
+        // sheetBindingUniv?.search?.visibility = View.GONE
+        sheetBindingUniv?.filters?.setText(resources.getString(R.string.filters))
+        mainDialog?.show()
+
+        sheetBindingUniv!!.clearText.setOnClickListener {
+
+            mainDialog?.dismiss()
+        }
+        sheetBindingUniv!!.backBtn.setOnClickListener {
+
+            mainDialog?.dismiss()
+
+        }
+
+        dialogP.show()
+        homeModel.getConsideringApplyingWith()
+
+        sheetBindingUniv!!.countryItem.setOnClickListener {
+            subFilter("Country")
+        }
+
+
+        sheetBindingUniv!!.applyingItem.setOnClickListener {
+            subFilter("Applying")
+        }
+
+        sheetBindingUniv!!.missingItem.setOnClickListener {
+            subFilter("Missing")
+        }
+    }
+
 
 }
 

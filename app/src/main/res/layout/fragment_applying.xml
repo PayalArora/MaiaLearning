@@ -1,15 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_1"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/white_1">
+
+    <RelativeLayout
+        android:id="@+id/select_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/select_all"
+            android:layout_width="@dimen/_100dp"
+            android:layout_height="@dimen/_30dp"
+            android:layout_marginTop="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"
+            android:layout_toLeftOf="@+id/selected"
+            android:layout_toRightOf="@+id/delete_btn"
+            android:text="@string/select_all"
+            android:textSize="11sp"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/selected"
+            android:layout_width="@dimen/_100dp"
+            android:layout_height="@dimen/_30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:layout_marginBottom="@dimen/_10dp"
+            android:background="@drawable/radiobutton_select"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/select"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:layout_marginTop="@dimen/_10dp"
+            android:background="@drawable/delete"
+            android:drawableLeft="@drawable/cross"
+            android:drawablePadding="@dimen/_7dp"
+            android:drawableTint="@color/red"
+            android:paddingHorizontal="@dimen/_15dp"
+            android:paddingVertical="@dimen/_10dp"
+            android:text="@string/delete_selected"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/applying_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/select_lay"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/applying_item_lay" />
 
