@@ -60,6 +60,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val getcontinentFilter = MutableLiveData<JsonObject>()
     val getApplyingWithObserver = MutableLiveData<JsonObject>()
     val bulkCollegeMoveObserver = MutableLiveData<Unit>()
+    val testSCoresObserver = MutableLiveData<JsonArray>()
+    val testScoreSubmitPayloadObserber = MutableLiveData<Unit>()
 
 
     fun getConsiderList(id: String, status: String) {
@@ -682,7 +684,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     }
 
     fun bulkCollegeMove(
-      payload: BulkCollegeMovePayload
+        payload: BulkCollegeMovePayload
     ) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -692,6 +694,33 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> bulkCollegeMoveObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getTestScores(id: String?) {
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                id?.let { catRepository.getTestScores(it) }
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> testSCoresObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun submitTestScoreStatus(payload: TestScoreSubmitPayload) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.testScoreStatusSubmit(payload)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> testScoreSubmitPayloadObserber.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

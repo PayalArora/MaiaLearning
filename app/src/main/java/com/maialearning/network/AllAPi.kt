@@ -700,4 +700,16 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Body payload: BulkCollegeMovePayload
     ): Deferred<Unit>
+
+    @GET("test-score-submission-status/{id}")
+    fun getTestScores(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonArray>
+
+    @POST("test-score-submission-status")
+    fun testScoreSubmit(
+        @Header("Authorization") AutToken: String,
+        @Body payload: TestScoreSubmitPayload
+    ): Deferred<Unit>
 }

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
@@ -23,10 +24,12 @@ import com.maialearning.ui.adapter.*
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
+import kotlinx.serialization.json.Json
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnItemClick,
@@ -45,9 +48,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     val missingList: ArrayList<KeyVal> = ArrayList()
     lateinit var applyingAdapter: ApplyingAdapter
     val bulkMoveList: ArrayList<String> = ArrayList()
-    var selectedCountry= ""
-    var selectedApplying= ""
+    var selectedCountry = ""
+    var selectedApplying = ""
     var selectedMissing = ""
+    val testScoresList: ArrayList<TestScoresResponseItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -580,6 +584,23 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             dialogP.dismiss()
             resetSelection()
             getApplyingList()
+        }
+        homeModel.testSCoresObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            val gson = GsonBuilder().create()
+            testScoresList.clear()
+            if (it != null) {
+                for (i in it) {
+                    val toppick = gson.fromJson(i, TestScoresResponseItem::class.java)
+                    testScoresList?.add(toppick)
+                }
+
+            }
+            sheetBinding.reciepentList.adapter =
+                TestScoresAdapter(testScoresList)
+        }
+        homeModel.testScoreSubmitPayloadObserber.observe(requireActivity()) {
+            dialogP.dismiss()
         }
     }
 
@@ -1144,10 +1165,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
     // Filter Work
     val countryArray: ArrayList<KeyVal> = ArrayList()
-
+    lateinit var sheetBinding: UniversityFilterBinding
     private fun subFilter(type: String) {
         val dialog = BottomSheetDialog(requireContext())
-        val sheetBinding: UniversityFilterBinding =
+        sheetBinding =
             UniversityFilterBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
@@ -1164,24 +1185,42 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.clearText.setOnClickListener {
             resetFilters()
-            for (i in countryArray) {
-                if (i.checked) {
-                    selectedCountry = i.key
+            if (type.equals(getString(R.string.test_scores))) {
+                val status = HashMap<String, String>()
+                for (i in testScoresList.indices) {
+                    if (testScoresList.get(i).change) {
+                        status.set(
+                            "" + testScoresList.get(i).transcriptNid,
+                            "" + testScoresList.get(i).statusId
+                        )
+                    }
                 }
-            }
-            for (i in applyingWithList) {
-                if (i.checked) {
-                    selectedApplying = i.value
+                if (status != null && status.size > 0) {
+                    val payload = TestScoreSubmitPayload()
+                    payload.student_uid = SharedHelper(requireContext()).id!!
+                    payload.status = status
+                    dialogP.show()
+                    homeModel.submitTestScoreStatus(payload)
                 }
-            }
-            for (i in missingList) {
-                if (i.checked) {
-                    selectedMissing = i.value
+            } else {
+                for (i in countryArray) {
+                    if (i.checked) {
+                        selectedCountry = i.key
+                    }
                 }
+                for (i in applyingWithList) {
+                    if (i.checked) {
+                        selectedApplying = i.value
+                    }
+                }
+                for (i in missingList) {
+                    if (i.checked) {
+                        selectedMissing = i.value
+                    }
+                }
+                val filteredArray = countryFilterEvaluation(finalArray)
+                (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(filteredArray)
             }
-            val filteredArray = countryFilterEvaluation(finalArray)
-            (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(filteredArray)
-
             dialog.dismiss()
             mainDialog?.dismiss()
         }
@@ -1203,8 +1242,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(missingList)
+        } else if (type.equals(getString(R.string.test_scores))) {
+            dialogP.show()
+            sheetBinding?.filters?.setText(resources.getString(R.string.which_testscores))
+            homeModel.getTestScores(SharedHelper(requireContext()).id)
         }
-
     }
 
     var mainDialog: BottomSheetDialog? = null
@@ -1225,12 +1267,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             mainDialog?.dismiss()
         }
 
-            sheetBindingUniv!!.backBtn.setOnClickListener {
+        sheetBindingUniv!!.backBtn.setOnClickListener {
 
             mainDialog?.dismiss()
 
         }
-         // mBinding.universitisCounte.text = filteredArray.size.toString() + " Universities"
+        // mBinding.universitisCounte.text = filteredArray.size.toString() + " Universities"
 
         dialogP.show()
         homeModel.getConsideringApplyingWith()
@@ -1247,7 +1289,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         sheetBindingUniv!!.missingItem.setOnClickListener {
             subFilter("Missing")
         }
+        sheetBindingUniv!!.testScores.setOnClickListener {
+            subFilter(getString(R.string.test_scores))
+        }
     }
+
     private fun countryFilterEvaluation(
         finalArray: ArrayList<ConsiderModel.Data>
     ): ArrayList<ConsiderModel.Data> {
@@ -1268,27 +1314,27 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 }
             }
         }
-        if (selectedMissing == "" || selectedMissing == "None" ){
+        if (selectedMissing == "" || selectedMissing == "None") {
             filteredArray = filteredArray as ArrayList<ConsiderModel.Data>
         } else {
             if (selectedMissing == MISSING_TRANSCRIPT) {
                 filteredArray = filteredArray.filter {
-                   it.requestTranscript == "0"
+                    it.requestTranscript == "0"
                 } as ArrayList<ConsiderModel.Data>
-            } else if (selectedMissing == MISSING_APP_TYPE){
+            } else if (selectedMissing == MISSING_APP_TYPE) {
                 filteredArray = filteredArray.filter {
                     !checkNonNull(it.applicationMode)
                 } as ArrayList<ConsiderModel.Data>
-            }else if (selectedMissing == MISSING_NONE){
+            } else if (selectedMissing == MISSING_NONE) {
                 filteredArray = filteredArray
-            }else if (selectedMissing == MISSING_APP_PLAN){
+            } else if (selectedMissing == MISSING_APP_PLAN) {
                 filteredArray = filteredArray.filter {
                     !checkNonNull(it.applicationType) && (it.appByProgramSupported == "0" || it.applicationMode == CommonApp)
                 } as ArrayList<ConsiderModel.Data>
             }
         }
         if (selectedApplying == "" || selectedApplying == "All") {
-            filteredArray =  filteredArray as ArrayList<ConsiderModel.Data>
+            filteredArray = filteredArray as ArrayList<ConsiderModel.Data>
         } else {
             filteredArray = filteredArray.filter {
                 it.selectedAppModeValue == selectedApplying ||
@@ -1309,13 +1355,14 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         return filteredArray
     }
-companion object{
-    const val MISSING_NONE = "Missing: None"
-    const val MISSING_APP_PLAN = "Missing: Application Plan"
-    const val MISSING_APP_TYPE = "Missing: Application Type"
-    const val MISSING_TRANSCRIPT = "Missing: Transcript Request"
 
-}
+    companion object {
+        const val MISSING_NONE = "Missing: None"
+        const val MISSING_APP_PLAN = "Missing: Application Plan"
+        const val MISSING_APP_TYPE = "Missing: Application Type"
+        const val MISSING_TRANSCRIPT = "Missing: Transcript Request"
+
+    }
 
 }
 

@@ -351,6 +351,15 @@ interface LoginRepository {
     suspend fun bulkCollegeMoving(
         payload: BulkCollegeMovePayload
     ): UseCaseResult<Unit>
+
+    suspend fun getTestScores(
+        id: String
+    ): UseCaseResult<JsonArray>
+
+    suspend fun testScoreStatusSubmit(
+        payload: TestScoreSubmitPayload
+    ): UseCaseResult<Unit>
+
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1791,12 +1800,40 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     }
 
     override suspend fun bulkCollegeMoving(
-       payload: BulkCollegeMovePayload
+        payload: BulkCollegeMovePayload
     ): UseCaseResult<Unit> {
         return try {
             val result = catApi.bulkCollegeMoving(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
-               payload
+                payload
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getTestScores(id: String): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.getTestScores(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun testScoreStatusSubmit(payload: TestScoreSubmitPayload): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.testScoreSubmit(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                payload
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

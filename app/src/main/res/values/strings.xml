@@ -704,5 +704,10 @@
 
     <string name="request_trans">Request Transcripts</string>
     <string name="transcript_ncaa">Transcript NCAA</string>
+    <string name="test_scores">Test Scores | Submitted</string>
+    <string name="sat">SAT</string>
+    <string name="satnact"><![CDATA[SAT & ACT]]></string>
+    <string name="not_submitted">Not Submitted</string>
+    <string name="which_testscores">Which test scores did you submit with your applications?</string>
 
 </resources>
