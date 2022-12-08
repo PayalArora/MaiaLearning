@@ -62,6 +62,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val bulkCollegeMoveObserver = MutableLiveData<Unit>()
     val testSCoresObserver = MutableLiveData<JsonArray>()
     val testScoreSubmitPayloadObserber = MutableLiveData<Unit>()
+    val checkAllTranscriptsObserver = MutableLiveData<Unit>()
 
 
     fun getConsiderList(id: String, status: String) {
@@ -726,4 +727,17 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
+    fun checkAllTranscripts(id: String, value: Int, ncaa: Int) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.checkAllTranscripts(id, value, ncaa)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> checkAllTranscriptsObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
 }

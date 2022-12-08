@@ -712,4 +712,10 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Body payload: TestScoreSubmitPayload
     ): Deferred<Unit>
+
+    @POST("check_all_transcript_request")
+    fun checkAllTranscript(
+        @Header("Authorization") AutToken: String,
+        @Body file: JsonObject
+    ): Deferred<Unit>
 }

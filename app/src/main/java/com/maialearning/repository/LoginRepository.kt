@@ -360,6 +360,9 @@ interface LoginRepository {
         payload: TestScoreSubmitPayload
     ): UseCaseResult<Unit>
 
+    suspend fun checkAllTranscripts(
+        id: String, value: Int, ncaa: Int
+    ): UseCaseResult<Unit>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1834,6 +1837,31 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.testScoreSubmit(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 payload
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun checkAllTranscripts(
+        id: String,
+        value: Int,
+        ncaa: Int
+    ): UseCaseResult<Unit> {
+        return try {
+            val obj = JsonObject()
+            obj.addProperty("student_uid", id)
+            obj.addProperty("value", value)
+            if (ncaa !== 0) {
+                obj.addProperty("ncaa", ncaa)
+            }
+
+            val result = catApi.checkAllTranscript(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                obj
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

@@ -150,6 +150,41 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 )
             }
         }
+        mBinding.allTranscriptBtn.setOnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                allTranscriptBtn(1, true)
+            } else {
+                allTranscriptBtn(0, true)
+            }
+        }
+        mBinding.allNcaaBtn.setOnClickListener({
+            if (mBinding.allNcaaBtn.isChecked) {
+                allTranscriptBtn(1, false)
+            } else {
+                allTranscriptBtn(0, false)
+            }
+        })
+//        mBinding.allNcaaBtn.setOnCheckedChangeListener { compoundButton, b ->
+//            if (b) {
+//                allTranscriptBtn(1, false)
+//            } else {
+//                allTranscriptBtn(0, false)
+//            }
+//        }
+    }
+
+    private fun allTranscriptBtn(i: Int, b: Boolean) {
+        dialogP.show()
+        if (b) {
+            SharedHelper(requireContext()).id?.let { homeModel.checkAllTranscripts(it, i, 0) }
+        } else {
+            SharedHelper(requireContext()).id?.let {
+                homeModel.checkAllTranscripts(
+                    it,
+                    i, 1
+                )
+            }
+        }
     }
 
     private fun confirmSelectedDeletePopup(b: Boolean, string: String) {
@@ -185,7 +220,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 finalArray.clear()
                 dialogP?.dismiss()
                 val json = JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
-
+                val ncaa = JSONObject(it.toString()).getJSONObject(userid).optString("ncaa")
+                if (ncaa!=null && ncaa.equals("1")) {
+                    mBinding.allNcaaBtn.isChecked = true
+                } else {
+                    mBinding.allNcaaBtn.isChecked = false
+                }
                 val x = json.keys() as Iterator<String>
                 val jsonArray = JSONArray()
                 while (x.hasNext()) {
@@ -609,6 +649,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         homeModel.testScoreSubmitPayloadObserber.observe(requireActivity()) {
             dialogP.dismiss()
+        }
+        homeModel.checkAllTranscriptsObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+//            getApplyingList()
         }
     }
 
