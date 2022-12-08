@@ -14,6 +14,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
@@ -84,8 +85,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         dialogP.show()
         getConsideringList()
         val filter = activity?.findViewById<ImageView>(R.id.toolbar_messanger)
-        filter?.setOnClickListener {
-            filterWork()
+        val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
+        if (viewPager?.currentItem == 1) {
+            filter?.setOnClickListener {
+                filterWork()
+            }
         }
     }
 

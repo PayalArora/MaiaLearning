@@ -13,6 +13,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
@@ -82,9 +83,16 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
         init()
         setAdapter()
+    }
+
+    override fun onResume() {
+        super.onResume()
         val filter = activity?.findViewById<ImageView>(R.id.toolbar_messanger)
-        filter?.setOnClickListener {
-            filterWork()
+        val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
+        if (viewPager?.currentItem == 2) {
+            filter?.setOnClickListener {
+                filterWork()
+            }
         }
     }
 

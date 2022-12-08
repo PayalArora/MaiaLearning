@@ -994,8 +994,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
             }
         } else if (binding.viewPager.currentItem == 1) {
-//            sheetBindingUniv!!.reciepentList.adapter =
-//                ConsiderFilterAdapter(resources.getStringArray(R.array.consideringFilters), this)
+        }
+        else if (binding.viewPager.currentItem == 2) {
+
         }
     }
 

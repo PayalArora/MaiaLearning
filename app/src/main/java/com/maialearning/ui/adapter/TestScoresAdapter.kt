@@ -32,10 +32,10 @@ class TestScoresAdapter(val arr: ArrayList<TestScoresResponseItem>) :
         viewHolder.binding.apply {
             collegeName.setText(arr.get(position).collegeName)
             if (arr.get(position).statusId != null && !arr.get(position).statusId!!.isEmpty()) {
-                sat.isChecked=false
-                act.isChecked=false
-                satact.isChecked=false
-                notSubmit.isChecked=false
+//                sat.isChecked=false
+//                act.isChecked=false
+//                satact.isChecked=false
+//                notSubmit.isChecked=false
                 if (arr.get(position).statusId!!.equals("1")) {
                     sat.isChecked = true
                 } else if (arr.get(position).statusId!!.equals("2")) {
@@ -49,39 +49,52 @@ class TestScoresAdapter(val arr: ArrayList<TestScoresResponseItem>) :
 
             sat.setOnClickListener({
                 if (sat.isChecked) {
+                    act.isChecked=false
+                    satact.isChecked=false
+                    notSubmit.isChecked=false
                     arr.get(position).statusId = "1"
                 } else {
                     arr.get(position).statusId = ""
                 }
                 arr.get(position).change=true
-                notifyDataSetChanged()
+
+                //notifyDataSetChanged()
             })
             satact.setOnClickListener({
                 if (satact.isChecked) {
+                sat.isChecked=false
+                act.isChecked=false
+                notSubmit.isChecked=false
                     arr.get(position).statusId = "3"
                 } else {
                     arr.get(position).statusId = ""
                 }
                 arr.get(position).change=true
-                notifyDataSetChanged()
+                //notifyDataSetChanged()
             })
             act.setOnClickListener({
                 if (act.isChecked) {
+                    sat.isChecked=false
+                    satact.isChecked=false
+                    notSubmit.isChecked=false
                     arr.get(position).statusId = "2"
                 } else {
                     arr.get(position).statusId = ""
                 }
                 arr.get(position).change=true
-                notifyDataSetChanged()
+               // notifyDataSetChanged()
             })
             notSubmit.setOnClickListener({
                 if (notSubmit.isChecked) {
+                    sat.isChecked=false
+                    act.isChecked=false
+                    satact.isChecked=false
                     arr.get(position).statusId = "4"
                 } else {
                     arr.get(position).statusId = ""
                 }
                 arr.get(position).change=true
-                notifyDataSetChanged()
+               // notifyDataSetChanged()
             })
         }
 
