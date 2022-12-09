@@ -345,6 +345,8 @@ fun checkNonNull(str:String?): Boolean{
        return false
 }
 
+fun String.toUpperCase():String = this.replaceFirstChar { it.toUpperCase() }
+
  fun TextView.showDatePicker(con: Context,  deadlineClick: (date:String) -> Unit) {
 
     val date =

@@ -1,5 +1,6 @@
 package com.maialearning.ui.adapter
 
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,6 +8,7 @@ import com.maialearning.databinding.ItemListFilterBinding
 import com.maialearning.model.KeyVal
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.ui.activity.UniversitiesActivity
+import com.maialearning.util.toUpperCase
 
 class DiversityAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters) :
     RecyclerView.Adapter<DiversityAdapter.ViewHolder>() {
@@ -31,8 +33,9 @@ class DiversityAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
-            check.setText(arr.get(position).value)
+            check.setText(arr.get(position).value.toUpperCase())
 
+           // check.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
 
             check.setOnClickListener({
                 for (i in arr.indices) {

@@ -12,6 +12,7 @@
         android:layout_marginTop="@dimen/_5dp"
         android:buttonTint="@color/checkbutton"
         android:checked="false"
+        android:inputType="textCapSentences"
         android:fontFamily="@font/inter_bold"
         android:paddingStart="@dimen/_10dp"
         android:text="@string/early_action"

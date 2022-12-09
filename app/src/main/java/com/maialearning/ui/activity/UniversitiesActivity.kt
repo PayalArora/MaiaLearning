@@ -986,7 +986,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 sheetBindingUniv!!.reciepentList.adapter =
                     UnivFilterAdapter(resources.getStringArray(R.array.GBFilters), this)
             } else if (SharedHelper(this).continent == "EU") {
-
                 sheetBindingUniv!!.reciepentList.adapter =
                     UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
             } else {
@@ -2163,11 +2162,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
 
             }
-            germanModeAdmission.clear()
+
             val jsonModeAdmission: JSONObject? =
                 JSONObject(it.toString()).optJSONObject("german_mode_of_admission")
             jsonModeAdmission?.let {
                 val keys = it.keys() as Iterator<String>
+                germanModeAdmission.clear()
                 while (keys.hasNext()) {
                     val key = keys.next()
                     germanModeAdmission.add(KeyVal(key, it.getString(key), false))
@@ -2176,11 +2176,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
 
 
-            germanStudyMode.clear()
             val jsonStudyMode: JSONObject? =
                 JSONObject(it.toString()).optJSONObject("german_study_mode")
             jsonStudyMode?.let {
                 val keys = it.keys() as Iterator<String>
+                germanStudyMode.clear()
                 while (keys.hasNext()) {
                     val key = keys.next()
                     germanStudyMode.add(KeyVal(key, it.getString(key), false))
@@ -2189,11 +2189,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
 
 
-            germanAdmissionSem.clear()
             val jsonAdmissionSem: JSONObject? =
                 JSONObject(it.toString()).optJSONObject("german_admission_semester")
             jsonAdmissionSem?.let {
                 val keys = it.keys() as Iterator<String>
+                germanAdmissionSem.clear()
                 while (keys.hasNext()) {
                     val key = keys.next()
                     germanAdmissionSem.add(KeyVal(key, it.getString(key), false))
@@ -2202,11 +2202,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
 
 
-            germanInstLang.clear()
             val jsonInstLang: JSONObject? =
                 JSONObject(it.toString()).optJSONObject("german_instruction_language")
             jsonInstLang?.let {
                 val keys = it.keys() as Iterator<String>
+                germanInstLang.clear()
                 while (keys.hasNext()) {
                     val key = keys.next()
                     germanInstLang.add(KeyVal(key, it.getString(key), false))
@@ -2237,13 +2237,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
             }
         }
-        areaStudy.clear()
         mModel.areaStudyObserver.observe(this) {
             dialogP.dismiss()
             val jsondisciplineAcivities: JSONObject? =
                 JSONObject(it.toString())
             jsondisciplineAcivities?.let {
                 val keys = it.keys() as Iterator<String>
+                areaStudy.clear()
                 while (keys.hasNext()) {
                     val key = keys.next()
 //                    if (key != "0")
