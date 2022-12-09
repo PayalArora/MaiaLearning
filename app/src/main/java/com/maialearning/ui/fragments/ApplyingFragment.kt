@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -75,6 +76,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+        missingList.add(KeyVal("", MISSING_NONE, false))
+        missingList.add(KeyVal("", MISSING_APP_PLAN, false))
+        missingList.add(KeyVal("", MISSING_APP_TYPE, false))
+        missingList.add(KeyVal("", MISSING_TRANSCRIPT, false))
+
+
         return mBinding.root
     }
 
@@ -343,7 +350,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 firstTime = false
                                 array[k].country_name = countries[j]
                             } else {
-                                array[k].country_name = ""
+                                array[k].country_name = countries[j]
                             }
                             finalArray.add(array[k])
                             finalArray[pos].count = count
@@ -1235,8 +1242,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         sheetBinding.clearText.setText(resources.getString(R.string.done))
         sheetBinding.spinnerLay.visibility = View.GONE
+        Log.e("Country"," "+ selectedCountry)
+        Log.e("Applying"," "+ selectedApplying)
         sheetBinding.clearText.setOnClickListener {
-            resetFilters()
             if (type.equals(getString(R.string.test_scores))) {
                 val status = HashMap<String, String>()
                 for (i in testScoresList.indices) {
@@ -1258,16 +1266,27 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 for (i in countryArray) {
                     if (i.checked) {
                         selectedCountry = i.key
+                        break
+                    } else {
+                        selectedCountry = ""
                     }
                 }
                 for (i in applyingWithList) {
                     if (i.checked) {
                         selectedApplying = i.value
+                        break
+                    }
+                    else {
+                        selectedApplying = ""
                     }
                 }
                 for (i in missingList) {
                     if (i.checked) {
                         selectedMissing = i.value
+                        break
+                    }
+                    else {
+                        selectedMissing = ""
                     }
                 }
                 val filteredArray = countryFilterEvaluation(finalArray)
@@ -1281,17 +1300,21 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
 
         if (type.equals("Country")) {
+            for (i in countryArray) {
+                i.checked = selectedCountry == i.key
+            }
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(countryArray)
         } else if (type.equals("Applying")) {
+            for (i in applyingWithList) {
+                i.checked = selectedApplying == i.value
+            }
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(applyingWithList)
         } else if (type.equals("Missing")) {
-            missingList.add(KeyVal("", MISSING_NONE, false))
-            missingList.add(KeyVal("", MISSING_APP_PLAN, false))
-            missingList.add(KeyVal("", MISSING_APP_TYPE, false))
-            missingList.add(KeyVal("", MISSING_TRANSCRIPT, false))
-
+            for (i in missingList) {
+                i.checked = selectedMissing == i.value
+            }
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(missingList)
         } else if (type.equals(getString(R.string.test_scores))) {
@@ -1354,17 +1377,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             filteredArray.addAll(finalArray)
 
         } else {
-            for (i in finalArray) {
-                var checkSame = false
-                if (i.country == selectedCountry) {
-                    checkSame = true
-                    filteredArray.add(i)
-                } else if (i.country == "" && checkSame) {
-                    filteredArray.add(i)
-                } else {
-                    checkSame = false
-                }
-            }
+            filteredArray = finalArray.filter { it.country == selectedCountry } as java.util.ArrayList<ConsiderModel.Data>
         }
         if (selectedMissing == "" || selectedMissing == "None") {
             filteredArray = filteredArray as ArrayList<ConsiderModel.Data>
@@ -1393,17 +1406,15 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         it.selectedAppPlanValue == selectedApplying
             } as ArrayList<ConsiderModel.Data>
         }
-        var count = 1
-        var prev = ""
-
-        for (i in filteredArray) {
-            if (prev == i.country_name) {
-                count++
-            } else {
-                prev = i.country_name
-                count = 1
+        var mappedList = filteredArray.groupBy {
+            it.country_name
+        }
+        filteredArray.clear()
+        for (i in mappedList){
+            for (j in i.value){
+                j.count = i.value.size
+                filteredArray.add(j)
             }
-            i.count = count
         }
         return filteredArray
     }

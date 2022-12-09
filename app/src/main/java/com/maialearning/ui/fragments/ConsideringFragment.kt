@@ -118,8 +118,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
         sheetBindingUniv!!.clearText.setOnClickListener {
 
-            selectedCountryActive == ""
-            selectedCountryDeleted == ""
+            selectedCountryActive = ""
+            selectedCountryDeleted = ""
             selectedApplyingActive = ""
             selectedApplyingDeleted = ""
             mainDialog?.dismiss()
@@ -163,38 +163,49 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             filteredArray.addAll(finalArray)
 
         } else {
-            for (i in finalArray) {
-                var checkSame = false
-                if (i.country == selectedCountry) {
-                    checkSame = true
-                    filteredArray.add(i)
-                } else if (i.country == "" && checkSame) {
-                    filteredArray.add(i)
-                } else {
-                    checkSame = false
-                }
-            }
+//            for (i in finalArray) {
+//                var checkSame = false
+//                if (i.country == selectedCountry) {
+//                    checkSame = true
+//                    filteredArray.add(i)
+//                } else if (i.country == "" && checkSame) {
+//                    filteredArray.add(i)
+//                } else {
+//                    checkSame = false
+//                }
+//            }
+            filteredArray = finalArray.filter { it.country == selectedCountry } as ArrayList<ConsiderModel.Data>
         }
         if (selectedApplying == "" || selectedApplying == "All") {
-            return filteredArray as ArrayList<ConsiderModel.Data>
+            filteredArray = filteredArray as ArrayList<ConsiderModel.Data>
         } else {
             filteredArray = filteredArray.filter {
                 //  Log.e("APPPlan",  it.selectedAppPlanValue.toString())
                 it.selectedAppModeValue == selectedApplying ||
                         it.selectedAppPlanValue == selectedApplying
             } as ArrayList<ConsiderModel.Data>
-            var count = 1
-            var prev = ""
-
-            for (i in filteredArray) {
-                if (prev == i.country_name) {
-                    count++
-                } else {
-                    prev = i.country_name
-                    count = 1
-                }
-                i.count = count
+            var mappedList = filteredArray.groupBy {
+                it.country_name
             }
+            filteredArray.clear()
+            for (i in mappedList){
+                for (j in i.value){
+                    j.count = i.value.size
+               filteredArray.add(j)
+                }
+            }
+//            var count = 1
+//            var prev = ""
+//
+//            for (i in filteredArray) {
+//                if (prev == i.country_name) {
+//                    count++
+//                } else {
+//                    prev = i.country_name
+//                    count = 1
+//                }
+//                i.count = count
+//            }
         }
         return filteredArray
     }
@@ -1346,35 +1357,51 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         sheetBinding.clearText.setText(resources.getString(R.string.done))
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.clearText.setOnClickListener {
-            selectedCountryActive = ""
-            selectedCountryDeleted = ""
-            selectedApplyingDeleted = ""
-            selectedApplyingActive = ""
+//            selectedCountryActive = ""
+//            selectedCountryDeleted = ""
+//            selectedApplyingDeleted = ""
+//            selectedApplyingActive = ""
             when (selectedConsider) {
 
                 ACTIVE_CONSIDER -> {
                     activeSelection()
+                    if (type  == "Country") {
                     for (i in countryArrayActive) {
                         if (i.checked) {
                             selectedCountryActive = i.key
+                            break
+                        } else {
+                            selectedCountryActive = ""
                         }
-                    }
-                    for (i in applyingWithList) {
-                        if (i.checked) {
-                            selectedApplyingActive = i.value
+                    }} else {
+                        for (i in applyingWithList) {
+                            if (i.checked) {
+                                selectedApplyingActive = i.value
+                                break
+                            } else {
+                                selectedApplyingActive = ""
+                            }
                         }
                     }
                 }
                 DELETED -> {
                    resetSelection()
+                    if (type  == "Country") {
                     for (i in countryArrayDeleted) {
                         if (i.checked) {
                             selectedCountryDeleted = i.key
+                            break
+                        } else {
+                            selectedCountryDeleted = ""
                         }
-                    }
-                    for (i in applyingWithList) {
-                        if (i.checked) {
-                            selectedApplyingDeleted = i.value
+                    }} else {
+                        for (i in applyingWithList) {
+                            if (i.checked) {
+                                selectedApplyingDeleted = i.value
+                                break
+                            } else {
+                                selectedApplyingDeleted = ""
+                            }
                         }
                     }
                 }
@@ -1392,14 +1419,22 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         sheetBinding.close.setOnClickListener {
             sheetBinding.searchText.setText("")
         }
+        Log.e("Country"," "+ selectedCountryActive)
+        Log.e("Applying"," "+ selectedApplyingActive)
 
         if (type.equals("Country")) {
             when (selectedConsider) {
                 ACTIVE_CONSIDER -> {
+                    for (i in countryArrayActive) {
+                        i.checked = selectedCountryActive == i.key
+                    }
                     sheetBinding.reciepentList.adapter =
                         ConsiderCountryFilterAdapter(countryArrayActive)
                 }
                 DELETED -> {
+                    for (i in countryArrayDeleted) {
+                        i.checked = selectedCountryDeleted == i.key
+                    }
                     sheetBinding.reciepentList.adapter =
                         ConsiderCountryFilterAdapter(countryArrayDeleted)
                 }

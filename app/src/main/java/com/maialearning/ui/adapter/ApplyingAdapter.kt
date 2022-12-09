@@ -333,6 +333,7 @@ class ApplyingAdapter(
     }
 
     fun updateAdapter(consider: ArrayList<ConsiderModel.Data>) {
+        prev = ""
         considerarray = consider
         notifyDataSetChanged()
     }
