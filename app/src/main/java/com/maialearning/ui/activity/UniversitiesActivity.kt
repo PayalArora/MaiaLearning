@@ -82,6 +82,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val gbCollegeList: ArrayList<KeyVal> = ArrayList()
     private val areaGBStudy: ArrayList<KeyVal> = ArrayList()
     private val programGBStudy: ArrayList<KeyVal> = ArrayList()
+    private val fieldOfStudyAny: ArrayList<KeyVal> = ArrayList()
+    val anyFilterArray = arrayOf("Country", "University List", "Field of Study", "Program", "Major")
 
 
     private var savedCountry = ""
@@ -990,7 +992,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
             } else {
                 sheetBindingUniv!!.reciepentList.adapter =
-                    UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
+                    UnivFilterAdapter(anyFilterArray, this)
             }
         }
     }
@@ -1028,6 +1030,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     ).country == "GB"
                 ) {
                     universityList()
+                } else {
+                    universityList()
                 }
             } else if (positiion == 2) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1044,6 +1048,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
                 } else if (SharedHelper(this).continent == "EU") {
                     disciplineFilter("Discipline")
+                } else {
+                    disciplineFilter("FOS")
                 }
             } else if (positiion == 3) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1056,6 +1062,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     }
                 } else if (SharedHelper(this).country == "GB") {
                     disciplineFilter("University")
+                } else {
+
                 }
             } else if (positiion == 4) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1066,6 +1074,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     }
                 } else if (SharedHelper(this).country == "GB") {
                     disciplineFilter("Subject")
+                } else {
+
                 }
             } else if (positiion == 5) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1156,6 +1166,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 ar = resources.getStringArray(R.array.DEFilters)
             } else if (SharedHelper(this).country == "GB") {
                 ar = resources.getStringArray(R.array.GBFilters)
+            } else {
+                ar=anyFilterArray
             }
 
 
@@ -1318,6 +1330,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                             UnivFilterAdapter(ar, this)
                     }
                 }
+            } else if (type.equals("FOS")) {
+                for (i in fieldOfStudyAny.indices) {
+                    if (fieldOfStudyAny.get(i).checked) {
+                        selectedFOS = ""
+                        selectedFOS = programGBStudy.get(i).key
+                        ar[selType] = programGBStudy.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
+                    }
+
+                }
             }
         }
 
@@ -1452,6 +1475,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             sheetBinding.reciepentList.adapter =
                 MultiSelectionAdapter(programGBStudy, this)
+        } else if (type.equals("FOS") && fieldOfStudyAny != null && fieldOfStudyAny.size > 0) {
+            for (i in fieldOfStudyAny) {
+                if (selectedFOS.contains(i.key)) {
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
+            sheetBinding.reciepentList.adapter =
+                DiversityAdapter(fieldOfStudyAny, this)
         }
 
 
@@ -2074,6 +2107,27 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
             }
 
+
+            //Type of school Activities
+            fieldOfStudyAny.clear()
+            val jsonFOS: JSONObject? =
+                JSONObject(it.toString()).optJSONObject("foslevel1")
+            jsonFOS?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    fieldOfStudyAny.add(
+                        KeyVal(
+                            key,
+                            it.optString(key),
+                            false
+                        )
+                    )
+                }
+            }
+
+
             sizeList.clear()
             val jsonSizeAcivities: JSONObject? =
                 JSONObject(it.toString()).optJSONObject("size")
@@ -2184,7 +2238,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
 
 
-
             val jsonAdmissionSem: JSONObject? =
                 JSONObject(it.toString()).optJSONObject("german_admission_semester")
             jsonAdmissionSem?.let {
@@ -2195,7 +2248,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     germanAdmissionSem.add(KeyVal(key, it.getString(key), false))
                 }
             }
-
 
 
             val jsonInstLang: JSONObject? =
@@ -2588,6 +2640,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedInstructionLanguage = ""
         var selectedGbUniversity: ArrayList<String> = arrayListOf()
         var selectedGbCollege = ""
+        var selectedFOS: String = ""
+
 
     }
 }
