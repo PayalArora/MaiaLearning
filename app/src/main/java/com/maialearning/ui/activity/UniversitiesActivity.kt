@@ -83,6 +83,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val areaGBStudy: ArrayList<KeyVal> = ArrayList()
     private val programGBStudy: ArrayList<KeyVal> = ArrayList()
     private val fieldOfStudyAny: ArrayList<KeyVal> = ArrayList()
+    private val fieldOfStudyProgramAny: ArrayList<KeyVal> = ArrayList()
+    private val fieldOfStudyMazorAny: ArrayList<KeyVal> = ArrayList()
     val anyFilterArray = arrayOf("Country", "University List", "Field of Study", "Program", "Major")
 
 
@@ -261,6 +263,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         areaStudy.clear()
         fieldStudy.clear()
         selectedGbUniversity.clear()
+        selectedFOS = ""
+        selectedProgramAny = ""
     }
 
     private fun initView() {
@@ -1049,7 +1053,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else if (SharedHelper(this).continent == "EU") {
                     disciplineFilter("Discipline")
                 } else {
-                    disciplineFilter("FOS")
+                    dialogP.show()
+                    mModel.getFosOther()
                 }
             } else if (positiion == 3) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1063,7 +1068,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else if (SharedHelper(this).country == "GB") {
                     disciplineFilter("University")
                 } else {
-
+                    if (fieldOfStudyProgramAny.size>0)
+                        disciplineFilter("ProgramAny")
                 }
             } else if (positiion == 4) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1075,7 +1081,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else if (SharedHelper(this).country == "GB") {
                     disciplineFilter("Subject")
                 } else {
-
+                    if (fieldOfStudyMazorAny.size>0)
+                        disciplineFilter("MazorAny")
                 }
             } else if (positiion == 5) {
                 if ((SharedHelper(this).country ?: "US") == "US") {
@@ -1334,15 +1341,40 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 for (i in fieldOfStudyAny.indices) {
                     if (fieldOfStudyAny.get(i).checked) {
                         selectedFOS = ""
-                        selectedFOS = programGBStudy.get(i).key
-                        ar[selType] = programGBStudy.get(i).value
+                        selectedFOS = fieldOfStudyAny.get(i).key
+                        ar[selType] = fieldOfStudyAny.get(i).value
                         sheetBindingUniv!!.reciepentList.adapter =
                             UnivFilterAdapter(ar, this)
                     }
-
                 }
+                dialogP.show()
+                mModel.getFosOtherchild(selectedFOS, true)
+            }else if (type.equals("ProgramAny")) {
+                for (i in fieldOfStudyProgramAny.indices) {
+                    if (fieldOfStudyProgramAny.get(i).checked) {
+                        selectedProgramAny = ""
+                        selectedProgramAny = fieldOfStudyProgramAny.get(i).key
+                        ar[selType] = fieldOfStudyProgramAny.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
+                    }
+                }
+                dialogP.show()
+                mModel.getFosOtherchild(selectedProgramAny, false)
+            }else if (type.equals("MazorAny")) {
+                for (i in fieldOfStudyMazorAny.indices) {
+                    if (fieldOfStudyMazorAny.get(i).checked) {
+                        selectedMazorAny = ""
+                        selectedMazorAny = fieldOfStudyMazorAny.get(i).key
+                        ar[selType] = fieldOfStudyMazorAny.get(i).value
+                        sheetBindingUniv!!.reciepentList.adapter =
+                            UnivFilterAdapter(ar, this)
+                    }
+                }
+
             }
         }
+
 
         sheetBinding.spinnerLay.visibility = View.GONE
         if (type.equals("Discipline")) {
@@ -1476,6 +1508,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sheetBinding.reciepentList.adapter =
                 MultiSelectionAdapter(programGBStudy, this)
         } else if (type.equals("FOS") && fieldOfStudyAny != null && fieldOfStudyAny.size > 0) {
+            sheetBinding.filters.text = "Field of Study"
             for (i in fieldOfStudyAny) {
                 if (selectedFOS.contains(i.key)) {
                     i.checked = true
@@ -1485,6 +1518,28 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(fieldOfStudyAny, this)
+        } else if (type.equals("ProgramAny") && fieldOfStudyProgramAny != null && fieldOfStudyProgramAny.size > 0) {
+            sheetBinding.filters.text = "Program"
+            for (i in fieldOfStudyProgramAny) {
+                if (selectedProgramAny.contains(i.key)) {
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
+            sheetBinding.reciepentList.adapter =
+                DiversityAdapter(fieldOfStudyProgramAny, this)
+        }else if (type.equals("MazorAny") && fieldOfStudyMazorAny != null && fieldOfStudyMazorAny.size > 0) {
+            sheetBinding.filters.text = "Mazor"
+            for (i in fieldOfStudyMazorAny) {
+                if (selectedMazorAny.contains(i.key)) {
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
+            sheetBinding.reciepentList.adapter =
+                DiversityAdapter(fieldOfStudyMazorAny, this)
         }
 
 
@@ -2108,24 +2163,24 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
 
 
-            //Type of school Activities
-            fieldOfStudyAny.clear()
-            val jsonFOS: JSONObject? =
-                JSONObject(it.toString()).optJSONObject("foslevel1")
-            jsonFOS?.let {
-                val keys = it.keys() as Iterator<String>
-                while (keys.hasNext()) {
-                    val key = keys.next()
-//                    if (key != "0")
-                    fieldOfStudyAny.add(
-                        KeyVal(
-                            key,
-                            it.optString(key),
-                            false
-                        )
-                    )
-                }
-            }
+//            //Type of school Activities
+//            fieldOfStudyAny.clear()
+//            val jsonFOS: JSONObject? =
+//                JSONObject(it.toString()).optJSONObject("foslevel1")
+//            jsonFOS?.let {
+//                val keys = it.keys() as Iterator<String>
+//                while (keys.hasNext()) {
+//                    val key = keys.next()
+////                    if (key != "0")
+//                    fieldOfStudyAny.add(
+//                        KeyVal(
+//                            key,
+//                            it.optString(key),
+//                            false
+//                        )
+//                    )
+//                }
+//            }
 
 
             sizeList.clear()
@@ -2502,6 +2557,54 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 listUni, View.GONE
             )
         }
+        mModel.otherFosObserver.observe(this){
+            dialogP.dismiss()
+            fieldOfStudyAny.clear()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    fieldOfStudyAny.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+            if (fieldOfStudyAny.size>0)
+            disciplineFilter("FOS")
+        }
+
+          mModel.fosChildOther.observe(this){
+            dialogP.dismiss()
+            fieldOfStudyProgramAny.clear()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    fieldOfStudyProgramAny.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+
+
+        }
+
+        mModel.fosChildMazor.observe(this){
+            dialogP.dismiss()
+            fieldOfStudyMazorAny.clear()
+            val jsondisciplineAcivities: JSONObject? =
+                JSONObject(it.toString())
+            jsondisciplineAcivities?.let {
+                val keys = it.keys() as Iterator<String>
+                while (keys.hasNext()) {
+                    val key = keys.next()
+//                    if (key != "0")
+                    fieldOfStudyMazorAny.add(KeyVal(key, it.getString(key), false))
+                }
+            }
+        }
 
 //        mModel.countryObserver.observe(this) {
 //            Log.e("Response: ", " $it")
@@ -2640,6 +2743,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedInstructionLanguage = ""
         var selectedGbUniversity: ArrayList<String> = arrayListOf()
         var selectedGbCollege = ""
+        var selectedProgramAny= ""
+        var selectedMazorAny= ""
         var selectedFOS: String = ""
 
 

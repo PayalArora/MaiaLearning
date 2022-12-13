@@ -345,6 +345,13 @@ interface LoginRepository {
         id: String
     ): UseCaseResult<JsonObject>
 
+    suspend fun getFosChild(
+        id: String
+    ): UseCaseResult<JsonObject>
+
+ suspend fun getFosOther(
+    ): UseCaseResult<JsonObject>
+
     suspend fun getApplyingWIth(
     ): UseCaseResult<JsonObject>
 
@@ -1780,6 +1787,33 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.getGBSubChildSubject(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getFosChild(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getFosChild(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getFosOther(): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getFosOther(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

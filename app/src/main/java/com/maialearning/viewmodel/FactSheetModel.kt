@@ -41,7 +41,10 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val areaStudyObserver = MutableLiveData<JsonObject>()
     val fieldStudyObserver = MutableLiveData<JsonObject>()
     val gbAreaStudy = MutableLiveData<JsonObject>()
+    val otherFosObserver = MutableLiveData<JsonObject>()
     val gbProgramObserver = MutableLiveData<JsonObject>()
+    val fosChildOther = MutableLiveData<JsonObject>()
+    val fosChildMazor= MutableLiveData<JsonObject>()
 
 
 
@@ -380,6 +383,46 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
                     } else {
                         gbProgramObserver.value = result.data
                     }
+                }
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getFosOtherchild(selected: String,  programAny: Boolean) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getFosChild(selected)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> {
+                    if (programAny) {
+                        fosChildOther.value = result.data
+                    } else {
+                        fosChildMazor.value = result.data
+                    }
+
+
+                }
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun getFosOther() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getFosOther()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> {
+
+                        otherFosObserver.value = result.data
+
                 }
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }

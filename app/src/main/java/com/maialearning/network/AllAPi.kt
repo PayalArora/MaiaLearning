@@ -690,6 +690,17 @@ interface AllAPi {
         @Field("subject_code") id: String
     ): Deferred<JsonObject>
 
+    @GET("get_fos_child/{id}")
+    fun getFosChild(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
+
+   @GET("get_first_level_fos")
+    fun getFosOther(
+        @Header("Authorization") AutToken: String,
+    ): Deferred<JsonObject>
+
     @GET
     fun getApplyingWith(
         @Url() url: String
