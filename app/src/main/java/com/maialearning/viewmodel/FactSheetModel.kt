@@ -166,7 +166,11 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
             // showLoading.value = false
             when (result) {
-                is UseCaseResult.Success -> listObserver.value = result.data
+                is UseCaseResult.Success -> {
+                    showLoading.value = false
+                    listObserver.value = result.data
+                }
+
                 is UseCaseResult.Error -> {
                     showLoading.value = false
                     showError.value = result.exception.response()?.errorBody()?.string()

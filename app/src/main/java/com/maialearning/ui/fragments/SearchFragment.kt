@@ -389,10 +389,13 @@ class SearchFragment : Fragment() {
         payload.instruction_language = UniversitiesActivity.selectedInstructionLanguage
         payload.college_list = UniversitiesActivity.selectedGbUniversity
         payload.ucas_college_type = UniversitiesActivity.selectedGbCollege
-        var cipcode: ArrayList<String>? = null
-        if (UniversitiesActivity.selectedFOS != null && !UniversitiesActivity.selectedFOS.equals("")) {
+        var cipcode: ArrayList<String>? = arrayListOf()
+        if (UniversitiesActivity.selectedMazorAny != null && !UniversitiesActivity.selectedMazorAny.equals(
+                ""
+            )
+        ) {
             cipcode?.clear()
-            cipcode?.add(UniversitiesActivity.selectedFOS)
+            cipcode?.add(UniversitiesActivity.selectedMazorAny)
             payload.cipcode = cipcode
         } else if (UniversitiesActivity.selectedProgramAny != null && !UniversitiesActivity.selectedProgramAny.equals(
                 ""
@@ -401,12 +404,9 @@ class SearchFragment : Fragment() {
             cipcode?.clear()
             cipcode?.add(UniversitiesActivity.selectedProgramAny)
             payload.cipcode = cipcode
-        } else if (UniversitiesActivity.selectedMazorAny != null && !UniversitiesActivity.selectedMazorAny.equals(
-                ""
-            )
-        ) {
+        } else if(UniversitiesActivity.selectedFOS != null && !UniversitiesActivity.selectedFOS.equals("")) {
             cipcode?.clear()
-            cipcode?.add(UniversitiesActivity.selectedMazorAny)
+            cipcode?.add(UniversitiesActivity.selectedFOS)
             payload.cipcode = cipcode
         }
 
