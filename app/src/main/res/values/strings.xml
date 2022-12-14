@@ -712,5 +712,6 @@
     <string name="satnact"><![CDATA[SAT & ACT]]></string>
     <string name="not_submitted">Not Submitted</string>
     <string name="which_testscores">Which test scores did you submit with your applications?</string>
+    <string name="prefered_recommend">Preferred Recommenders</string>
 
 </resources>

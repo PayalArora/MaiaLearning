@@ -356,7 +356,7 @@ class SearchFragment : Fragment() {
         payload.country = country
         payload.pager = pageNo
         payload.search = search
-        if (country!="DE") {
+        if (country != "DE") {
             payload.region = UniversitiesActivity.selectedRegion
             payload.campus_activities = UniversitiesActivity.selectedCampusActivity
             payload.special = UniversitiesActivity.selectedDiversity
@@ -387,8 +387,28 @@ class SearchFragment : Fragment() {
         payload.mode_of_study = UniversitiesActivity.selectedModeStudy
         payload.admission_semester = UniversitiesActivity.selectedAdmissionSem
         payload.instruction_language = UniversitiesActivity.selectedInstructionLanguage
-        payload.college_list=UniversitiesActivity.selectedGbUniversity
-        payload.ucas_college_type=UniversitiesActivity.selectedGbCollege
+        payload.college_list = UniversitiesActivity.selectedGbUniversity
+        payload.ucas_college_type = UniversitiesActivity.selectedGbCollege
+        var cipcode: ArrayList<String>? = null
+        if (UniversitiesActivity.selectedFOS != null && !UniversitiesActivity.selectedFOS.equals("")) {
+            cipcode?.clear()
+            cipcode?.add(UniversitiesActivity.selectedFOS)
+            payload.cipcode = cipcode
+        } else if (UniversitiesActivity.selectedProgramAny != null && !UniversitiesActivity.selectedProgramAny.equals(
+                ""
+            )
+        ) {
+            cipcode?.clear()
+            cipcode?.add(UniversitiesActivity.selectedProgramAny)
+            payload.cipcode = cipcode
+        } else if (UniversitiesActivity.selectedMazorAny != null && !UniversitiesActivity.selectedMazorAny.equals(
+                ""
+            )
+        ) {
+            cipcode?.clear()
+            cipcode?.add(UniversitiesActivity.selectedMazorAny)
+            payload.cipcode = cipcode
+        }
 
 
         if (!UniversitiesActivity.sat_erbw.isNullOrEmpty()) {

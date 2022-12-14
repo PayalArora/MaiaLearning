@@ -696,7 +696,7 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<JsonObject>
 
-   @GET("get_first_level_fos")
+    @GET("get_first_level_fos")
     fun getFosOther(
         @Header("Authorization") AutToken: String,
     ): Deferred<JsonObject>
@@ -729,4 +729,11 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Body file: JsonObject
     ): Deferred<Unit>
+
+    @GET("student-preferred-recommenders?")
+    fun studentPrefferedRecommenders(
+        @Header("Authorization") AutToken: String,
+        @Query("school_nid") schoolNID: String,
+        @Query("student_uid") studentUid: String
+    ): Deferred<JsonObject>
 }

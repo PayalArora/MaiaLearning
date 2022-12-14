@@ -265,6 +265,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selectedGbUniversity.clear()
         selectedFOS = ""
         selectedProgramAny = ""
+        selectedMazorAny=""
     }
 
     private fun initView() {
@@ -2746,7 +2747,6 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedProgramAny= ""
         var selectedMazorAny= ""
         var selectedFOS: String = ""
-
 
     }
 }

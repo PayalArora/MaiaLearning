@@ -13,7 +13,7 @@ class UniversitySearchPayload {
     @SerializedName("2_4_year")
     var twoFourYear: ArrayList<String>? = null
     var selectivity: ArrayList<String>? = null
-    lateinit var cipcode: String
+//    lateinit var cipcode: String
     var athletic_associations: ArrayList<String>? = null
     lateinit var sports: String
     lateinit var sports_participants: String
@@ -42,6 +42,8 @@ class UniversitySearchPayload {
     lateinit var instruction_language:String
     var college_list: ArrayList<String>? = null
     lateinit var ucas_college_type: String
+     var cipcode: ArrayList<String>? = null
+
 
 
 /*    {

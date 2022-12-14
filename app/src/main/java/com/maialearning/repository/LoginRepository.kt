@@ -349,7 +349,7 @@ interface LoginRepository {
         id: String
     ): UseCaseResult<JsonObject>
 
- suspend fun getFosOther(
+    suspend fun getFosOther(
     ): UseCaseResult<JsonObject>
 
     suspend fun getApplyingWIth(
@@ -370,6 +370,10 @@ interface LoginRepository {
     suspend fun checkAllTranscripts(
         id: String, value: Int, ncaa: Int
     ): UseCaseResult<Unit>
+
+    suspend fun getStudentRecommendPrefrence(
+        schoolId: String, studentId: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1896,6 +1900,23 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.checkAllTranscript(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 obj
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getStudentRecommendPrefrence(
+        schoolId: String,
+        studentId: String
+    ): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.studentPrefferedRecommenders(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                schoolId, studentId
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

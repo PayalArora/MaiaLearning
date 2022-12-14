@@ -4,15 +4,15 @@ package com.maialearning.model
 import com.google.gson.annotations.SerializedName
 
 data class CollegeFactSheetModel(
-    @SerializedName("basic_info")
-    var basicInfo: BasicInfo,
-    @SerializedName("campus_community")
-    var campusCommunity: CampusCommunity,
-    @SerializedName("admissions")
-    var admissions: Admissions,
-    @SerializedName("tution_financial")
-    var tutionFinancial: TutionFinancial,
-    @SerializedName("degree_majors")
+        @SerializedName("basic_info")
+        var basicInfo: BasicInfo,
+        @SerializedName("campus_community")
+        var campusCommunity: CampusCommunity,
+        @SerializedName("admissions")
+        var admissions: Admissions,
+        @SerializedName("tution_financial")
+        var tutionFinancial: TutionFinancial,
+        @SerializedName("degree_majors")
     var degreeMajors: DegreeMajors,
     @SerializedName("degree_majors1")
     var degreeMajors1: DegreeMajors1?,

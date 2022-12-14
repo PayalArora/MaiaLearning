@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
@@ -54,6 +55,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     var selectedApplying = ""
     var selectedMissing = ""
     val testScoresList: ArrayList<TestScoresResponseItem> = ArrayList()
+    val collegeRecommendList: ArrayList<CollegeRecommendationRequirementModel> = ArrayList()
+    val collegeID: ArrayList<String> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -228,7 +232,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 dialogP?.dismiss()
                 val json = JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
                 val ncaa = JSONObject(it.toString()).getJSONObject(userid).optString("ncaa")
-                if (ncaa!=null && ncaa.equals("1")) {
+                if (ncaa != null && ncaa.equals("1")) {
                     mBinding.allNcaaBtn.isChecked = true
                 } else {
                     mBinding.allNcaaBtn.isChecked = false
@@ -660,6 +664,34 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         homeModel.checkAllTranscriptsObserver.observe(requireActivity()) {
             dialogP.dismiss()
 //            getApplyingList()
+        }
+        homeModel.getSTudentRecommendPrefranceObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            it?.let {
+                finalArray.clear()
+                val json = JSONObject(it.toString()).getJSONObject("data")
+                val collJson = json.getJSONObject("college_recommendation_requirement")
+
+                val x = json.getJSONObject("college_recommendation_requirement")
+                    .keys() as Iterator<String>
+                while (x.hasNext()) {
+                    val key: String = x.next().toString()
+                    if (!collegeID.contains(collJson.optJSONObject(key).optString("college_nid"))) {
+                        collegeID.add(collJson.optJSONObject(key).optString("college_nid"))
+                        collegeRecommendList.add(
+                            CollegeRecommendationRequirementModel(
+                                collJson.optJSONObject(key).optBoolean("counselor_eval_reqd"),
+                                collJson.optJSONObject(key).optString("min_te_reqd"),
+                                collJson.optJSONObject(key).optString("max_te_reqd"),
+                                collJson.optJSONObject(key).optString("college_nid"),
+                                collJson.optJSONObject(key).optString("college_name")
+                            )
+                        )
+                    }
+                }
+                Log.e("Data", "Size>>> " + collegeRecommendList.size)
+                dialogP?.dismiss()
+            }
         }
     }
 
@@ -1242,8 +1274,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         sheetBinding.clearText.setText(resources.getString(R.string.done))
         sheetBinding.spinnerLay.visibility = View.GONE
-        Log.e("Country"," "+ selectedCountry)
-        Log.e("Applying"," "+ selectedApplying)
+        Log.e("Country", " " + selectedCountry)
+        Log.e("Applying", " " + selectedApplying)
         sheetBinding.clearText.setOnClickListener {
             if (type.equals(getString(R.string.test_scores))) {
                 val status = HashMap<String, String>()
@@ -1275,8 +1307,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     if (i.checked) {
                         selectedApplying = i.value
                         break
-                    }
-                    else {
+                    } else {
                         selectedApplying = ""
                     }
                 }
@@ -1284,8 +1315,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     if (i.checked) {
                         selectedMissing = i.value
                         break
-                    }
-                    else {
+                    } else {
                         selectedMissing = ""
                     }
                 }
@@ -1367,6 +1397,17 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         sheetBindingUniv!!.testScores.setOnClickListener {
             subFilter(getString(R.string.test_scores))
         }
+        sheetBindingUniv!!.prefferedItem.setOnClickListener {
+            dialogP.show()
+            SharedHelper(requireContext()).schoolId?.let { it1 ->
+                SharedHelper(requireContext()).id?.let { it2 ->
+                    homeModel.getStudentRecommenderPrefrance(
+                        it1,
+                        it2
+                    )
+                }
+            }
+        }
     }
 
     private fun countryFilterEvaluation(
@@ -1377,7 +1418,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             filteredArray.addAll(finalArray)
 
         } else {
-            filteredArray = finalArray.filter { it.country == selectedCountry } as java.util.ArrayList<ConsiderModel.Data>
+            filteredArray =
+                finalArray.filter { it.country == selectedCountry } as java.util.ArrayList<ConsiderModel.Data>
         }
         if (selectedMissing == "" || selectedMissing == "None") {
             filteredArray = filteredArray as ArrayList<ConsiderModel.Data>
@@ -1410,8 +1452,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             it.country_name
         }
         filteredArray.clear()
-        for (i in mappedList){
-            for (j in i.value){
+        for (i in mappedList) {
+            for (j in i.value) {
                 j.count = i.value.size
                 filteredArray.add(j)
             }
