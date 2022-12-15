@@ -670,27 +670,43 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             it?.let {
                 finalArray.clear()
                 val json = JSONObject(it.toString()).getJSONObject("data")
-                val collJson = json.getJSONObject("college_recommendation_requirement")
+                val collJson = json.getJSONObject("student_preferred_recommenders")
 
-                val x = json.getJSONObject("college_recommendation_requirement")
+                val x = json.getJSONObject("student_preferred_recommenders")
                     .keys() as Iterator<String>
+
                 while (x.hasNext()) {
                     val key: String = x.next().toString()
-                    if (!collegeID.contains(collJson.optJSONObject(key).optString("college_nid"))) {
-                        collegeID.add(collJson.optJSONObject(key).optString("college_nid"))
-                        collegeRecommendList.add(
-                            CollegeRecommendationRequirementModel(
-                                collJson.optJSONObject(key).optBoolean("counselor_eval_reqd"),
-                                collJson.optJSONObject(key).optString("min_te_reqd"),
-                                collJson.optJSONObject(key).optString("max_te_reqd"),
-                                collJson.optJSONObject(key).optString("college_nid"),
-                                collJson.optJSONObject(key).optString("college_name")
+                    val subJsonKeys = collJson.getJSONObject(key)
+                        .keys() as Iterator<String>
+                    while (subJsonKeys.hasNext()) {
+                        val subKey: String = subJsonKeys.next().toString()
+                        if (!collegeID.contains(
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optString("college_nid")
                             )
-                        )
+                        ) {
+                            collegeID.add(
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optString("college_nid")
+                            )
+                            collegeRecommendList.add(
+                                CollegeRecommendationRequirementModel(
+                                    false, "", "",
+                                    collJson.optJSONObject(key).optJSONObject(subKey)
+                                        .optString("college_nid"),
+                                    collJson.optJSONObject(key).optJSONObject(subKey)
+                                        .optString("college_name")
+                                )
+                            )
+                        }
                     }
                 }
                 Log.e("Data", "Size>>> " + collegeRecommendList.size)
                 dialogP?.dismiss()
+                if (collegeRecommendList != null && collegeRecommendList.size > 0)
+                    sheetBinding.reciepentList.adapter =
+                        RecommendedPrefrenceAdapter(collegeRecommendList)
             }
         }
     }
@@ -1399,6 +1415,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         sheetBindingUniv!!.prefferedItem.setOnClickListener {
             dialogP.show()
+            subFilter(getString(R.string.prefered_recommend))
             SharedHelper(requireContext()).schoolId?.let { it1 ->
                 SharedHelper(requireContext()).id?.let { it2 ->
                     homeModel.getStudentRecommenderPrefrance(
