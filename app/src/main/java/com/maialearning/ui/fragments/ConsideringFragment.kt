@@ -354,6 +354,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getInt("confirm_applied"), null, requiredRecs,
                             object_.getInt("manual_update"),
                             object_.optString("applicaton_round"),
+                            null,
                             object_.optString("status")
 
                         )

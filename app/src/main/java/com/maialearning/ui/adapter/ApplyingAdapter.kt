@@ -243,6 +243,9 @@ class ApplyingAdapter(
                 commentImg.setOnClickListener {
                     onItemClickOption.onCommentClick()
                 }
+                appRound.setOnClickListener {
+                    onItemClickOption.onInfoClick(position)
+                }
                 /*          transcriptBtn.setOnCheckedChangeListener { compoundButton, b ->
                           if (compoundButton.isChecked) {
                               onItemClickOption.onTranscriptRequest(position)

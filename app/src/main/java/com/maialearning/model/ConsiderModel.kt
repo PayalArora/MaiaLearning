@@ -58,17 +58,21 @@ class ConsiderModel {
         var confirmApplied: Int,
         var collegeAppLicationType: CollType?,
         @SerializedName("required_recommendation")
-        var requiredRecommendation:RequiredRecommendation?,
+        var requiredRecommendation: RequiredRecommendation?,
         @SerializedName("manual_update")
-        var manualUpdate:Int,
+        var manualUpdate: Int,
         @SerializedName("application_round")
         var applicationRound: String?,
+        @SerializedName("application_round_detail")
+        var applicationRoundDetail: ArrayList<ApplicationRoundDetail>?,
         @SerializedName("status")
         var status: String?,
-        var selected:Boolean=false,
-        var selectedAppModeValue:String? = null,
-        var selectedAppPlanValue:String? = null
-        )
+        var selected: Boolean = false,
+        var selectedAppModeValue: String? = null,
+        var selectedAppPlanValue: String? = null
+
+    )
+
     data class RequiredRecommendation(
         @SerializedName("teacher_evaluation")
         var teacherEvaluation: String?,
@@ -77,19 +81,20 @@ class ConsiderModel {
         @SerializedName("counselor_recommendation")
         var counselorRecommendation: String?
     )
-    data class CollType(var collType: ArrayList<DynamicKeyValue>?, var selectedPlanType:String?)
+
+    data class CollType(var collType: ArrayList<DynamicKeyValue>?, var selectedPlanType: String?)
 
     class CollTerm {
-         var type: String? = null
-         var termList: ArrayList<String>? = null
-         var planList: ArrayList<DecisionPlan>? = null
-         var collTerm: ArrayList<CollPlan>? = null
+        var type: String? = null
+        var termList: ArrayList<String>? = null
+        var planList: ArrayList<DecisionPlan>? = null
+        var collTerm: ArrayList<CollPlan>? = null
 
     }
 
     class CollPlan {
         lateinit var plan: String
-         var collPlan: ArrayList<Decision>? = null
+        var collPlan: ArrayList<Decision>? = null
     }
 
     data class Decision(
@@ -97,10 +102,12 @@ class ConsiderModel {
         var decision_plan_value: String,
         var deadline_date: String?
     )
+
     data class DecisionPlan(
         var id: String,
         var label: String
     )
+
     data class ProgramData(
         @SerializedName("program_id")
         var program_id: Int,
@@ -129,6 +136,51 @@ class ConsiderModel {
         var lastName: String
     )
 
+
+    data class ApplicationRoundDetail(
+
+        @SerializedName("id")
+        var id: String,
+
+        @SerializedName("tr_nid")
+        var trNid: String,
+
+        @SerializedName("college_id")
+        var collegeId: String,
+
+        @SerializedName("student_uid")
+        var studentUid: String,
+
+        @SerializedName("author_uid")
+        var authorUid: String? = null,
+
+        @SerializedName("plan")
+        var plan: String,
+
+        @SerializedName("deadline")
+        var deadline: String,
+
+        @SerializedName("internal_deadline")
+        var internalDeadline: String? = null,
+
+        @SerializedName("app_submitted")
+        var appSubmitted: String,
+
+        @SerializedName("app_status")
+        var appStatus: String,
+
+        @SerializedName("created")
+        var created: String? = null,
+
+        @SerializedName("app_type")
+        var appType: String,
+
+        @SerializedName("term")
+        var term: String,
+
+        @SerializedName("round_number")
+        var roundNumber: String? = null
+    )
 
 }
 

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/_70dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/manage_round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/_15dp"
+            android:layout_toStartOf="@+id/close"
+            android:text="@string/manage_rounds"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_21sp"
+            android:textStyle="bold" />
+        <RelativeLayout
+            android:id="@+id/close"
+            android:layout_width="@dimen/_30dp"
+            android:layout_height="@dimen/_30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/_15dp"
+            android:background="@drawable/circle_lay">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/cross" />
+        </RelativeLayout>
+
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/manage_round"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:background="@color/divider_color" />
+        <RelativeLayout
+            android:id="@+id/name_lay"
+            android:padding="@dimen/_5dp"
+            android:layout_below="@+id/view4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/icon_lay"
+                android:layout_width="@dimen/_40dp"
+                android:layout_height="@dimen/_40dp"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/univ_icon"
+                    android:layout_width="@dimen/_35dp"
+                    android:layout_height="@dimen/_35dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/univ_icon" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/uni_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/icon_lay"
+                android:layout_alignBottom="@id/icon_lay"
+                android:layout_marginStart="@dimen/_5dp"
+                android:layout_toEndOf="@+id/icon_lay"
+                android:fontFamily="@font/inter_bold"
+                android:gravity="center|start"
+                android:text="@string/university_of_calefornia"
+                android:textColor="@color/univ_name"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+        <View
+            android:id="@+id/view5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1dp"
+            android:layout_below="@+id/name_lay"
+            android:layout_marginLeft="@dimen/_10dp"
+            android:background="@color/divider_color" />
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/save"
+            android:layout_below="@+id/view5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view4"
+                android:paddingBottom="@dimen/_15dp"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/round_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_10dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                <TextView
+                    android:id="@+id/add_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50dp"
+                    android:layout_marginHorizontal="@dimen/_15dp"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:background="@drawable/white_rect_24"
+                    android:backgroundTint="@color/blue_alpha"
+                    android:fontFamily="@font/inter_bold"
+                    android:gravity="center"
+                    android:paddingVertical="5dp"
+                    android:text="@string/add_round"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blue"
+                    android:textFontWeight="500"
+                    android:textSize="@dimen/_14sp" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="@dimen/_15dp"
+            android:background="@drawable/white_rect_15"
+            android:backgroundTint="@color/blue"
+            android:fontFamily="@font/inter"
+            android:gravity="center"
+            android:paddingVertical="5dp"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textFontWeight="800"
+            android:textSize="@dimen/_16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</LinearLayout>

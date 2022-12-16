@@ -713,5 +713,8 @@
     <string name="not_submitted">Not Submitted</string>
     <string name="which_testscores">Which test scores did you submit with your applications?</string>
     <string name="prefered_recommend">Preferred Recommenders</string>
+    <string name="manage_rounds">Manage Rounds</string>
+    <string name="add_round">Add Round</string>
+    <string name="application_type">Application Type</string>
 
 </resources>

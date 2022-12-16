@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_weight=".5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:background="@drawable/white_rect_border">
+
+            <TextView
+                android:id="@+id/round"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_5dp"
+                android:text="@string/round"
+                android:textAllCaps="false"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/hintColor"
+                android:textSize="@dimen/_14sp" />
+
+            <TextView
+                android:id="@+id/round_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/round"
+                android:fontFamily="@font/inter"
+                android:padding="@dimen/_5dp"
+                android:text="@string/round"
+                android:textAllCaps="false"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/hintColor"
+                android:textSize="@dimen/_14sp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:background="@drawable/white_rect_border">
+
+            <TextView
+                android:id="@+id/app_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_5dp"
+                android:text="@string/application_type"
+                android:textAllCaps="false"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/hintColor"
+                android:textSize="@dimen/_14sp" />
+
+            <TextView
+                android:id="@+id/type_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/app_type"
+                android:fontFamily="@font/inter"
+                android:padding="@dimen/_5dp"
+                android:text="@string/round"
+                android:textAllCaps="false"
+                android:textColor="@color/grey"
+                android:textColorHint="@color/hintColor"
+                android:textSize="@dimen/_14sp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10dp"
+            android:background="@drawable/white_rect_border">
+
+            <TextView
+                android:id="@+id/deadline_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_5dp"
+                android:text="@string/deadline"
+                android:textAllCaps="false"
+                android:textColor="@color/red"
+                android:textColorHint="@color/hintColor"
+                android:textSize="@dimen/_14sp" />
+
+            <TextView
+                android:id="@+id/deadline_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deadline_text"
+                android:fontFamily="@font/inter_bold"
+                android:padding="@dimen/_5dp"
+                android:text="@string/round"
+                android:textAllCaps="false"
+                android:textColor="@color/red"
+                android:textColorHint="@color/hintColor"
+                android:textSize="@dimen/_14sp" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/close"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="@dimen/_10dp"
+        android:background="@drawable/white_rect_border">
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_bold"
+            android:padding="@dimen/_5dp"
+            android:text="@string/status"
+            android:textAllCaps="false"
+            android:textColor="@color/grey"
+            android:textColorHint="@color/hintColor"
+            android:textSize="@dimen/_14sp" />
+
+        <TextView
+            android:id="@+id/status_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter"
+            android:padding="@dimen/_5dp"
+            android:text="@string/round"
+            android:layout_below="@+id/status"
+            android:textAllCaps="false"
+            android:textColor="@color/grey"
+            android:textColorHint="@color/hintColor"
+            android:textSize="@dimen/_14sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/close"
+        android:layout_width="@dimen/_30dp"
+        android:layout_height="@dimen/_30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/_15dp"
+        android:background="@drawable/circle_lay">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/cross" />
+    </RelativeLayout>
+    </RelativeLayout>
+    <View
+        android:layout_marginVertical="@dimen/_10dp"
+        android:background="@color/grey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+</LinearLayout>

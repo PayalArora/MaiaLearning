@@ -27,6 +27,7 @@ import com.maialearning.ui.adapter.*
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
+import com.squareup.picasso.Picasso
 import kotlinx.serialization.json.Json
 import org.json.JSONArray
 import org.json.JSONObject
@@ -56,6 +57,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     var selectedMissing = ""
     val testScoresList: ArrayList<TestScoresResponseItem> = ArrayList()
     val collegeRecommendList: ArrayList<CollegeRecommendationRequirementModel> = ArrayList()
+    val recommenderList: ArrayList<RecommenderModel> = ArrayList()
+    val recommenderIDList: ArrayList<String> = ArrayList()
+
+
     val collegeID: ArrayList<String> = ArrayList()
 
 
@@ -306,6 +311,32 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                             )
                         )
                     }
+
+                    val arrayRoundList: ArrayList<ConsiderModel.ApplicationRoundDetail> =
+                        ArrayList()
+                    var roundArray = object_.getJSONArray("application_round_detail")
+                    for (j in 0 until roundArray.length()) {
+                        val objectProgram = roundArray.getJSONObject(j)
+                        arrayRoundList.add(
+                            ConsiderModel.ApplicationRoundDetail(
+                                objectProgram.getString("id"),
+                                objectProgram.getString("tr_nid"),
+                                objectProgram.getString("college_id"),
+                                objectProgram.getString("student_uid"),
+                                objectProgram.getString("author_uid"),
+                                objectProgram.getString("plan"),
+                                objectProgram.getString("deadline"),
+                                objectProgram.getString("internal_deadline"),
+                                objectProgram.getString("app_submitted"),
+                                objectProgram.getString("app_status"),
+                                objectProgram.getString("created"),
+                                objectProgram.getString("app_type"),
+                                objectProgram.getString("term"),
+                                objectProgram.getString("round_number")
+                            )
+                        )
+                    }
+
                     val model: ConsiderModel.Data = ConsiderModel.Data(
                         object_.getInt("contact_info"),
                         object_.getInt("parchment"),
@@ -335,12 +366,14 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
                         object_.getInt("manual_update"),
                         object_.optString("application_round"),
+                        arrayRoundList,
                         object_.optString("status")
 
                     )
                     array.add(model)
                     array.sortBy { it.naviance_college_name }
                 }
+
 
                 var pos = 0
                 countries.sortBy { it }
@@ -700,13 +733,44 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 )
                             )
                         }
+                        if (!recommenderIDList.contains(
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optString("recommender_uid")
+                            )
+                        ) {
+                            recommenderIDList.add(
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optString("recommender_uid")
+                            )
+                            recommenderList.add(
+                                RecommenderModel(
+                                    collJson.optJSONObject(key).optJSONObject(subKey)
+                                        .optString("recommender_uid"),
+                                    collJson.optJSONObject(key).optJSONObject(subKey)
+                                        .optString("recommender_name"),
+                                    collJson.optJSONObject(key).optJSONObject(subKey)
+                                        .optString("recommendation_nid"),
+                                    "", "",
+                                    collJson.optJSONObject(key).optJSONObject(subKey)
+                                        .optInt("preferred_recommender")
+                                )
+                            )
+                        }
                     }
                 }
                 Log.e("Data", "Size>>> " + collegeRecommendList.size)
                 dialogP?.dismiss()
+
+                collegeRecommendList.sortBy { it.collegeName }
+                recommenderList.sortBy { it.recommenderName }
+
                 if (collegeRecommendList != null && collegeRecommendList.size > 0)
                     sheetBinding.reciepentList.adapter =
-                        RecommendedPrefrenceAdapter(collegeRecommendList)
+                        RecommendedPrefrenceAdapter(
+                            requireContext(),
+                            collegeRecommendList,
+                            recommenderList
+                        )
             }
         }
     }
@@ -871,6 +935,32 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     }
 
     override fun onInfoClick(postion: Int) {
+        // ROund work
+        bottomSheetRound(postion);
+    }
+
+    private fun bottomSheetRound(position: Int) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: AppRoundBottomsheetBinding =
+            AppRoundBottomsheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =
+            ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+
+        Picasso.with(requireContext())
+            .load("$UNIV_LOGO_URL${finalArray[position].country?.toLowerCase()}/${finalArray[position].unitid}/logo_sm.jpg")
+            .error(R.drawable.static_coll).into(sheetBinding.univIcon)
+
+        sheetBinding.uniName.text = finalArray[position].naviance_college_name
+        sheetBinding.roundList.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        sheetBinding.roundList.adapter = finalArray[position].applicationRoundDetail?.let {
+            ApplyingRoundAdapter(
+                it
+            )
+        }
+
     }
 
     override fun onApplyingClick(postion: Int) {
