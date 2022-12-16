@@ -167,10 +167,15 @@ class UniFactAdapter(
         isLoading = false
     }
 
-    fun addAllLis(list: ArrayList<UniversitiesSearchModel?>, total: Int, current: Int) {
+    fun addAllLis(list: ArrayList<UniversitiesSearchModel?>, total: Int, current: Int, searchtext:Boolean) {
+        if (searchtext)
+            university_list.clear()
         this.university_list.addAll(list)
         this.totalPages = total
         this.currentPages = current
+        if (searchtext)
+            notifyDataSetChanged()
+        else
         notifyItemChanged(university_list.size)
     }
     fun likeClick(i: Int, flag:Int?) {

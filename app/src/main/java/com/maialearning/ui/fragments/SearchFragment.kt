@@ -214,7 +214,10 @@ class SearchFragment : Fragment() {
                 //for swipe refresh page
                 if (totalPage != null) {
                     if (last != null) {
-                        adapter.addAllLis(universityList!!, totalPage, last)
+                        if (univ.pager != 1)
+                        adapter.addAllLis(universityList!!, totalPage, last, false)
+                        else
+                            adapter.addAllLis(universityList!!, totalPage, last, true)
                     }
                 }
                 adapter.setLoaded()
@@ -253,7 +256,7 @@ class SearchFragment : Fragment() {
                     isLoading = true
                     germanAdapter.notifyItemInserted(germanListNew.size - 1)
                     Handler(Looper.getMainLooper()).postDelayed({
-                        hitAPI(page, "")
+                        hitAPI(page, mBinding.searchText.text.toString())
 
                     }, 2000)
                 }
@@ -276,7 +279,7 @@ class SearchFragment : Fragment() {
                     isLoading = true
                     ukAdapter.notifyItemInserted(ukListNew.size - 1)
                     Handler(Looper.getMainLooper()).postDelayed({
-                        hitAPI(page, "")
+                        hitAPI(page, mBinding.searchText.text.toString())
 
                     }, 2000)
                 }
@@ -300,7 +303,7 @@ class SearchFragment : Fragment() {
                     isLoading = true
                     euroAdapter.notifyItemInserted(euroListNew.size - 1)
                     Handler(Looper.getMainLooper()).postDelayed({
-                        hitAPI(page, "")
+                        hitAPI(page, mBinding.searchText.text.toString())
 
                     }, 2000)
                 }
@@ -324,13 +327,13 @@ class SearchFragment : Fragment() {
                     isLoading = true
                     adapter.notifyItemInserted(universityListNew.size - 1)
                     Handler(Looper.getMainLooper()).postDelayed({
-                        hitAPI(page, "")
+                        hitAPI(page, mBinding.searchText.text.toString())
 
                     }, 2000)
                 }
             })
         }
-        hitAPI(page, "")
+        hitAPI(page, mBinding.searchText.text.toString())
 
     }
 

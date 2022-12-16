@@ -978,6 +978,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
                 mModel.setSaveCountry()
+                listUni.clear()
             } else {
                 initView()
             }
@@ -2547,6 +2548,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         mModel.listObserver.observe(this) {
             dialogP.dismiss()
             dialogUni.dismiss()
+            listUni.clear()
             for (i in 0 until it.size()) {
                 val objectProgram = it.get(i).asJsonObject
                 val json = JSONObject(it.get(i).toString())
