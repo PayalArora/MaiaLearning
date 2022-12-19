@@ -1161,6 +1161,10 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
     }
 
+    override fun onRoundClick(postion: Int, round: Boolean) {
+
+    }
+
     override fun onMenuClick(postion: Int, it: View?) {
         menuPopUp(postion, it)
     }
@@ -1538,4 +1542,5 @@ interface OnItemClickOption {
     fun onMenuClick(postion: Int, it: View?)
     fun onTranscriptRequest(postion: Int, checked: String)
     fun onDeadlineClick(postion: Int, deadline: String)
+    fun onRoundClick(postion: Int, round:Boolean)
 }

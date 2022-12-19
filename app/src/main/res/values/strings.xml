@@ -716,5 +716,6 @@
     <string name="manage_rounds">Manage Rounds</string>
     <string name="add_round">Add Round</string>
     <string name="application_type">Application Type</string>
+    <string name="cancel_round">Cancel Round</string>
 
 </resources>

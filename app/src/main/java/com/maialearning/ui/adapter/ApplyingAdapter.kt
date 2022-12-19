@@ -243,8 +243,14 @@ class ApplyingAdapter(
                 commentImg.setOnClickListener {
                     onItemClickOption.onCommentClick()
                 }
-                appRound.setOnClickListener {
-                    onItemClickOption.onInfoClick(position)
+                      appRound.setOnClickListener {
+                          val  canAddRound=
+                              checkNonNull(applicationMode) &&
+                                      confirmApplied == 1 &&
+                                      (collegeAppLicationType?.selectedPlanType !== "term" ||
+                                              (collegeAppLicationType?.selectedPlanType === "term" && checkNonNull(applicationTerm)))
+
+                          onItemClickOption.onRoundClick(position, canAddRound)
                 }
                 /*          transcriptBtn.setOnCheckedChangeListener { compoundButton, b ->
                           if (compoundButton.isChecked) {

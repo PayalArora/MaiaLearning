@@ -936,13 +936,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     }
 
     override fun onInfoClick(postion: Int) {
-        // ROund work
-        finalArray[postion].applicationRoundDetail?.let {
-            bottomSheetRound(postion);
-        }
+
     }
 
-    private fun bottomSheetRound(position: Int) {
+    private fun bottomSheetRound(position: Int, round: Boolean) {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: AppRoundBottomsheetBinding =
             AppRoundBottomsheetBinding.inflate(layoutInflater)
@@ -964,6 +961,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 it, finalArray[position].collegeAppLicationType
             )
         }
+        if(round)
+        sheetBinding.addRound.visibility = View.VISIBLE
+        else
+            sheetBinding.addRound.visibility = View.GONE
 
     }
 
@@ -1110,6 +1111,13 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             finalArray.get(typeTermPosition).dueDate =
                 formateDateFromstring("MMM dd yyyy", "yyyy-MM-dd hh:mm:ss", deadline)
             mBinding.applyingList.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    override fun onRoundClick(postion: Int, round: Boolean) {
+        // ROund work
+        finalArray[postion].applicationRoundDetail?.let {
+            bottomSheetRound(postion, round);
         }
     }
 
