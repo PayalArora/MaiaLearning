@@ -10,10 +10,15 @@ import com.maialearning.databinding.AppRoundItemBinding
 import com.maialearning.databinding.AttachItemRowBinding
 import com.maialearning.model.ConsiderModel
 import com.maialearning.model.DashboardOverdueResponse
+import com.maialearning.util.checkNonNull
 import com.maialearning.util.convertDateToLong
 import com.maialearning.util.formateDateFromstring
+import com.maialearning.util.replaceInvertedComas
 
-class ApplyingRoundAdapter(val list: List<ConsiderModel.ApplicationRoundDetail>) :
+class ApplyingRoundAdapter(
+    val list: List<ConsiderModel.ApplicationRoundDetail>,
+    val collegeAppLicationType: ConsiderModel.CollType?
+) :
     RecyclerView.Adapter<ApplyingRoundAdapter.ViewHolder>() {
 
     /**
@@ -38,10 +43,13 @@ class ApplyingRoundAdapter(val list: List<ConsiderModel.ApplicationRoundDetail>)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             roundValue.text = list.get(position).roundNumber
-            typeValue.text = list.get(position).appType
+            typeValue.text = getAppType(collegeAppLicationType, list.get(position).appType)
+            if (checkNonNull(list.get(position).appStatus))
             statusValue.text = list.get(position).appStatus
+            else
+                statusValue.text = "---"
             deadlineValue.setText(formateDateFromstring(
-                "yyyy-mm-dd hh:mm:ss",
+                "yyyy-MM-dd hh:mm:ss",
                 "MMM dd, yyyy",
                 list.get(position).deadline))
         }
@@ -49,5 +57,15 @@ class ApplyingRoundAdapter(val list: List<ConsiderModel.ApplicationRoundDetail>)
 
     override fun getItemCount(): Int {
         return list!!.size
+    }
+    fun getAppType( collegeAppLicationType: ConsiderModel.CollType?, key:String):String?{
+        collegeAppLicationType?.collType?.let {
+            for (item in it){
+                if (item.key.replaceInvertedComas().equals(key)){
+                    return item.value
+                }
+            }
+        }
+        return null
     }
 }

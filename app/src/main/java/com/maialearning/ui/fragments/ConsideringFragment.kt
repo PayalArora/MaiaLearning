@@ -1533,7 +1533,7 @@ interface OnItemClickOption {
     fun onPlanClick(postion: Int)
     fun onCommentClick()
     fun onAddClick(postion: Int)
-    fun onInfoClick(postion: Int)
+    fun onInfoClick(postion: Int, )
     fun onApplyingClick(postion: Int)
     fun onMenuClick(postion: Int, it: View?)
     fun onTranscriptRequest(postion: Int, checked: String)

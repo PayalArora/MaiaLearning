@@ -18,7 +18,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
@@ -28,7 +27,6 @@ import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
 import com.squareup.picasso.Picasso
-import kotlinx.serialization.json.Json
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,7 +42,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     private lateinit var mBinding: FragmentApplyingBinding
     private lateinit var dialogP: Dialog
     private val homeModel: HomeViewModel by viewModel()
-    val finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
+    var finalArray: ArrayList<ConsiderModel.Data> = ArrayList()
+    var copyArray: ArrayList<ConsiderModel.Data> = ArrayList()
     lateinit var userid: String
     var selectedUnivId: String = ""
     var positio: Int = 0
@@ -332,7 +331,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 objectProgram.getString("created"),
                                 objectProgram.getString("app_type"),
                                 objectProgram.getString("term"),
-                                objectProgram.getString("round_number")
+                                objectProgram.getString("round_number"),
+
                             )
                         )
                     }
@@ -640,6 +640,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 //                                ConsiderModel.CollType(typeList, selectedAppModeType)
 //
 //                        }
+                        copyArray = finalArray
                         (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(finalArray)
                     }
                 }
@@ -936,7 +937,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
     override fun onInfoClick(postion: Int) {
         // ROund work
-        bottomSheetRound(postion);
+        finalArray[postion].applicationRoundDetail?.let {
+            bottomSheetRound(postion);
+        }
     }
 
     private fun bottomSheetRound(position: Int) {
@@ -947,6 +950,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
+        sheetBinding.close.setOnClickListener { dialog?.dismiss() }
 
         Picasso.with(requireContext())
             .load("$UNIV_LOGO_URL${finalArray[position].country?.toLowerCase()}/${finalArray[position].unitid}/logo_sm.jpg")
@@ -957,7 +961,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         sheetBinding.roundList.adapter = finalArray[position].applicationRoundDetail?.let {
             ApplyingRoundAdapter(
-                it
+                it, finalArray[position].collegeAppLicationType
             )
         }
 
@@ -1425,8 +1429,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         selectedMissing = ""
                     }
                 }
-                val filteredArray = countryFilterEvaluation(finalArray)
-                (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(filteredArray)
+
+                finalArray = countryFilterEvaluation(copyArray)
+                (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(finalArray)
             }
             dialog.dismiss()
             mainDialog?.dismiss()
@@ -1575,6 +1580,15 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         const val MISSING_TRANSCRIPT = "Missing: Transcript Request"
 
     }
-
+    fun getAppType( collegeAppLicationType: ConsiderModel.CollType?, key:String):String?{
+       collegeAppLicationType?.collType?.let {
+            for (item in it){
+                if (item.key.replaceInvertedComas().equals(key)){
+                    return item.value
+                }
+            }
+        }
+        return null
+    }
 }
 

@@ -19,6 +19,7 @@ import com.maialearning.model.FactsheetModelOther
 import com.maialearning.network.BaseApplication
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.VideoFactAdapter
+import com.maialearning.util.checkNonNull
 import com.maialearning.util.parseEmpty
 import com.maialearning.util.parseNA
 import com.maialearning.util.prefhandler.SharedHelper
@@ -97,7 +98,7 @@ class OverViewFragment : Fragment() {
                     "222178"
                 )
                 mBinding.aboutdes.visibility = View.VISIBLE
-            } else if (modelOther?.providerInfo != null) {
+            } else if (checkNonNull(modelOther?.providerInfo.toString())) {
                 val gson = GsonBuilder().create()
                 val jsonObject = gson.toJsonTree(modelOther?.providerInfo as LinkedTreeMap<String, String>).asJsonObject
 
