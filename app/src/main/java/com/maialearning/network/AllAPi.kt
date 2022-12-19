@@ -736,4 +736,11 @@ interface AllAPi {
         @Query("school_nid") schoolNID: String,
         @Query("student_uid") studentUid: String
     ): Deferred<JsonObject>
+
+    //    get_student_career_detail/9375
+    @GET("get_student_career_detail/{id}")
+    fun compareALl(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 }
