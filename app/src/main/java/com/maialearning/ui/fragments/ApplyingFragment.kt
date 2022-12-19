@@ -957,6 +957,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         sheetBinding.roundList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         sheetBinding.roundList.adapter = finalArray[position].applicationRoundDetail?.let {
+            if (it.size>0){
+                sheetBinding.cancelRound.visibility = View.VISIBLE
+            }
             ApplyingRoundAdapter(
                 it, finalArray[position].collegeAppLicationType
             )
