@@ -374,6 +374,10 @@ interface LoginRepository {
     suspend fun getStudentRecommendPrefrence(
         schoolId: String, studentId: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun compareAllColleges(
+        id: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1917,6 +1921,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.studentPrefferedRecommenders(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 schoolId, studentId
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun compareAllColleges(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.compareALl(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
