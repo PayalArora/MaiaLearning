@@ -730,5 +730,6 @@
     <string name="previous_application_status">Previous Application Status</string>
     <string name="new_application_plan">New Application Plan*</string>
     <string name="save_round">Save Round</string>
+    <string name="app_plan_error">Please select some Application Plan</string>
 
 </resources>

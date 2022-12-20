@@ -72,7 +72,7 @@ class ConsiderModel {
         var selected: Boolean = false,
         var selectedAppModeValue: String? = null,
         var selectedAppPlanValue: String? = null,
-
+        var header: String="",
         )
 
     data class RequiredRecommendation(

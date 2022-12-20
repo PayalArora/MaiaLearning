@@ -65,10 +65,17 @@ class ApplyingAdapter(
                                 !isAppPlan
                         )
 
-                if (prev == country_name) {
-                    top.visibility = View.GONE
+//                if (prev == country_name) {
+//                    top.visibility = View.GONE
+//                } else {
+//                    prev = country_name
+//                    top.visibility = View.VISIBLE
+//                    countryTxt.text = country_name
+//                }
+                      if (header == "") {
+                   top.visibility = View.GONE
                 } else {
-                    prev = country_name
+                 //   prev = country_name
                     top.visibility = View.VISIBLE
                     countryTxt.text = country_name
                 }

@@ -387,8 +387,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                             if (firstTime) {
                                 firstTime = false
                                 array[k].country_name = countries[j]
+                                array[k].header =  countries[j]
                             } else {
                                 array[k].country_name = countries[j]
+                                array[k].header =  ""
                             }
                             finalArray.add(array[k])
                             finalArray[pos].count = count
@@ -776,9 +778,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             }
         }
         homeModel.decisionStatusObserver.observe(requireActivity()) {
-            if (appStatus.size == 0) {
-                dialogP.dismiss()
-            }
+            dialogP.dismiss()
             val json = JSONObject(it.toString())
             val iterator: Iterator<*> = json.keys()
             while (iterator.hasNext()) {
@@ -984,7 +984,6 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         if (round) {
             sheetBinding.addRound.visibility = View.VISIBLE
             val appPlanOptions = finalArray[position].commonApp
-            appPlanLIst.clear()
             appPlanLIst = arrayListOf<ConsiderModel.DecisionPlan>()
             if (appPlanOptions)
                 appPlanLIst = getAppPlansCommonApp(finalArray[position].collegeAppLicationType)
@@ -1002,12 +1001,12 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
 
         sheetBinding.addRound.setOnClickListener {
-            addRoundWork()
+            addRoundWork(position, dialog)
         }
 
     }
 
-    private fun addRoundWork() {
+    private fun addRoundWork(postion: Int, dialogRound:BottomSheetDialog) {
         val dialog = BottomSheetDialog(requireContext())
         val sheet =
             AddRoundLayoutBinding.inflate(layoutInflater)
@@ -1019,6 +1018,39 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         sheet.cancelRound.setOnClickListener {
             dialog.dismiss()
+        }
+        sheet.saveRound.setOnClickListener {
+            if (sheet.newSpinner.selectedItemPosition == 0){
+                context?.showToast(resources.getString(R.string.app_plan_error))
+            } else {
+            var updateStudentPlan = UpdateStudentPlan()
+            updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+            updateStudentPlan.college_nid = finalArray[postion].university_nid
+            if (sheet.previousSpinner.selectedItemPosition != 0) {
+                updateStudentPlan.old_app_status =
+                    appStatus.get(sheet.previousSpinner.selectedItemPosition).key
+            }
+                updateStudentPlan.app_plan =
+                    appStatus.get(sheet.newSpinner.selectedItemPosition).key
+                updateStudentPlan.deadline_date = formateDateFromstring("yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy", finalArray[postion].dueDate)
+               // updateStudentPlan.multiple_decision_round = finalArray[postion].
+                dialogP.show()
+                homeModel.updateStudentPlan(updateStudentPlan)
+                homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+
+                    dialogP.dismiss()
+                    context?.resources?.getString(R.string.updated)
+                        ?.let { it1 -> context?.showToast(it1) }
+                    homeModel.getApplyList(userid)
+                    dialog.dismiss()
+                    dialogRound.dismiss()
+                }
+                homeModel.showError.observe(requireActivity()) {
+
+                    //mBinding.applyingList.adapter?.notifyDataSetChanged()
+                    dialogP.dismiss()
+                }
+            }
         }
         val adapter =
             PreviousStatusSpinnerAdapter(
@@ -1042,9 +1074,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 android.R.layout.simple_spinner_item
             )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        sheet.previousSpinner.setAdapter(
+        sheet.newSpinner.setAdapter(
             NothingSelectedSpinnerAdapter(
-                adapter,
+                newAdapter,
                 R.layout.nothing_adapter_type,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
                 requireContext()
             )
@@ -1721,9 +1753,16 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             it.country_name
         }
         filteredArray.clear()
+        var prev = ""
         for (i in mappedList) {
             for (j in i.value) {
                 j.count = i.value.size
+                if (prev == j.country_name) {
+                   j.header =""
+                } else {
+                    prev = j.country_name
+                    j.header =  j.country_name
+                }
                 filteredArray.add(j)
             }
         }

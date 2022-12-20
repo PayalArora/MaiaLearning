@@ -178,7 +178,7 @@
             android:textFontWeight="500"
             android:textSize="@dimen/_14sp" />
         <TextView
-            android:id="@+id/add_round"
+            android:id="@+id/save_round"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="@dimen/_50dp"
