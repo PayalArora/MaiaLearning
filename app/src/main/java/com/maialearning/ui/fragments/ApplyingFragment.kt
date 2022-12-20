@@ -333,7 +333,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 objectProgram.getString("term"),
                                 objectProgram.getString("round_number"),
 
-                            )
+                                )
                         )
                     }
 
@@ -783,8 +783,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             val iterator: Iterator<*> = json.keys()
             while (iterator.hasNext()) {
                 val key = iterator.next() as String
-                appStatus.add(StatusModel(key,json.getString(key)))
-            }}
+                appStatus.add(StatusModel(key, json.getString(key)))
+            }
+        }
         appStatus.filter { !resources.getStringArray(R.array.app_status).contains(it.key) }
 
 
@@ -953,6 +954,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
     }
 
+    var appPlanLIst = arrayListOf<ConsiderModel.DecisionPlan>()
+
     private fun bottomSheetRound(position: Int, round: Boolean) {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: AppRoundBottomsheetBinding =
@@ -971,35 +974,85 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         sheetBinding.roundList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         sheetBinding.roundList.adapter = finalArray[position].applicationRoundDetail?.let {
-            if (it.size>0){
+            if (it.size > 0) {
                 sheetBinding.cancelRound.visibility = View.VISIBLE
             }
             ApplyingRoundAdapter(
                 it, finalArray[position].collegeAppLicationType
             )
         }
-        if(round) {
+        if (round) {
             sheetBinding.addRound.visibility = View.VISIBLE
             val appPlanOptions = finalArray[position].commonApp
+            appPlanLIst.clear()
+            appPlanLIst = arrayListOf<ConsiderModel.DecisionPlan>()
             if (appPlanOptions)
-           getAppPlansCommonApp(finalArray[position].collegeAppLicationType)
+                appPlanLIst = getAppPlansCommonApp(finalArray[position].collegeAppLicationType)
             else
                 finalArray[position].applicationMode?.let {
-                    getAppPlansOther(finalArray[position].collegeAppLicationType,
+                    appPlanLIst = getAppPlansOther(
+                        finalArray[position].collegeAppLicationType,
                         it
                     )
                 };
             dialogP.show()
             homeModel.getDecisionStatuses()
-        }
-        else {
+        } else {
             sheetBinding.addRound.visibility = View.GONE
+        }
+
+        sheetBinding.addRound.setOnClickListener {
+            addRoundWork()
         }
 
     }
 
-    private fun getAppPlansCommonApp(planDetails: ConsiderModel.CollType?):  ArrayList<ConsiderModel.DecisionPlan> {
-       var list: ArrayList<ConsiderModel.DecisionPlan> = arrayListOf()
+    private fun addRoundWork() {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheet =
+            AddRoundLayoutBinding.inflate(layoutInflater)
+        sheet.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheet.root)
+        dialog.show()
+        sheet.backBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+        sheet.cancelRound.setOnClickListener {
+            dialog.dismiss()
+        }
+        val adapter =
+            PreviousStatusSpinnerAdapter(
+                requireContext(),
+                appStatus,
+                android.R.layout.simple_spinner_item
+            )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        sheet.previousSpinner.setAdapter(
+            NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.nothing_adapter_type,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                requireContext()
+            )
+        )
+
+        val newAdapter =
+            NewApplicationPlanSpinner(
+                requireContext(),
+                appPlanLIst,
+                android.R.layout.simple_spinner_item
+            )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        sheet.previousSpinner.setAdapter(
+            NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.nothing_adapter_type,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                requireContext()
+            )
+        )
+    }
+
+    private fun getAppPlansCommonApp(planDetails: ConsiderModel.CollType?): ArrayList<ConsiderModel.DecisionPlan> {
+        var list: ArrayList<ConsiderModel.DecisionPlan> = arrayListOf()
         planDetails?.collType?.let {
             for (item in it) {
                 if (item?.term?.type == "term" && item.key == "3" && item?.term?.collTerm != null) {
@@ -1025,7 +1078,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         return list
     }
-    private fun getAppPlansOther(planDetails: ConsiderModel.CollType?, appMode:String):  ArrayList<ConsiderModel.DecisionPlan> {
+
+    private fun getAppPlansOther(
+        planDetails: ConsiderModel.CollType?,
+        appMode: String
+    ): ArrayList<ConsiderModel.DecisionPlan> {
         var list: ArrayList<ConsiderModel.DecisionPlan> = arrayListOf()
         planDetails?.collType?.let {
             for (item in it) {
@@ -1045,10 +1102,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                             }
                         }
                     }
-                } else if (item.key == appMode){
-                    if(item?.term?.planList!= null) {
+                } else if (item.key == appMode) {
+                    if (item?.term?.planList != null) {
                         for (i in item?.term?.planList!!) {
-                            if ( i.label != "Early Decision" &&  i.label != "Early Decision II") {
+                            if (i.label != "Early Decision" && i.label != "Early Decision II") {
                                 list.add(ConsiderModel.DecisionPlan(i.id, i.label))
                                 Log.e("Plan", i.label)
                             }
@@ -1680,10 +1737,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         const val MISSING_TRANSCRIPT = "Missing: Transcript Request"
 
     }
-    fun getAppType( collegeAppLicationType: ConsiderModel.CollType?, key:String):String?{
-       collegeAppLicationType?.collType?.let {
-            for (item in it){
-                if (item.key.replaceInvertedComas().equals(key)){
+
+    fun getAppType(collegeAppLicationType: ConsiderModel.CollType?, key: String): String? {
+        collegeAppLicationType?.collType?.let {
+            for (item in it) {
+                if (item.key.replaceInvertedComas().equals(key)) {
                     return item.value
                 }
             }

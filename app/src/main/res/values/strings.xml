@@ -727,5 +727,8 @@
     <string name="add_round">Add Round</string>
     <string name="application_type">Application Type</string>
     <string name="cancel_round">Cancel Round</string>
+    <string name="previous_application_status">Previous Application Status</string>
+    <string name="new_application_plan">New Application Plan*</string>
+    <string name="save_round">Save Round</string>
 
 </resources>

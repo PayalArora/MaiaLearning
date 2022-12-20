@@ -8,7 +8,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:fontFamily="@font/inter_regular"
-        android:text="@string/religious"
         android:padding="@dimen/_5dp"
         style="?android:attr/spinnerItemStyle"
         android:singleLine="true"
