@@ -67,11 +67,13 @@ class ConsiderModel {
         var applicationRoundDetail: ArrayList<ApplicationRoundDetail>?,
         @SerializedName("status")
         var status: String?,
+        @SerializedName("isCommonApp")
+        var commonApp: Boolean,
         var selected: Boolean = false,
         var selectedAppModeValue: String? = null,
-        var selectedAppPlanValue: String? = null
+        var selectedAppPlanValue: String? = null,
 
-    )
+        )
 
     data class RequiredRecommendation(
         @SerializedName("teacher_evaluation")

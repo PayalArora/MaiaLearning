@@ -705,6 +705,16 @@
         <item>Universal App</item>
     </string-array>
 
+    <string-array name="app_status">
+        <item>2nd semester admission->attend</item>
+        <item>attending</item>
+        <item>conditional acceptance->attending</item>
+        <item>deferred->accepted->attend</item>
+        <item>deferred->waitlisted->accepted->attending</item>
+        <item>guar. transfer->attending</item>
+        <item>waitlisted->accepted->attend</item>
+    </string-array>
+
     <string name="request_trans">Request Transcripts</string>
     <string name="transcript_ncaa">Transcript NCAA</string>
     <string name="test_scores">Test Scores | Submitted</string>

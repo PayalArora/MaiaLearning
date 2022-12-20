@@ -92,7 +92,8 @@ class ApplyingParser(val it:JsonObject, val userId:String,  val statuses : Array
                 null, requiredRecs,
                 object_.getInt("manual_update"),
                 object_.optString("applicaton_round"),null,
-                object_.optString("status")
+                object_.optString("status"),
+                        object_.optBoolean("isCommonApp")
             )
             array.add(model)
         }

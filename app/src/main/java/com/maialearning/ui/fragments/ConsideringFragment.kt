@@ -355,8 +355,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getInt("manual_update"),
                             object_.optString("applicaton_round"),
                             null,
-                            object_.optString("status")
-
+                            object_.optString("status"),
+                            object_.optBoolean("isCommonApp")
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }

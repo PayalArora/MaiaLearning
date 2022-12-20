@@ -58,7 +58,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     val collegeRecommendList: ArrayList<CollegeRecommendationRequirementModel> = ArrayList()
     val recommenderList: ArrayList<RecommenderModel> = ArrayList()
     val recommenderIDList: ArrayList<String> = ArrayList()
-
+    var appStatus = ArrayList<StatusModel>()
 
     val collegeID: ArrayList<String> = ArrayList()
 
@@ -367,7 +367,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.getInt("manual_update"),
                         object_.optString("application_round"),
                         arrayRoundList,
-                        object_.optString("status")
+                        object_.optString("status"),
+                        object_.optBoolean("isCommonApp"), object_.optBoolean("isCommonApp")
 
                     )
                     array.add(model)
@@ -774,6 +775,19 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         )
             }
         }
+        homeModel.decisionStatusObserver.observe(requireActivity()) {
+            if (appStatus.size == 0) {
+                dialogP.dismiss()
+            }
+            val json = JSONObject(it.toString())
+            val iterator: Iterator<*> = json.keys()
+            while (iterator.hasNext()) {
+                val key = iterator.next() as String
+                appStatus.add(StatusModel(key,json.getString(key)))
+            }}
+        appStatus.filter { !resources.getStringArray(R.array.app_status).contains(it.key) }
+
+
     }
 
     private fun resetSelection() {
@@ -964,11 +978,86 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 it, finalArray[position].collegeAppLicationType
             )
         }
-        if(round)
-        sheetBinding.addRound.visibility = View.VISIBLE
-        else
+        if(round) {
+            sheetBinding.addRound.visibility = View.VISIBLE
+            val appPlanOptions = finalArray[position].commonApp
+            if (appPlanOptions)
+           getAppPlansCommonApp(finalArray[position].collegeAppLicationType)
+            else
+                finalArray[position].applicationMode?.let {
+                    getAppPlansOther(finalArray[position].collegeAppLicationType,
+                        it
+                    )
+                };
+            dialogP.show()
+            homeModel.getDecisionStatuses()
+        }
+        else {
             sheetBinding.addRound.visibility = View.GONE
+        }
 
+    }
+
+    private fun getAppPlansCommonApp(planDetails: ConsiderModel.CollType?):  ArrayList<ConsiderModel.DecisionPlan> {
+       var list: ArrayList<ConsiderModel.DecisionPlan> = arrayListOf()
+        planDetails?.collType?.let {
+            for (item in it) {
+                if (item?.term?.type == "term" && item.key == "3" && item?.term?.collTerm != null) {
+                    for (plan in item?.term?.collTerm!!) {
+                        if (plan?.collPlan != null) {
+                            for (planitem in plan?.collPlan!!) {
+                                if (planitem.decision_plan_value != "Early Decision" && planitem.decision_plan_value != "Early Decision II") {
+                                    list.add(
+                                        ConsiderModel.DecisionPlan(
+                                            planitem.decision_plan,
+                                            planitem.decision_plan_value
+                                        )
+                                    )
+
+                                    Log.e("Plan", planitem.decision_plan_value)
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return list
+    }
+    private fun getAppPlansOther(planDetails: ConsiderModel.CollType?, appMode:String):  ArrayList<ConsiderModel.DecisionPlan> {
+        var list: ArrayList<ConsiderModel.DecisionPlan> = arrayListOf()
+        planDetails?.collType?.let {
+            for (item in it) {
+                if (item?.term?.type == "term" && item.key == appMode && item?.term?.collTerm != null) {
+                    for (plan in item?.term?.collTerm!!) {
+                        if (plan?.collPlan != null) {
+                            for (planitem in plan?.collPlan!!) {
+                                if (planitem.decision_plan_value != "Early Decision" && planitem.decision_plan_value != "Early Decision II") {
+                                    list.add(
+                                        ConsiderModel.DecisionPlan(
+                                            planitem.decision_plan,
+                                            planitem.decision_plan_value
+                                        )
+                                    )
+                                    Log.e("Plan", planitem.decision_plan_value)
+                                }
+                            }
+                        }
+                    }
+                } else if (item.key == appMode){
+                    if(item?.term?.planList!= null) {
+                        for (i in item?.term?.planList!!) {
+                            if ( i.label != "Early Decision" &&  i.label != "Early Decision II") {
+                                list.add(ConsiderModel.DecisionPlan(i.id, i.label))
+                                Log.e("Plan", i.label)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return list
     }
 
     override fun onApplyingClick(postion: Int) {
