@@ -731,5 +731,7 @@
     <string name="new_application_plan">New Application Plan*</string>
     <string name="save_round">Save Round</string>
     <string name="app_plan_error">Please select some Application Plan</string>
+    <string name="sat_">SAT 1600</string>
+    <string name="compare_all">Compare All</string>
 
 </resources>

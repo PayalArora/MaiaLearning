@@ -337,6 +337,19 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         )
                     }
 
+                    var collComapre: ConsiderModel.CollegeCompare? = null
+                    val collJson: JSONObject? = object_.optJSONObject("college_compare")
+                    collJson?.let {
+                        collComapre = ConsiderModel.CollegeCompare(
+                            it.optString("college"),
+                            it.optString("gpa"),
+                            it.optString("sat_1600"),
+                            it.optString("sat_2400"),
+                            it.optString("act"),
+                            it.optString("sat_points"),
+                            it.optString("act_points")
+                        )
+                    }
                     val model: ConsiderModel.Data = ConsiderModel.Data(
                         object_.getInt("contact_info"),
                         object_.getInt("parchment"),
@@ -368,7 +381,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                         object_.optString("application_round"),
                         arrayRoundList,
                         object_.optString("status"),
-                        object_.optBoolean("isCommonApp"), object_.optBoolean("isCommonApp")
+                        object_.optBoolean("isCommonApp"),
+                        object_.optString("naviance_mapping"), collComapre
 
                     )
                     array.add(model)
@@ -387,10 +401,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                             if (firstTime) {
                                 firstTime = false
                                 array[k].country_name = countries[j]
-                                array[k].header =  countries[j]
+                                array[k].header = countries[j]
                             } else {
                                 array[k].country_name = countries[j]
-                                array[k].header =  ""
+                                array[k].header = ""
                             }
                             finalArray.add(array[k])
                             finalArray[pos].count = count
@@ -1006,7 +1020,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
     }
 
-    private fun addRoundWork(postion: Int, dialogRound:BottomSheetDialog) {
+    private fun addRoundWork(postion: Int, dialogRound: BottomSheetDialog) {
         val dialog = BottomSheetDialog(requireContext())
         val sheet =
             AddRoundLayoutBinding.inflate(layoutInflater)
@@ -1020,20 +1034,24 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             dialog.dismiss()
         }
         sheet.saveRound.setOnClickListener {
-            if (sheet.newSpinner.selectedItemPosition == 0){
+            if (sheet.newSpinner.selectedItemPosition == 0) {
                 context?.showToast(resources.getString(R.string.app_plan_error))
             } else {
-            var updateStudentPlan = UpdateStudentPlan()
-            updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
-            updateStudentPlan.college_nid = finalArray[postion].university_nid
-            if (sheet.previousSpinner.selectedItemPosition != 0) {
-                updateStudentPlan.old_app_status =
-                    appStatus.get(sheet.previousSpinner.selectedItemPosition).key
-            }
+                var updateStudentPlan = UpdateStudentPlan()
+                updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+                updateStudentPlan.college_nid = finalArray[postion].university_nid
+                if (sheet.previousSpinner.selectedItemPosition != 0) {
+                    updateStudentPlan.old_app_status =
+                        appStatus.get(sheet.previousSpinner.selectedItemPosition).key
+                }
                 updateStudentPlan.app_plan =
                     appStatus.get(sheet.newSpinner.selectedItemPosition).key
-                updateStudentPlan.deadline_date = formateDateFromstring("yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy", finalArray[postion].dueDate)
-               // updateStudentPlan.multiple_decision_round = finalArray[postion].
+                updateStudentPlan.deadline_date = formateDateFromstring(
+                    "yyyy-MM-dd hh:mm:ss",
+                    "MM/dd/yyyy",
+                    finalArray[postion].dueDate
+                )
+                // updateStudentPlan.multiple_decision_round = finalArray[postion].
                 dialogP.show()
                 homeModel.updateStudentPlan(updateStudentPlan)
                 homeModel.updateStudentPlanObserver.observe(requireActivity()) {
@@ -1651,6 +1669,28 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             dialogP.show()
             sheetBinding?.filters?.setText(resources.getString(R.string.which_testscores))
             homeModel.getTestScores(SharedHelper(requireContext()).id)
+        } else if (type.equals(getString(R.string.compare_all))) {
+            filterApplyingList()
+        }
+    }
+
+    private fun filterApplyingList() {
+        var filteredApplying: ArrayList<ConsiderModel.Data> = ArrayList()
+
+        for (i in finalArray.indices) {
+            if (finalArray.get(i).navianceMapping.equals("1") &&
+                (!finalArray.get(i).collegeCompare?.gpa.equals("null") || !finalArray.get(i).collegeCompare?.sat1600.equals(
+                    "null"
+                ) || !finalArray.get(
+                    i
+                ).collegeCompare?.act.equals("null"))
+            ) {
+                filteredApplying.add(finalArray.get(i));
+            }
+        }
+        if (filteredApplying.size > 0) {
+            sheetBinding.reciepentList.adapter =
+                CompareAllAdapter(filteredApplying)
         }
     }
 
@@ -1696,6 +1736,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         sheetBindingUniv!!.testScores.setOnClickListener {
             subFilter(getString(R.string.test_scores))
+        }
+        sheetBindingUniv!!.compareItem.setOnClickListener {
+            subFilter(getString(R.string.compare_all))
         }
         sheetBindingUniv!!.prefferedItem.setOnClickListener {
             dialogP.show()
@@ -1758,10 +1801,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             for (j in i.value) {
                 j.count = i.value.size
                 if (prev == j.country_name) {
-                   j.header =""
+                    j.header = ""
                 } else {
                     prev = j.country_name
-                    j.header =  j.country_name
+                    j.header = j.country_name
                 }
                 filteredArray.add(j)
             }

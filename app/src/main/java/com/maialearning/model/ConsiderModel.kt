@@ -69,11 +69,15 @@ class ConsiderModel {
         var status: String?,
         @SerializedName("isCommonApp")
         var commonApp: Boolean,
+        @SerializedName("naviance_mapping")
+        var navianceMapping: String? = null,
+        @SerializedName("college_compare")
+        var collegeCompare: CollegeCompare?,
         var selected: Boolean = false,
         var selectedAppModeValue: String? = null,
         var selectedAppPlanValue: String? = null,
-        var header: String="",
-        )
+        var header: String = "",
+    )
 
     data class RequiredRecommendation(
         @SerializedName("teacher_evaluation")
@@ -82,6 +86,25 @@ class ConsiderModel {
         var maxTeacherEvaluation: String?,
         @SerializedName("counselor_recommendation")
         var counselorRecommendation: String?
+    )
+
+    data class CollegeCompare(
+
+        @SerializedName("college")
+        var college: String?,
+        @SerializedName("gpa")
+        var gpa: String?,
+        @SerializedName("sat_1600")
+        var sat1600: String?,
+        @SerializedName("sat_2400")
+        var sat2400: String?,
+        @SerializedName("act")
+        var act: String?,
+        @SerializedName("sat_points")
+        var satPoints: String?,
+        @SerializedName("act_points")
+        var actPoints: String?
+
     )
 
     data class CollType(var collType: ArrayList<DynamicKeyValue>?, var selectedPlanType: String?)
