@@ -1670,11 +1670,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             sheetBinding?.filters?.setText(resources.getString(R.string.which_testscores))
             homeModel.getTestScores(SharedHelper(requireContext()).id)
         } else if (type.equals(getString(R.string.compare_all))) {
-            filterApplyingList()
+            filterApplyingList(copyArray)
         }
     }
 
-    private fun filterApplyingList() {
+    private fun filterApplyingList(finalArray: ArrayList<ConsiderModel.Data>) {
         var filteredApplying: ArrayList<ConsiderModel.Data> = ArrayList()
 
         for (i in finalArray.indices) {

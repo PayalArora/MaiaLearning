@@ -33,10 +33,10 @@
             android:id="@+id/filters"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+
             android:layout_centerVertical="true"
             android:fontFamily="@font/inter"
-            android:padding="@dimen/_15dp"
+            android:paddingHorizontal="@dimen/_15dp"
             android:text="@string/country"
             android:textColor="@color/black_1"
             android:textFontWeight="500"

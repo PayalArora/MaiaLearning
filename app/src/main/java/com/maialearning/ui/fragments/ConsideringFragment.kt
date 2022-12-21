@@ -149,6 +149,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         sheetBindingUniv!!.applyingItem.setOnClickListener {
             subFilter("Applying")
         }
+        sheetBindingUniv!!.compareItem.setOnClickListener {
+            subFilter("Compare All")
+        }
 //        sheetBindingUniv!!.reciepentList.adapter =
 //            ConsiderFilterAdapter(resources.getStringArray(R.array.consideringFilters), ::onConsideringMainFilterClick)
 
@@ -1460,10 +1463,33 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(applyingWithList)
+        } else if (type.equals("Compare All")){
+            filterCompare(finalArray,sheetBinding )
         }
 
     }
+    private fun filterCompare(
+        finalArray: ArrayList<ConsiderModel.Data>,
+        sheetBinding: UniversityFilterBinding
+    ) {
+        var filteredApplying: ArrayList<ConsiderModel.Data> = ArrayList()
 
+        for (i in finalArray.indices) {
+            if (finalArray.get(i).navianceMapping.equals("1") &&
+                (!finalArray.get(i).collegeCompare?.gpa.equals("null") || !finalArray.get(i).collegeCompare?.sat1600.equals(
+                    "null"
+                ) || !finalArray.get(
+                    i
+                ).collegeCompare?.act.equals("null"))
+            ) {
+                filteredApplying.add(finalArray.get(i));
+            }
+        }
+        if (filteredApplying.size > 0) {
+            sheetBinding.reciepentList.adapter =
+                CompareAllAdapter(filteredApplying)
+        }
+    }
     private fun activeSelection() {
         mBinding.selectAll.visibility = View.GONE
         mBinding.selected.visibility = View.VISIBLE

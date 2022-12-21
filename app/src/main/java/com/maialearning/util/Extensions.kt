@@ -257,6 +257,14 @@ fun parseNA(string: String?): String {
     }
 }
 
+fun parseDash(string: String?): String {
+    if (string == null || string == "null") {
+        return BaseApplication.applicationContext().getString(R.string.dash)
+    } else {
+        return string
+    }
+}
+
 fun parseEvaluation(string: String?, str1:String?): String {
     if (string == null || string == "null" ||str1 == null || str1 == "null") {
         return BaseApplication.applicationContext().getString(R.string.na)

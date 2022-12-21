@@ -39,7 +39,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/_1dp"
-            android:background="@color/grey_2"
+            android:background="@color/divider_color"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name" />
 
@@ -73,7 +73,7 @@
                     android:maxLines="1"
                     android:padding="5dp"
                     android:text="--"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
 
                 <TextView
@@ -87,7 +87,7 @@
                     android:maxLines="1"
                     android:padding="5dp"
                     android:text="WGPA"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
             </RelativeLayout>
 
@@ -115,7 +115,7 @@
                     android:padding="5dp"
                     android:text="--"
                     android:textColor="@color/red"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
 
                 <TextView
@@ -129,7 +129,7 @@
                     android:maxLines="1"
                     android:padding="5dp"
                     android:text="@string/sat_"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
             </RelativeLayout>
 
@@ -157,7 +157,7 @@
                     android:padding="5dp"
                     android:text="--"
                     android:textColor="@color/green_1"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
 
                 <TextView
@@ -171,7 +171,7 @@
                     android:maxLines="1"
                     android:padding="5dp"
                     android:text="@string/act"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
             </RelativeLayout>
 
@@ -198,7 +198,7 @@
                     android:maxLines="1"
                     android:padding="5dp"
                     android:text="--"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
 
                 <TextView
@@ -212,7 +212,7 @@
                     android:maxLines="1"
                     android:padding="5dp"
                     android:text="@string/status"
-                    android:textSize="@dimen/_12sp"
+                    android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
             </RelativeLayout>
 

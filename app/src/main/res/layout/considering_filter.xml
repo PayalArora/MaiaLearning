@@ -85,10 +85,9 @@
             android:id="@+id/country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:fontFamily="@font/inter"
-            android:padding="@dimen/_15dp"
+            android:paddingHorizontal="@dimen/_15dp"
             android:text="@string/country"
             android:textColor="@color/black_1"
             android:textFontWeight="500"
@@ -121,10 +120,9 @@
             android:id="@+id/applying_with"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:fontFamily="@font/inter"
-            android:padding="@dimen/_15dp"
+            android:paddingHorizontal="@dimen/_15dp"
             android:text="@string/applying_with"
             android:textColor="@color/black_1"
             android:textFontWeight="500"
@@ -147,12 +145,45 @@
         android:layout_height="@dimen/_1dp"
         android:layout_below="@+id/applying_item"
         android:background="@color/divider_color" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/compare_item"
+        android:layout_below="@id/view3"
+        android:layout_height="@dimen/_50dp">
 
+        <TextView
+            android:id="@+id/compare_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/inter"
+            android:paddingHorizontal="@dimen/_15dp"
+            android:text="@string/compare_all"
+            android:textColor="@color/black_1"
+            android:textFontWeight="500"
+            android:textSize="@dimen/_16sp" />
+        <ImageView
+            android:id="@+id/right_arrow_compare"
+            android:layout_width="@dimen/_20dp"
+            android:layout_height="@dimen/_15dp"
+            android:layout_marginEnd="@dimen/_15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+
+            android:layout_marginStart="@dimen/_5dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
+    </RelativeLayout>
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:layout_below="@+id/compare_item"
+        android:background="@color/divider_color" />
     <TextView
         android:id="@+id/show"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/view3"
+        android:layout_below="@id/view4"
         android:layout_centerVertical="true"
         android:fontFamily="@font/inter_black"
         android:paddingHorizontal="@dimen/_15dp"

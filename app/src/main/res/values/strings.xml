@@ -733,5 +733,6 @@
     <string name="app_plan_error">Please select some Application Plan</string>
     <string name="sat_">SAT 1600</string>
     <string name="compare_all">Compare All</string>
+    <string name="dash">--</string>
 
 </resources>

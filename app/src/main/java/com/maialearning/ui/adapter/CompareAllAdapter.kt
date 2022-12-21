@@ -42,12 +42,11 @@ class CompareAllAdapter(
 
         viewHolder.binding.apply {
             considerarray.apply {
-                wgpaValue.text = considerarray.get(position).collegeCompare?.gpa
-                satValue.text = considerarray.get(position).collegeCompare?.sat1600
-                actValue.text = considerarray.get(position).collegeCompare?.act
-                statusValue.text = considerarray.get(position)?.status
-                name.text = considerarray.get(position).naviance_college_name
-
+                wgpaValue.text = parseDash(considerarray.get(position).collegeCompare?.gpa)
+                satValue.text = parseDash(considerarray.get(position).collegeCompare?.sat1600)
+                actValue.text = parseDash(considerarray.get(position).collegeCompare?.act)
+                statusValue.text = parseDash(considerarray.get(position)?.status)
+                name.text = parseDash(considerarray.get(position).naviance_college_name)
             }
 
         }
