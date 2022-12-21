@@ -328,6 +328,19 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 )
                             }
                         }
+                        var collComapre: ConsiderModel.CollegeCompare? = null
+                        val collJson: JSONObject? = object_.optJSONObject("college_compare")
+                        collJson?.let {
+                            collComapre = ConsiderModel.CollegeCompare(
+                                it.optString("college"),
+                                it.optString("gpa"),
+                                it.optString("sat_1600"),
+                                it.optString("sat_2400"),
+                                it.optString("act"),
+                                it.optString("sat_points"),
+                                it.optString("act_points")
+                            )
+                        }
 
                         val model: ConsiderModel.Data = ConsiderModel.Data(
                             object_.getInt("contact_info"),
@@ -359,7 +372,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.optString("applicaton_round"),
                             null,
                             object_.optString("status"),
-                            object_.optBoolean("isCommonApp"),null,null
+                            object_.optBoolean("isCommonApp"),object_.optString("naviance_mapping"),collComapre
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
