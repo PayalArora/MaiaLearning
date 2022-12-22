@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
@@ -56,11 +57,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     var selectedMissing = ""
     val testScoresList: ArrayList<TestScoresResponseItem> = ArrayList()
     val collegeRecommendList: ArrayList<CollegeRecommendationRequirementModel> = ArrayList()
-    val recommenderList: ArrayList<RecommenderModel> = ArrayList()
-    val recommenderIDList: ArrayList<String> = ArrayList()
     var appStatus = ArrayList<StatusModel>()
 
-    val collegeID: ArrayList<String> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -719,75 +717,112 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         homeModel.getSTudentRecommendPrefranceObserver.observe(requireActivity()) {
             dialogP.dismiss()
             it?.let {
-                finalArray.clear()
+                collegeRecommendList.clear()
                 val json = JSONObject(it.toString()).getJSONObject("data")
                 val collJson = json.getJSONObject("student_preferred_recommenders")
 
                 val x = json.getJSONObject("student_preferred_recommenders")
                     .keys() as Iterator<String>
+                val collegeJson = json.getJSONObject("college_recommendation_requirement")
 
                 while (x.hasNext()) {
                     val key: String = x.next().toString()
+                    var collname =""
                     val subJsonKeys = collJson.getJSONObject(key)
                         .keys() as Iterator<String>
+                    val json:JSONObject? = collegeJson.optJSONObject(key)
+                   val max_te_reqd =json?.optString("max_te_reqd")
+                   val minTeReqd =json?.optString("min_te_reqd")
+                   val counselorEvalReqd =json?.optBoolean("counselor_eval_reqd")
+
+                  var  recommenderList = arrayListOf<RecommenderModel>()
                     while (subJsonKeys.hasNext()) {
                         val subKey: String = subJsonKeys.next().toString()
-                        if (!collegeID.contains(
+
+                        collname= collJson.optJSONObject(key).optJSONObject(subKey)
+                            .optString("college_name")
+                        recommenderList.add(
+                            RecommenderModel(
                                 collJson.optJSONObject(key).optJSONObject(subKey)
-                                    .optString("college_nid")
-                            )
-                        ) {
-                            collegeID.add(
+                                    .optString("recommender_uid"),
                                 collJson.optJSONObject(key).optJSONObject(subKey)
-                                    .optString("college_nid")
-                            )
-                            collegeRecommendList.add(
-                                CollegeRecommendationRequirementModel(
-                                    false, "", "",
-                                    collJson.optJSONObject(key).optJSONObject(subKey)
-                                        .optString("college_nid"),
-                                    collJson.optJSONObject(key).optJSONObject(subKey)
-                                        .optString("college_name")
+                                    .optString("recommender_name"),
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optString("recommendation_nid"),
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optString("college_nid"),
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optString("college_name"),
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optInt("preferred_recommender"),
+                                collJson.optJSONObject(key).optJSONObject(subKey)
+                                    .optInt("set_by_counselor"),
+
                                 )
-                            )
-                        }
-                        if (!recommenderIDList.contains(
-                                collJson.optJSONObject(key).optJSONObject(subKey)
-                                    .optString("recommender_uid")
-                            )
-                        ) {
-                            recommenderIDList.add(
-                                collJson.optJSONObject(key).optJSONObject(subKey)
-                                    .optString("recommender_uid")
-                            )
-                            recommenderList.add(
-                                RecommenderModel(
-                                    collJson.optJSONObject(key).optJSONObject(subKey)
-                                        .optString("recommender_uid"),
-                                    collJson.optJSONObject(key).optJSONObject(subKey)
-                                        .optString("recommender_name"),
-                                    collJson.optJSONObject(key).optJSONObject(subKey)
-                                        .optString("recommendation_nid"),
-                                    "", "",
-                                    collJson.optJSONObject(key).optJSONObject(subKey)
-                                        .optInt("preferred_recommender")
-                                )
-                            )
-                        }
+                        )
+
+
+//                        if (!recommenderIDList.contains(
+//                                collJson.optJSONObject(key).optJSONObject(subKey)
+//                                    .optString("recommender_uid")
+//                            )
+//                        ) {
+//                            recommenderIDList.add(
+//                                collJson.optJSONObject(key).optJSONObject(subKey)
+//                                    .optString("recommender_uid")
+//                            )
+//                            recommenderList.add(
+//                                RecommenderModel(
+//                                    collJson.optJSONObject(key).optJSONObject(subKey)
+//                                        .optString("recommender_uid"),
+//                                    collJson.optJSONObject(key).optJSONObject(subKey)
+//                                        .optString("recommender_name"),
+//                                    collJson.optJSONObject(key).optJSONObject(subKey)
+//                                        .optString("recommendation_nid"),
+//                                    collJson.optJSONObject(key).optJSONObject(subKey)
+//                                        .optString("college_nid"),
+//                                    collJson.optJSONObject(key).optJSONObject(subKey)
+//                                        .optString("college_name"),
+//                                    collJson.optJSONObject(key).optJSONObject(subKey)
+//                                        .optInt("preferred_recommender"),
+//                                    collJson.optJSONObject(key).optJSONObject(subKey)
+//                                        .optInt("set_by_counselor"),
+//
+//                                )
+//                            )
+//                        }
                     }
+                    recommenderList.sortBy { it.recommenderUid.toInt() }
+                    collegeRecommendList.add(
+                        CollegeRecommendationRequirementModel(
+                            counselorEvalReqd, minTeReqd, max_te_reqd,
+                            key,
+                            collname,
+                            recommenderList
+                        )
+                    )
+
                 }
                 Log.e("Data", "Size>>> " + collegeRecommendList.size)
+
+
+
+
+
+
+
+
+
                 dialogP?.dismiss()
 
-                collegeRecommendList.sortBy { it.collegeName }
-                recommenderList.sortBy { it.recommenderName }
+                collegeRecommendList.sortBy { it.collegeNid.toInt() }
+
 
                 if (collegeRecommendList != null && collegeRecommendList.size > 0)
                     sheetBinding.reciepentList.adapter =
                         RecommendedPrefrenceAdapter(
                             requireContext(),
-                            collegeRecommendList,
-                            recommenderList
+                            collegeRecommendList
                         )
             }
         }
@@ -1671,6 +1706,16 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             homeModel.getTestScores(SharedHelper(requireContext()).id)
         } else if (type.equals(getString(R.string.compare_all))) {
             filterApplyingList(copyArray)
+        } else if (type.equals(getString(R.string.prefered_recommend))){
+            dialogP.show()
+            SharedHelper(requireContext()).schoolId?.let { it1 ->
+                SharedHelper(requireContext()).id?.let { it2 ->
+                    homeModel.getStudentRecommenderPrefrance(
+                        it1,
+                        it2
+                    )
+                }
+            }
         }
     }
 
@@ -1741,16 +1786,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             subFilter(getString(R.string.compare_all))
         }
         sheetBindingUniv!!.prefferedItem.setOnClickListener {
-            dialogP.show()
+
             subFilter(getString(R.string.prefered_recommend))
-            SharedHelper(requireContext()).schoolId?.let { it1 ->
-                SharedHelper(requireContext()).id?.let { it2 ->
-                    homeModel.getStudentRecommenderPrefrance(
-                        it1,
-                        it2
-                    )
-                }
-            }
+
         }
     }
 

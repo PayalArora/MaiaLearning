@@ -14,5 +14,8 @@ data class RecommenderModel(
     @SerializedName("college_name")
     var collegeName: String,
     @SerializedName("preferred_recommender")
-    var preferredRecommender: Int
+    var preferredRecommender: Int,
+    @SerializedName("set_by_counselor")
+    var setByCounscelor: Int = 0
+
 )

@@ -34,6 +34,16 @@ class HorizontalRecommenderAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             recName.setText(recommenderList.get(position).recommenderName)
+            if (recommenderList.get(position).preferredRecommender == 1){
+                recName.isChecked = true
+            }else{
+                recName.isChecked = false
+            }
+            if (recommenderList.get(position).setByCounscelor == 1){
+                recName.isEnabled =true
+            }else{
+                recName.isEnabled = false
+            }
         }
 
     }
