@@ -8,7 +8,7 @@ import com.maialearning.databinding.PrefrenceRecommenderLayoutBinding
 import com.maialearning.model.RecommenderModel
 
 class HorizontalRecommenderAdapter(
-    val recommenderList: ArrayList<RecommenderModel>  = ArrayList()
+    val recommenderList: ArrayList<RecommenderModel> = ArrayList()
 ) :
     RecyclerView.Adapter<HorizontalRecommenderAdapter.ViewHolder>() {
     /**
@@ -34,16 +34,24 @@ class HorizontalRecommenderAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
             recName.setText(recommenderList.get(position).recommenderName)
-            if (recommenderList.get(position).preferredRecommender == 1){
+            if (recommenderList.get(position).preferredRecommender == 1) {
                 recName.isChecked = true
-            }else{
+            } else {
                 recName.isChecked = false
             }
-            if (recommenderList.get(position).setByCounscelor == 1){
-                recName.isEnabled =true
-            }else{
+            if (recommenderList.get(position).setByCounscelor == 1) {
+                recName.isEnabled = true
+            } else {
                 recName.isEnabled = false
             }
+            recName.setOnClickListener({
+                if (recName.isChecked) {
+                    recommenderList.get(position).preferredRecommender = 1
+                } else {
+                    recommenderList.get(position).preferredRecommender = 0
+                }
+                recommenderList.get(position).newChange = true
+            })
         }
 
     }

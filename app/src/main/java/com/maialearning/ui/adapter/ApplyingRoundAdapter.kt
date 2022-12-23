@@ -1,23 +1,17 @@
 package com.maialearning.ui.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
-import com.maialearning.R
 import com.maialearning.databinding.AppRoundItemBinding
-import com.maialearning.databinding.AttachItemRowBinding
 import com.maialearning.model.ConsiderModel
-import com.maialearning.model.DashboardOverdueResponse
 import com.maialearning.util.checkNonNull
-import com.maialearning.util.convertDateToLong
 import com.maialearning.util.formateDateFromstring
 import com.maialearning.util.replaceInvertedComas
 
 class ApplyingRoundAdapter(
     val list: List<ConsiderModel.ApplicationRoundDetail>,
-    val collegeAppLicationType: ConsiderModel.CollType?
+    private val collegeAppLicationType: ConsiderModel.CollType?
 ) :
     RecyclerView.Adapter<ApplyingRoundAdapter.ViewHolder>() {
 
@@ -26,9 +20,6 @@ class ApplyingRoundAdapter(
      * (custom ViewHolder).
      */
     class ViewHolder(val binding: AppRoundItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            // Define click listener for the ViewHolder's View.
-        }
     }
 
     // Create new views (invoked by the layout manager)
@@ -56,12 +47,12 @@ class ApplyingRoundAdapter(
     }
 
     override fun getItemCount(): Int {
-        return list!!.size
+        return list.size
     }
     fun getAppType( collegeAppLicationType: ConsiderModel.CollType?, key:String):String?{
         collegeAppLicationType?.collType?.let {
             for (item in it){
-                if (item.key.replaceInvertedComas().equals(key)){
+                if (item.key.replaceInvertedComas() == key){
                     return item.value
                 }
             }

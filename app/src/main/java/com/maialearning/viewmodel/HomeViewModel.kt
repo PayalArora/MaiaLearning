@@ -65,6 +65,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val checkAllTranscriptsObserver = MutableLiveData<Unit>()
     val getSTudentRecommendPrefranceObserver = MutableLiveData<JsonObject>()
     val compareAllObserver = MutableLiveData<JsonObject>()
+    val cancelRoundObserver = MutableLiveData<JsonObject>()
 
 
     fun getConsiderList(id: String, status: String) {
@@ -766,6 +767,20 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> compareAllObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun cancelRound(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.cancelRound(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> cancelRoundObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

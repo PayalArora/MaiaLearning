@@ -16,6 +16,7 @@ data class RecommenderModel(
     @SerializedName("preferred_recommender")
     var preferredRecommender: Int,
     @SerializedName("set_by_counselor")
-    var setByCounscelor: Int = 0
+    var setByCounscelor: Int = 0,
+    var newChange: Boolean = false
 
 )

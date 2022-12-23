@@ -60,7 +60,6 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     var appStatus = ArrayList<StatusModel>()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -727,19 +726,19 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
                 while (x.hasNext()) {
                     val key: String = x.next().toString()
-                    var collname =""
+                    var collname = ""
                     val subJsonKeys = collJson.getJSONObject(key)
                         .keys() as Iterator<String>
-                    val json:JSONObject? = collegeJson.optJSONObject(key)
-                   val max_te_reqd =json?.optString("max_te_reqd")
-                   val minTeReqd =json?.optString("min_te_reqd")
-                   val counselorEvalReqd =json?.optBoolean("counselor_eval_reqd")
+                    val json: JSONObject? = collegeJson.optJSONObject(key)
+                    val max_te_reqd = json?.optString("max_te_reqd")
+                    val minTeReqd = json?.optString("min_te_reqd")
+                    val counselorEvalReqd = json?.optBoolean("counselor_eval_reqd")
 
-                  var  recommenderList = arrayListOf<RecommenderModel>()
+                    var recommenderList = arrayListOf<RecommenderModel>()
                     while (subJsonKeys.hasNext()) {
                         val subKey: String = subJsonKeys.next().toString()
 
-                        collname= collJson.optJSONObject(key).optJSONObject(subKey)
+                        collname = collJson.optJSONObject(key).optJSONObject(subKey)
                             .optString("college_name")
                         recommenderList.add(
                             RecommenderModel(
@@ -756,9 +755,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 collJson.optJSONObject(key).optJSONObject(subKey)
                                     .optInt("preferred_recommender"),
                                 collJson.optJSONObject(key).optJSONObject(subKey)
-                                    .optInt("set_by_counselor"),
+                                    .optInt("set_by_counselor"), false
 
-                                )
+                            )
                         )
 
 
@@ -837,7 +836,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         appStatus.filter { !resources.getStringArray(R.array.app_status).contains(it.key) }
 
-
+        homeModel.cancelRoundObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+        }
     }
 
     private fun resetSelection() {
@@ -1051,6 +1052,32 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
         sheetBinding.addRound.setOnClickListener {
             addRoundWork(position, dialog)
+        }
+
+        sheetBinding.cancelRound.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setMessage("Are you sure you want to delete the current application round?")
+                .setPositiveButton(
+                    "Yes"
+                ) { dialog, _ ->
+                    dialogP.show()
+                    homeModel.cancelRound("" + finalArray.get(position).transcriptNid)
+
+                    val count = finalArray.get(position).applicationRound?.toInt()?.minus(1)
+                    if (count != null && count > 1) {
+                        finalArray.get(position).applicationRound = "" + count
+                        count.let { it1 ->
+                            finalArray.get(position).applicationRoundDetail?.removeAt(
+                                it1 - 1
+                            )
+                        }
+                        applyingAdapter.notifyDataSetChanged()
+                        sheetBinding.roundList.adapter?.notifyDataSetChanged()
+                    }
+                }
+                .setNegativeButton("No", null)
+                .show()
         }
 
     }
@@ -1706,7 +1733,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             homeModel.getTestScores(SharedHelper(requireContext()).id)
         } else if (type.equals(getString(R.string.compare_all))) {
             filterApplyingList(copyArray)
-        } else if (type.equals(getString(R.string.prefered_recommend))){
+        } else if (type.equals(getString(R.string.prefered_recommend))) {
             dialogP.show()
             SharedHelper(requireContext()).schoolId?.let { it1 ->
                 SharedHelper(requireContext()).id?.let { it2 ->

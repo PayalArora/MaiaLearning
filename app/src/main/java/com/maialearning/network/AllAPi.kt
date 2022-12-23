@@ -743,4 +743,10 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Path("id") id: String
     ): Deferred<JsonObject>
+
+    @PUT("college_multiple_decision_rounds/{id}")
+    fun cancelRound(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String
+    ): Deferred<JsonObject>
 }

@@ -378,6 +378,10 @@ interface LoginRepository {
     suspend fun compareAllColleges(
         id: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun cancelRound(
+        id: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1943,4 +1947,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
+    override suspend fun cancelRound(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.cancelRound(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
 }
