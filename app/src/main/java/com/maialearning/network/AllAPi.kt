@@ -750,7 +750,7 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<JsonObject>
 
-    @POST("savePrefReco")
+    @POST("student-preferred-recommenders")
     fun savePrefReco(
         @Header("Authorization") AutToken: String,
         @Body reco: PrefferedRecoSaveModel
