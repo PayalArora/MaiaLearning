@@ -58,6 +58,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     val testScoresList: ArrayList<TestScoresResponseItem> = ArrayList()
     val collegeRecommendList: ArrayList<CollegeRecommendationRequirementModel> = ArrayList()
     var appStatus = ArrayList<StatusModel>()
+    var cancelDialog:BottomSheetDialog?= null
+    var prefDialog:BottomSheetDialog?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -804,14 +806,6 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 }
                 Log.e("Data", "Size>>> " + collegeRecommendList.size)
 
-
-
-
-
-
-
-
-
                 dialogP?.dismiss()
 
                 collegeRecommendList.sortBy { it.collegeNid.toInt() }
@@ -838,6 +832,14 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
         homeModel.cancelRoundObserver.observe(requireActivity()) {
             dialogP.dismiss()
+            dialogP.show()
+            homeModel.getApplyList(userid)
+            cancelDialog?.dismiss()
+
+        }
+        homeModel.savePrefRecoObserver.observe(requireActivity()){
+            dialogP.dismiss()
+            prefDialog?.dismiss()
         }
     }
 
@@ -1007,14 +1009,14 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     var appPlanLIst = arrayListOf<ConsiderModel.DecisionPlan>()
 
     private fun bottomSheetRound(position: Int, round: Boolean) {
-        val dialog = BottomSheetDialog(requireContext())
+         cancelDialog = BottomSheetDialog(requireContext())
         val sheetBinding: AppRoundBottomsheetBinding =
             AppRoundBottomsheetBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight =
             ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
-        dialog.show()
-        sheetBinding.close.setOnClickListener { dialog?.dismiss() }
+        cancelDialog?.setContentView(sheetBinding.root)
+        cancelDialog?.show()
+        sheetBinding.close.setOnClickListener {  cancelDialog?.dismiss() }
 
         Picasso.with(requireContext())
             .load("$UNIV_LOGO_URL${finalArray[position].country?.toLowerCase()}/${finalArray[position].unitid}/logo_sm.jpg")
@@ -1051,7 +1053,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
 
         sheetBinding.addRound.setOnClickListener {
-            addRoundWork(position, dialog)
+            addRoundWork(position, cancelDialog!!)
         }
 
         sheetBinding.cancelRound.setOnClickListener {
@@ -1072,7 +1074,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 it1 - 1
                             )
                         }
-                        applyingAdapter.notifyDataSetChanged()
+                       // applyingAdapter.notifyDataSetChanged()
                         sheetBinding.roundList.adapter?.notifyDataSetChanged()
                     }
                 }
@@ -1673,7 +1675,31 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     dialogP.show()
                     homeModel.submitTestScoreStatus(payload)
                 }
-            } else {
+            } else if (type.equals(getString(R.string.prefered_recommend))){
+                val prefRecoList : ArrayList<PrefferedRecoSaveModel.PrefferedRecoSave> = arrayListOf()
+                for (i in collegeRecommendList){
+                    i.recomendorList?.let {
+                        for (j in it) {
+                            if (j.newChange){
+                                prefRecoList.add(
+                                    PrefferedRecoSaveModel.PrefferedRecoSave(
+                                        j.collegeNid,
+                                        j.recommenderUid,
+                                        j.preferredRecommender.toString()
+                                    )
+                                )
+                            }
+
+                        }
+                    }
+                }
+                val prefferedRecoSaveModel = PrefferedRecoSaveModel()
+                prefferedRecoSaveModel.preferred_recommender_data = prefRecoList
+                if (prefRecoList.size>0){
+                    prefDialog = dialog
+                    homeModel.savePrefReco(prefferedRecoSaveModel)
+                }
+            }else {
                 for (i in countryArray) {
                     if (i.checked) {
                         selectedCountry = i.key

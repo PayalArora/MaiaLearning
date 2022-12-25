@@ -39,11 +39,18 @@ class HorizontalRecommenderAdapter(
             } else {
                 recName.isChecked = false
             }
-            if (recommenderList.get(position).setByCounscelor == 1) {
-                recName.isEnabled = true
-            } else {
-                recName.isEnabled = false
-            }
+//        val a =     (!isCounselorEnv && recommenderInfo.set_by_counselor === 1) ||
+//                    maxRecsRequired === 0 ||
+//                    (collegeRecRequirement?.[collegeNid] &&
+//                            maxRecsRequired > 0 &&
+//                            recommenderInfo.preferred_recommender !== 1 &&
+//                            getTotalPreferrestudent_can_set_preferred_recommenderdRecsForCollege(studentPreferredRecs[collegeNid]) >=
+//                            maxRecsRequired)
+//            if (recommenderList.get(position).setByCounscelor == 1) {
+//                recName.isEnabled = true
+//            } else {
+//                recName.isEnabled = false
+//            }
             recName.setOnClickListener({
                 if (recName.isChecked) {
                     recommenderList.get(position).preferredRecommender = 1

@@ -6,6 +6,5 @@
     android:layout_margin="@dimen/_5dp"
     android:layout_width="wrap_content"
     android:id="@+id/rec_name"
-    android:enabled="false"
     android:layout_height="wrap_content"/>
 </LinearLayout>

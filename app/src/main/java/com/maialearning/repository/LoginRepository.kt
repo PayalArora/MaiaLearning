@@ -382,6 +382,9 @@ interface LoginRepository {
     suspend fun cancelRound(
         id: String
     ): UseCaseResult<JsonObject>
+    suspend fun savePrefReco(
+       arr:PrefferedRecoSaveModel
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -1953,6 +1956,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.cancelRound(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun savePrefReco(arr: PrefferedRecoSaveModel): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.savePrefReco(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                arr
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

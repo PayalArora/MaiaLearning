@@ -66,6 +66,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val getSTudentRecommendPrefranceObserver = MutableLiveData<JsonObject>()
     val compareAllObserver = MutableLiveData<JsonObject>()
     val cancelRoundObserver = MutableLiveData<JsonObject>()
+    val savePrefRecoObserver = MutableLiveData<JsonObject>()
 
 
     fun getConsiderList(id: String, status: String) {
@@ -781,6 +782,20 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> cancelRoundObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun savePrefReco(array:PrefferedRecoSaveModel) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.savePrefReco(array)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> savePrefRecoObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
