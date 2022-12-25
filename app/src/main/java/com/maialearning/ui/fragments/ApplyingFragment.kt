@@ -1695,6 +1695,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 }
                 val prefferedRecoSaveModel = PrefferedRecoSaveModel()
                 prefferedRecoSaveModel.preferred_recommender_data = prefRecoList
+                prefferedRecoSaveModel.school_nid =  SharedHelper(requireContext()).schoolId!!
+                prefferedRecoSaveModel.student_uid = SharedHelper(requireContext()).id!!
                 if (prefRecoList.size>0){
                     prefDialog = dialog
                     homeModel.savePrefReco(prefferedRecoSaveModel)
