@@ -954,8 +954,7 @@ class RecommendationFragment : Fragment(), onClick {
     @SuppressLint("Range")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CHOOSE_PDF_UPCOMING_DETAIL) {
-
+        if (data!=null&&requestCode == REQUEST_CHOOSE_PDF_UPCOMING_DETAIL) {
             fileUri = data?.data!!
             val uri: Uri = data?.data!!
             val uriString: String = uri.toString()
