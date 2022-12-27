@@ -5,10 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.HorizontalRecommenderItemBinding
 import com.maialearning.databinding.PrefrenceRecommenderLayoutBinding
+import com.maialearning.model.CollegeRecommendationRequirementModel
 import com.maialearning.model.RecommenderModel
 
 class HorizontalRecommenderAdapter(
-    val recommenderList: ArrayList<RecommenderModel> = ArrayList()
+    val arr:CollegeRecommendationRequirementModel, val recommenderList: ArrayList<RecommenderModel> = ArrayList()
 ) :
     RecyclerView.Adapter<HorizontalRecommenderAdapter.ViewHolder>() {
     /**
@@ -39,18 +40,20 @@ class HorizontalRecommenderAdapter(
             } else {
                 recName.isChecked = false
             }
-//        val a =     (!isCounselorEnv && recommenderInfo.set_by_counselor === 1) ||
-//                    maxRecsRequired === 0 ||
-//                    (collegeRecRequirement?.[collegeNid] &&
-//                            maxRecsRequired > 0 &&
-//                            recommenderInfo.preferred_recommender !== 1 &&
-//                            getTotalPreferrestudent_can_set_preferred_recommenderdRecsForCollege(studentPreferredRecs[collegeNid]) >=
-//                            maxRecsRequired)
-//            if (recommenderList.get(position).setByCounscelor == 1) {
-//                recName.isEnabled = true
-//            } else {
-//                recName.isEnabled = false
-//            }
+            val maxRecsRequired = arr?.max_te_reqd ?:"0"
+        val disable:Boolean = ( recommenderList.get(position).setByCounscelor == 1) ||
+                maxRecsRequired== "0" ||
+                    (maxRecsRequired.toInt()  > 0 &&
+                            recommenderList.get(position).preferredRecommender != 1 &&
+                            getTotalPreferrestudent_can_set_preferred_recommenderdRecsForCollege() >=
+                            maxRecsRequired.toInt())
+
+
+            if (!disable) {
+                recName.isEnabled = true
+            } else {
+                recName.isEnabled = false
+            }
             recName.setOnClickListener({
                 if (recName.isChecked) {
                     recommenderList.get(position).preferredRecommender = 1
@@ -62,6 +65,17 @@ class HorizontalRecommenderAdapter(
         }
 
     }
+
+    private fun getTotalPreferrestudent_can_set_preferred_recommenderdRecsForCollege(): Int {
+        var count:Int = 0
+     for (i in recommenderList){
+         if (i.preferredRecommender==1){
+             count = count +1
+         }
+     }
+        return count
+    }
+
 
     override fun getItemCount(): Int {
         return recommenderList.size

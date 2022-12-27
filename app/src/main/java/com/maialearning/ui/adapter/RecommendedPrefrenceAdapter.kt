@@ -48,7 +48,7 @@ class RecommendedPrefrenceAdapter(val context:Context,
             }
             recommenderList.layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             recommenderList.adapter= arr.get(position).recomendorList?.let {
-                HorizontalRecommenderAdapter(
+                HorizontalRecommenderAdapter(arr.get(position),
                     it
                 )
             }
