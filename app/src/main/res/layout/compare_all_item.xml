@@ -114,7 +114,7 @@
                     android:maxLines="1"
                     android:padding="5dp"
                     android:text="--"
-                    android:textColor="@color/red"
+                    android:textColor="@color/red_1"
                     android:textSize="@dimen/_13sp"
                     android:visibility="visible" />
 

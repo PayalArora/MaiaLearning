@@ -8,10 +8,11 @@
         android:id="@+id/college_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/_13sp"
+        android:textColor="@color/black_1"
         android:layout_marginHorizontal="@dimen/_12dp"
         android:layout_marginVertical="@dimen/_5dp"
-        android:fontFamily="@font/inter_bold" />
+        android:fontFamily="@font/inter_bold"
+        android:textSize="@dimen/_13sp" />
     <TextView
         android:id="@+id/college_min"
         android:layout_width="wrap_content"
