@@ -256,6 +256,7 @@
         android:layout_height="@dimen/_1dp"
         android:layout_below="@+id/test_item"
         android:background="@color/divider_color" />
+
     <RelativeLayout
         android:id="@+id/compare_item"
         android:layout_width="match_parent"

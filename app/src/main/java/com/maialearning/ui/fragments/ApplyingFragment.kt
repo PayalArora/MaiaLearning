@@ -166,9 +166,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         mBinding.allTranscriptBtn.setOnCheckedChangeListener { compoundButton, b ->
             if (b) {
-                allTranscriptBtn(1, true)
+                reqTranscriptBtn(1, true)
             } else {
-                allTranscriptBtn(0, true)
+                reqTranscriptBtn(0, true)
             }
         }
         mBinding.allNcaaBtn.setOnClickListener({
@@ -196,6 +196,20 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 homeModel.checkAllTranscripts(
                     it,
                     i, 1
+                )
+            }
+        }
+    }
+
+  private fun reqTranscriptBtn(i: Int, b: Boolean) {
+        dialogP.show()
+        if (b) {
+            SharedHelper(requireContext()).id?.let { homeModel.checkReqTranscripts(it, i) }
+        } else {
+            SharedHelper(requireContext()).id?.let {
+                homeModel.checkReqTranscripts(
+                    it,
+                    i
                 )
             }
         }
@@ -713,7 +727,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
         homeModel.checkAllTranscriptsObserver.observe(requireActivity()) {
             dialogP.dismiss()
-//            getApplyingList()
+allTranscriptSheet(it)
+        }
+        homeModel.checkAllTranscriptsObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+
         }
         homeModel.getSTudentRecommendPrefranceObserver.observe(requireActivity()) {
             dialogP.dismiss()
@@ -841,6 +859,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             dialogP.dismiss()
             prefDialog?.dismiss()
         }
+    }
+
+    private fun allTranscriptSheet(it: Unit?) {
+
     }
 
     private fun resetSelection() {

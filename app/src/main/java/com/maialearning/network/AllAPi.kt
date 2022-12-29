@@ -730,6 +730,11 @@ interface AllAPi {
         @Body file: JsonObject
     ): Deferred<Unit>
 
+    @POST("check_all_transcript_request")
+    fun checkReqTranscript(
+        @Header("Authorization") AutToken: String,
+        @Body file: JsonObject
+    ): Deferred<JsonObject>
     @GET("student-preferred-recommenders?")
     fun studentPrefferedRecommenders(
         @Header("Authorization") AutToken: String,

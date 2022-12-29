@@ -734,5 +734,7 @@
     <string name="sat_">SAT 1600</string>
     <string name="compare_all">Compare All</string>
     <string name="dash">--</string>
+    <string name="transcript_error"><![CDATA[Transcript Request failed for the following college(s). Add the college(s) to your My Colleges list in Common App and be sure your Common App account is linked to MaiaLearning in your Profile > Settings, then try again.]]></string>
+    <string name="transcript_error1">Transcript Request on failed for following College/s because for these colleges Application type is not set.</string>
 
 </resources>

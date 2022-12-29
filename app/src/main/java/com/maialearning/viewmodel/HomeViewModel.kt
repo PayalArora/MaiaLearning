@@ -63,6 +63,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val testSCoresObserver = MutableLiveData<JsonArray>()
     val testScoreSubmitPayloadObserber = MutableLiveData<Unit>()
     val checkAllTranscriptsObserver = MutableLiveData<Unit>()
+    val checkReqTranscriptsObserver = MutableLiveData<JsonObject>()
     val getSTudentRecommendPrefranceObserver = MutableLiveData<JsonObject>()
     val compareAllObserver = MutableLiveData<JsonObject>()
     val cancelRoundObserver = MutableLiveData<JsonObject>()
@@ -744,7 +745,19 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
-
+    fun checkReqTranscripts(id: String, value: Int) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.checkReqTranscripts(id, value)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> checkReqTranscriptsObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
     fun getStudentRecommenderPrefrance(schoolId: String, studentId: String) {
         showLoading.value = true
         Coroutines.mainWorker {
