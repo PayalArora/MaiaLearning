@@ -58,8 +58,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     val testScoresList: ArrayList<TestScoresResponseItem> = ArrayList()
     val collegeRecommendList: ArrayList<CollegeRecommendationRequirementModel> = ArrayList()
     var appStatus = ArrayList<StatusModel>()
-    var cancelDialog:BottomSheetDialog?= null
-    var prefDialog:BottomSheetDialog?= null
+    var cancelDialog: BottomSheetDialog? = null
+    var prefDialog: BottomSheetDialog? = null
+    val failColleges: ArrayList<KeyVal> = ArrayList()
+    val failCollegesMissingApptype: ArrayList<KeyVal> = ArrayList()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -168,7 +171,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             if (b) {
                 reqTranscriptBtn(1, true)
             } else {
-                reqTranscriptBtn(0, true)
+                reqTranscriptBtn(1, true)
             }
         }
         mBinding.allNcaaBtn.setOnClickListener({
@@ -201,7 +204,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         }
     }
 
-  private fun reqTranscriptBtn(i: Int, b: Boolean) {
+    private fun reqTranscriptBtn(i: Int, b: Boolean) {
         dialogP.show()
         if (b) {
             SharedHelper(requireContext()).id?.let { homeModel.checkReqTranscripts(it, i) }
@@ -725,9 +728,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         homeModel.testScoreSubmitPayloadObserber.observe(requireActivity()) {
             dialogP.dismiss()
         }
-        homeModel.checkAllTranscriptsObserver.observe(requireActivity()) {
+        homeModel.checkReqTranscriptsObserver.observe(requireActivity()) {
             dialogP.dismiss()
-allTranscriptSheet(it)
+            allTranscriptSheet(it)
         }
         homeModel.checkAllTranscriptsObserver.observe(requireActivity()) {
             dialogP.dismiss()
@@ -855,14 +858,58 @@ allTranscriptSheet(it)
             cancelDialog?.dismiss()
 
         }
-        homeModel.savePrefRecoObserver.observe(requireActivity()){
+        homeModel.savePrefRecoObserver.observe(requireActivity()) {
             dialogP.dismiss()
             prefDialog?.dismiss()
         }
     }
 
-    private fun allTranscriptSheet(it: Unit?) {
+    private fun allTranscriptSheet(it: JsonObject) {
+        Log.e("data",""+it)
+        val dialog = BottomSheetDialog(requireContext())
+        var sheet =
+            LayoutTranscriptBinding.inflate(layoutInflater)
+        sheet.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheet.root)
+        dialog.show()
+        sheet.backBtn.setOnClickListener {
+            dialog.dismiss()
+        }
 
+
+        val json: JSONObject? =
+            JSONObject(it.toString())
+        val failjson=json?.optJSONObject("college")?.optJSONObject("fail")
+        failColleges.clear()
+        failjson?.let {
+            val keys = it.keys() as Iterator<String>
+            while (keys.hasNext()) {
+                val key = keys.next()
+//                    if (key != "0")
+                failColleges.add(KeyVal(key, it.getString(key), false))
+            }
+        }
+
+        val failAppTypejson=json?.optJSONObject("college")?.optJSONObject("fail_missing_app_type")
+        failCollegesMissingApptype.clear()
+        failAppTypejson?.let {
+            val keys = it.keys() as Iterator<String>
+            while (keys.hasNext()) {
+                val key = keys.next()
+//                    if (key != "0")
+                failCollegesMissingApptype.add(KeyVal(key, it.getString(key), false))
+            }
+        }
+        if(failColleges!=null && failColleges.size>0){
+            failColleges.sortBy { it.key }
+            sheet.listing.layoutManager=LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
+            sheet.listing.adapter=TranscriptFailCollAdapter(failColleges)
+        }
+        if(failCollegesMissingApptype!=null && failCollegesMissingApptype.size>0){
+//            failCollegesMissingApptype.sortBy { it.key }
+            sheet.listing2.layoutManager=LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
+            sheet.listing2.adapter=TranscriptFailCollAdapter(failCollegesMissingApptype)
+        }
     }
 
     private fun resetSelection() {
@@ -1031,14 +1078,14 @@ allTranscriptSheet(it)
     var appPlanLIst = arrayListOf<ConsiderModel.DecisionPlan>()
 
     private fun bottomSheetRound(position: Int, round: Boolean) {
-         cancelDialog = BottomSheetDialog(requireContext())
+        cancelDialog = BottomSheetDialog(requireContext())
         val sheetBinding: AppRoundBottomsheetBinding =
             AppRoundBottomsheetBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight =
             ((Resources.getSystem().displayMetrics.heightPixels))
         cancelDialog?.setContentView(sheetBinding.root)
         cancelDialog?.show()
-        sheetBinding.close.setOnClickListener {  cancelDialog?.dismiss() }
+        sheetBinding.close.setOnClickListener { cancelDialog?.dismiss() }
 
         Picasso.with(requireContext())
             .load("$UNIV_LOGO_URL${finalArray[position].country?.toLowerCase()}/${finalArray[position].unitid}/logo_sm.jpg")
@@ -1096,7 +1143,7 @@ allTranscriptSheet(it)
                                 it1 - 1
                             )
                         }
-                       // applyingAdapter.notifyDataSetChanged()
+                        // applyingAdapter.notifyDataSetChanged()
                         sheetBinding.roundList.adapter?.notifyDataSetChanged()
                     }
                 }
@@ -1697,12 +1744,13 @@ allTranscriptSheet(it)
                     dialogP.show()
                     homeModel.submitTestScoreStatus(payload)
                 }
-            } else if (type.equals(getString(R.string.prefered_recommend))){
-                val prefRecoList : ArrayList<PrefferedRecoSaveModel.PrefferedRecoSave> = arrayListOf()
-                for (i in collegeRecommendList){
+            } else if (type.equals(getString(R.string.prefered_recommend))) {
+                val prefRecoList: ArrayList<PrefferedRecoSaveModel.PrefferedRecoSave> =
+                    arrayListOf()
+                for (i in collegeRecommendList) {
                     i.recomendorList?.let {
                         for (j in it) {
-                            if (j.newChange){
+                            if (j.newChange) {
                                 prefRecoList.add(
                                     PrefferedRecoSaveModel.PrefferedRecoSave(
                                         j.collegeNid,
@@ -1717,13 +1765,13 @@ allTranscriptSheet(it)
                 }
                 val prefferedRecoSaveModel = PrefferedRecoSaveModel()
                 prefferedRecoSaveModel.preferred_recommender_data = prefRecoList
-                prefferedRecoSaveModel.school_nid =  SharedHelper(requireContext()).schoolId!!
+                prefferedRecoSaveModel.school_nid = SharedHelper(requireContext()).schoolId!!
                 prefferedRecoSaveModel.student_uid = SharedHelper(requireContext()).id!!
-                if (prefRecoList.size>0){
+                if (prefRecoList.size > 0) {
                     prefDialog = dialog
                     homeModel.savePrefReco(prefferedRecoSaveModel)
                 }
-            }else {
+            } else {
                 for (i in countryArray) {
                     if (i.checked) {
                         selectedCountry = i.key
