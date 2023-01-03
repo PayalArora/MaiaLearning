@@ -735,6 +735,7 @@ interface AllAPi {
         @Header("Authorization") AutToken: String,
         @Body file: JsonObject
     ): Deferred<JsonObject>
+
     @GET("student-preferred-recommenders?")
     fun studentPrefferedRecommenders(
         @Header("Authorization") AutToken: String,
@@ -759,5 +760,11 @@ interface AllAPi {
     fun savePrefReco(
         @Header("Authorization") AutToken: String,
         @Body reco: PrefferedRecoSaveModel
-    ) : Deferred<JsonObject>
+    ): Deferred<JsonObject>
+
+    @POST("un_aws_cloud_search")
+    fun addUniverstiesCollegeSearch(
+        @Header("Authorization") Authorization: String,
+        @Body payload: UniversitySearchPayload
+    ): Deferred<JsonObject>
 }

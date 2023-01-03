@@ -7,10 +7,12 @@ import com.maialearning.R
 import com.maialearning.databinding.ItemNotesBinding
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ItemAddUniversityBinding
+import com.maialearning.model.UniversitiesSearchModel
 import com.maialearning.ui.activity.ClickFilters
 
 
-class AddUniversiityAdapter(val onItemClick: ClickFilters) : RecyclerView.Adapter<AddUniversiityAdapter.ViewHolder>() {
+class AddUniversiityAdapter(var university_list: ArrayList<UniversitiesSearchModel?>,
+                            val onItemClick: ClickFilters) : RecyclerView.Adapter<AddUniversiityAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).

@@ -9,6 +9,7 @@ import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
 import com.maialearning.util.prefhandler.SharedHelper
+import com.maialearning.util.replaceCrossBracketsComas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -45,7 +46,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val gbProgramObserver = MutableLiveData<JsonObject>()
     val fosChildOther = MutableLiveData<JsonObject>()
     val fosChildMazor= MutableLiveData<JsonObject>()
-
+    val addSearchUniversityObserver = MutableLiveData<JsonObject>()
 
 
     fun getColFactSheet(token: String, id: String) {
@@ -432,4 +433,20 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             }
         }
     }
+
+    fun addUniversityCollSearch(payload: UniversitySearchPayload) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.addUniversityCollSearch(payload)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> addSearchUniversityObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+            }
+        }
+    }
+
 }
