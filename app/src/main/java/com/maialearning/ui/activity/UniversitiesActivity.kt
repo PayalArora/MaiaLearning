@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -32,6 +34,7 @@ import com.maialearning.ui.fragments.ConsideringFragment
 import com.maialearning.ui.model.AthleticAsociations
 import com.maialearning.ui.model.ChildrenItem
 import com.maialearning.ui.model.ResponseItem
+import com.maialearning.util.OnLoadMoreListener
 import com.maialearning.util.UNIV_LOGO_URL
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.prefhandler.SharedPreference
@@ -185,6 +188,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var adapterAddUniv: AddUniversiityAdapter? = null
     var selectedAddUniv = false
     var page: Int = 1
+    private var isLoading = false
+    private var isEuropean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -935,8 +940,19 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             dialog.dismiss()
         }
 
-        adapterAddUniv = university_list?.let { AddUniversiityAdapter(it, this) }
+        adapterAddUniv =
+            university_list?.let { AddUniversiityAdapter(it, sheetBinding.reciepentList, this) }
         sheetBinding.reciepentList.adapter = adapterAddUniv
+        adapterAddUniv?.setOnLoadMoreListener(object : OnLoadMoreListener {
+            override fun onLoadMore() {
+                university_list?.add(null)
+                isLoading = true
+                adapterAddUniv?.notifyItemInserted((university_list?.size ?: 0) - 1)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    getSelectedCountryUniversities()
+                }, 2000)
+            }
+        })
         sheetBinding.save.setOnClickListener {
             selectedAddUniv = false
             refreshTab()
@@ -2023,8 +2039,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     fun refreshTab() {
 
         binding.tabs.selectTab(binding.tabs.getTabAt(0))
-        if (selectedAddUniv)
+        if (selectedAddUniv) {
+            dialogP.dismiss()
+            page=1
+            university_list?.clear()
             getSelectedCountryUniversities()
+        }
     }
 
     private fun getSelectedCountryUniversities() {
@@ -2032,7 +2052,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val country = SharedHelper(this).country
         if (country != null) {
             payload.country = country
-            payload.pager = 1
+            payload.pager = page
         }
         mModel.addUniversityCollSearch(payload)
     }
@@ -2695,7 +2715,111 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //        }
 
         mModel.addSearchUniversityObserver.observe(this) {
-  dialogP.dismiss()
+            dialogP.dismiss()
+            if ((SharedHelper(this).country ?: "US") == "DE") {
+                val univ = SearchParser(it).parseGermanJson()
+                page = (univ.pager!!.current!! + 1)
+                val totalPage = univ.pager?.total
+                val last = univ.pager?.last
+                dialogP.dismiss()
+
+                for (item in univ.data?.collegeData!!) {
+                    item.courseList.sortBy { it.courseName }
+                    var universitiesSearchModel = UniversitiesSearchModel()
+                    universitiesSearchModel.collegeName = item.collegeName
+                    universitiesSearchModel.nid = item.collegeNid
+                    university_list?.add(universitiesSearchModel)
+                }
+
+
+                if (isLoading) {
+                    isLoading = false
+                    university_list?.removeAt(university_list!!.size - 1)
+                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                }
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        adapterAddUniv?.addAllLis(university_list!!, totalPage.toInt(), last, false)
+                    }
+                }
+                adapterAddUniv?.setLoaded()
+            } else if ((SharedHelper(this).country ?: "US") == "GB") {
+                val univ = SearchParser(it).parseUkJson()
+                page = (univ.pager!!.current!! + 1)
+                val totalPage = univ.pager?.total
+                val last = univ.pager?.last
+                dialogP.dismiss()
+                for (item in univ.data?.collegeData!!) {
+                    item.courseList.sortBy { it.courseName }
+                    item.courseList.sortBy { it.courseName }
+                    var universitiesSearchModel = UniversitiesSearchModel()
+                    universitiesSearchModel.collegeName = item.collegeName
+                    universitiesSearchModel.nid = item.collegeNid
+                    university_list?.add(universitiesSearchModel)
+                }
+//                ukList?.addAll(univ.data?.collegeData!!)
+//                ukListUpdate?.addAll(univ.data?.collegeData!!)
+
+                if (isLoading) {
+                    isLoading = false
+                    university_list?.removeAt(university_list!!.size - 1)
+                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                }
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        adapterAddUniv?.addAllLis(university_list!!, totalPage.toInt(), last, false)
+                    }
+                }
+                adapterAddUniv?.setLoaded()
+
+            } else if (isEuropean) {
+                val univ = SearchParser(it).parseEuropeanJson()
+                page = (univ.pager!! + 1)
+                val totalPage = univ.totalRecords
+                val last = univ.last
+                dialogP.dismiss()
+                for (item in univ.collegeList) {
+                    var universitiesSearchModel = UniversitiesSearchModel()
+                    universitiesSearchModel.collegeName = item.collegeName
+                    universitiesSearchModel.nid = item.collegeNid
+                    university_list?.add(universitiesSearchModel)
+                }
+
+                if (isLoading) {
+                    isLoading = false
+                    university_list?.removeAt(university_list!!.size - 1)
+                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                }
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        adapterAddUniv?.addAllLis(university_list!!, totalPage.toInt(), last, false)
+                    }
+                }
+                adapterAddUniv?.setLoaded()
+            } else {
+                val univ = SearchParser(it).parseJson()
+                page = (univ.pager!! + 1)
+                val totalPage = univ.totalRecords
+                val last = univ.last
+                dialogP.dismiss()
+                university_list?.addAll(univ.university_list!!)
+
+                if (isLoading) {
+                    isLoading = false
+                    university_list?.removeAt(university_list!!.size - 1)
+                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                }
+                //for swipe refresh page
+                if (totalPage != null) {
+                    if (last != null) {
+                        adapterAddUniv?.addAllLis(university_list!!, totalPage.toInt(), last, false)
+                    }
+                }
+                adapterAddUniv?.setLoaded()
+            }
         }
     }
 

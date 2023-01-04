@@ -34,18 +34,17 @@
         android:textSize="@dimen/_12sp"
         android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/univ"
-            android:layout_marginStart="@dimen/_5dp"
-            android:layout_toStartOf="@+id/add_check"
-            android:layout_toEndOf="@+id/icon_lay"
-            android:fontFamily="@font/inter"
-            android:text="TE: 2-2, Couns Rec. – Required"
-            android:textColor="@color/black_1"
-            android:textFontWeight="500"
-            android:textSize="@dimen/_11sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/univ"
+        android:layout_marginStart="@dimen/_5dp"
+        android:layout_toStartOf="@+id/add_check"
+        android:layout_toEndOf="@+id/icon_lay"
+        android:fontFamily="@font/inter"
+        android:textColor="@color/black_1"
+        android:textFontWeight="500"
+        android:textSize="@dimen/_11sp" />
 
     <CheckBox
         android:id="@+id/add_check"

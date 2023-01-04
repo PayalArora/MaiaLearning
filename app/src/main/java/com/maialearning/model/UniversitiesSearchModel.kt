@@ -11,13 +11,13 @@ data class UniversitiesSearchModel(
 	val parchment: Int? = null,
 
 	@field:SerializedName("college_name")
-	val collegeName: String? = null,
+	var collegeName: String? = null,
 
 	@field:SerializedName("city_state")
 	val cityState: String? = null,
 
 	@field:SerializedName("nid")
-	val nid: String? = null,
+	var nid: String? = null,
 
 	@field:SerializedName("act_scores")
 	val actScores: String? = null,
