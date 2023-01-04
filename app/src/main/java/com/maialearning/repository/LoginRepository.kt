@@ -370,9 +370,11 @@ interface LoginRepository {
     suspend fun checkAllTranscripts(
         id: String, value: Int, ncaa: Int
     ): UseCaseResult<Unit>
+
     suspend fun checkReqTranscripts(
         id: String, value: Int
     ): UseCaseResult<JsonObject>
+
     suspend fun getStudentRecommendPrefrence(
         schoolId: String, studentId: String
     ): UseCaseResult<JsonObject>
@@ -384,8 +386,13 @@ interface LoginRepository {
     suspend fun cancelRound(
         id: String
     ): UseCaseResult<JsonObject>
+
     suspend fun savePrefReco(
-       arr:PrefferedRecoSaveModel
+        arr: PrefferedRecoSaveModel
+    ): UseCaseResult<JsonObject>
+
+    suspend fun addUniversityCollSearch(
+        payload: UniversitySearchPayload
     ): UseCaseResult<JsonObject>
 }
 
@@ -1921,6 +1928,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun checkReqTranscripts(
         id: String,
         value: Int
@@ -1986,12 +1994,40 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun savePrefReco(arr: PrefferedRecoSaveModel): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.savePrefReco(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 arr
             ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun addUniversityCollSearch(payload: UniversitySearchPayload): UseCaseResult<JsonObject> {
+        return try {
+            val result = if (payload.country == "DE") {
+                catApi.germanUniverstiesAsync(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    payload
+                ).await()
+            } else if (payload.country == "GB") {
+                payload.sort_parameter = "name"
+                catApi.ukUniversitiesAsync(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    payload
+                ).await()
+            } else {
+                catApi.addUniverstiesCollegeSearch(
+                    "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                    payload
+                ).await()
+            }
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

@@ -745,6 +745,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     fun checkReqTranscripts(id: String, value: Int) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -758,6 +759,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
     fun getStudentRecommenderPrefrance(schoolId: String, studentId: String) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -800,7 +802,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
-    fun savePrefReco(array:PrefferedRecoSaveModel) {
+    fun savePrefReco(array: PrefferedRecoSaveModel) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
@@ -813,4 +815,5 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             }
         }
     }
+
 }
