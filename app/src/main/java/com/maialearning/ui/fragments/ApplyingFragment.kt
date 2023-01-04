@@ -675,6 +675,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 //                        }
                         copyArray = finalArray
                         (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(finalArray)
+                        mBinding.universitisCounte.text = finalArray.size.toString() + " Universities"
                     }
                 }
             }
@@ -1798,6 +1799,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 }
 
                 finalArray = countryFilterEvaluation(copyArray)
+                mBinding.universitisCounte.text = finalArray.size.toString() + " Universities"
                 (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(finalArray)
             }
             dialog.dismiss()

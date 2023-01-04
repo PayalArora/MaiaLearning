@@ -23,7 +23,6 @@
             android:layout_marginBottom="@dimen/_15dp"
             android:fontFamily="@font/inter_bold"
             android:gravity="left|top"
-            android:text="@string/universities_5650"
             android:textColor="@color/greytext"
             android:textSize="@dimen/_14sp" />
 

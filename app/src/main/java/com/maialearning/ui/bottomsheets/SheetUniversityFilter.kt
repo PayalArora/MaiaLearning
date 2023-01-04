@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -14,9 +15,10 @@ import com.maialearning.model.*
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.*
+import com.maialearning.util.prefhandler.SharedHelper
 
 class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: LayoutInflater) {
-
+    var selectedCountry: String? = null
     fun showDialog(
         list: ArrayList<FilterUSModelClass.CountryList>,
         context: Context,
@@ -30,12 +32,16 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.search.visibility = View.GONE
         sheetBinding.filters.setText(con.resources.getString(R.string.country))
         sheetBinding.clearText.setText(con.resources.getString(R.string.done))
+
         sheetBinding.clearText.setOnClickListener {
-            con.refreshTab()
+            //single done
+            // con.refreshTab(dialog)
+
             dialog.dismiss()
         }
         sheetBinding.backBtn.setOnClickListener {
-            con.refreshTab()
+            //single done
+            // con.refreshTab()
             dialog.dismiss()
         }
         sheetBinding.reciepentList.adapter =
@@ -65,14 +71,14 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener {
-            con.reigonFilterDone(reigonList)
-            dialog.dismiss()
+            con.reigonFilterDone(reigonList, dialog)
+
         }
         if (positiion == 1) {
 
-            for (i in list){
+            for (i in list) {
                 if (UniversitiesActivity.Filters.selectedRegion.contains(i))
-                reigonList.add(Region(i, true))
+                    reigonList.add(Region(i, true))
                 else
                     reigonList.add(Region(i, false))
             }
@@ -93,7 +99,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
 //            sheetBinding.reciepentList.adapter =
 //                SportsFilterAdapter(sheetBinding.root.context.resources.getStringArray(R.array.sports).toList() as ArrayList<String>)
 //
-           sheetBinding.close.setOnClickListener {
+            sheetBinding.close.setOnClickListener {
                 sheetBinding.searchText.setText("")
             }
             val others = sheetBinding.root.context.resources.getStringArray(R.array.spinner_sports)
@@ -122,6 +128,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
 
 
     }
+
     fun selectedReigon(list: ArrayList<Region>) {
 
     }
@@ -147,8 +154,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener {
-            dialog.dismiss()
-            con.listFilterDone(listUni)
+            con.listFilterDone(listUni, dialog)
         }
 
         sheetBinding.spinnerLay.visibility = View.GONE
@@ -157,14 +163,20 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.close.setOnClickListener {
             sheetBinding.searchText.setText("")
         }
-
+        dialog.setOnDismissListener {
+            if (sheetBinding.root.parent != null) {
+                val parentViewGroup = sheetBinding.root.parent as ViewGroup?
+                parentViewGroup?.removeAllViews();
+            }
+        }
     }
+
     fun stateFilter(
         visibility: Int,
         title: String,
-        listUni:ArrayList<KeyVal>,
+        listUni: ArrayList<KeyVal>,
         visibility_spinner: Int = 0,
-                positiion: Int
+        positiion: Int
     ) {
 
         val dialog = BottomSheetDialog(con)
@@ -181,28 +193,35 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
 
         sheetBinding.clearText.setOnClickListener {
-            dialog.dismiss()
-            when(positiion){
-                2->{con.stateFilterDone(listUni)}
-                5->{con.selectivityFilterDone(listUni)}
+            when (positiion) {
+                2 -> {
+                    con.stateFilterDone(listUni, dialog)
+                }
+                5 -> {
+                    con.selectivityFilterDone(listUni, dialog)
+                }
             }
 
         }
-        when(positiion){
-            2->{for (i in UniversitiesActivity.selectedStateFilter){
-                for (j in listUni){
-                    if (i == j.key) {
-                        j.checked = true
+        when (positiion) {
+            2 -> {
+                for (i in UniversitiesActivity.selectedStateFilter) {
+                    for (j in listUni) {
+                        if (i == j.key) {
+                            j.checked = true
+                        }
                     }
                 }
-            }}
-            5->{for (i in UniversitiesActivity.selectedSelectivityFilter){
-                for (j in listUni){
-                    if (i == j.key) {
-                        j.checked = true
+            }
+            5 -> {
+                for (i in UniversitiesActivity.selectedSelectivityFilter) {
+                    for (j in listUni) {
+                        if (i == j.key) {
+                            j.checked = true
+                        }
                     }
                 }
-            }}
+            }
         }
 
         sheetBinding.reciepentList.adapter =
@@ -212,8 +231,10 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
         }
 
     }
-}
 
-fun selectCountry(s: String) {
+
+    fun selectCountry(s: String) {
+        selectedCountry = s
+    }
 }
 

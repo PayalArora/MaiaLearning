@@ -151,7 +151,7 @@ class TraficFragment : Fragment() {
         val listing = view.findViewById<RecyclerView>(R.id.listing)
         val layout = view.findViewById<ConstraintLayout>(R.id.layout)
         val close = view.findViewById<RelativeLayout>(R.id.close)
-        DrawableCompat.setTint(layout.background, Color.parseColor("#E5E5E5"))
+        DrawableCompat.setTint(layout.background, resources.getColor(R.color.white_1, getActivity()?.getTheme()))
 
         listing.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);

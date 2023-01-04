@@ -26,7 +26,6 @@
             android:layout_marginStart="@dimen/_10dp"
             android:layout_toLeftOf="@+id/right_arrow"
             android:gravity="right|center"
-            android:text="2"
             android:visibility="gone" />
 
         <TextView
@@ -41,15 +40,16 @@
             android:textColor="@color/black_1"
             android:textFontWeight="500"
             android:textSize="@dimen/_16sp" />
+
         <ImageView
             android:id="@+id/right_arrow"
             android:layout_width="@dimen/_20dp"
             android:layout_height="@dimen/_15dp"
-            android:layout_marginEnd="@dimen/_15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-
             android:layout_marginStart="@dimen/_5dp"
+
+            android:layout_marginEnd="@dimen/_15dp"
             android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
     </RelativeLayout>
     <View

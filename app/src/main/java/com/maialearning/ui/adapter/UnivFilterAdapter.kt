@@ -4,16 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.maialearning.databinding.ItemNotesBinding
-import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.ItemUnivFilterBinding
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.util.prefhandler.SharedHelper
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.flow.SharedFlow
 
-
-class UnivFilterAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : RecyclerView.Adapter<UnivFilterAdapter.ViewHolder>() {
+class UnivFilterAdapter(val arr:Array<String>, val onItemClick: ClickFilters, val selectedCount:Array<Int>? = null) : RecyclerView.Adapter<UnivFilterAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -40,13 +36,23 @@ class UnivFilterAdapter(val arr:Array<String>, val onItemClick: ClickFilters) : 
             if (position == 0){
                 flagImg.visibility = View.VISIBLE
                 flagText.visibility = View.GONE
-            } else if (position ==1){
-                flagImg.visibility = View.GONE
-                flagText.visibility = View.VISIBLE
-            } else {
+            }  else {
                 flagImg.visibility = View.GONE
                 flagText.visibility = View.GONE
+                selectedCount?.let {
+                    if (selectedCount?.get(position) != 0) {
+                        flagImg.visibility = View.GONE
+                        flagText.visibility = View.VISIBLE
+                        flagText.setText("" + selectedCount?.get(position))
+
+                    } else {
+                        flagImg.visibility = View.GONE
+                        flagText.visibility = View.GONE
+                    }
+                }
+
             }
+
             Picasso.with(root.context)
                 .load("https://countryflagsapi.com/png/${SharedHelper(root.context).country}")
                 .into(flagImg)

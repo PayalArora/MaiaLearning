@@ -27,15 +27,11 @@ import com.maialearning.network.BaseApplication
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
-import com.maialearning.ui.fragments.ConsideringFragment
 import com.maialearning.ui.model.AthleticAsociations
 import com.maialearning.ui.model.ChildrenItem
 import com.maialearning.ui.model.ResponseItem
-import com.maialearning.util.UNIV_LOGO_URL
+import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.prefhandler.SharedPreference
-import com.maialearning.util.replaceInvertedComas
-import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
 import com.maialearning.viewmodel.HomeViewModel
 import com.squareup.picasso.Picasso
@@ -87,8 +83,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val fieldOfStudyProgramAny: ArrayList<KeyVal> = ArrayList()
     private val fieldOfStudyMazorAny: ArrayList<KeyVal> = ArrayList()
     var anyFilterArray = arrayOf("Country", "University List", "Field of Study", "Program", "Major")
-
-
+    var filterArrayEuropean = arrayOf("Country", "University List", "Discipline", "Sub Discipline")
+    var filterArrayDE = arrayOf("Country", "University List", "Subject Group", "Area of Study", "Field of Study", "Mode of admission", "Admission Semester", "Instruction Language")
 
     private var savedCountry = ""
     private var selectedList = ""
@@ -923,13 +919,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialog.setContentView(sheetBinding.root)
         dialog.show()
         sheetBinding.close.setOnClickListener {
-            refreshTab()
+            refreshTab(dialog)
             dialog.dismiss()
         }
 
         sheetBinding.reciepentList.adapter = AddUniversiityAdapter(this)
         sheetBinding.save.setOnClickListener {
-            refreshTab()
+            refreshTab(dialog)
             dialog.dismiss()
         }
         sheetBinding.country.setOnClickListener {
@@ -948,6 +944,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun univFilter() {
+        //var save = false
         mainDialog = BottomSheetDialog(this)
 
         sheetBindingUniv = UniversityFilterBinding.inflate(layoutInflater)
@@ -956,52 +953,185 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         mainDialog?.setContentView(sheetBindingUniv!!.root)
         sheetBindingUniv?.search?.visibility = View.GONE
         sheetBindingUniv?.filters?.setText(resources.getString(R.string.filters))
+        sheetBindingUniv?.clearBtn?.visibility = View.VISIBLE
         dialogP = showLoadingDialog(this)
         dialogP.show()
         mModel.getFilterCollege()
         mainDialog?.show()
         sheetBindingUniv!!.clearText.setOnClickListener {
+            for (i in  countries){
+                if(i.select){
+                    SharedHelper(this).country=i.code
+                }
+            }
+
             if (savedCountry != SharedHelper(this).country) {
-//                dialogP = showLoadingDialog(this)
-//                dialogP.show()
-//                mModel.setSaveCountry()
+                // change single done
+                dialogP = showLoadingDialog(this)
+                dialogP.show()
+                mModel.setSaveCountry()
+                listUni.clear()
                 SharedHelper(this).country?.let { savedCountry = it }
             } else {
-                resetFilters()
+              //  resetFilters()
                 initView()
             }
 
             mainDialog?.dismiss()
         }
         sheetBindingUniv!!.backBtn.setOnClickListener {
-            if (savedCountry != SharedHelper(this).country) {
-                dialogP = showLoadingDialog(this)
-                dialogP.show()
-                mModel.setSaveCountry()
-                listUni.clear()
-            } else {
-                initView()
-            }
+//            if (savedCountry != SharedHelper(this).country) {
+//                dialogP = showLoadingDialog(this)
+//                dialogP.show()
+//                mModel.setSaveCountry()
+//                listUni.clear()
+//            } else {
+//             //   initView()
+//            }
+           // resetFilters()
+           // initView()
             mainDialog?.dismiss()
         }
+        sheetBindingUniv!!.clearBtn.setOnClickListener {
+             resetFilters()
+             initView()
+            mainDialog?.dismiss()
+        }
+        
         Log.e("Selected Country >>", SharedHelper(this).country.toString())
+      setFilters()
+    }
+
+    private fun setFilters() {
         if (binding.viewPager.currentItem == 0) {
             if ((SharedHelper(this).country ?: "US") == "US") {
-                sheetBindingUniv!!.reciepentList.adapter =
-                    UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this)
+                val typeSize = selectedTwoFour.size + selectedPublicPrivate.size + selectedTypeEnv.size + selectedSize.size
+                var arr:Array<Int> = arrayOf(0, selectedRegion.size, selectedStateFilter.size, selectedListFilter.size, typeSize,
+                    selectedSelectivityFilter.size, 0, selectedAthleticAsociations.size,0
+                )
+                sheetBindingUniv?.reciepentList?.adapter =
+                    UnivFilterAdapter(resources.getStringArray(R.array.UnivFilters), this, arr)
             } else if ((SharedHelper(this).country ?: "US") == "DE") {
-                sheetBindingUniv!!.reciepentList.adapter =
-                    UnivFilterAdapter(resources.getStringArray(R.array.DEFilters), this)
+                var deFilterArray  =resources.getStringArray(R.array.DEFilters)
+                val selectedCount: Array<Int> = arrayOf(0, selectedListFilter.size, 0, 0, 0, 0, 0, 0, 0)
+                var subject_group = "Subject Group"
+                for (j in selectedGermanSubject) {
+                    if (checkNonNull(j)) {
+                        for (i in germanSubject) {
+                            if (i.key == j) {
+                                subject_group = i.value
+                            }
+                        }
+                    }
+                }
+                deFilterArray[2] = subject_group
+
+                var area_of_study = "Area of Study"
+                for (j in selectedAreaStudy) {
+                    if (checkNonNull(j)) {
+                        for (i in areaStudy) {
+                            if (i.key == j) {
+                                area_of_study = i.value
+                            }
+                        }
+                    }
+                }
+                deFilterArray[3] = area_of_study
+
+                var fos = "Field of Study"
+                for (j in selectedFieldSubject) {
+                    if (checkNonNull(j)) {
+                        for (i in fieldStudy) {
+                            if (i.key == j) {
+                                fos = i.value
+                            }
+                        }
+                    }
+                }
+                deFilterArray[4] = fos
+
+                var mode_admission = "Mode of admission"
+                if (checkNonNull(selectedModeAdmission)) {
+                    for (i in germanModeAdmission) {
+                        if (i.key == selectedModeAdmission) {
+                            mode_admission = i.value
+                        }
+                    }
+                }
+                deFilterArray[5] = mode_admission
+
+                var mode_study= "Mode of study"
+                if (checkNonNull(selectedModeStudy)) {
+                    for (i in germanStudyMode) {
+                        if (i.key == selectedModeStudy) {
+                            mode_study = i.value
+                        }
+                    }
+                }
+                deFilterArray[6] = mode_study
+
+                var adm_sem = "Admission Semester"
+                    if (checkNonNull(selectedAdmissionSem)) {
+                        for (i in germanAdmissionSem) {
+                            if (i.key == selectedAdmissionSem) {
+                                adm_sem = i.value
+                            }
+                        }
+                    }
+                deFilterArray[7] = adm_sem
+
+                var inst_lang = "Instruction Language"
+                if (checkNonNull(selectedInstructionLanguage)) {
+                    for (i in germanInstLang) {
+                        if (i.key == selectedInstructionLanguage) {
+                            inst_lang = i.value
+                        }
+                    }
+                }
+                deFilterArray[8] = inst_lang
+
+
+
+                sheetBindingUniv?.reciepentList?.adapter =UnivFilterAdapter(deFilterArray,
+                     this, selectedCount)
+
+
             } else if ((SharedHelper(this).country ?: "US") == "GB") {
-                sheetBindingUniv!!.reciepentList.adapter =
+                 sheetBindingUniv?.reciepentList?.adapter =
                     UnivFilterAdapter(resources.getStringArray(R.array.GBFilters), this)
             } else if (SharedHelper(this).continent == "EU") {
-                sheetBindingUniv!!.reciepentList.adapter =
-                    UnivFilterAdapter(resources.getStringArray(R.array.EUFilters), this)
+                val selectedCount: Array<Int> = arrayOf(0, selectedListFilter.size, 0, 0)
+                var discipline = "Discipline"
+                if (checkNonNull(selectedDiscipline)){
+                    for (i in disciplines){
+                        if (i.key == selectedDiscipline){
+                            discipline = i.value
+
+                        }
+                    }
+                }
+                filterArrayEuropean[2] = discipline
+
+                var sub_discipline = "Sub Discipline"
+                for (j in selectedSubDiscipline) {
+                    if (checkNonNull(j)) {
+                        for (i in subDisciplines) {
+                            if (i.key == j) {
+                                sub_discipline = i.value
+                            }
+                        }
+                    }
+                }
+                filterArrayEuropean[3] = sub_discipline
+
+                 sheetBindingUniv?.reciepentList?.adapter =
+                    UnivFilterAdapter(filterArrayEuropean, this, selectedCount)
             } else {
-                dialogUni = showLoadingDialog(this)
-                dialogUni.show()
-                SharedHelper(this).id?.let { mModel.getUniversityList("1", it) }
+
+                    dialogUni = showLoadingDialog(this)
+                    dialogUni.show()
+                    SharedHelper(this).id?.let { mModel.getUniversityList("1", it) }
+
             }
         }
     }
@@ -1040,8 +1170,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 ) {
                     universityList()
                 } else {
-                    if (listUni.size>0)
-                    universityList()
+                    if (listUni.size>0) {
+                        universityList()
+                    }
                     else{
                         dialogP.show()
                     mModel.getFosOther()
@@ -1166,6 +1297,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     private fun universityList() {
         if (listUni.size > 0) {
+            for (i in listUni) {
+                if (selectedListFilter.contains(i.id)) {
+                    i.selected = true
+                } else {
+                    i.selected = false
+                }
+            }
             SheetUniversityFilter(this, layoutInflater).selectRegionFilter(
                 View.VISIBLE,
                 resources.getString(R.string.list),
@@ -1189,24 +1327,36 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         sheetBinding.filters.setText(type)
         dialog.show()
 
+
         sheetBinding.spinnerLay.visibility = View.GONE
         sheetBinding.invisibleLay.visibility = View.GONE
+
         sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
         sheetBinding.clearText.setText(resources.getString(R.string.done))
+
         sheetBinding.clearText.setOnClickListener {
-            var ar = resources.getStringArray(R.array.EUFilters)
+            var ar = filterArrayEuropean
             if (SharedHelper(this).country == "DE") {
                 ar = resources.getStringArray(R.array.DEFilters)
             } else if (SharedHelper(this).country == "GB") {
                 ar = resources.getStringArray(R.array.GBFilters)
-            } else {
+            } else if(SharedHelper(this).country == "EU") {
+                    ar = filterArrayEuropean
 
-                   ar = anyFilterArray
-
+            } else{
+                ar = anyFilterArray
             }
 
 
             dialog.dismiss()
+            if (type.equals("Discipline")) {
+                for (i in disciplines.indices) {
+                    if (disciplines.get(i).checked) {
+                        if (SharedHelper(this).continent == "EU") {
+                ar[selType] = disciplines.get(i).value}
+                    }}
+            }
+            
             if (type.equals("Discipline")) {
                 selectedDiscipline = ""
                 selectedSubDiscipline.clear()
@@ -1216,14 +1366,22 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedSubDiscipline.add(disciplines.get(i).key)
                         if (SharedHelper(this).continent == "EU") {
                             ar[selType] = disciplines.get(i).value
-                            sheetBindingUniv!!.reciepentList.adapter =
-                                UnivFilterAdapter(ar, this)
+//                            val selectedCount: Array<Int> = arrayOf(0, selectedListFilter.size, 0, 0)
+//                             sheetBindingUniv?.reciepentList?.adapter =
+//                                UnivFilterAdapter(ar, this)
+                          //  filterArrayEuropean = ar
 
                         }
                     }
                 }
-                dialogP.show()
-                mModel.getSubDiscipline(selectedDiscipline)
+
+                if (checkNonNull(selectedDiscipline)) {
+                    dialogP.show()
+
+                    mModel.getSubDiscipline(selectedDiscipline)
+                }
+
+
             } else if (type.equals("Subdiscipline")) {
                 selectedSubDiscipline.clear()
                 for (i in subDisciplines.indices) {
@@ -1231,7 +1389,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedSubDiscipline.add(subDisciplines.get(i).key)
                         if (SharedHelper(this).continent == "EU") {
                             ar[selType] = subDisciplines.get(i).value
-                            sheetBindingUniv!!.reciepentList.adapter =
+                             sheetBindingUniv?.reciepentList?.adapter =
                                 UnivFilterAdapter(ar, this)
                         }
 
@@ -1243,7 +1401,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     if (germanSubject.get(i).checked) {
                         selectedGermanSubject.add(germanSubject.get(i).key)
                         ar[selType] = germanSubject.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1263,7 +1421,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     if (germanModeAdmission.get(i).checked) {
                         selectedModeAdmission = germanModeAdmission.get(i).key
                         ar[selType] = germanModeAdmission.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1273,7 +1431,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     if (germanStudyMode.get(i).checked) {
                         selectedModeStudy = germanStudyMode.get(i).key
                         ar[selType] = germanStudyMode.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1283,7 +1441,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     if (germanAdmissionSem.get(i).checked) {
                         selectedAdmissionSem = germanAdmissionSem.get(i).key
                         ar[selType] = germanAdmissionSem.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1293,7 +1451,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     if (germanInstLang.get(i).checked) {
                         selectedInstructionLanguage = germanInstLang.get(i).key
                         ar[selType] = germanInstLang.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1303,7 +1461,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedAreaStudy.clear()
                         selectedAreaStudy.add(areaStudy.get(i).key)
                         ar[selType] = areaStudy.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1317,7 +1475,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedFieldSubject.clear()
                         selectedFieldSubject.add(fieldStudy.get(i).key)
                         ar[selType] = fieldStudy.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1327,7 +1485,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //                        selectedGbUniversity.clear()
                         selectedGbUniversity.add(gbUniversityList.get(i).key)
                         ar[selType] = gbUniversityList.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1337,7 +1495,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedGbCollege = ""
                         selectedGbCollege = gbCollegeList.get(i).key
                         ar[selType] = gbCollegeList.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1347,7 +1505,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedAreaStudy.clear()
                         selectedAreaStudy.add(areaGBStudy.get(i).key)
                         ar[selType] = areaGBStudy.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1361,7 +1519,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedFieldSubject.clear()
                         selectedFieldSubject.add(programGBStudy.get(i).key)
                         ar[selType] = programGBStudy.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1377,7 +1535,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedFOS = ""
                         selectedFOS = fieldOfStudyAny.get(i).key
                         ar[selType] = fieldOfStudyAny.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1388,12 +1546,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     if (fieldOfStudyProgramAny.get(i).checked) {
                         if (fieldOfStudyProgramAny.get(i).key!=selectedProgramAny){
                             selectedMazorAny = ""
-                            ar[selType+2] = "Mazor"
+                            ar[selType+1] = "Mazor"
                         }
                         selectedProgramAny = ""
                         selectedProgramAny = fieldOfStudyProgramAny.get(i).key
                         ar[selType] = fieldOfStudyProgramAny.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
@@ -1405,19 +1563,22 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                         selectedMazorAny = ""
                         selectedMazorAny = fieldOfStudyMazorAny.get(i).key
                         ar[selType] = fieldOfStudyMazorAny.get(i).value
-                        sheetBindingUniv!!.reciepentList.adapter =
+                         sheetBindingUniv?.reciepentList?.adapter =
                             UnivFilterAdapter(ar, this)
                     }
                 }
 
             }
+            //initView()
+           // mainDialog?.dismiss()
+            setFilters()
         }
 
 
         sheetBinding.spinnerLay.visibility = View.GONE
         if (type.equals("Discipline")) {
             for (i in disciplines) {
-                if (selectedSubDiscipline.contains(i.key)) {
+                if (selectedDiscipline== i.key) {
                     i.checked = true
                 } else {
                     i.checked = false
@@ -1578,6 +1739,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(fieldOfStudyMazorAny, this)
+
         }
 
 
@@ -1662,6 +1824,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
 
             dialog.dismiss()
+          //  initView()
+           // mainDialog?.dismiss()
         }
 
         sheetBinding.close.setOnClickListener {
@@ -1765,7 +1929,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             sat_math = local_math
             act = local_act
             dialog.dismiss()
-
+           // initView()
+            //mainDialog?.dismiss()
         }
         for (i in diversities) {
             i.checked = i.key == selectedDiversity
@@ -1949,6 +2114,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 selectedReligious = ""
 
             dialog.dismiss()
+            //initView()
+           // mainDialog?.dismiss()
         }
         sheetBinding.backTxt.setOnClickListener {
             selectedTwoFour.clear()
@@ -2012,18 +2179,31 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     }
 
-    fun refreshTab() {
-
+    fun refreshTab(dialog: BottomSheetDialog) {
         binding.tabs.selectTab(binding.tabs.getTabAt(0))
-
+        //mainDialog?.dismiss()
+        dialog?.dismiss()
+//        binding.tabs.selectTab(binding.tabs.getTabAt(0))
+//        if (savedCountry != SharedHelper(this).country) {
+//            dialogP = showLoadingDialog(this)
+//            dialogP.show()
+//            mModel.setSaveCountry()
+//            listUni.clear()
+//        } else {
+//             initView()
+//        }
     }
 
-    fun listFilterDone(list: MutableList<UniersitiesListModel>) {
+    fun listFilterDone(list: MutableList<UniersitiesListModel>,dialog: BottomSheetDialog) {
         selectedListFilter.clear()
         for (i in list) {
             if (i.selected)
                 selectedListFilter.add(i.id.toString())
         }
+       // mainDialog?.dismiss()
+        setFilters()
+        dialog.dismiss()
+       // initView()
     }
 
     private fun likeClick() {
@@ -2547,6 +2727,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         mModel.listObserver.observe(this) {
             dialogP.dismiss()
+            if (this::dialogUni.isInitialized)
             dialogUni.dismiss()
             listUni.clear()
             for (i in 0 until it.size()) {
@@ -2593,9 +2774,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             else {
                 if (listUni.size==0)
                 anyFilterArray = arrayOf("Country", "Field of Study", "Program", "Major")
-
-                sheetBindingUniv!!.reciepentList.adapter =
-                    UnivFilterAdapter(anyFilterArray, this)
+                if (anyFilterArray.size == 4){
+                    val selectedCount:Array<Int> = arrayOf(0, selectedListFilter.size, 0, 0)
+                    sheetBindingUniv?.reciepentList?.adapter =
+                        UnivFilterAdapter(anyFilterArray, this, selectedCount)
+                }
+                else {
+                    val selectedCount: Array<Int> = arrayOf(0, selectedListFilter.size, 0, 0, 0)
+                    sheetBindingUniv?.reciepentList?.adapter =
+                        UnivFilterAdapter(anyFilterArray, this, selectedCount)
+                }
             }
         }
         mModel.otherFosObserver.observe(this){
@@ -2731,29 +2919,39 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
     }
 
-    fun reigonFilterDone(list: ArrayList<Region>) {
+    fun reigonFilterDone(list: ArrayList<Region>,dialog: BottomSheetDialog) {
         selectedRegion.clear()
         for (i in list) {
             if (i.checked)
                 i.reigon?.let { selectedRegion.add(it) }
         }
+       // mainDialog?.dismiss()
+        dialog.dismiss()
+       // initView()
+
 
     }
 
-    fun stateFilterDone(list: MutableList<KeyVal>) {
+    fun stateFilterDone(list: MutableList<KeyVal>,dialog: BottomSheetDialog) {
         selectedStateFilter.clear()
         for (i in list) {
             if (i.checked)
                 selectedStateFilter.add(i.key)
         }
+       // mainDialog?.dismiss()
+        dialog.dismiss()
+       // initView()
     }
 
-    fun selectivityFilterDone(list: ArrayList<KeyVal>) {
+    fun selectivityFilterDone(list: ArrayList<KeyVal>,dialog: BottomSheetDialog) {
         selectedSelectivityFilter.clear()
         for (i in list) {
             if (i.checked)
                 selectedSelectivityFilter.add(i.key)
         }
+       // mainDialog?.dismiss()
+        dialog.dismiss()
+       // initView()
     }
 
     companion object Filters {

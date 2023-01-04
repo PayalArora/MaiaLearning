@@ -1,6 +1,8 @@
 package com.maialearning.ui.fragments
 
 import android.app.Dialog
+import android.content.Context
+
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
@@ -27,6 +29,7 @@ import com.maialearning.ui.adapter.GermanFactAdapter
 import com.maialearning.ui.adapter.UkFactAdapter
 import com.maialearning.ui.adapter.UniFactAdapter
 import com.maialearning.util.OnLoadMoreListener
+import com.maialearning.util.checkNonNull
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.replaceInvertedComas
 import com.maialearning.util.showLoadingDialog
@@ -62,6 +65,7 @@ class SearchFragment : Fragment() {
     lateinit var germanAdapter: GermanFactAdapter
     lateinit var euroAdapter: EuropeanFactAdapter
     lateinit var ukAdapter: UkFactAdapter
+    lateinit var mCon: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,9 +78,11 @@ class SearchFragment : Fragment() {
     ): View? {
 
         mBinding = SearchLayoutBinding.inflate(inflater, container, false)
-        progress = showLoadingDialog(requireContext())
+        mCon = requireContext()
+        progress = showLoadingDialog(mCon)
+       
         adapter = UniFactAdapter(
-            requireContext(),
+            mCon,
             universityListNew,
             ::click,
             mBinding.rvUniv
@@ -126,7 +132,7 @@ class SearchFragment : Fragment() {
         }
 
         homeModel.searchUniversityObserver.observe(requireActivity()) {
-            if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
+            if ((mCon?.let { it1 -> SharedHelper(it1).country } ?: "US") == "DE") {
                 val univ = SearchParser(it).parseGermanJson()
                 page = (univ.pager!!.current!! + 1)
                 val totalPage = univ.pager?.total
@@ -151,8 +157,9 @@ class SearchFragment : Fragment() {
                         germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last)
                     }
                 }
+                mBinding.universitisCounte.text =univ.pager?.total .toString() + " Universities found"
                 germanAdapter.setLoaded()
-            } else if ((SharedHelper(requireContext()).country ?: "US") == "GB") {
+            } else if ((mCon?.let { it1 -> SharedHelper(it1).country } ?: "US") == "GB") {
                 val univ = SearchParser(it).parseUkJson()
                 page = (univ.pager!!.current!! + 1)
                 val totalPage = univ.pager?.total
@@ -176,6 +183,7 @@ class SearchFragment : Fragment() {
                         ukAdapter.addAllLis(ukList!!, totalPage.toInt(), last)
                     }
                 }
+                mBinding.universitisCounte.text =univ.pager?.total .toString() + " Universities found"
                 ukAdapter.setLoaded()
 
             } else if (isEuropean) {
@@ -197,6 +205,7 @@ class SearchFragment : Fragment() {
                         euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
                     }
                 }
+                mBinding.universitisCounte.text =univ.totalRecords .toString() + " Universities found"
                 euroAdapter.setLoaded()
             } else {
                 val univ = SearchParser(it).parseJson()
@@ -220,6 +229,7 @@ class SearchFragment : Fragment() {
                             adapter.addAllLis(universityList!!, totalPage, last, true)
                     }
                 }
+                mBinding.universitisCounte.text = univ.totalRecords.toString() + " Universities found"
                 adapter.setLoaded()
             }
         }
@@ -232,24 +242,25 @@ class SearchFragment : Fragment() {
         homeModel.showError.observe(requireActivity()) {
             progress.dismiss()
             Log.e("Error", "err" + it)
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            Toast.makeText(mCon, it, Toast.LENGTH_SHORT).show()
         }
     }
 
     fun universitySearch() {
-        if ((SharedHelper(requireContext()).country ?: "US") == "DE") {
-            SharedHelper(requireContext()).continent = "DE"
+        if ((SharedHelper(mCon).country ?: "US") == "DE") {
+            SharedHelper(mCon).continent = "DE"
             germanListUpdate = ArrayList()
             germanList = ArrayList()
             germanListNew = ArrayList<GermanUniversitiesResponse.Data.CollegeData?>()
             isEuropean = false
             germanAdapter = GermanFactAdapter(
-                requireContext(),
+                mCon,
                 germanListNew,
                 ::clickEuropean,
                 mBinding.rvUniv
             )
             mBinding.rvUniv.adapter = germanAdapter
+            mBinding.universitisCounte.text = germanListNew.size.toString() + " Universities found"
             germanAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
                     germanListNew.add(null)
@@ -261,42 +272,45 @@ class SearchFragment : Fragment() {
                     }, 2000)
                 }
             })
-        } else if ((SharedHelper(requireContext()).country ?: "US").equals("GB")) {
-            SharedHelper(requireContext()).continent = "GB"
+        } else if ((SharedHelper(mCon).country ?: "US").equals("GB")) {
+            SharedHelper(mCon).continent = "GB"
             ukListUpdate = ArrayList()
             ukList = ArrayList()
             ukListNew = ArrayList<UkResponseModel.Data.CollegeData?>()
             ukAdapter = UkFactAdapter(
-                requireContext(),
+                mCon,
                 ukListNew,
                 ::clickEuropean,
                 mBinding.rvUniv
             )
             mBinding.rvUniv.adapter = ukAdapter
+            mBinding.universitisCounte.text = ukListNew.size.toString() + " Universities found"
             ukAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
                     ukListNew.add(null)
                     isLoading = true
                     ukAdapter.notifyItemInserted(ukListNew.size - 1)
+                    mBinding.universitisCounte.text = ukListNew.size.toString() + " Universities found"
                     Handler(Looper.getMainLooper()).postDelayed({
                         hitAPI(page, mBinding.searchText.text.toString())
 
                     }, 2000)
                 }
             })
-        } else if (euCountries.contains(SharedHelper(requireContext()).country ?: "US")) {
-            SharedHelper(requireContext()).continent = "EU"
+        } else if (euCountries.contains(SharedHelper(mCon).country ?: "US")) {
+            SharedHelper(mCon).continent = "EU"
             euroListUpdate = ArrayList()
             euroList = ArrayList()
             euroListNew = ArrayList()
             isEuropean = true
             euroAdapter = EuropeanFactAdapter(
-                requireContext(),
+                mCon,
                 euroListNew,
                 ::clickEuropean,
                 mBinding.rvUniv
             )
             mBinding.rvUniv.adapter = euroAdapter
+            mBinding.universitisCounte.text = euroListNew.size.toString() + " Universities found"
             euroAdapter.setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
                     euroListNew.add(null)
@@ -309,23 +323,23 @@ class SearchFragment : Fragment() {
                 }
             })
         } else {
-            SharedHelper(requireContext()).continent = "US"
+            SharedHelper(mCon).continent = "US"
             universityListUpdate = ArrayList()
             universityList = ArrayList()
             universityListNew = ArrayList()
             isEuropean = false
             adapter = UniFactAdapter(
-                requireContext(),
+                mCon,
                 universityListNew,
                 ::click,
                 mBinding.rvUniv
             )
             mBinding.rvUniv.adapter = adapter
+
             adapter.setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore() {
                     universityListNew.add(null)
                     isLoading = true
-                    adapter.notifyItemInserted(universityListNew.size - 1)
                     Handler(Looper.getMainLooper()).postDelayed({
                         hitAPI(page, mBinding.searchText.text.toString())
 
@@ -354,8 +368,8 @@ class SearchFragment : Fragment() {
         if (!isLoading)
             progress.show()
         val payload = UniversitySearchPayload()
-        val country = SharedHelper(requireContext()).country ?: "US"
-        payload.student_uid = SharedHelper(requireContext()).id.toString()
+        val country = SharedHelper(mCon).country ?: "US"
+        payload.student_uid = SharedHelper(mCon).id.toString()
         payload.country = country
         payload.pager = pageNo
         payload.search = search
@@ -373,7 +387,13 @@ class SearchFragment : Fragment() {
             payload.public_private = UniversitiesActivity.selectedPublicPrivate
             payload.religious = UniversitiesActivity.selectedReligious
             payload.athletic_associations = UniversitiesActivity.selectedAthleticAsociations
-            payload.foscode = UniversitiesActivity.selectedSubDiscipline
+            if (UniversitiesActivity.selectedSubDiscipline.size!=0) {
+                payload.foscode = UniversitiesActivity.selectedSubDiscipline
+            }
+            else {
+                if (checkNonNull(UniversitiesActivity.selectedDiscipline))
+                payload.foscode = arrayListOf(UniversitiesActivity.selectedDiscipline)
+            }
         }
         payload.sort_parameter = "college_name"
         payload.sort_order = "asc"
@@ -438,7 +458,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun bottomSheetList() {
-        val dialog = BottomSheetDialog(requireContext())
+        val dialog = BottomSheetDialog(mCon)
         val view = layoutInflater.inflate(R.layout.search_bottom_sheet, null)
         view.minimumHeight = Resources.getSystem().displayMetrics.heightPixels / 3
 //
@@ -448,8 +468,8 @@ class SearchFragment : Fragment() {
 //        val mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
 //        mBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         listing.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
-//        listing.adapter = UniFactAdapter(requireContext(), ::click)
+            LinearLayoutManager(mCon, LinearLayoutManager.VERTICAL, false);
+//        listing.adapter = UniFactAdapter(mCon, ::click)
 //        close.setOnClickListener {
 //            dialog.dismiss()
 //        }
@@ -472,7 +492,7 @@ class SearchFragment : Fragment() {
 
     private fun hitUnlikeWork(nid: String?) {
         progress.show()
-        SharedHelper(requireContext()).id?.let {
+        SharedHelper(mCon).id?.let {
             nid?.let { it1 ->
                 homeModel.hitunlike(
                     it,
@@ -485,7 +505,7 @@ class SearchFragment : Fragment() {
     private fun hitLikeWork(nid: String?) {
         progress.show()
 
-        SharedHelper(requireContext()).id?.let {
+        SharedHelper(mCon).id?.let {
             nid?.let { it1 ->
                 homeModel.hitlike(
                     it,

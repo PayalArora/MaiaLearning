@@ -6,7 +6,8 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="gray_2">#F5F5F5</color>
+<!--   Theme change  <color name="gray_2">#F5F5F5</color>-->
+    <color name="gray_2">#EBECF8</color>
     <color name="gray">#707070</color>
     <color name="grey">#80000000</color>
     <color name="stroke">#8054575F</color>
@@ -17,7 +18,8 @@
     <color name="alpha_blue_1">#1A3743BE</color>
     <color name="forgot_color">#3743BE</color>
     <color name="forgot_color_1">#103743BE</color>
-    <color name="divider_color">#EAEBF0</color>
+<!--    Theme change<color name="divider_color">#EAEBF0</color>-->
+    <color name="divider_color">#1A54575F</color>
     <color name="divider_color_1">#1A54575F</color>
     <color name="circle_color">#1A54575F</color>
     <color name="black_1">#54575F</color>
@@ -42,7 +44,9 @@
     <color name="purple_2">#8055AC</color>
     <color name="green_4">#225E81</color>
     <color name="green_5">#36779C</color>
-    <color name="white_1">#E5E5E5</color>
+
+<!-- Theme change   <color name="white_1">#E5E5E5</color>-->
+    <color name="white_1">#EBECF8</color>
     <color name="color_acent">#19224F</color>
     <color name="tab_color">#80FFFFFF</color>
     <color name="blue">#3743BE</color>

@@ -63,8 +63,8 @@ class CountryAdapter(
                     arr[i].select = false
                 }
                 arr[position].select=true
-                SharedHelper(context).country=arr[position].code
-             //   click("https://countryflagsapi.com/png/${arr[position].code}")
+               // SharedHelper(context).country=arr[position].code
+               click(arr[position].code)
 
                 Picasso.with(viewHolder.binding.root.context)
                     .load("https://countryflagsapi.com/png/${arr[position].code}")

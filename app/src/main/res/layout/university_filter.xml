@@ -44,7 +44,7 @@
         android:layout_alignParentRight="true"
         android:fontFamily="@font/inter"
         android:padding="@dimen/_15dp"
-        android:text="@string/clear"
+        android:text="@string/done"
         android:textColor="@color/black_1"
         android:textFontWeight="500"
         android:textSize="@dimen/_14sp" />
@@ -224,6 +224,23 @@
 
             </RadioGroup>
         </RelativeLayout>
+        <TextView
+            android:id="@+id/clear_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50dp"
+            android:layout_marginHorizontal="@dimen/_15dp"
+            android:visibility="gone"
+            android:background="@drawable/white_rect_15"
+            android:backgroundTint="@color/blue"
+            android:fontFamily="@font/inter"
+            android:gravity="center"
+            android:paddingVertical="5dp"
+            android:text="@string/clear_all"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textFontWeight="800"
+            android:textSize="@dimen/_16sp"
+            android:textStyle="bold" />
 
         <RelativeLayout
             android:id="@+id/invisibleLay"
