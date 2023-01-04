@@ -76,12 +76,12 @@ class AddUniversiityAdapter(
         return when (viewType) {
             viewTypeItem -> {
                 val bindingView = ItemAddUniversityBinding.inflate(inflater, viewGroup, false)
-                viewHolder = AddUniversiityAdapter.ViewHolder(bindingView)
+                viewHolder = ViewHolder(bindingView)
                 viewHolder
             }
             viewTypeLoading -> {
                 val view = ProgressLayoutBinding.inflate(inflater, viewGroup, false)
-                viewHolder = AddUniversiityAdapter.ViewHolder2(view)
+                viewHolder = ViewHolder2(view)
                 viewHolder
             }
             else -> null!!
@@ -155,7 +155,9 @@ class AddUniversiityAdapter(
         else
             notifyItemChanged(university_list.size)
     }
-
+    override fun getItemViewType(position: Int): Int {
+        return if (university_list[position] == null) viewTypeLoading else viewTypeItem
+    }
 
 }
 

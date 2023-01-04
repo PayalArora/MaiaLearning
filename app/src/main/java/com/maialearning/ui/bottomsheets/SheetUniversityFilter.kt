@@ -22,7 +22,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
     fun showDialog(
         list: ArrayList<FilterUSModelClass.CountryList>,
         context: Context,
-        flagImg: ImageView
+        flagImg: ImageView, selectedAddUniv: Boolean
     ) {
         val dialog = BottomSheetDialog(con)
         val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
@@ -37,6 +37,7 @@ class SheetUniversityFilter(val con: UniversitiesActivity, val layoutInflater: L
             //single done
             // con.refreshTab(dialog)
 
+            selectedCountry?.let { it1 -> con.countryFilterDone(it1) }
             dialog.dismiss()
         }
         sheetBinding.backBtn.setOnClickListener {

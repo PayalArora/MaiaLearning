@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -25,6 +26,7 @@ import com.maialearning.R
 import com.maialearning.databinding.*
 import com.maialearning.model.*
 import com.maialearning.network.BaseApplication
+import com.maialearning.parser.SearchParser
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
@@ -32,10 +34,8 @@ import com.maialearning.ui.fragments.ConsideringFragment
 import com.maialearning.ui.model.AthleticAsociations
 import com.maialearning.ui.model.ChildrenItem
 import com.maialearning.ui.model.ResponseItem
-import com.maialearning.util.OnLoadMoreListener
-import com.maialearning.util.UNIV_LOGO_URL
+import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
 import com.maialearning.viewmodel.HomeViewModel
 import com.squareup.picasso.Picasso
@@ -181,7 +181,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 "        }\n" +
                 "    ]")
     var sheetBindingUniv: UniversityFilterBinding? = null
-    var university_list: ArrayList<UniversitiesSearchModel?>? = ArrayList()
+    var university_list: ArrayList<UniversitiesSearchModel?> = ArrayList()
+    var university_list_new: ArrayList<UniversitiesSearchModel?> = ArrayList()
     var adapterAddUniv: AddUniversiityAdapter? = null
     var selectedAddUniv = false
     var page: Int = 1
@@ -933,27 +934,35 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selectedAddUniv = true
         sheetBinding.close.setOnClickListener {
             selectedAddUniv = false
-            refreshTab()
-            refreshTab(dialog)
             dialog.dismiss()
         }
+        dialog.setOnDismissListener {
+            selectedAddUniv = false
+        }
+        university_list_new?.clear()
+        university_list?.clear()
 
         adapterAddUniv =
-            university_list?.let { AddUniversiityAdapter(it, sheetBinding.reciepentList, this) }
+            university_list_new?.let { AddUniversiityAdapter(it, sheetBinding.reciepentList, this) }
         sheetBinding.reciepentList.adapter = adapterAddUniv
         adapterAddUniv?.setOnLoadMoreListener(object : OnLoadMoreListener {
             override fun onLoadMore() {
-                university_list?.add(null)
+                university_list_new.add(null)
                 isLoading = true
-                adapterAddUniv?.notifyItemInserted((university_list?.size ?: 0) - 1)
+                adapterAddUniv?.notifyItemInserted((university_list_new?.size ?: 0) - 1)
                 Handler(Looper.getMainLooper()).postDelayed({
-                    getSelectedCountryUniversities()
+                    for (i in  countries){
+                        if(i.select){
+                            getSelectedCountryUniversities(i.code)
+                        }
+                    }
+
                 }, 2000)
             }
         })
         sheetBinding.save.setOnClickListener {
             selectedAddUniv = false
-            refreshTab(dialog)
+            //refreshTab(dialog)
             dialog.dismiss()
         }
         sheetBinding.country.setOnClickListener {
@@ -961,7 +970,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 SheetUniversityFilter(this, layoutInflater).showDialog(
                     countries,
                     this,
-                    sheetBinding.flagImg
+                    sheetBinding.flagImg, selectedAddUniv
                 )
             } else {
                 dialogP = showLoadingDialog(this)
@@ -1167,7 +1176,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         SheetUniversityFilter(this, layoutInflater).showDialog(
             countries,
             this,
-            flagImg
+            flagImg,false
         )
     }
 
@@ -2207,21 +2216,27 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //        } else {
 //             initView()
 //        }
+    }
+
+    fun countryFilterDone(country:String){
         if (selectedAddUniv) {
             dialogP.dismiss()
             page=1
             university_list?.clear()
-            getSelectedCountryUniversities()
+            university_list_new?.clear()
+            getSelectedCountryUniversities(country)
         }
     }
 
-    private fun getSelectedCountryUniversities() {
+    private fun getSelectedCountryUniversities(country:String) {
         val payload = UniversitySearchPayload()
-        val country = SharedHelper(this).country
+
+       // val country = SharedHelper(this).country
         if (country != null) {
             payload.country = country
             payload.pager = page
         }
+        university_list.clear()
         mModel.addUniversityCollSearch(payload)
     }
 
@@ -2912,8 +2927,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
                 if (isLoading) {
                     isLoading = false
-                    university_list?.removeAt(university_list!!.size - 1)
-                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                    university_list_new?.removeAt(university_list_new!!.size - 1)
+                    university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
                 }
                 //for swipe refresh page
                 if (totalPage != null) {
@@ -2941,8 +2956,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
                 if (isLoading) {
                     isLoading = false
-                    university_list?.removeAt(university_list!!.size - 1)
-                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                    university_list_new?.removeAt(university_list_new!!.size - 1)
+                    university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
                 }
                 //for swipe refresh page
                 if (totalPage != null) {
@@ -2967,8 +2982,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
                 if (isLoading) {
                     isLoading = false
-                    university_list?.removeAt(university_list!!.size - 1)
-                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                    university_list_new?.removeAt(university_list_new!!.size - 1)
+                    university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
                 }
                 //for swipe refresh page
                 if (totalPage != null) {
@@ -2987,8 +3002,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
                 if (isLoading) {
                     isLoading = false
-                    university_list?.removeAt(university_list!!.size - 1)
-                    university_list?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
+                    university_list_new?.removeAt(university_list_new?.size - 1)
+                    university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
                 }
                 //for swipe refresh page
                 if (totalPage != null) {
