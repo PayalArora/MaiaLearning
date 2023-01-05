@@ -1,4 +1,4 @@
-package com.maialearning.ui.acti
+package com.maialearning.ui.activity
 
 
 import android.app.Dialog
@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -197,6 +198,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var selectedAddUniv = false
     var page: Int = 1
     private var isLoading = false
+    var add_univ_country = ""
+    private var recyclerview:RecyclerView? = null
     //  private var isEuropean = false
 
 
@@ -308,7 +311,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val adapter = ViewStateAdapter(fm, lifecycle, binding.tabs, tabArray.size)
 
         binding.viewPager.adapter = adapter
-
+        binding.viewPager.setUserInputEnabled(false)
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.setText(tabArray[position])
         }.attach()
@@ -330,10 +333,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
         binding.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (binding.tabs.selectedTabPosition == 5) {
-                    binding.addFab.visibility = View.GONE
-                } else
+                if (binding.tabs.selectedTabPosition == 1 ||binding.tabs.selectedTabPosition == 2) {
                     binding.addFab.visibility = View.VISIBLE
+                } else
+                    binding.addFab.visibility = View.GONE
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -942,6 +945,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val sheetBinding: LayoutUniversityBinding = LayoutUniversityBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
+
+        add_univ_country = SharedHelper(this).country!!
         dialog.show()
         selectedAddUniv = true
         sheetBinding.close.setOnClickListener {
@@ -954,6 +959,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         university_list_new?.clear()
         university_list?.clear()
 
+        getSelectedCountryUniversities(add_univ_country)
+        recyclerview = sheetBinding.reciepentList
         adapterAddUniv =
             university_list_new?.let { AddUniversiityAdapter(it, sheetBinding.reciepentList, this) }
         sheetBinding.reciepentList.adapter = adapterAddUniv
@@ -1034,6 +1041,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 dialogP.show()
                 mModel.setSaveCountry()
                 listUni.clear()
+                if (!selectedAddUniv)
+                resetFilters()
                 SharedHelper(this).country?.let { savedCountry = it }
             } else {
                 //  resetFilters()
@@ -1172,8 +1181,60 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
 
             } else if ((SharedHelper(this).country ?: "US") == "GB") {
+                var gbFilterArray = resources.getStringArray(R.array.GBFilters)
+                val selectedCount: Array<Int> =
+                    arrayOf(0, selectedListFilter.size, 0, selectedGbUniversity.size, 0, 0, 0, 0, 0)
+
+
+                var sub = "Subject Guide"
+                for (j in selectedGermanSubject) {
+                    if (checkNonNull(j)) {
+                        for (i in germanSubject) {
+                            if (i.key == j) {
+                                sub = i.value
+                            }
+                        }
+                    }
+                }
+                gbFilterArray[4] = sub
+
+                var area = "Area"
+                for (j in selectedAreaStudy) {
+                    if (checkNonNull(j)) {
+                        for (i in areaGBStudy) {
+                            if (i.key == j) {
+                                area = i.value
+                            }
+                        }
+                    }
+                }
+                gbFilterArray[5] = area
+
+                var prog = "Program"
+                for (j in selectedFieldSubject) {
+                    if (checkNonNull(j)) {
+                        for (i in programGBStudy) {
+                            if (i.key == j) {
+                                prog = i.value
+                            }
+                        }
+                    }
+                }
+                gbFilterArray[6] = prog
+                var collg = "Colleges"
+
+                if (checkNonNull(selectedGbCollege)) {
+                    for (i in gbCollegeList) {
+                        if (i.key == selectedGbCollege) {
+                            collg = i.value
+                        }
+                    }
+                }
+                gbFilterArray[7] = collg
+
+
                 sheetBindingUniv?.reciepentList?.adapter =
-                    UnivFilterAdapter(resources.getStringArray(R.array.GBFilters), this)
+                    UnivFilterAdapter(gbFilterArray, this,selectedCount)
             } else if (SharedHelper(this).continent == "EU") {
                 val selectedCount: Array<Int> = arrayOf(0, selectedListFilter.size, 0, 0)
                 var discipline = "Discipline"
@@ -2262,6 +2323,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             page = 1
             university_list?.clear()
             university_list_new?.clear()
+            add_univ_country = country
+            adapterAddUniv?.notifyDataSetChanged()
             getSelectedCountryUniversities(country)
         }
     }
@@ -2272,10 +2335,18 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         if (country != null) {
             payload.country = country
             payload.pager = page
+            payload.student_uid = SharedHelper(this).id!!
         }
         university_list.clear()
+        dialogP.show()
 
-        if (euCountries.contains(country)) {
+//        for (i in euCountries){
+//            println(i)
+//        }
+        if (country.equals("GB")|| country.equals("US")||country.equals("DE")){
+            mModel.addUniversityCollSearch(payload)
+        }
+       else if (euCountries.contains(country)) {
             mModel.euroUniversities(payload)
         } else {
             mModel.addUniversityCollSearch(payload)
@@ -2961,7 +3032,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         mModel.addSearchUniversityObserver.observe(this) {
             dialogP.dismiss()
-            if ((SharedHelper(this).country ?: "US") == "DE") {
+            if (add_univ_country == "DE") {
                 val univ = SearchParser(it).parseGermanJson()
                 page = (univ.pager!!.current!! + 1)
                 val totalPage = univ.pager?.total
@@ -2985,7 +3056,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
 
 
-                if (isLoading) {
+                if (isLoading && university_list_new.size>0) {
                     isLoading = false
                     university_list_new?.removeAt(university_list_new!!.size - 1)
                     university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
@@ -2997,7 +3068,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     }
                 }
                 adapterAddUniv?.setLoaded()
-            } else if ((SharedHelper(this).country ?: "US") == "GB") {
+            } else if (add_univ_country == "GB") {
                 val univ = SearchParser(it).parseUkJson()
                 page = (univ.pager!!.current!! + 1)
                 val totalPage = univ.pager?.total
@@ -3014,7 +3085,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //                ukList?.addAll(univ.data?.collegeData!!)
 //                ukListUpdate?.addAll(univ.data?.collegeData!!)
 
-                if (isLoading) {
+                if (isLoading&& university_list_new.size>0) {
                     isLoading = false
                     university_list_new?.removeAt(university_list_new!!.size - 1)
                     university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
@@ -3027,7 +3098,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
                 adapterAddUniv?.setLoaded()
 
-            } else if (euCountries.contains(SharedHelper(this).country ?: "US")) {
+            } else if (euCountries.contains(add_univ_country)) {
+
                 val univ = SearchParser(it).parseEuropeanJson()
                 page = (univ.pager!! + 1)
                 val totalPage = univ.totalRecords
@@ -3047,7 +3119,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     university_list?.add(universitiesSearchModel)
                 }
 
-                if (isLoading) {
+                if (isLoading&& university_list_new.size>0) {
                     isLoading = false
                     university_list_new?.removeAt(university_list_new!!.size - 1)
                     university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
@@ -3067,7 +3139,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 dialogP.dismiss()
                 university_list?.addAll(univ.university_list!!)
 
-                if (isLoading) {
+                if (isLoading && university_list_new.size>0) {
                     isLoading = false
                     university_list_new?.removeAt(university_list_new?.size - 1)
                     university_list_new?.let { it1 -> adapterAddUniv?.notifyItemRemoved(it1.size) }
@@ -3149,7 +3221,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         // mainDialog?.dismiss()
         dialog.dismiss()
         // initView()
-
+        setFilters()
 
     }
 
@@ -3162,6 +3234,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         // mainDialog?.dismiss()
         dialog.dismiss()
         // initView()
+        setFilters()
     }
 
     fun selectivityFilterDone(list: ArrayList<KeyVal>, dialog: BottomSheetDialog) {
@@ -3173,6 +3246,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         // mainDialog?.dismiss()
         dialog.dismiss()
         // initView()
+        setFilters()
     }
 
     companion object Filters {

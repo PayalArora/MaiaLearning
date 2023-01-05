@@ -167,17 +167,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             filteredArray.addAll(finalArray)
 
         } else {
-//            for (i in finalArray) {
-//                var checkSame = false
-//                if (i.country == selectedCountry) {
-//                    checkSame = true
-//                    filteredArray.add(i)
-//                } else if (i.country == "" && checkSame) {
-//                    filteredArray.add(i)
-//                } else {
-//                    checkSame = false
-//                }
-//            }
             filteredArray = finalArray.filter { it.country == selectedCountry } as ArrayList<ConsiderModel.Data>
         }
         if (selectedApplying == "" || selectedApplying == "All") {

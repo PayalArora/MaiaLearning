@@ -47,8 +47,11 @@ class AddUniversiityAdapter(
                 val visibleItemCount = linearLayoutManager.childCount
                 totalItemCount = linearLayoutManager.itemCount
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition()
-                if (!isLoading && totalItemCount <= lastVisibleItem + visibleItemCount) {
+               // linearLayoutManager.findLastCompletelyVisibleItemPosition() == rowsArrayList.size() - 1
+               // if (!isLoading && totalItemCount <= lastVisibleItem + visibleItemCount) {
+                if (!isLoading && totalItemCount <= lastVisibleItem + visibleItemCount && lastVisibleItem ==university_list.size-1) {
                     if (totalPages != currentPages) {
+                        if (::mOnLoadMoreListener.isInitialized)
                         mOnLoadMoreListener.onLoadMore()
                         isLoading = true
                     }

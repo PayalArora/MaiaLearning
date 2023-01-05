@@ -3,12 +3,12 @@ package com.maialearning.model
 import com.google.gson.annotations.SerializedName
 
 data class UkResponseModel(
+
 	@SerializedName("pager" ) var pager : Pager? = Pager(),
 	@SerializedName("data"  ) var data  : Data?  = Data()
 
 ){
 	data class Data (
-
 		@SerializedName("college_data" ) var collegeData : ArrayList<CollegeData> = arrayListOf()
 
 	){

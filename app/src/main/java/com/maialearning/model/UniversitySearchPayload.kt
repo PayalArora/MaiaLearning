@@ -33,8 +33,8 @@ class UniversitySearchPayload {
      var pager: Int = 0
     lateinit var student_uid: String
     var foscode: ArrayList<String>? = null
-    var cipcode_search_type = "or"
-
+    //var cipcode_search_type = "or"
+    var per_pager = 10
     var subject_code: ArrayList<String>? = null
     lateinit var mode_of_admission:String
     lateinit var mode_of_study:String
