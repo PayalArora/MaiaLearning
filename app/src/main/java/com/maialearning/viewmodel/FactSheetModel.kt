@@ -47,6 +47,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val fosChildOther = MutableLiveData<JsonObject>()
     val fosChildMazor= MutableLiveData<JsonObject>()
     val addSearchUniversityObserver = MutableLiveData<JsonObject>()
+    val addUniversitiesSaveObserver = MutableLiveData<Unit>()
 
 
     fun getColFactSheet(token: String, id: String) {
@@ -445,6 +446,35 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
                 is UseCaseResult.Success -> addSearchUniversityObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+            }
+        }
+    }
+
+
+    fun euroUniversities(payload: UniversitySearchPayload) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.euroUniversities(payload)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> addSearchUniversityObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun addUniversties(id: String,cId:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.addUniversity(id,cId)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> addUniversitiesSaveObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
     }

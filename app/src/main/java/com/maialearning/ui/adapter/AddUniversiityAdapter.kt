@@ -111,10 +111,17 @@ class AddUniversiityAdapter(
         if (holder is ViewHolder) {
             holder.binding.univ.setText(university_list.get(position)?.collegeName)
             holder.binding.root.setOnClickListener { onItemClick.onClick(position, 0, null) }
+            if(university_list.get(position)?.added == true){
+                holder.binding.addCheck.setText(holder.binding.root.context.getString(R.string.added))
+            }else{
+                holder.binding.addCheck.setText(holder.binding.root.context.getString(R.string.add))
+            }
             holder.binding.addCheck.setOnCheckedChangeListener { compoundButton, b ->
                 if (compoundButton.isChecked) {
+                    university_list.get(position)?.added=true
                     holder.binding.addCheck.setText(holder.binding.root.context.getString(R.string.added))
                 } else {
+                    university_list.get(position)?.added=false
                     holder.binding.addCheck.setText(holder.binding.root.context.getString(R.string.add))
                 }
             }

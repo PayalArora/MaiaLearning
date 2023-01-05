@@ -20,6 +20,7 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
 import com.maialearning.model.*
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
@@ -406,6 +407,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         ids.add(finalArray[i].universityNid)
                         selectedUnivId = finalArray[i].universityNid
                     }
+                    UniversitiesActivity.collegeList = finalArray
                     univModel.university_nids = ids
                     dialogP.show()
                     homeModel.getCollegeJsonFilter(COLLEGE_JSON, univModel)
@@ -658,6 +660,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
             }
+            UniversitiesActivity.collegeList = finalArray
             if (selectedConsider == ACTIVE_CONSIDER) {
                 activeArray = finalArray
                // considerAdapter = ConsiderAdapter(this, activeArray, ::notesClick)

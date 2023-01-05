@@ -127,6 +127,7 @@ class SearchFragment : Fragment() {
                 while (x.hasNext()) {
                     euCountries.add(x.next().replaceInvertedComas())
                 }
+                UniversitiesActivity.euCountries = euCountries
                 universitySearch()
             }
         }

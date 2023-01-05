@@ -767,4 +767,11 @@ interface AllAPi {
         @Header("Authorization") Authorization: String,
         @Body payload: UniversitySearchPayload
     ): Deferred<JsonObject>
+
+    @POST("top-picks")
+    fun addUniversity(
+        @Header("Authorization") Authorization: String,
+        @Field("student_id") id: String,
+        @Field("college_id") c_id: String
+    ): Deferred<Unit>
 }
