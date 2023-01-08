@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.ItemListFilterBinding
+import com.maialearning.databinding.RadiobuttonItemFilterBinding
 import com.maialearning.model.KeyVal
 import com.maialearning.ui.activity.ClickFilters
 import com.maialearning.ui.activity.UniversitiesActivity
@@ -16,7 +17,7 @@ class DiversityAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(val binding: ItemListFilterBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: RadiobuttonItemFilterBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
         }
@@ -25,7 +26,7 @@ class DiversityAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
-        val binding = ItemListFilterBinding.inflate(inflater, viewGroup, false)
+        val binding = RadiobuttonItemFilterBinding.inflate(inflater, viewGroup, false)
 
         return ViewHolder(binding)
     }

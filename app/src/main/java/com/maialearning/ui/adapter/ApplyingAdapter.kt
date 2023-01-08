@@ -62,7 +62,7 @@ class ApplyingAdapter(
                 val isAppDeadlineDisabled =(
                         !isAppMode ||
                                 (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm) ||
-                                !isAppPlan
+                                !isAppPlan || confirmApplied==1
                         )
 
 //                if (prev == country_name) {
@@ -111,6 +111,11 @@ class ApplyingAdapter(
                 } else {
                     appDeadline.isEnabled = true
                 }
+                if (confirmApplied!=1){
+                    appType.isEnabled = true
+                } else {
+                    appType.isEnabled = false
+                }
                 appDeadline.setOnClickListener {
                     positio = position
                     deadlineValue.showDatePicker(root.context, ::deadlineClick)
@@ -126,7 +131,7 @@ class ApplyingAdapter(
                 } else {
                     countTxt.setText(college_priority_choice)
                 }
-                if (isAppMode) {
+                if (isAppMode && confirmApplied!=1) {
                     //  typeValue.setText(applicationType)
                     val typeVal = getAppType(applicationMode!!, position)
                     typeVal.let { typeValue.setText(it) }
@@ -205,7 +210,7 @@ class ApplyingAdapter(
                         !isAppMode ||
                         (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm))
                 Log.e("TERMTYP", collegeAppLicationType?.selectedPlanType.toString())
-                if (isAppPlanDdDisabled){
+                if (isAppPlanDdDisabled && confirmApplied==1){
                     appPlan.isEnabled = false
                 } else {
                     appPlan.isEnabled = true
