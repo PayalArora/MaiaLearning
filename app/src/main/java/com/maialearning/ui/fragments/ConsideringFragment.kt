@@ -396,7 +396,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         ids.add(finalArray[i].universityNid)
                         selectedUnivId = finalArray[i].universityNid
                     }
-                    UniversitiesActivity.collegeList = finalArray
+                  //  UniversitiesActivity.collegeList = finalArray
                     univModel.university_nids = ids
                     dialogP.show()
                     homeModel.getCollegeJsonFilter(COLLEGE_JSON, univModel)
@@ -649,7 +649,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
             }
-            UniversitiesActivity.collegeList = finalArray
+          //  UniversitiesActivity.collegeList = finalArray
             if (selectedConsider == ACTIVE_CONSIDER) {
                 activeArray = finalArray
                // considerAdapter = ConsiderAdapter(this, activeArray, ::notesClick)

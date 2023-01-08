@@ -52,6 +52,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var dialog: BottomSheetDialog? = null
     var mainDialog: BottomSheetDialog? = null
     var dialogFacts: BottomSheetDialog? = null
+    var  add_univ_dialog: BottomSheetDialog? = null
     var model: CollegeFactSheetModel? = null
     var modelOther: FactsheetModelOther? = null
     private val mModel: FactSheetModel by viewModel()
@@ -201,6 +202,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     var add_univ_country = ""
     private var recyclerview:RecyclerView? = null
     //  private var isEuropean = false
+    var add_count =0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -323,10 +325,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         }
 
         binding.addFab.setOnClickListener {
-            collegeList?.let {
-                bottomSheetAddUniv()
-            }
-
+            bottomSheetAddUniv()
         }
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).setOnClickListener {
             univFilter()
@@ -941,25 +940,25 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
     var flagImg: ImageView? = null
     private fun bottomSheetAddUniv() {
-        val dialog = BottomSheetDialog(this)
+         add_univ_dialog = BottomSheetDialog(this)
         val sheetBinding: LayoutUniversityBinding = LayoutUniversityBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
+        add_univ_dialog?.setContentView(sheetBinding.root)
 
         add_univ_country = SharedHelper(this).country!!
-        dialog.show()
+        add_univ_dialog?.show()
         selectedAddUniv = true
         sheetBinding.close.setOnClickListener {
             selectedAddUniv = false
-            dialog.dismiss()
+            add_univ_dialog?.dismiss()
         }
-        dialog.setOnDismissListener {
+        add_univ_dialog?.setOnDismissListener {
             selectedAddUniv = false
         }
         university_list_new?.clear()
         university_list?.clear()
+        page = 1
 
-        getSelectedCountryUniversities(add_univ_country)
         recyclerview = sheetBinding.reciepentList
         adapterAddUniv =
             university_list_new?.let { AddUniversiityAdapter(it, sheetBinding.reciepentList, this) }
@@ -981,22 +980,29 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         })
         sheetBinding.save.setOnClickListener {
             selectedAddUniv = false
+            add_count = 0
+
             //refreshTab(dialog)
-            //TODO https://maia2-staging-backend.maialearning.com/ajs-services/top-picks
+                // //TODO https://maia2-staging-backend.maialearning.com/ajs-services/top-picks
 //            {"student_id":"9375","college_id":"400352","applying_flag":null}
-            for (i in university_list?.indices) {
-                if (university_list.get(i)?.added == true) {
+            for (i in university_list_new?.indices) {
+                if (university_list_new.get(i)?.added == true) {
+
                     SharedHelper(this).id?.let { it1 ->
-                        university_list.get(i)!!.nid?.let { it2 ->
-                            mModel.addUniversties(
-                                it1,
-                                it2
-                            )
+                        university_list_new.get(i)?.nid?.let { it2 ->
+                                add_count++
+                                mModel.addUniversties(
+                                    it1,
+                                    it2
+                                )
                         }
                     }
                 }
             }
-            dialog.dismiss()
+            if (add_count>0){
+                dialogP.show()
+            }
+          //  dialog.dismiss()
         }
         sheetBinding.country.setOnClickListener {
             flagImg = sheetBinding.flagImg
@@ -1011,6 +1017,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 dialogP.show()
                 mModel.getFilterCollege()
             }
+        }
+        if (collegeList?.size?:0 > 0) {
+            getSelectedCountryUniversities(add_univ_country)
+        }
+        else{
+            SharedHelper(this).id?.let {
+                dialogP.show()
+                homeModel.getCollegeList(it)}
         }
     }
 
@@ -2396,6 +2410,11 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         homeModel.unlikeObserver.observe(this) {
             dialogP.dismiss()
         }
+        mModel.addUniversitiesSaveObserver.observe(this){
+            dialogP.dismiss()
+           add_univ_dialog?.dismiss()
+            showToast("${add_count} universities added successfully")
+        }
 
         homeModel.showError.observe(this) {
             dialogP.dismiss()
@@ -3046,7 +3065,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     universitiesSearchModel.nid = item.collegeNid
                     collegeList?.let {
                         for (i in it) {
-                            if (i.university_nid == universitiesSearchModel.nid || i.universityNid == universitiesSearchModel.nid) {
+                            if (i.university_nid == universitiesSearchModel.nid) {
                                 universitiesSearchModel.added = true
                             }
                         }
@@ -3081,6 +3100,13 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     universitiesSearchModel.collegeName = item.collegeName
                     universitiesSearchModel.nid = item.collegeNid
                     university_list?.add(universitiesSearchModel)
+                    collegeList?.let {
+                        for (i in it) {
+                            if (i.university_nid == universitiesSearchModel.nid) {
+                                universitiesSearchModel.added = true
+                            }
+                        }
+                    }
                 }
 //                ukList?.addAll(univ.data?.collegeData!!)
 //                ukListUpdate?.addAll(univ.data?.collegeData!!)
@@ -3111,7 +3137,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     universitiesSearchModel.nid = item.collegeNid
                     collegeList?.let {
                         for (i in it) {
-                            if (i.university_nid == universitiesSearchModel.nid || i.universityNid == universitiesSearchModel.nid) {
+                            if (i.university_nid == universitiesSearchModel.nid) {
                                 universitiesSearchModel.added = true
                             }
                         }
@@ -3137,7 +3163,20 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 val totalPage = univ.totalRecords
                 val last = univ.last
                 dialogP.dismiss()
-                university_list?.addAll(univ.university_list!!)
+                univ.university_list?.let {
+                    for (i in it) {
+                        collegeList?.let {it1->
+                            for (j in it1) {
+                                    if (j.university_nid.replaceInvertedComas() == i.nid?.replaceInvertedComas() ) {
+                                        i.added = true
+                                    }
+                                }
+                        }
+                        university_list?.add(i)
+                    }
+                }
+
+              //  university_list?.addAll(univ.university_list!!)
 
                 if (isLoading && university_list_new.size>0) {
                     isLoading = false
@@ -3152,6 +3191,28 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 }
                 adapterAddUniv?.setLoaded()
             }
+        }
+        
+        homeModel.collegesObserver.observe(this){
+           dialogP?.dismiss()
+            val userid = SharedHelper(this).id
+            collegeList = arrayListOf()
+            if (JSONObject(it.toString()).optJSONObject(userid).has("data")) {
+                val json = JSONObject(it.toString()).getJSONObject(userid).getJSONObject("data")
+                val x = json.keys() as Iterator<String>
+                val jsonArray = JSONArray()
+                while (x.hasNext()) {
+                    val key: String = x.next().toString()
+                    jsonArray.put(json.get(key))
+                }
+
+                for (i in 0 until jsonArray.length()) {
+                    val object_ = jsonArray.getJSONObject(i)
+                    val model:CollegeList.Data = CollegeList.Data( object_.optString("university_nid"))
+                    collegeList?.add(model)
+                }
+            }
+            getSelectedCountryUniversities(add_univ_country)
         }
     }
 
@@ -3282,7 +3343,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedProgramAny = ""
         var selectedMazorAny = ""
         var selectedFOS: String = ""
-        var collegeList: java.util.ArrayList<ConsiderModel.Data>? = null
+        var collegeList: java.util.ArrayList<CollegeList.Data>? = null
 
     }
 }

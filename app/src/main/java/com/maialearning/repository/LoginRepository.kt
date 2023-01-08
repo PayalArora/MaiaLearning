@@ -35,6 +35,7 @@ interface LoginRepository {
 
     suspend fun getUserProfile(id_token: String, id: String): UseCaseResult<ProfileResponse>
     suspend fun getConsiderList(id: String, status: String): UseCaseResult<JsonObject>
+    suspend fun getColleges(id: String): UseCaseResult<JsonObject>
     suspend fun getNotes(id: String): UseCaseResult<NotesModel>
     suspend fun getApplyList(id: String): UseCaseResult<JsonObject>
     suspend fun getJWTToken(): UseCaseResult<String>
@@ -478,6 +479,19 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.considerListAsync(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id, status
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+    override suspend fun getColleges(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.collegeListAsync(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

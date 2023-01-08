@@ -26,6 +26,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
     val showLoading = MutableLiveData<Boolean>()
     val listObserver = MutableLiveData<JsonObject>()
+    val collegesObserver = MutableLiveData<JsonObject>()
     val applyObserver = MutableLiveData<JsonObject>()
     val notesObserver = MutableLiveData<NotesModel>()
     val listArrayObserver = MutableLiveData<JsonArray>()
@@ -79,6 +80,23 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> listObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+
+    fun getCollegeList(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getColleges(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> collegesObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
                         ?.replaceCrossBracketsComas()

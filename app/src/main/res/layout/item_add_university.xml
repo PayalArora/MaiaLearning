@@ -51,10 +51,10 @@
         android:layout_width="@dimen/_70dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:button="@null"
         android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
         android:background="@drawable/add_checkbox"
+        android:button="@null"
         android:gravity="center"
         android:padding="@dimen/_10dp"
         android:text="@string/add" />

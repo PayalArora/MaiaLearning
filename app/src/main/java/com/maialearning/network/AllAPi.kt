@@ -61,6 +61,13 @@ interface AllAPi {
         @Query("status") status: String
     ): Deferred<JsonObject>
 
+    @GET("counselor_college/{id}")
+    fun collegeListAsync(
+        @Header("Authorization") AutToken: String,
+        @Path("id") id: String,
+    ): Deferred<JsonObject>
+
+
     @GET("counselor_college/{id}?status=applying")
     fun applyListAsync(
         @Path("id") id: String,
@@ -769,6 +776,7 @@ interface AllAPi {
     ): Deferred<JsonObject>
 
     @POST("top-picks")
+    @FormUrlEncoded
     fun addUniversity(
         @Header("Authorization") Authorization: String,
         @Field("student_id") id: String,
