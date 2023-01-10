@@ -386,14 +386,13 @@
                 <ImageButton
                     android:id="@+id/img_common_app"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
+                    android:layout_height="@dimen/_30dp"
                     android:layout_alignParentRight="true"
+
                     android:layout_centerVertical="true"
                     android:background="@android:color/transparent"
-
-
-                    android:src="@drawable/ic_common_app" />
+                    android:src="@drawable/maia_docs"
+                    android:visibility="visible" />
             </RelativeLayout>
 
             <View

@@ -66,10 +66,9 @@ class ConsiderAdapter(
                                     !isAppPlan
                             )
 
-                    if (prev == country_name) {
+                    if (header == "") {
                         top.visibility = View.GONE
                     } else {
-                        prev = country_name
                         top.visibility = View.VISIBLE
                         countryTxt.text = country_name
                     }
@@ -118,12 +117,14 @@ class ConsiderAdapter(
                     name.setText(created_name)
 
                     if (college_priority_choice.equals("null")) {
-                        countTxt.setText("?")
+                        countTxt.setText("--")
                     } else if (college_priority_choice.equals("1")) {
                         countTxt.setText("1st")
                     } else if (college_priority_choice.equals("2")) {
                         countTxt.setText("2nd")
-                    } else {
+                    } else if (college_priority_choice.equals("3")) {
+                        countTxt.setText("3rd")
+                    }else {
                         countTxt.setText(college_priority_choice)
                     }
 //            university.app_by_program_supported === 1 &&
@@ -143,6 +144,11 @@ class ConsiderAdapter(
                         appTerm.isEnabled = false
                     }
                     val supportsMaiaDocs = slate == 1 || parchment == 1
+                    if (supportsMaiaDocs){
+                        imgCommonApp.visibility = View.VISIBLE
+                    } else {
+                        imgCommonApp.visibility = View.GONE
+                    }
                     val canShowTeacherEval =
                         appByProgramSupported != "1" || applicationMode == CommonApp
                     if (canShowTeacherEval) {

@@ -5,11 +5,13 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -35,6 +37,7 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var dialog: Dialog
     lateinit var profileFilter: ProfileFilter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,9 +59,18 @@ class DashboardActivity : AppCompatActivity() {
             SharedHelper(this).jwtToken = it
 
         }
+        SharedHelper(this).authkey?.let {
+            SharedHelper(this).id?.let { it1 ->
+                Log.e(" it1 ", it1)
+            //    dialog.show()
+                dashboardViewModel.getProfile("Bearer " + it, it1)
+            }
+        }
+
         dashboardViewModel.showLoading.observe(this) {
             if (it == true) {
                 dialog = showLoadingDialog(this)
+                dialog.show()
             } else {
                 dialog.dismiss()
             }
@@ -69,6 +81,17 @@ class DashboardActivity : AppCompatActivity() {
                 logoutPopup()
             } else {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+        dashboardViewModel.observer.observe(this){
+
+//            if (SharedHelper(this).picture != null && SharedHelper(this).picture?.length!! > 5) {
+//                Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
+//            }
+            dialog.dismiss()
+            if (it.info?.profilePic != null) {
+                SharedHelper(this).picture = it.info?.profilePic
+                Picasso.with(this).load(it.info?.profilePic).into(binding.toolbarProf)
             }
         }
         loadFragment(HomeFragment())

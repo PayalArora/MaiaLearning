@@ -167,7 +167,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             filteredArray.addAll(finalArray)
 
         } else {
-            filteredArray = finalArray.filter { it.country == selectedCountry } as ArrayList<ConsiderModel.Data>
+            filteredArray =
+                finalArray.filter { it.country == selectedCountry } as ArrayList<ConsiderModel.Data>
         }
         if (selectedApplying == "" || selectedApplying == "All") {
             filteredArray = filteredArray as ArrayList<ConsiderModel.Data>
@@ -177,28 +178,24 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 it.selectedAppModeValue == selectedApplying ||
                         it.selectedAppPlanValue == selectedApplying
             } as ArrayList<ConsiderModel.Data>
-            var mappedList = filteredArray.groupBy {
-                it.country_name
-            }
-            filteredArray.clear()
-            for (i in mappedList){
-                for (j in i.value){
-                    j.count = i.value.size
-               filteredArray.add(j)
+
+        }
+        var mappedList = filteredArray.groupBy {
+            it.country_name
+        }
+        filteredArray.clear()
+        var prev = ""
+        for (i in mappedList) {
+            for (j in i.value) {
+                j.count = i.value.size
+                if (prev == j.country_name) {
+                    j.header = ""
+                } else {
+                    prev = j.country_name
+                    j.header = j.country_name
                 }
+                filteredArray.add(j)
             }
-//            var count = 1
-//            var prev = ""
-//
-//            for (i in filteredArray) {
-//                if (prev == i.country_name) {
-//                    count++
-//                } else {
-//                    prev = i.country_name
-//                    count = 1
-//                }
-//                i.count = count
-//            }
         }
         return filteredArray
     }
@@ -380,8 +377,10 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 if (firstTime) {
                                     firstTime = false
                                     array[k].country_name = countries[j]
+                                    array[k].header = countries[j]
                                 } else {
                                     array[k].country_name = countries[j]
+                                    array[k].header = ""
                                 }
                                 finalArray.add(array[k])
                                 finalArray[pos].count = count
@@ -838,8 +837,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     array.clear()
                     array.addAll(it)
                     val term = ConsiderModel.CollTerm()
-                    if (checkNonNull(finalArray[arratlistPosition].applicationMode))
+                    if (checkNonNull(finalArray[arratlistPosition].applicationMode)) {
                         array!!.add(DynamicKeyValue("Reset", "Reset", term))
+                    }
                     ConsideringTypeTermAdapter(array, type, this)
 
                 }
@@ -855,7 +855,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             val array = arrayListOf<String>()
                             array.clear()
                             array.addAll(it)
-                            if (checkNonNull(finalArray[arratlistPosition].applicationTerm))
+                            if (checkNonNull(finalArray[arratlistPosition].applicationTerm)&& !array.contains("Reset"))
                                 array!!.add("Reset")
                             recyclerView.adapter = ConsideringTermAdapter(
                                 array, type, this
@@ -866,7 +866,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         val array = arrayListOf<String>()
                         array.clear()
                         array.addAll(resources.getStringArray(R.array.APPLICATION_TERM))
-                        if (checkNonNull(finalArray[arratlistPosition].applicationTerm))
+                        if (checkNonNull(finalArray[arratlistPosition].applicationTerm)&& !array.contains("Reset"))
                             array!!.add("Reset")
                         recyclerView.adapter = ConsideringTermAdapter(
                             array,

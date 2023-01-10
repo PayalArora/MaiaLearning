@@ -904,7 +904,7 @@
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:id="@+id/survey_lay"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="@dimen/_18dp"
@@ -974,18 +974,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="end"
                     android:layout_marginHorizontal="@dimen/_15dp"
                     android:layout_marginTop="@dimen/_5dp"
-                    android:fontFamily="@font/inter_bold"
                     android:backgroundTint="@color/alpha_blue_t"
-                    android:background="@drawable/white_rounded"
-                    android:lineSpacingExtra="@dimen/_2sp"
-                    android:text="@string/complete"
                     android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
-                    android:layout_centerVertical="true"
-                    android:paddingVertical="@dimen/_5dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="@dimen/_2sp"
                     android:paddingHorizontal="@dimen/_10dp"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:text="@string/view"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14sp" />
             </RelativeLayout>
