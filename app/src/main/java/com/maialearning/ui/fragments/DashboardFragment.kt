@@ -49,9 +49,9 @@ class DashboardFragment : Fragment() {
     var endCompletedList = arrayListOf<SortedDateModel>()
     var upcomingList = arrayListOf<SortedDateModel>()
     var surveyList = arrayListOf<SortedDateModel>()
-    private   var  upcomingFragment: UpcomingFragment? = null
-    private   var  surveyFragment: SurveyFragment? = null
-    private   var  overDueFragment: OverDueFragment? = null
+    private var upcomingFragment: UpcomingFragment? = null
+    private var surveyFragment: SurveyFragment? = null
+    private var overDueFragment: OverDueFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,16 +89,18 @@ class DashboardFragment : Fragment() {
         return mBinding.root
 
     }
-    private fun click(type:String) {
-        when(type){
-            COMPLETE ->{
-               listing()
-                          }
-            RESET->{
-               listing()
+
+    private fun click(type: String) {
+        when (type) {
+            COMPLETE -> {
+                listing()
+            }
+            RESET -> {
+                listing()
             }
         }
     }
+
     fun showApplicationFilter() {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: ApplicationFilterBinding =
@@ -134,13 +136,12 @@ class DashboardFragment : Fragment() {
                 dataSet(it)
                 dashboardViewModel.showLoading.value = false
                 if (mBinding.tabs.selectedTabPosition == 0) {
-                   upcomingFragment?.setAdapter(upcomingList)
-                }
-               else if (mBinding.tabs.selectedTabPosition == 1)
+                    upcomingFragment?.setAdapter(upcomingList)
+                } else if (mBinding.tabs.selectedTabPosition == 1)
                     surveyFragment?.setAdapter(surveyList)
-              else  if (mBinding.tabs.selectedTabPosition == 2)
+                else if (mBinding.tabs.selectedTabPosition == 2)
                     overDueFragment?.setAdapter(endList)
-               else if (mBinding.tabs.selectedTabPosition == 3)
+                else if (mBinding.tabs.selectedTabPosition == 3)
                     overDueFragment?.setAdapter(endCompletedList)
 
             }
@@ -190,6 +191,8 @@ class DashboardFragment : Fragment() {
                         assignmentItem.date = null
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
+                        assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
+//                        assignmentItem.status=data.get(i)?.status
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
                     }
@@ -203,6 +206,8 @@ class DashboardFragment : Fragment() {
                         assignmentItem.date = data.get(i)?.endTime
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
+                        assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
+//                        assignmentItem.status=data.get(i)?.status
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
                     }
@@ -257,7 +262,8 @@ class DashboardFragment : Fragment() {
 
 
     private fun dataSet(dashboardOverdueResponse: DashboardOverdueResponse) {
-        assignmentList = dashboardOverdueResponse.assignment as ArrayList<DashboardOverdueResponse.AssignmentItem>
+        assignmentList =
+            dashboardOverdueResponse.assignment as ArrayList<DashboardOverdueResponse.AssignmentItem>
         upcomingListWork()
         overDueListWork()
         completedListWork()
@@ -311,7 +317,7 @@ class DashboardFragment : Fragment() {
                 noDueList.add(SortedDateModel("No Due Date", it.value))
             }
         }
-       // upcomingList.clear()
+        // upcomingList.clear()
         upcomingList.addAll(noDueList)
         Log.e("data ", "" + upcomingList.size)
     }
@@ -329,7 +335,8 @@ class DashboardFragment : Fragment() {
     }
 
     private fun completedListWork() {
-        var completedList = assignmentList.filter { it.completed == 1 } as ArrayList<DashboardOverdueResponse.AssignmentItem>
+        var completedList =
+            assignmentList.filter { it.completed == 1 } as ArrayList<DashboardOverdueResponse.AssignmentItem>
 
         val dateTimeFormatter: DateTimeFormatter =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -373,7 +380,8 @@ class DashboardFragment : Fragment() {
     }
 
     private fun overDueListWork() {
-        var overdueList = assignmentList.filter { it.overdue == 1 } as ArrayList<DashboardOverdueResponse.AssignmentItem>
+        var overdueList =
+            assignmentList.filter { it.overdue == 1 } as ArrayList<DashboardOverdueResponse.AssignmentItem>
 
         val dateTimeFormatter: DateTimeFormatter =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -435,7 +443,8 @@ class DashboardFragment : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
                     0 -> {
-                        upcomingFragment = UpcomingFragment(dashboardViewModel, upcomingList, ::click)
+                        upcomingFragment =
+                            UpcomingFragment(dashboardViewModel, upcomingList, ::click)
                         loadFragment(upcomingFragment)
                     }
                     1 -> {
@@ -443,11 +452,12 @@ class DashboardFragment : Fragment() {
                         loadFragment(surveyFragment)
                     }
                     2 -> {
-                        overDueFragment = OverDueFragment(dashboardViewModel, endList,::click)
+                        overDueFragment = OverDueFragment(dashboardViewModel, endList, ::click)
                         loadFragment(overDueFragment)
                     }
                     3 -> {
-                        overDueFragment = OverDueFragment(dashboardViewModel, endCompletedList,::click)
+                        overDueFragment =
+                            OverDueFragment(dashboardViewModel, endCompletedList, ::click)
                         loadFragment(overDueFragment)
                     }
                 }
@@ -498,7 +508,8 @@ class DashboardFragment : Fragment() {
     }
 
 
-companion object  {
-    const val COMPLETE = "complete"
-    const val RESET = "reset"
-}}
+    companion object {
+        const val COMPLETE = "complete"
+        const val RESET = "reset"
+    }
+}

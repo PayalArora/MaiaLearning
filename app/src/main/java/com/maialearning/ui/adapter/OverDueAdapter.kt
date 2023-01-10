@@ -40,13 +40,15 @@ import kotlin.collections.ArrayList
 
 
 class OverDueAdapter(
-    var overdueList: ArrayList<DashboardOverdueResponse.AssignmentItem>, val con: FragmentActivity, val fragment: Fragment
+    var overdueList: ArrayList<DashboardOverdueResponse.AssignmentItem>,
+    val con: FragmentActivity,
+    val fragment: Fragment
 ) :
     RecyclerView.Adapter<OverDueAdapter.ViewHolder>(), RichEditor.OnTextChangeListener {
     var isSelected = false
     lateinit var inflater: LayoutInflater
     private lateinit var progress: Dialog
-    private val click:OnClick = fragment as OnClick
+    private val click: OnClick = fragment as OnClick
 
     /**
      * Provide a reference to the type of views that you are using
@@ -162,6 +164,10 @@ class OverDueAdapter(
             }
             viewHolder.binding.textType.setText(overdueList.get(position).category.toString())
             viewHolder.binding.textType.setTextColor(Color.parseColor("#000000"))
+        } else if (overdueList.get(position).category == "Survey") {
+            setVisibility(viewHolder.binding, survey_lay = 1)
+            viewHolder.binding.textType.text = overdueList?.get(position)?.category
+            viewHolder.binding.descrptionSurvey.text =overdueList?.get(position)?.body
         } else {
             setVisibility(viewHolder.binding, carrier_lay = 1)
             viewHolder.binding.textType.text = overdueList?.get(position)?.category
@@ -197,16 +203,24 @@ class OverDueAdapter(
             viewHolder.binding.textSubmittedDoc.visibility = View.GONE
         }
         viewHolder.itemView.setOnClickListener {
-            if (!overdueList.get(position).category.equals("Survey"))
-                UpcomingItemDetails(fragment, inflater, overdueList.get(position), ::clickDetail).showDialog()
+            if (!overdueList.get(position).category.equals("Survey")) {
+                UpcomingItemDetails(
+                    fragment,
+                    inflater,
+                    overdueList.get(position),
+                    ::clickDetail
+                ).showDialog()
+            } else {
+
+            }
         }
         viewHolder.binding.menuClick.setOnClickListener {
             if (!overdueList.get(position).category.equals("Survey"))
-            menuPopUp(position, it)
+                menuPopUp(position, it)
         }
         viewHolder.binding.academicMenuClick.setOnClickListener {
             if (!overdueList.get(position).category.equals("Survey"))
-            menuPopUp(position, it)
+                menuPopUp(position, it)
         }
     }
 
@@ -249,7 +263,7 @@ class OverDueAdapter(
                     completeWork(overdueList.get(position).nid)
                 }
                 R.id.navigation_reset_complete -> {
-                    resetCompleteWork( overdueList.get(position).nid)
+                    resetCompleteWork(overdueList.get(position).nid)
                 }
             }
 
@@ -260,7 +274,7 @@ class OverDueAdapter(
     }
 
     private fun resetCompleteWork(nid: String?) {
-       nid?.let {
+        nid?.let {
             progress.show()
             dashboardViewModel.resetCompleteTask(
                 it,
@@ -280,8 +294,8 @@ class OverDueAdapter(
         }
     }
 
-    private fun completeWork(nid:String?) {
-       nid?.let {
+    private fun completeWork(nid: String?) {
+        nid?.let {
             SharedHelper(con).id?.let { it1 ->
                 progress.show()
                 dashboardViewModel.completetTask(
@@ -293,8 +307,8 @@ class OverDueAdapter(
         dashboardViewModel.completeFileObserver.observe(fragment.viewLifecycleOwner) {
             progress.dismiss()
             click.click("complete")
-         //   overdueList.removeAt(position)
-           // notifyDataSetChanged()
+            //   overdueList.removeAt(position)
+            // notifyDataSetChanged()
 //            SharedHelper(con).id?.let {
 //                dashboardViewModel.getOverDueCompleted(
 //                    "Bearer " + SharedHelper(con).authkey,
@@ -610,17 +624,23 @@ class OverDueAdapter(
         intent.type = type
         con.startActivityForResult(intent, REQUEST_CHOOSE_PHOTO_UPCOMING_DETAIL)
     }
-    private fun clickDetail(type: String, dialog: BottomSheetDialog, progress: Dialog, nid:String?){
+
+    private fun clickDetail(
+        type: String,
+        dialog: BottomSheetDialog,
+        progress: Dialog,
+        nid: String?
+    ) {
         progress.dismiss()
         dialog.dismiss()
-       if (type == "completeBtn") {
-           completeWork(nid)
-       } else {
-          resetCompleteWork(nid)
-       }
+        if (type == "completeBtn") {
+            completeWork(nid)
+        } else {
+            resetCompleteWork(nid)
+        }
     }
 }
 
 interface OnClick {
-    fun click(type:String)
+    fun click(type: String)
 }
