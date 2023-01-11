@@ -22,6 +22,8 @@ import com.maialearning.R
 import com.maialearning.databinding.ActivityCareerBinding
 import com.maialearning.ui.adapter.CareerCompareAdapter
 import com.maialearning.ui.adapter.CareerStateAdapter
+import com.maialearning.util.prefhandler.SharedHelper
+import com.squareup.picasso.Picasso
 
 class CareerActivity : Fragment() {
     var dialog: BottomSheetDialog? = null
@@ -54,7 +56,11 @@ class CareerActivity : Fragment() {
 //        binding.addFab.setOnClickListener {
 //            bottomSheetList()
 //        }
-
+        context?.let {
+            if (SharedHelper(it).picture != null && SharedHelper(it).picture?.length!! > 5) {
+                Picasso.with(it).load(SharedHelper(it).picture).into(binding.toolbarProf)
+            }
+        }
         return binding.root
     }
 

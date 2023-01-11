@@ -227,7 +227,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         dialogP.show()
         mModel.getSaveCountry()
         observerInit()
-
+        if (SharedHelper(this).picture != null && SharedHelper(this).picture?.length!! > 5) {
+            Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
+        }
     }
 
     fun parseJSON(): AthleticAsociations {
@@ -610,26 +612,12 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         val close = view.findViewById<ImageView>(R.id.close)
         val imageUniv = view.findViewById<ImageView>(R.id.image)
         val tabArray: Array<String>
-        if ((SharedHelper(this).country ?: "US") == "US") {
-            tabArray = arrayOf(
-                getString(R.string.overview),
-                getString(R.string.community),
-                getString(R.string.admission),
-                getString(R.string.cost_),
-                getString(R.string.degree),
-                getString(R.string.var_sport),
-                getString(R.string.transfer),
-                getString(R.string.notes),
-                getString(R.string.campus_service)
-            )
-        } else {
-            tabArray = arrayOf(
+        tabArray = arrayOf(
                 getString(R.string.college_info),
-                "Program List",
+                getString(R.string.prog_list),
                 getString(R.string.admission),
-                getString(R.string.notes)
-            )
-        }
+                getString(R.string.notes))
+
         for (item in tabArray) {
             factTabs.addTab(factTabs.newTab().setText(item))
         }

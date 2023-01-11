@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.internal.LinkedTreeMap
 import com.maialearning.databinding.ProgramDetailSheetBinding
@@ -20,7 +21,9 @@ import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.EntryRequirementAdapter
 import com.maialearning.ui.adapter.FeesAdapter
 import com.maialearning.ui.adapter.ProgramListAdapter
+import com.maialearning.ui.adapter.ProgramListAdapterEuropean
 import com.maialearning.viewmodel.FactSheetModel
+import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -65,10 +68,11 @@ class ProgramListFragment : Fragment(), OnClickOption {
 
                 // if response type is object
                 val gson = GsonBuilder().create()
-                val jsonObject = gson.toJsonTree(modelOther?.course_list as LinkedTreeMap<String,String>).asJsonObject
+                val jsonObject =
+                    gson.toJsonTree(modelOther?.course_list as LinkedTreeMap<String, String>).asJsonObject
 
                 //val jsonObject = JSONTokener(modelOther?.course_list).nextValue() as JSONObject
-               val courses = JSONObject(jsonObject.toString())
+                val courses = JSONObject(jsonObject.toString())
                 val courseObj = courses.optJSONObject("course_list")
                 val iteratorObj: Iterator<*> = courseObj.keys()
                 var courseList: ArrayList<CourseListModel> =
@@ -106,9 +110,30 @@ class ProgramListFragment : Fragment(), OnClickOption {
                     courseList.add(course)
                 }
                 courseList.sortBy { it.courseName }
+                mBinding.head1.visibility = View.GONE
                 mBinding.programList.adapter = ProgramListAdapter(
                     requireContext(),
                     courseList, this
+                )
+            } else if (modelOther?.course_list.toString().startsWith("[")){
+                val gson = GsonBuilder().create()
+                val jsonArray = gson.toJsonTree(modelOther?.course_list as ArrayList<*>) as JsonArray
+                val courses = JSONArray(jsonArray.toString())
+                var programList: ArrayList<ProgramListFactSheet> =
+                    ArrayList<ProgramListFactSheet>()
+                for (i in 0 until  courses.length()){
+                    val course: JSONObject? = courses.optJSONObject(i)
+                    course?.let {
+                        val prog = ProgramListFactSheet(it.optString("program_name"), it.optString("duration"), it.optString("tuition_fee"),  it.optString("program_id") )
+                        programList.add(prog)
+                    }
+
+                }
+                programList.sortBy { it.programName }
+                mBinding.head1.visibility = View.VISIBLE
+                mBinding.programList.adapter = ProgramListAdapterEuropean(
+                    requireContext(),
+                    programList, this
                 )
             }
         }

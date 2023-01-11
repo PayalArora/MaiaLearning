@@ -1015,7 +1015,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                             array!!.add(ConsiderModel.DecisionPlan("Reset", "Reset"))
 
                             recyclerView.adapter = ConsiderDecisionAdapter(
-                                it, type, this
+                                array, type, this
                             )
                             return
                         }

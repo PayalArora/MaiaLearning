@@ -914,7 +914,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                 array!!.add(ConsiderModel.DecisionPlan("Reset", "Reset"))
 
                             recyclerView.adapter = ConsiderDecisionAdapter(
-                                it, type, this
+                                array, type, this
                             )
                             return
                         }

@@ -35,7 +35,7 @@
                 android:visibility="gone" />
 
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/toolbar_prof"
                 android:layout_width="@dimen/_35dp"
                 android:layout_height="@dimen/_35dp"
