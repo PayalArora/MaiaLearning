@@ -1,11 +1,13 @@
 package com.maialearning.ui.fragments
 
+import android.app.Dialog
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.internal.LinkedTreeMap
+import com.maialearning.databinding.ProgramDetailEuropeanSheetBinding
 import com.maialearning.databinding.ProgramDetailSheetBinding
 import com.maialearning.databinding.ProgramListLayoutBinding
 import com.maialearning.model.*
@@ -22,16 +25,19 @@ import com.maialearning.ui.adapter.EntryRequirementAdapter
 import com.maialearning.ui.adapter.FeesAdapter
 import com.maialearning.ui.adapter.ProgramListAdapter
 import com.maialearning.ui.adapter.ProgramListAdapterEuropean
+import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.FactSheetModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.net.URLEncoder
 
 
 class ProgramListFragment : Fragment(), OnClickOption {
     private lateinit var mBinding: ProgramListLayoutBinding
     var modelOther: FactsheetModelOther? = null
     private val mModel: FactSheetModel by viewModel()
+    private  var dialogP: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +57,7 @@ class ProgramListFragment : Fragment(), OnClickOption {
         super.onViewCreated(view, savedInstanceState)
         mBinding.programList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        dialogP = context?.let { showLoadingDialog(it) }
         initData()
     }
 
@@ -133,14 +140,11 @@ class ProgramListFragment : Fragment(), OnClickOption {
                 mBinding.head1.visibility = View.VISIBLE
                 mBinding.programList.adapter = ProgramListAdapterEuropean(
                     requireContext(),
-                    programList, this
+                    programList, ::click
                 )
             }
         }
-    }
 
-    override fun onViewClick(mainPostion: Int, courseListOptionModel: CourseListOptionModel) {
-        courseListOptionModel.courseOptionId?.let { mModel.getProgramsDetail(it) }
         mModel.programDetailObserber.observe(viewLifecycleOwner) {
             Log.e("Detail", it.basicInfo.toString())
             val dialog = BottomSheetDialog(requireContext())
@@ -173,8 +177,42 @@ class ProgramListFragment : Fragment(), OnClickOption {
                 FeesAdapter(it.feesFunding?.tuitionFees as ArrayList<TuitionFeesItem>)
 
         }
+        mModel.progDetailObserverEurope.observe(viewLifecycleOwner){
+            dialogP?.dismiss()
+            if (it.size() ==1 ){
+                val dialog = BottomSheetDialog(requireContext())
+                val sheetBinding: ProgramDetailEuropeanSheetBinding =
+                    ProgramDetailEuropeanSheetBinding.inflate(layoutInflater)
+                sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+                dialog.setContentView(sheetBinding.root)
+                dialog?.show()
+                sheetBinding.close.setOnClickListener {
+                    dialog.dismiss()
+                }
+                sheetBinding.backBtn.setOnClickListener {
+                    dialog.dismiss()
+                }
+                sheetBinding.webView.loadDataWithBaseURL(
+                    "",
+                    it.get(0).toString(),
+                    "text/html",
+                    "utf-8",
+                    ""
+                )
+            }
+        }
     }
+
+    override fun onViewClick(mainPostion: Int, courseListOptionModel: CourseListOptionModel) {
+        courseListOptionModel.courseOptionId?.let { mModel.getProgramsDetail(it) }
+    }
+    fun click(i: String) {
+        dialogP?.show()
+        mModel.programDetails(i)
+    }
+
 }
+
 
 interface OnClickOption {
     fun onViewClick(mainPostion: Int, courseListOptionModel: CourseListOptionModel)

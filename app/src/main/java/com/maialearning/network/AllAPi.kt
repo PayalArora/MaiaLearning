@@ -782,4 +782,10 @@ interface AllAPi {
         @Field("student_id") id: String,
         @Field("college_id") c_id: String
     ): Deferred<Unit>
+
+    @GET("unicas_course_details/{id}")
+    fun programDetails(
+        @Header("Authorization") Authorization: String,
+        @Path("id") id: String
+    ): Deferred<JsonArray>
 }

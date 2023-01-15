@@ -14,16 +14,13 @@ import com.maialearning.databinding.AdmissionAdapterBinding
 import com.maialearning.databinding.CoursesListAdapterBinding
 import com.maialearning.databinding.ProgramListItemBinding
 import com.maialearning.databinding.ProgramListItemLayoutBinding
-import com.maialearning.model.CourseListModel
-import com.maialearning.model.GermanUniversitiesResponse
-import com.maialearning.model.ProgramListFactSheet
-import com.maialearning.model.UkResponseModel
+import com.maialearning.model.*
 import com.maialearning.ui.fragments.OnClickOption
 import com.maialearning.ui.fragments.OnItemClickOption
 
 class ProgramListAdapterEuropean(
     var context: Context,
-    val list: List<ProgramListFactSheet?>?, val onClickOption: OnClickOption
+    val list: List<ProgramListFactSheet?>?,  var click:(String)->Unit
     ) :
     RecyclerView.Adapter<ProgramListAdapterEuropean.ViewHolder>() {
     var isSelected = false
@@ -52,7 +49,7 @@ class ProgramListAdapterEuropean(
         viewHolder.binding.durationTxt.text = list?.get(position)?.duration
         viewHolder.binding.price.text = Html.fromHtml(list?.get(position)?.tuitionFee)
         viewHolder.binding.arrow.setOnClickListener {
-
+            list?.get(position)?.programId?.let { it1 -> click(it1) }
         }
     }
 

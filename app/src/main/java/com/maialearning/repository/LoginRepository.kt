@@ -399,6 +399,10 @@ interface LoginRepository {
     suspend fun addUniversity(
         id: String, cId: String
     ): UseCaseResult<Unit>
+
+    suspend fun programDetails(
+        id: String
+    ): UseCaseResult<JsonArray>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -2059,6 +2063,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.addUniversity(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id, cId
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun programDetails(id: String): UseCaseResult<JsonArray> {
+        return try {
+            val result = catApi.programDetails(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

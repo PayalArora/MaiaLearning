@@ -2,6 +2,7 @@ package com.maialearning.ui.fragments
 
 
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,7 +84,51 @@ class OverViewFragment : Fragment() {
             }
         } else {
             modelOther = (context as UniversitiesActivity).getDataOther()
-            if (modelOther != null && modelOther?.basicInfo?.basicInfo?.name != null) {
+            if (checkNonNull(modelOther?.providerInfo.toString())) {
+                if (modelOther?.providerInfo.toString()?.startsWith("<div")){
+                    mBinding.aboutdes.setText(Html.fromHtml(modelOther?.providerInfo.toString()))
+                    mBinding.aboutdes.visibility = View.VISIBLE
+                    mBinding.webUrl.visibility = View.GONE
+                    mBinding.web.visibility = View.GONE
+                    mBinding.phone.visibility = View.GONE
+                    mBinding.entType.visibility = View.GONE
+                    mBinding.enviro.visibility = View.GONE
+                    mBinding.institutionType.visibility = View.GONE
+                    mBinding.publicType.visibility = View.GONE
+                    mBinding.types.visibility = View.GONE
+                    mBinding.intsType.visibility = View.GONE
+                    mBinding.termTyp.visibility = View.GONE
+                    mBinding.degree.visibility = View.GONE
+                    mBinding.locTxt.visibility = View.GONE
+                    mBinding.mapLayout.visibility = View.GONE
+                } else
+                {
+                val gson = GsonBuilder().create()
+                val jsonObject = gson.toJsonTree(modelOther?.providerInfo as LinkedTreeMap<String, String>).asJsonObject
+
+                if (jsonObject.has("website") == true) {
+                    //  val jsonObject = JSONObject(modelOther?.providerInfo.toString())
+                    val providerInfo = gson.fromJson(
+                        jsonObject,
+                        FactsheetModelOther.ProviderInfo::class.java
+                    )
+                    //val providerInfo = modelOther?.providerInfo as FactsheetModelOther.ProviderInfo
+                    mBinding.aboutdes.visibility = View.GONE
+                    mBinding.webUrl.text = " ${providerInfo.website}"
+                    mBinding.locTxt.text =
+                        "${
+                            parseEmpty(providerInfo.address1) + parseEmpty(providerInfo.address2) + parseEmpty(
+                                providerInfo.address3
+                            ) + parseEmpty(providerInfo.address4) + parseEmpty(
+                                providerInfo.postalCode
+                            )
+                        }"
+
+
+
+                }
+        }
+    }else if (modelOther != null && modelOther?.basicInfo?.basicInfo?.name != null) {
                 mBinding.aboutdes.text = " ${modelOther?.basicInfo?.basicInfo?.description}"
                 mBinding.phoneNo.text = " ${modelOther?.basicInfo?.basicInfo?.phone}"
                 mBinding.webUrl.text = " ${modelOther?.basicInfo?.basicInfo?.webAddr}"
@@ -98,34 +143,8 @@ class OverViewFragment : Fragment() {
                     "222178"
                 )
                 mBinding.aboutdes.visibility = View.VISIBLE
-            } else if (checkNonNull(modelOther?.providerInfo.toString())) {
-                val gson = GsonBuilder().create()
-                val jsonObject = gson.toJsonTree(modelOther?.providerInfo as LinkedTreeMap<String, String>).asJsonObject
 
-                if (jsonObject.has("website") == true) {
-                        //  val jsonObject = JSONObject(modelOther?.providerInfo.toString())
-                        val providerInfo = gson.fromJson(
-                            jsonObject,
-                            FactsheetModelOther.ProviderInfo::class.java
-                        )
-                        //val providerInfo = modelOther?.providerInfo as FactsheetModelOther.ProviderInfo
-                        mBinding.aboutdes.visibility = View.GONE
-                        mBinding.webUrl.text = " ${providerInfo.website}"
-                        mBinding.locTxt.text =
-                            "${
-                                parseEmpty(providerInfo.address1) + parseEmpty(providerInfo.address2) + parseEmpty(
-                                    providerInfo.address3
-                                ) + parseEmpty(providerInfo.address4) + parseEmpty(
-                                    providerInfo.postalCode
-                                )
-                            }"
-
-
-
-                }
-            }
-        }
-    }
+            }}}
 
     fun observer() {
         mModel.idObserver.observe(requireActivity()) {

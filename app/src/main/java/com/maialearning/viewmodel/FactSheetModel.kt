@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import kotlin.coroutines.CoroutineContext
 
 class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
@@ -47,6 +48,7 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
     val fosChildOther = MutableLiveData<JsonObject>()
     val fosChildMazor= MutableLiveData<JsonObject>()
     val addSearchUniversityObserver = MutableLiveData<JsonObject>()
+    val progDetailObserverEurope = MutableLiveData<JsonArray>()
     val addUniversitiesSaveObserver = MutableLiveData<Unit>()
 
 
@@ -474,6 +476,20 @@ class FactSheetModel(private val catRepository: LoginRepository) : ViewModel(), 
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> addUniversitiesSaveObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+
+    fun programDetails(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.programDetails(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> progDetailObserverEurope.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }
