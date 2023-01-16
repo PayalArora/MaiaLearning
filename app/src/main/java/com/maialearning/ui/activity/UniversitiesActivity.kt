@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,7 +33,7 @@ import com.maialearning.parser.SearchParser
 import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ProfileFilter
 import com.maialearning.ui.bottomsheets.SheetUniversityFilter
-import com.maialearning.ui.fragments.ConsideringFragment
+import com.maialearning.ui.fragments.*
 import com.maialearning.ui.model.AthleticAsociations
 import com.maialearning.ui.model.ChildrenItem
 import com.maialearning.ui.model.ResponseItem
@@ -230,8 +231,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         if (SharedHelper(this).picture != null && SharedHelper(this).picture?.length!! > 5) {
             Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
         }
+        loadFragment(SearchFragment())
     }
 
+    private fun loadFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment_content_dashboard, fragment)
+        transaction.commit()
+    }
     fun parseJSON(): AthleticAsociations {
         val athleticAsociations = AthleticAsociations()
         val items: List<String> = ArrayList()
@@ -311,14 +318,53 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             binding.tabs.addTab(binding.tabs.newTab().setText(item))
 
         }
-        val fm: FragmentManager = supportFragmentManager
-        val adapter = ViewStateAdapter(fm, lifecycle, binding.tabs, tabArray.size)
 
-        binding.viewPager.adapter = adapter
-        binding.viewPager.setUserInputEnabled(false)
-        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
-            tab.setText(tabArray[position])
-        }.attach()
+       // val adapter = ViewStateAdapter(fm, lifecycle, binding.tabs, tabArray.size)
+
+//        binding.viewPager.adapter = adapter
+//        binding.viewPager.setUserInputEnabled(false)
+//        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
+//            tab.setText(tabArray[position])
+//        }.attach()
+
+        binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> {
+                        loadFragment(SearchFragment())
+                    }
+                    1 -> {
+
+                        loadFragment(ConsideringFragment())
+                    }
+                    2 -> {
+
+                        loadFragment( ApplyingFragment(binding.tabs))
+                    }
+                    3 -> {
+                        loadFragment(MilestonesFragment())
+                    }
+                    4 -> {
+
+                    loadFragment( RecommendationFragment())
+                }
+                    5 -> {
+                        loadFragment(DecisionsFragment())
+                    }
+                    6 -> {
+                        loadFragment(EssaysFragment())
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
 
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).apply {
             setOnClickListener {
@@ -1077,7 +1123,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun setFilters() {
-        if (binding.viewPager.currentItem == 0) {
+        if (binding.tabs.selectedTabPosition == 0) {
             if ((SharedHelper(this).country ?: "US") == "US") {
                 val typeSize =
                     selectedTwoFour.size + selectedPublicPrivate.size + selectedTypeEnv.size + selectedSize.size
@@ -3334,6 +3380,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var collegeList: java.util.ArrayList<CollegeList.Data>? = null
 
     }
+
 }
 
 interface ClickFilters {
@@ -3341,5 +3388,6 @@ interface ClickFilters {
     fun onDiversityClick(position: Int)
     fun onTypeClick(position: Int, type: String)
 }
+
 
 

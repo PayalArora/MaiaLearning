@@ -106,11 +106,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         super.onResume()
         val filter = activity?.findViewById<ImageView>(R.id.toolbar_messanger)
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
-        if (viewPager?.currentItem == 2) {
+       // if (viewPager?.currentItem == 2) {
             filter?.setOnClickListener {
                 filterWork()
             }
-        }
+       // }
     }
 
     private fun resetFilters() {

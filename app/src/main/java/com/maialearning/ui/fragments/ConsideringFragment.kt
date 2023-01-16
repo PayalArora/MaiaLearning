@@ -86,12 +86,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         dialogP.show()
         getConsideringList()
         val filter = activity?.findViewById<ImageView>(R.id.toolbar_messanger)
-        val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
-        if (viewPager?.currentItem == 1) {
+       // val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
+        //if (viewPager?.currentItem == 1) {
             filter?.setOnClickListener {
                 filterWork()
             }
-        }
+        //}
     }
 
     var sheetBindingUniv: ConsideringFilterBinding? = null

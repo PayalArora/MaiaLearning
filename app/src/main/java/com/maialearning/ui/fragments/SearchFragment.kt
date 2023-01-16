@@ -92,6 +92,7 @@ class SearchFragment : Fragment() {
         } else {
             universitySearch()
         }
+
         return mBinding.root
 
     }
