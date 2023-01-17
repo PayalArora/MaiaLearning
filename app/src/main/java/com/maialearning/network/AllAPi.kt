@@ -454,7 +454,7 @@ interface AllAPi {
         @Path("id") id: String
     ): Deferred<JsonObject>
 
-    @GET("get-itask-category/1/")
+    @GET("get-itask-category/1?custom_cat=1")
     fun getMilestonesID(
         @Header("Authorization") AutToken: String
     ): Deferred<JsonObject>

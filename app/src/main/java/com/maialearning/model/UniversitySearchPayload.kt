@@ -37,9 +37,9 @@ class UniversitySearchPayload {
     var per_pager = 10
     var subject_code: ArrayList<String>? = null
     lateinit var mode_of_admission:String
-    lateinit var mode_of_study:String
-    lateinit var admission_semester:String
-    lateinit var instruction_language:String
+     var mode_of_study:String? = null
+    var admission_semester:String? = null
+    var instruction_language:String? = null
     var college_list: ArrayList<String>? = null
     lateinit var ucas_college_type: String
      var cipcode: ArrayList<String>? = null

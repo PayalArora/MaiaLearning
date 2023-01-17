@@ -156,7 +156,12 @@ class SearchFragment : Fragment() {
                 //for swipe refresh page
                 if (totalPage != null) {
                     if (last != null) {
-                        germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last)
+                        if (univ.pager?.current?:0 >= 1)
+                            germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last, false)
+                        else
+                            germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last, true)
+
+
                     }
                 }
                 mBinding.universitisCounte.text =univ.pager?.total .toString() + " Universities found"
@@ -396,9 +401,13 @@ class SearchFragment : Fragment() {
                 if (checkNonNull(UniversitiesActivity.selectedDiscipline))
                 payload.foscode = arrayListOf(UniversitiesActivity.selectedDiscipline)
             }
+             payload.college_list = UniversitiesActivity.selectedGbUniversity
+             payload.ucas_college_type = UniversitiesActivity.selectedGbCollege
+            payload.sort_parameter = "college_name"
+            payload.sort_order = "asc"
+
         }
-        payload.sort_parameter = "college_name"
-        payload.sort_order = "asc"
+
 
         payload.university_list = UniversitiesActivity.selectedListFilter
         if (UniversitiesActivity.selectedGermanSubject != null && UniversitiesActivity.selectedGermanSubject.size > 0)
@@ -408,12 +417,16 @@ class SearchFragment : Fragment() {
         if (UniversitiesActivity.selectedFieldSubject != null && UniversitiesActivity.selectedFieldSubject.size > 0)
             payload.subject_code = UniversitiesActivity.selectedFieldSubject
 
+        if (checkNonNull( UniversitiesActivity.selectedModeAdmission))
         payload.mode_of_admission = UniversitiesActivity.selectedModeAdmission
+
+        if (checkNonNull( UniversitiesActivity.selectedModeStudy))
         payload.mode_of_study = UniversitiesActivity.selectedModeStudy
+        if (checkNonNull( UniversitiesActivity.selectedAdmissionSem))
         payload.admission_semester = UniversitiesActivity.selectedAdmissionSem
+        if (checkNonNull( UniversitiesActivity.selectedInstructionLanguage))
         payload.instruction_language = UniversitiesActivity.selectedInstructionLanguage
-        payload.college_list = UniversitiesActivity.selectedGbUniversity
-        payload.ucas_college_type = UniversitiesActivity.selectedGbCollege
+
         var cipcode: ArrayList<String>? = arrayListOf()
         if (UniversitiesActivity.selectedMazorAny != null && !UniversitiesActivity.selectedMazorAny.equals(
                 ""
