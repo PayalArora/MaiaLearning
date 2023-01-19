@@ -1136,7 +1136,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             finalArray.get(postion).notes = sheetBinding.enterNote.text.toString().trim()
 //            mBinding.applyingList.adapter?.notifyDataSetChanged()
 //            sheetBinding.enterNote.setText("")
-            getApplyingList()
+//            getApplyingList()
             sheetBinding.save.visibility = View.GONE
             dialog.dismiss()
         }
