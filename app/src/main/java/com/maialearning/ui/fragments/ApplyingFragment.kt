@@ -1134,8 +1134,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         homeModel.saveTopPickNoteObserver.observe(requireActivity()) {
             dialogP.dismiss()
             finalArray.get(postion).notes = sheetBinding.enterNote.text.toString().trim()
-            mBinding.applyingList.adapter?.notifyDataSetChanged()
-            sheetBinding.enterNote.setText("")
+//            mBinding.applyingList.adapter?.notifyDataSetChanged()
+//            sheetBinding.enterNote.setText("")
+            getApplyingList()
             sheetBinding.save.visibility = View.GONE
             dialog.dismiss()
         }
