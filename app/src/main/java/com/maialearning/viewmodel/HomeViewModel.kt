@@ -69,6 +69,8 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val compareAllObserver = MutableLiveData<JsonObject>()
     val cancelRoundObserver = MutableLiveData<JsonObject>()
     val savePrefRecoObserver = MutableLiveData<JsonObject>()
+    val saveTopPickNoteObserver= MutableLiveData<Unit>()
+
 
 
     fun getConsiderList(id: String, status: String) {
@@ -834,4 +836,17 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         }
     }
 
+    fun saveTopPickNote(id: String, note: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.saveTopPickNote(id, note)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> saveTopPickNoteObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
 }

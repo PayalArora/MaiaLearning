@@ -738,5 +738,13 @@
     <string name="transcript_error1">Transcript Request on failed for following College/s because for these colleges Application type is not set.</string>
     <string name="transcript_request_failed">Transcript Request Failed</string>
     <string name="clear_all">Clear All</string>
+    <string name="notes_only">Notes</string>
+    <string name="student_note">Student Note</string>
+    <string name="no_comments">No Comments</string>
+    <string name="note_for_student">Note for Student</string>
+    <string name="add_a_note">+ Add a note</string>
+    <string name="add_note">Add note</string>
+    <string name="enter_note_hint">Enter Note</string>
+    <string name="editing_note">Editing note</string>
 
 </resources>

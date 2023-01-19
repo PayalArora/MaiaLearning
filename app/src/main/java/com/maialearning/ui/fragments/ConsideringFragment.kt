@@ -949,7 +949,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         bottomSheetType(R.layout.application_plan_filter, R.id.radio_action, 2, postion, "")
     }
 
-    override fun onCommentClick() {
+    override fun onCommentClick(postion: Int) {
         bottomSheetComment()
     }
 
@@ -1566,7 +1566,7 @@ interface OnItemClickOption {
     fun onTypeClick(postion: Int)
     fun onTermClick(postion: Int)
     fun onPlanClick(postion: Int)
-    fun onCommentClick()
+    fun onCommentClick(position: Int)
     fun onAddClick(postion: Int)
     fun onInfoClick(postion: Int, )
     fun onApplyingClick(postion: Int)

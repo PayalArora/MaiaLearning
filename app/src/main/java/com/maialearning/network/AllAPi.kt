@@ -788,4 +788,13 @@ interface AllAPi {
         @Header("Authorization") Authorization: String,
         @Path("id") id: String
     ): Deferred<JsonArray>
+
+
+    @POST("save-toppick-note")
+    @FormUrlEncoded
+    fun saveTopPickNote(
+        @Header("Authorization") Authorization: String,
+        @Field("transcript_nid") id: String,
+        @Field("note") note: String
+    ): Deferred<Unit>
 }

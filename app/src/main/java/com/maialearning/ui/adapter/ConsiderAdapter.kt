@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.ConsideringItemLayBinding
@@ -65,6 +66,18 @@ class ConsiderAdapter(
                                     (collegeAppLicationType?.selectedPlanType == "term" && !isAppTerm) ||
                                     !isAppPlan
                             )
+
+                    if (array[position].notes != null && !array[position].notes.isEmpty()&&!array[position].notes.equals("null")) {
+                        if (counselorNotes != null && counselorNotes?.size!! > 0) {
+                            notesCount.text = "${ counselorNotes!!.size + 1 }"
+                        }else{
+                            notesCount.text = "1"
+                        }
+                    }else if (counselorNotes != null && counselorNotes?.size!! > 0) {
+                            notesCount.text = "${ counselorNotes!!.size + 1 }"
+                    }else{
+                        notesCount.text = "0"
+                    }
 
                     if (header == "") {
                         top.visibility = View.GONE
@@ -124,7 +137,7 @@ class ConsiderAdapter(
                         countTxt.setText("2nd")
                     } else if (college_priority_choice.equals("3")) {
                         countTxt.setText("3rd")
-                    }else {
+                    } else {
                         countTxt.setText(college_priority_choice)
                     }
 //            university.app_by_program_supported === 1 &&
@@ -144,7 +157,7 @@ class ConsiderAdapter(
                         appTerm.isEnabled = false
                     }
                     val supportsMaiaDocs = slate == 1 || parchment == 1
-                    if (supportsMaiaDocs){
+                    if (supportsMaiaDocs) {
                         imgCommonApp.visibility = View.VISIBLE
                     } else {
                         imgCommonApp.visibility = View.GONE
@@ -246,7 +259,6 @@ class ConsiderAdapter(
                     //uniName.text=naviance_college_name
                     appTerm.setOnClickListener {
                         onItemClickOption.onTermClick(position)
-
                     }
                     appType.setOnClickListener {
                         onItemClickOption.onTypeClick(position)
@@ -258,7 +270,10 @@ class ConsiderAdapter(
                         onItemClickOption.onPlanClick(position)
                     }
                     commentImg.setOnClickListener {
-                        onItemClickOption.onCommentClick()
+                        Toast.makeText(viewHolder.binding.root.context, "tt", Toast.LENGTH_SHORT)
+                            .show()
+                        onItemClickOption.onCommentClick(position)
+
                     }
                     addButton.setOnClickListener {
                         onItemClickOption.onAddClick(position)
@@ -287,15 +302,14 @@ class ConsiderAdapter(
                     selection.visibility = View.GONE
 
                 }
-                if (selected == true){
+                if (selected == true) {
                     selection.isChecked = true
-                } else
-                {
-                    selection.isChecked= false
+                } else {
+                    selection.isChecked = false
                 }
 
 
-                selection.setOnClickListener{
+                selection.setOnClickListener {
                     selected = selection.isChecked
                 }
             }
@@ -404,10 +418,10 @@ class ConsiderAdapter(
         onItemClickOption.onDeadlineClick(positio, string)
     }
 
-    fun selectionVisibility(b: Boolean) : Boolean{
+    fun selectionVisibility(b: Boolean): Boolean {
         selectionVisiblility = b
         notifyDataSetChanged()
-        return  b
+        return b
     }
 }
 

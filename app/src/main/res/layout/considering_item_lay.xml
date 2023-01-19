@@ -257,6 +257,7 @@
                         android:background="@drawable/black_circle"
                         android:gravity="center"
                         android:text="0"
+                        android:id="@+id/notes_count"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_7sp"
                         android:visibility="visible" />

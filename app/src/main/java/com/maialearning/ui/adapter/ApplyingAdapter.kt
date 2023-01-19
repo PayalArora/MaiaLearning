@@ -260,7 +260,7 @@ class ApplyingAdapter(
                     onItemClickOption.onMenuClick(position, it)
                 }
                 commentImg.setOnClickListener {
-                    onItemClickOption.onCommentClick()
+                    onItemClickOption.onCommentClick(position)
                 }
                       appRound.setOnClickListener {
                           val  canAddRound=
@@ -340,6 +340,17 @@ class ApplyingAdapter(
 
                 selection.setOnClickListener{
                     selected = selection.isChecked
+                }
+                if (notes != null && !notes.isEmpty()&&!notes.equals("null")) {
+                    if (counselorNotes != null && counselorNotes?.size!! > 0) {
+                        notesCount.text = "${ counselorNotes!!.size + 1 }"
+                    }else{
+                        notesCount.text = "1"
+                    }
+                }else if (counselorNotes != null && counselorNotes?.size!! > 0) {
+                    notesCount.text = "${ counselorNotes!!.size + 1 }"
+                }else{
+                    notesCount.text = "0"
                 }
         }
 

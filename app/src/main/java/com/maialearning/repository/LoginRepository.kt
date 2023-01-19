@@ -403,6 +403,10 @@ interface LoginRepository {
     suspend fun programDetails(
         id: String
     ): UseCaseResult<JsonArray>
+
+    suspend fun saveTopPickNote(
+        id: String, note: String
+    ): UseCaseResult<Unit>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -491,6 +495,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
     override suspend fun getColleges(id: String): UseCaseResult<JsonObject> {
         return try {
             val result = catApi.collegeListAsync(
@@ -2077,6 +2082,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.programDetails(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun saveTopPickNote(id: String, note: String): UseCaseResult<Unit> {
+        return try {
+            val result = catApi.saveTopPickNote(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id, note
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

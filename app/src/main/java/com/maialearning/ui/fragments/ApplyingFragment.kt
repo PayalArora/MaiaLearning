@@ -64,7 +64,6 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     val failCollegesMissingApptype: ArrayList<KeyVal> = ArrayList()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -106,11 +105,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         super.onResume()
         val filter = activity?.findViewById<ImageView>(R.id.toolbar_messanger)
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
-       // if (viewPager?.currentItem == 2) {
-            filter?.setOnClickListener {
-                filterWork()
-            }
-       // }
+        // if (viewPager?.currentItem == 2) {
+        filter?.setOnClickListener {
+            filterWork()
+        }
+        // }
     }
 
     private fun resetFilters() {
@@ -290,24 +289,44 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                     }
                     var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
                         arrayListOf()
-                    /*       var counselorNotes = object_.getJSONArray("counselor_notes")
-                           if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
-                               if (counselorNotes is JSONObject) {
-                                   val x = counselorNotes.keys() as Iterator<String>
-                                   while (x.hasNext()) {
-                                       var json: JSONObject = counselorNotes.get(x.next()) as JSONObject
-                                       val notesObj: ConsiderModel.CounselorNotes =
-                                           ConsiderModel.CounselorNotes(json.optString("id"),
-                                               json.optString("uid"),
-                                               json.optString("counselor_note"),
-                                               json.optString("first_name"),
-                                               json.optString("last_name"))
-                                       arrayCounselor.add(notesObj)
-                                   }
+                    var counselorNotes = object_.optJSONArray("counselor_notes")
+                    if (counselorNotes != null) {
+                        if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
+                            if (counselorNotes is JSONObject) {
+                                val x = counselorNotes.keys() as Iterator<String>
+                                while (x.hasNext()) {
+                                    var json: JSONObject =
+                                        counselorNotes.get(x.next()) as JSONObject
+                                    val notesObj: ConsiderModel.CounselorNotes =
+                                        ConsiderModel.CounselorNotes(
+                                            json.optString("id"),
+                                            json.optString("uid"),
+                                            json.optString("counselor_note"),
+                                            json.optString("first_name"),
+                                            json.optString("last_name")
+                                        )
+                                    arrayCounselor.add(notesObj)
+                                }
+                            }
+                        }
+                    } else {
+                        var counselorNotes = object_.optJSONObject("counselor_notes")
+                        val x = counselorNotes.keys() as Iterator<String>
+                        while (x.hasNext()) {
+                            var json: JSONObject =
+                                counselorNotes.get(x.next()) as JSONObject
+                            val notesObj: ConsiderModel.CounselorNotes =
+                                ConsiderModel.CounselorNotes(
+                                    json.optString("id"),
+                                    json.optString("uid"),
+                                    json.optString("counselor_note"),
+                                    json.optString("first_name"),
+                                    json.optString("last_name")
+                                )
+                            arrayCounselor.add(notesObj)
+                        }
+                    }
 
-
-                               }
-                           }*/
                     var requiredRecs: ConsiderModel.RequiredRecommendation? = null
                     val jobj: JSONObject? = object_.optJSONObject("required_recommendation")
                     jobj?.let {
@@ -352,6 +371,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                                 )
                         )
                     }
+
 
                     var collComapre: ConsiderModel.CollegeCompare? = null
                     val collJson: JSONObject? = object_.optJSONObject("college_compare")
@@ -675,7 +695,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 //                        }
                         copyArray = finalArray
                         (mBinding.applyingList.adapter as ApplyingAdapter).updateAdapter(finalArray)
-                        mBinding.universitisCounte.text = finalArray.size.toString() + " Universities"
+                        mBinding.universitisCounte.text =
+                            finalArray.size.toString() + " Universities"
                     }
                 }
             }
@@ -866,7 +887,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     }
 
     private fun allTranscriptSheet(it: JsonObject) {
-        Log.e("data",""+it)
+        Log.e("data", "" + it)
         val dialog = BottomSheetDialog(requireContext())
         var sheet =
             LayoutTranscriptBinding.inflate(layoutInflater)
@@ -880,7 +901,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
         val json: JSONObject? =
             JSONObject(it.toString())
-        val failjson=json?.optJSONObject("college")?.optJSONObject("fail")
+        val failjson = json?.optJSONObject("college")?.optJSONObject("fail")
         failColleges.clear()
         failjson?.let {
             val keys = it.keys() as Iterator<String>
@@ -891,7 +912,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             }
         }
 
-        val failAppTypejson=json?.optJSONObject("college")?.optJSONObject("fail_missing_app_type")
+        val failAppTypejson = json?.optJSONObject("college")?.optJSONObject("fail_missing_app_type")
         failCollegesMissingApptype.clear()
         failAppTypejson?.let {
             val keys = it.keys() as Iterator<String>
@@ -901,15 +922,17 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 failCollegesMissingApptype.add(KeyVal(key, it.getString(key), false))
             }
         }
-        if(failColleges!=null && failColleges.size>0){
+        if (failColleges != null && failColleges.size > 0) {
             failColleges.sortBy { it.key }
-            sheet.listing.layoutManager=LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
-            sheet.listing.adapter=TranscriptFailCollAdapter(failColleges)
+            sheet.listing.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            sheet.listing.adapter = TranscriptFailCollAdapter(failColleges)
         }
-        if(failCollegesMissingApptype!=null && failCollegesMissingApptype.size>0){
+        if (failCollegesMissingApptype != null && failCollegesMissingApptype.size > 0) {
 //            failCollegesMissingApptype.sortBy { it.key }
-            sheet.listing2.layoutManager=LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false)
-            sheet.listing2.adapter=TranscriptFailCollAdapter(failCollegesMissingApptype)
+            sheet.listing2.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            sheet.listing2.adapter = TranscriptFailCollAdapter(failCollegesMissingApptype)
         }
     }
 
@@ -1050,11 +1073,11 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     }
 
 
-    override fun onCommentClick() {
-        //     bottomSheetComment()
+    override fun onCommentClick(postion: Int) {
+        bottomSheetComment(postion)
     }
 
-    private fun bottomSheetComment() {
+    private fun bottomSheetComment(postion: Int) {
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: com.maialearning.databinding.CommentsSheetBinding =
             CommentsSheetBinding.inflate(layoutInflater)
@@ -1065,7 +1088,57 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         sheetBinding.close.setOnClickListener {
             dialog.dismiss()
         }
-        sheetBinding.commentList.adapter = CommentAdapter(this)
+//        sheetBinding.commentList.adapter = CommentAdapter(this)
+        if (finalArray[postion].notes != null && !finalArray[postion].notes.isEmpty() && !finalArray[postion].notes.equals(
+                "null"
+            )
+        ) {
+            sheetBinding.notesTxt.text = finalArray[postion].notes
+        } else {
+            sheetBinding.editStudentNote.visibility = View.GONE
+        }
+        if (finalArray.get(postion).counselorNotes != null && finalArray.get(postion)?.counselorNotes!!.size > 0)
+            sheetBinding.commentList.adapter =
+                CounselorNotesCommentsAdapter(finalArray.get(postion).counselorNotes)
+
+        sheetBinding.addMore.setOnClickListener {
+            sheetBinding.enterNoteLay.visibility = View.VISIBLE
+
+            sheetBinding.addMore.visibility = View.VISIBLE
+            sheetBinding.save.text = "Add note"
+            sheetBinding.save.visibility=View.VISIBLE
+        }
+
+        sheetBinding.editStudentNote.setOnClickListener {
+            sheetBinding.enterNoteLay.visibility = View.VISIBLE
+            sheetBinding.addNoteTxt.text = resources.getText(R.string.editing_note)
+            sheetBinding.enterNote.requestFocus()
+            sheetBinding.enterNote.setText(finalArray.get(postion).notes)
+            sheetBinding.save.visibility = View.VISIBLE
+            sheetBinding.save.text = "Save note"
+        }
+
+        sheetBinding.save.setOnClickListener {
+            if (sheetBinding.enterNote.text.toString() != null && !sheetBinding.enterNote.text.toString()
+                    .trim().isEmpty()
+            ) {
+                dialogP.show()
+                homeModel.saveTopPickNote(
+                    finalArray.get(postion).transcriptNid.toString(),
+                    sheetBinding.enterNote.text.toString().trim()
+                )
+            }
+
+        }
+
+        homeModel.saveTopPickNoteObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            finalArray.get(postion).notes = sheetBinding.enterNote.text.toString().trim()
+            mBinding.applyingList.adapter?.notifyDataSetChanged()
+            sheetBinding.enterNote.setText("")
+            sheetBinding.save.visibility = View.GONE
+            dialog.dismiss()
+        }
     }
 
     override fun onClick(positiion: Int) {
