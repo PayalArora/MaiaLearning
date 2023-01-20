@@ -47,7 +47,8 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     var copyArray: ArrayList<ConsiderModel.Data> = ArrayList()
     lateinit var userid: String
     var selectedUnivId: String = ""
-    var positio: Int = 0
+    var positionNotes: Int = 0
+    var notes: String = ""
     val applyingWithList: ArrayList<KeyVal> = ArrayList()
     val missingList: ArrayList<KeyVal> = ArrayList()
     lateinit var applyingAdapter: ApplyingAdapter
@@ -60,6 +61,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     var appStatus = ArrayList<StatusModel>()
     var cancelDialog: BottomSheetDialog? = null
     var prefDialog: BottomSheetDialog? = null
+    var notesDialog: BottomSheetDialog? = null
     val failColleges: ArrayList<KeyVal> = ArrayList()
     val failCollegesMissingApptype: ArrayList<KeyVal> = ArrayList()
 
@@ -884,6 +886,16 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             dialogP.dismiss()
             prefDialog?.dismiss()
         }
+        homeModel.saveTopPickNoteObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            finalArray.get(positionNotes).notes = notes
+//            mBinding.applyingList.adapter?.notifyDataSetChanged()
+//            sheetBinding.enterNote.setText("")
+//            getApplyingList()
+          //  sheetBinding.save.visibility = View.GONE
+            dialog?.dismiss()
+            notesDialog?.dismiss()
+        }
     }
 
     private fun allTranscriptSheet(it: JsonObject) {
@@ -1078,7 +1090,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     }
 
     private fun bottomSheetComment(postion: Int) {
+        positionNotes = postion
         val dialog = BottomSheetDialog(requireContext())
+        notesDialog = dialog
         val sheetBinding: com.maialearning.databinding.CommentsSheetBinding =
             CommentsSheetBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight =
@@ -1122,6 +1136,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             if (sheetBinding.enterNote.text.toString() != null && !sheetBinding.enterNote.text.toString()
                     .trim().isEmpty()
             ) {
+                notes = sheetBinding.enterNote.text.toString()
                 dialogP.show()
                 homeModel.saveTopPickNote(
                     finalArray.get(postion).transcriptNid.toString(),
@@ -1131,15 +1146,6 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
 
         }
 
-        homeModel.saveTopPickNoteObserver.observe(requireActivity()) {
-            dialogP.dismiss()
-            finalArray.get(postion).notes = sheetBinding.enterNote.text.toString().trim()
-//            mBinding.applyingList.adapter?.notifyDataSetChanged()
-//            sheetBinding.enterNote.setText("")
-//            getApplyingList()
-            sheetBinding.save.visibility = View.GONE
-            dialog.dismiss()
-        }
     }
 
     override fun onClick(positiion: Int) {

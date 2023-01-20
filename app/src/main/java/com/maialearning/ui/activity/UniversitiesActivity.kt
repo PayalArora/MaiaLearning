@@ -310,9 +310,9 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             getString(R.string.applying),
             getString(R.string.milestone),
             getString(R.string.recommendations),
-            getString(R.string.decisions),
-            getString(R.string.essays),
-            getString(R.string.scholarships)
+          getString(R.string.decisions),
+//            getString(R.string.essays),
+//            getString(R.string.scholarships)
         )
         for (item in tabArray) {
             binding.tabs.addTab(binding.tabs.newTab().setText(item))
@@ -329,31 +329,42 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (binding.tabs.selectedTabPosition == 1 ||binding.tabs.selectedTabPosition == 2) {
+                    binding.addFab.visibility = View.VISIBLE
+                } else
+                    binding.addFab.visibility = View.GONE
                 when (tab?.position) {
                     0 -> {
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
                         loadFragment(SearchFragment())
                     }
                     1 -> {
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
 
                         loadFragment(ConsideringFragment())
                     }
                     2 -> {
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
 
                         loadFragment( ApplyingFragment(binding.tabs))
                     }
                     3 -> {
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
                         loadFragment(MilestonesFragment())
                     }
                     4 -> {
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
 
                     loadFragment( RecommendationFragment())
                 }
                     5 -> {
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
                         loadFragment(DecisionsFragment())
                     }
-                    6 -> {
-                        loadFragment(EssaysFragment())
-                    }
+//                    6 -> {
+//                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
+//                        loadFragment(EssaysFragment())
+//                    }
                 }
             }
 
@@ -378,22 +389,22 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).setOnClickListener {
             univFilter()
         }
-        binding.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                if (binding.tabs.selectedTabPosition == 1 ||binding.tabs.selectedTabPosition == 2) {
-                    binding.addFab.visibility = View.VISIBLE
-                } else
-                    binding.addFab.visibility = View.GONE
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                if (binding.tabs.selectedTabPosition == 0) {
-
-
-                }
-            }
-        })
+//        binding.tabs.addOnTabSelectedListener(object : OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab) {
+//                if (binding.tabs.selectedTabPosition == 1 ||binding.tabs.selectedTabPosition == 2) {
+//                    binding.addFab.visibility = View.VISIBLE
+//                } else
+//                    binding.addFab.visibility = View.GONE
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab) {}
+//            override fun onTabReselected(tab: TabLayout.Tab) {
+//                if (binding.tabs.selectedTabPosition == 0) {
+//
+//
+//                }
+//            }
+//        })
     }
 
     private fun bottomSheetList() {

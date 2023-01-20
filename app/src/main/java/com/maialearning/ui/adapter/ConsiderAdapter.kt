@@ -270,10 +270,7 @@ class ConsiderAdapter(
                         onItemClickOption.onPlanClick(position)
                     }
                     commentImg.setOnClickListener {
-                        Toast.makeText(viewHolder.binding.root.context, "tt", Toast.LENGTH_SHORT)
-                            .show()
-                        onItemClickOption.onCommentClick(position)
-
+                   //     onItemClickOption.onCommentClick(position)
                     }
                     addButton.setOnClickListener {
                         onItemClickOption.onAddClick(position)
@@ -291,7 +288,7 @@ class ConsiderAdapter(
                         R.layout.spinner_text, others
                     )
                     allSystem.adapter = adapter
-                    commentImg.setOnClickListener { notesClick(array[position]) }
+                   // commentImg.setOnClickListener { notesClick(array[position]) }
                     applyingLay.setOnClickListener({
                         onItemClickOption.onApplyingClick(position)
                     })
