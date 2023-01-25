@@ -104,7 +104,7 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
     }
 
     override fun onClick(positiion: Int, id: String) {
-        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id).putExtra("type","true")
+        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id).putExtra("type","true").putExtra("DATA",recyclerDataArrayList.get(positiion).messageId)
         startActivity(intent)
     }
 

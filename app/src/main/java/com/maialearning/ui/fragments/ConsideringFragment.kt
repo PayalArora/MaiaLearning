@@ -251,8 +251,6 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     for (i in 0 until jsonArray.length()) {
                         val object_ = jsonArray.getJSONObject(i)
                         val arrayProgram: ArrayList<ConsiderModel.ProgramData> = arrayListOf()
-                        var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
-                            arrayListOf()
                         var programArray = object_.getJSONArray("app_by_program_data")
                         for (j in 0 until programArray.length()) {
                             val objectProgram = programArray.getJSONObject(j)
@@ -264,6 +262,46 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                                     ""
                                 )
                             )
+                        }
+
+                        var arrayCounselor: ArrayList<ConsiderModel.CounselorNotes> =
+                            arrayListOf()
+                        var counselorNotes = object_.optJSONArray("counselor_notes")
+                        if (counselorNotes != null) {
+                            if (counselorNotes !is JSONArray && counselorNotes.length() != 0) {
+                                if (counselorNotes is JSONObject) {
+                                    val x = counselorNotes.keys() as Iterator<String>
+                                    while (x.hasNext()) {
+                                        var json: JSONObject =
+                                            counselorNotes.get(x.next()) as JSONObject
+                                        val notesObj: ConsiderModel.CounselorNotes =
+                                            ConsiderModel.CounselorNotes(
+                                                json.optString("id"),
+                                                json.optString("uid"),
+                                                json.optString("counselor_note"),
+                                                json.optString("first_name"),
+                                                json.optString("last_name")
+                                            )
+                                        arrayCounselor.add(notesObj)
+                                    }
+                                }
+                            }
+                        } else {
+                            var counselorNotes = object_.optJSONObject("counselor_notes")
+                            val x = counselorNotes.keys() as Iterator<String>
+                            while (x.hasNext()) {
+                                var json: JSONObject =
+                                    counselorNotes.get(x.next()) as JSONObject
+                                val notesObj: ConsiderModel.CounselorNotes =
+                                    ConsiderModel.CounselorNotes(
+                                        json.optString("id"),
+                                        json.optString("uid"),
+                                        json.optString("counselor_note"),
+                                        json.optString("first_name"),
+                                        json.optString("last_name")
+                                    )
+                                arrayCounselor.add(notesObj)
+                            }
                         }
 
                         /*      var counselorNotes = object_.getJSONArray("counselor_notes")
@@ -950,7 +988,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     }
 
     override fun onCommentClick(postion: Int) {
-        bottomSheetComment()
+        bottomSheetComment(postion)
     }
 
     override fun onAddClick(position: Int) {
@@ -1056,17 +1094,66 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
     }
 
+    var notes: String = ""
+    var positionNotes: Int = 0
 
-    private fun bottomSheetComment() {
+    private fun bottomSheetComment(postion: Int) {
+        positionNotes = postion
         val dialog = BottomSheetDialog(requireContext())
-        val sheetBinding: CommentsSheetBinding = CommentsSheetBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        notesDialog = dialog
+        val sheetBinding: com.maialearning.databinding.CommentsSheetBinding =
+            CommentsSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight =
+            ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
         sheetBinding.close.setOnClickListener {
             dialog.dismiss()
         }
-        sheetBinding.commentList.adapter = CommentAdapter(this)
+//        sheetBinding.commentList.adapter = CommentAdapter(this)
+        if (finalArray[postion].notes != null && !finalArray[postion].notes.isEmpty() && !finalArray[postion].notes.equals(
+                "null"
+            )
+        ) {
+            sheetBinding.notesTxt.text = finalArray[postion].notes
+        } else {
+            sheetBinding.editStudentNote.visibility = View.GONE
+        }
+        if (finalArray.get(postion).counselorNotes != null && finalArray.get(postion)?.counselorNotes!!.size > 0)
+            sheetBinding.commentList.adapter =
+                CounselorNotesCommentsAdapter(finalArray.get(postion).counselorNotes)
+
+        sheetBinding.addMore.setOnClickListener {
+            sheetBinding.enterNoteLay.visibility = View.VISIBLE
+
+            sheetBinding.addMore.visibility = View.VISIBLE
+            sheetBinding.save.text = "Add note"
+            sheetBinding.save.visibility=View.VISIBLE
+        }
+
+        sheetBinding.editStudentNote.setOnClickListener {
+            sheetBinding.enterNoteLay.visibility = View.VISIBLE
+            sheetBinding.addNoteTxt.text = resources.getText(R.string.editing_note)
+            sheetBinding.enterNote.requestFocus()
+            sheetBinding.enterNote.setText(finalArray.get(postion).notes)
+            sheetBinding.save.visibility = View.VISIBLE
+            sheetBinding.save.text = "Save note"
+        }
+
+        sheetBinding.save.setOnClickListener {
+            if (sheetBinding.enterNote.text.toString() != null && !sheetBinding.enterNote.text.toString()
+                    .trim().isEmpty()
+            ) {
+                notes = sheetBinding.enterNote.text.toString()
+                dialogP.show()
+                homeModel.saveTopPickNote(
+                    finalArray.get(postion).transcriptNid.toString(),
+                    sheetBinding.enterNote.text.toString().trim()
+                )
+            }
+
+        }
+
 
     }
 
