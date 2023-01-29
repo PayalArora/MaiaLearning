@@ -171,11 +171,17 @@ class EuropeanFactAdapter(
         isLoading = false
     }
 
-    fun addAllLis(list: ArrayList<EuropeanUniList.CollegeList?>, total: Int, current: Int) {
+    fun addAllLis(list: ArrayList<EuropeanUniList.CollegeList?>, total: Int, current: Int, searchtext:Boolean) {
+        if (searchtext) {
+            university_list.clear()
+        }
         this.university_list.addAll(list)
         this.totalPages = total
         this.currentPages = current
-        notifyItemChanged(university_list.size)
+        if (searchtext)
+            notifyDataSetChanged()
+        else
+            notifyItemChanged(university_list.size)
     }
     fun likeClick(i: Int, flag:Int?) {
         if (flag == 1)

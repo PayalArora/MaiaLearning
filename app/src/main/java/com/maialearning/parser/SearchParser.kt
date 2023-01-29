@@ -58,45 +58,72 @@ class SearchParser(val it: JsonObject) {
         val gson = GsonBuilder().create()
         val itModel = gson.fromJson(it, UkResponseModel::class.java)
         val itModelNew = ArrayList<UkResponseModel.Data.CollegeData>()
-        val json = JSONObject(it.toString()).getJSONObject("data").getJSONArray("college_data")
-        for (i in 0 until json.length()) {
-            val varArray: ArrayList<CourseListModel> =
-                ArrayList()
-            val data = json.getJSONObject(i)
-            val jsonVar = data.getJSONObject("course_list")
-            val varList = ArrayList<String>()
-            val x1 = jsonVar.keys() as Iterator<String>
-            val jsonVarArray = JSONArray()
-            while (x1.hasNext()) {
-                val key: String = x1.next().toString()
-                jsonVarArray.put(jsonVar.get(key))
-                varList.add(key)
-            }
-            for (j in 0 until jsonVarArray.length()) {
-                val objectProgram = jsonVarArray.getJSONObject(j)
-                varArray.add(
-                    CourseListModel(
-                        objectProgram.getString("course_id") ?: "",
-                        objectProgram.getString("course_name") ?: "",
-                        objectProgram.getString("option_count") ?: "",
-                        objectProgram.getString("a_level") ?: "",
-                        objectProgram.getString("ib") ?: ""
+        val json1 = JSONObject(it.toString()).optJSONObject("data")
+        if (json1!= null) {
+            val json = json1.optJSONArray("college_data")
+
+            for (i in 0 until json.length()) {
+                val varArray: ArrayList<CourseListModel> =
+                    ArrayList()
+                val data = json.getJSONObject(i)
+                val jsonVar = data.getJSONObject("course_list")
+                val varList = ArrayList<String>()
+                val x1 = jsonVar.keys() as Iterator<String>
+                val jsonVarArray = JSONArray()
+                while (x1.hasNext()) {
+                    val key: String = x1.next().toString()
+                    jsonVarArray.put(jsonVar.get(key))
+                    varList.add(key)
+                }
+                for (j in 0 until jsonVarArray.length()) {
+                    val objectProgram = jsonVarArray.getJSONObject(j)
+
+                    var courseSubList = ArrayList<CourseListOptionModel>()
+
+                    val subJson = objectProgram.optJSONObject("course_option_list")
+                    val iteratorSubObj: Iterator<*> = subJson.keys()
+                    while (iteratorSubObj.hasNext()) {
+                        val getSubJsonObj = iteratorSubObj.next() as String
+                        val jsonSub = subJson.optJSONObject(getSubJsonObj)
+                        var courseOption = CourseListOptionModel()
+                        courseOption.courseOptionId = jsonSub.optString("course_option_id")
+                        courseOption.outcomeQualification =
+                            jsonSub.optString("OutcomeQualification")
+                        courseOption.studyMode = jsonSub.optString("StudyMode")
+                        courseOption.startDate = jsonSub.optString("StartDate")
+                        courseOption.ibScore = jsonSub.optString("ib_score")
+                        courseOption.alevels = jsonSub.optString("alevels")
+                        courseOption.durationValue = jsonSub.optString("DurationValue")
+                        courseOption.durationType = jsonSub.optString("DurationType")
+                        courseOption.locationName = jsonSub.optString("LocationName")
+                        courseSubList.add(courseOption)
+                    }
+
+
+                    varArray.add(
+                        CourseListModel(
+                            objectProgram.getString("course_id") ?: "",
+                            objectProgram.getString("course_name") ?: "",
+                            objectProgram.getString("option_count") ?: "",
+                            objectProgram.getString("a_level") ?: "",
+                            objectProgram.getString("ib") ?: "", courseSubList
+                        )
+                    )
+
+                }
+                itModelNew.add(
+                    UkResponseModel.Data.CollegeData(
+                        data.getString("college_nid"),
+                        data.getString("college_name"),
+                        data.getInt("parchment"),
+                        data.getInt("slate"),
+                        data.getString("course_count"),
+                        data.getInt("top_pick_flag"),
+                        data.getString("file_name"),
+                        varArray
                     )
                 )
-
             }
-            itModelNew.add(
-                UkResponseModel.Data.CollegeData(
-                    data.getString("college_nid"),
-                    data.getString("college_name"),
-                    data.getInt("parchment"),
-                    data.getInt("slate"),
-                    data.getString("course_count"),
-                    data.getInt("top_pick_flag"),
-                    data.getString("file_name"),
-                    varArray
-                )
-            )
         }
         itModel.data?.collegeData = itModelNew
         return itModel

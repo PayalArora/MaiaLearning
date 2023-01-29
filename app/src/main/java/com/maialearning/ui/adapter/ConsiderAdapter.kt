@@ -270,7 +270,7 @@ class ConsiderAdapter(
                         onItemClickOption.onPlanClick(position)
                     }
                     commentImg.setOnClickListener {
-                   //     onItemClickOption.onCommentClick(position)
+                       onItemClickOption.onCommentClick(position)
                     }
                     addButton.setOnClickListener {
                         onItemClickOption.onAddClick(position)

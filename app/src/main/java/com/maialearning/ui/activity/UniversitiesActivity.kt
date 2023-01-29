@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -2449,6 +2450,39 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     }
 
     private fun observerInit() {
+        mModel.programDetailObserber.observe(this) {
+            dialogP.dismiss()
+            Log.e("Detail", it.basicInfo.toString())
+            val dialog = BottomSheetDialog(this)
+//            val sheetBinding= ProgramDetailSheetBinding.inflate(inflater, container, false)
+            val sheetBinding: ProgramDetailSheetBinding =
+                ProgramDetailSheetBinding.inflate(layoutInflater)
+            sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+            dialog.setContentView(sheetBinding.root)
+            dialog?.show()
+            sheetBinding.close.setOnClickListener {
+                dialog.dismiss()
+            }
+            sheetBinding.backBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            sheetBinding.descriptionText.setText(it.basicInfo?.description)
+            sheetBinding.locationTxt.setText(it.basicInfo?.location)
+            sheetBinding.dateTxt.setText(it.basicInfo?.startDate)
+            sheetBinding.qualTxt.setText(it.basicInfo?.qualification)
+            sheetBinding.durationTxt.setText(it.basicInfo?.duration + "/" + it.basicInfo?.studyMode)
+            sheetBinding.courseCode.setText(it.howToApply?.courseCode)
+            sheetBinding.instituteCode.setText(it.howToApply?.providerCode)
+            sheetBinding.campusName.setText(it.howToApply?.locationName)
+            sheetBinding.entryList.layoutManager = GridLayoutManager(this, 2)
+            sheetBinding.entryList.adapter =
+                EntryRequirementAdapter(it.entryRequirement?.qualificationTable as ArrayList<QualificationTableItem>)
+            sheetBinding.feesList.layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            sheetBinding.feesList.adapter =
+                FeesAdapter(it.feesFunding?.tuitionFees as ArrayList<TuitionFeesItem>)
+
+        }
         homeModel.likeObserver.observe(this) {
             dialogP.dismiss()
         }
@@ -3275,14 +3309,14 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             get?.courseList?.sortBy { it.courseName }
             sheetBinding.recyclerList.adapter = CoursesAdapter(
                 this,
-                get?.courseList, null, type
+                get?.courseList, null, type, ::progclick
             )
         } else {
             listGerman?.courseList?.sortBy { it.courseName }
             sheetBinding.name.text = listGerman?.collegeName
             sheetBinding.recyclerList.adapter = CoursesAdapter(
                 this,
-                null, listGerman?.courseList, type
+                null, listGerman?.courseList, type, ::progclick
             )
         }
         sheetBinding.back.setOnClickListener {
@@ -3292,7 +3326,10 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 
 
     }
-
+    fun progclick(i: String) {
+        dialogP?.show()
+        mModel.getProgramsDetail(i)
+    }
     private fun hitUnlikeWork(nid: String?) {
         dialogP.show()
         SharedHelper(this).id?.let {

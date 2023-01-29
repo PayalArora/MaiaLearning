@@ -704,7 +704,16 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         homeModel.showError.observe(requireActivity()) {
             dialogP.dismiss()
         }
-
+        homeModel.saveTopPickNoteObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            finalArray.get(positionNotes).notes = notes
+//            mBinding.applyingList.adapter?.notifyDataSetChanged()
+//            sheetBinding.enterNote.setText("")
+//            getApplyingList()
+            //  sheetBinding.save.visibility = View.GONE
+            dialog?.dismiss()
+            notesDialog?.dismiss()
+        }
         homeModel.getApplyingWithObserver.observe(requireActivity()) {
             dialogP.dismiss()
             dialogP.dismiss()

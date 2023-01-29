@@ -156,7 +156,7 @@ class SearchFragment : Fragment() {
                 //for swipe refresh page
                 if (totalPage != null) {
                     if (last != null) {
-                        if (univ.pager?.current?:0 >= 1)
+                        if (univ.pager?.current?:0 > 1)
                             germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last, false)
                         else
                             germanAdapter.addAllLis(germanList!!, totalPage.toInt(), last, true)
@@ -187,7 +187,10 @@ class SearchFragment : Fragment() {
                 //for swipe refresh page
                 if (totalPage != null) {
                     if (last != null) {
-                        ukAdapter.addAllLis(ukList!!, totalPage.toInt(), last)
+                        if (univ.pager?.current?:0 > 1)
+                        ukAdapter.addAllLis(ukList!!, totalPage.toInt(), last, false)
+                        else
+                            ukAdapter.addAllLis(ukList!!, totalPage.toInt(), last, true)
                     }
                 }
                 mBinding.universitisCounte.text =univ.pager?.total .toString() + " Universities found"
@@ -209,7 +212,12 @@ class SearchFragment : Fragment() {
                 //for swipe refresh page
                 if (totalPage != null) {
                     if (last != null) {
-                        euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last)
+                        if (univ.pager != 1)
+                            euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last, false)
+                        else
+                            euroAdapter.addAllLis(euroList!!, totalPage.toInt(), last, true)
+
+
                     }
                 }
                 mBinding.universitisCounte.text =univ.totalRecords .toString() + " Universities found"
@@ -380,7 +388,7 @@ class SearchFragment : Fragment() {
         payload.country = country
         payload.pager = pageNo
         payload.search = search
-        if (country != "DE") {
+        if (country != "DE"&& country != "GB") {
             payload.region = UniversitiesActivity.selectedRegion
             payload.campus_activities = UniversitiesActivity.selectedCampusActivity
             payload.special = UniversitiesActivity.selectedDiversity
@@ -407,7 +415,15 @@ class SearchFragment : Fragment() {
             payload.sort_order = "asc"
 
         }
+ if (country == "GB")
+ {
+     payload.ucas_college_type = UniversitiesActivity.selectedGbCollege
+     payload.sort_parameter = "college_name"
+     payload.sort_order = "asc"
+     payload.academic_year = "2023"
+     payload.college_list = UniversitiesActivity.selectedGbUniversity
 
+ }
 
         payload.university_list = UniversitiesActivity.selectedListFilter
         if (UniversitiesActivity.selectedGermanSubject != null && UniversitiesActivity.selectedGermanSubject.size > 0)

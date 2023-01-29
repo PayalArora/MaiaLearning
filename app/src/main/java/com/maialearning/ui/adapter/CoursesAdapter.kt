@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.CoursesListAdapterBinding
 import com.maialearning.model.CourseListModel
 import com.maialearning.model.GermanUniversitiesResponse
+import com.maialearning.model.IndustryModel
 
 import com.maialearning.model.UkResponseModel
 
@@ -15,7 +16,7 @@ class CoursesAdapter(
     var context: Context,
     val list: List<CourseListModel>?,
     val listGerman: List<GermanUniversitiesResponse.Data.CollegeData.CourseList?>?,
-    var type: String
+    var type: String,     var click:(String)->Unit
 ) :
     RecyclerView.Adapter<CoursesAdapter.ViewHolder>() {
     var isSelected = false
@@ -54,6 +55,14 @@ class CoursesAdapter(
             } else {
                 viewHolder.binding.ib.text = " -- "
             }
+            viewHolder.binding.name.setOnClickListener {
+                list?.get(position)?.let { it1 ->
+                    if (it1.courseOptionList.size > 0) {
+                        click( it1.courseOptionList.get(0).courseOptionId.toString())
+                    }
+                }
+            }
+
         } else {
             viewHolder.binding.name.text = listGerman?.get(position)?.courseName
             viewHolder.binding.option.visibility = View.GONE
@@ -67,6 +76,7 @@ class CoursesAdapter(
             } else {
                 viewHolder.binding.ib.text = " -- "
             }
+          //  viewHolder.binding.name.setOnClickListener {   listGerman?.get(position)?.let { it1 ->  click( it1.courseId.toString())}}
         }
 
     }

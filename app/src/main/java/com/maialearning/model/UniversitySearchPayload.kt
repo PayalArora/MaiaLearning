@@ -42,6 +42,7 @@ class UniversitySearchPayload {
     var instruction_language:String? = null
     var college_list: ArrayList<String>? = null
     lateinit var ucas_college_type: String
+    lateinit var academic_year: String
      var cipcode: ArrayList<String>? = null
 
 
