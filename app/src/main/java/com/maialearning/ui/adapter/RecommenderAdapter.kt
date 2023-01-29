@@ -101,7 +101,7 @@ class RecommenderAdapter(
                     viewHolder.binding.cancelLay.visibility = View.GONE
                     viewHolder.binding.status.setTextColor(context.getColor(R.color.green_1))
                 } else {
-                    viewHolder.binding.status.text = "Pending..."
+                    viewHolder.binding.status.text = "Pending"
                     viewHolder.binding.cancelLay.visibility = View.VISIBLE
                     viewHolder.binding.status.setTextColor(context.getColor(R.color.red_1))
                 }
@@ -125,7 +125,7 @@ class RecommenderAdapter(
             } else {
                 if (list[position]?.ucasRefLetterdue != null && list[position]?.ucasRefLetterdue != "null" && list[position]?.ucasRefLetterdue != "")
                     viewHolder.binding.letter.text =
-                        "Pending... , " + getDate(
+                        "Pending , " + getDate(
                             list[position]?.ucasRefLetterdue!!.toLong(),
                             "MM/dd/yyyy"
                         )
@@ -140,7 +140,9 @@ class RecommenderAdapter(
             viewHolder.binding.cancel.setOnClickListener {
                 cancelPopup(position)
             }
-
+            viewHolder.binding.brag.setOnClickListener {
+               onClick.onBragClick(list.get(position))
+            }
         } else {
             val loadingViewHolder = viewHolder as ViewHolder2
             loadingViewHolder.binding.layout.setBackgroundColor(

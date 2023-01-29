@@ -339,18 +339,24 @@ class RecommendationFragment : Fragment(), onClick {
                 url = it.get(0).toString()
                 val manager =
                     requireActivity().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
                 val uri = Uri.parse(url.replace("\"", ""))
+                val file =
+                    File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path.toString() + "/" +  File(uri.path).name)
+
                 val request = DownloadManager.Request(uri)
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-                request.setAllowedOverRoaming(false)
+                request.setAllowedOverRoaming(true)
                 request.setDestinationUri(
                     Uri.fromFile(
-                        File(
-                            context?.getExternalFilesDir(
-                                Environment.DIRECTORY_DOWNLOADS
-                            ).toString(), File(uri.path).name
-                        )
+                        //File(
+//                            context?.getExternalFilesDir(
+//                                Environment.DIRECTORY_DOWNLOADS
+//                            ).toString(), File(uri.path).name
+                    file
+
+
                     )
                 )
 
@@ -776,6 +782,12 @@ class RecommendationFragment : Fragment(), onClick {
         homeModel.cancelRecommendRequest(data?.nid.toString())
     }
 
+    override fun onBragClick(data: RecomdersModel.Data?) {
+        recoUpdate = true
+        updateRecoBragId = "" + data?.nid
+        checkStoragePermissionAndOpenImageSelection()
+    }
+
     private var fileUri: Uri? = null
     var imagePath: String? = null
 
@@ -898,6 +910,7 @@ class RecommendationFragment : Fragment(), onClick {
             }
         }
         homeModel.saveDocumentBragsheetObserver.observe(requireActivity()) {
+            context?.getString(R.string.updated)?.let { it1 -> context?.showToast(it1) }
             progress.dismiss()
             pdfDialog.dismiss()
         }
@@ -984,4 +997,5 @@ class RecommendationFragment : Fragment(), onClick {
 
 interface onClick {
     fun onCancelClick(data: RecomdersModel.Data?)
+    fun onBragClick(data: RecomdersModel.Data?)
 }
