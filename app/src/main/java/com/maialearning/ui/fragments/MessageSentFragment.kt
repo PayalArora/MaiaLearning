@@ -23,7 +23,7 @@ import com.maialearning.viewmodel.MessageViewModel
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MessageSentFragment : Fragment(),  OnItemClickDelete  {
+class MessageSentFragment : Fragment(), OnItemClickDelete {
     private lateinit var mBinding: LayoutRecyclerviewBinding
     private var recyclerDataArrayList: ArrayList<InboxResponse.MessagesItem> = arrayListOf()
     private val messageViewModel: MessageViewModel by viewModel()
@@ -45,19 +45,23 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
         mBinding.recyclerList.addItemDecoration(decor)
         return mBinding.root
     }
+
     private fun observer() {
         messageViewModel.inboxObserver.observe(viewLifecycleOwner) {
             it?.let {
                 dialog?.dismiss()
                 val json = JSONObject(it.toString()).getJSONObject("Item")
-                val array=json.getJSONArray("messages")
+                val array = json.getJSONArray("messages")
                 for (j in 0 until array.length()) {
                     val objectProgram = array.getJSONObject(j)
                     recyclerDataArrayList.add(
                         InboxResponse.MessagesItem(
-                            objectProgram.getString("senderName"),
-                            objectProgram.getString("subject"), objectProgram.getString("sentTimestamp"), objectProgram.getString("messageId"),
-                            objectProgram.getString("shortMessageBody"), 0
+                            objectProgram.optString("senderName"),
+                            objectProgram.optString("subject"),
+                            objectProgram.optString("sentTimestamp"),
+                            objectProgram.optString("messageId"),
+                            objectProgram.optString("shortMessageBody"),
+                            0
                         )
                     )
                 }
@@ -82,7 +86,6 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
     }
 
 
-
     private fun setAdapter() {
         mBinding.recyclerList.adapter = MessageAdapter(this, recyclerDataArrayList, 1)
         val swipeHelper: SwipeHelper = object : SwipeHelper(context, mBinding.recyclerList) {
@@ -104,7 +107,9 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
     }
 
     override fun onClick(positiion: Int, id: String) {
-        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id",id).putExtra("type","true").putExtra("DATA",recyclerDataArrayList.get(positiion).messageId)
+        val intent = Intent(requireActivity(), MessageDetailActivity::class.java).putExtra("id", id)
+            .putExtra("type", "true")
+            .putExtra("DATA", recyclerDataArrayList.get(positiion).messageId)
         startActivity(intent)
     }
 
@@ -112,7 +117,7 @@ class MessageSentFragment : Fragment(),  OnItemClickDelete  {
 //        recyclerDataArrayList.removeAt(position)
 //        (mBinding.recyclerList.adapter as MessageAdapter).notifyItemRemoved(position)
         dialog.show()
-        messageViewModel.delMessage(recyclerDataArrayList[position].messageId?:"")
+        messageViewModel.delMessage(recyclerDataArrayList[position].messageId ?: "")
         recyclerDataArrayList.removeAt(position)
 
         // below line is to notify our item is removed from adapter.
