@@ -348,6 +348,8 @@ class RecommendationFragment : Fragment(), onClick {
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 request.setAllowedOverRoaming(true)
+                request.setAllowedOverRoaming(true)
+                Log.e("FILE", file.absolutePath)
                 request.setDestinationUri(
                     Uri.fromFile(
                         //File(

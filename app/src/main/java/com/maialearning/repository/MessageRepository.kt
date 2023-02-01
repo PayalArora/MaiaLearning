@@ -30,7 +30,12 @@ interface MessageRepository {
         key: String,
         schoolId: String
     ): UseCaseResult<JsonObject>
-
+    suspend fun getFile(
+        token: String,
+        filename: String,
+        fileTypeExt: String,
+        key: String
+    ): UseCaseResult<JsonObject>
     suspend fun uploadImage(content: String, url: String, bode: RequestBody): UseCaseResult<Unit>
     suspend fun checkFileVirus(
         url: String,
@@ -145,6 +150,25 @@ class MessageRepositoryImpl(private val catApi: AllMessageAPi) : MessageReposito
                 MessageReqAttachModel(filename, fileTypeExt, key, schoolId, "Message Attachment")
             //val result = catApi.updateMessageAttachment(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
             val result = catApi.updateProfImage1(token, object_).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getFile(
+        token: String,
+        filename: String,
+        fileTypeExt: String,
+        key: String
+    ): UseCaseResult<JsonObject> {
+        return try {
+//            var object_ =
+//                MessageReqAttachModel(filename, fileTypeExt, key, schoolId, "Message Attachment")
+            //val result = catApi.updateMessageAttachment(token, filename, "image/jpg",key, "Message Attachment",schoolId).await()
+            val result = catApi.downloadFile(token, fileTypeExt, filename, key, "Message Attachment").await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
             UseCaseResult.Error(ex)

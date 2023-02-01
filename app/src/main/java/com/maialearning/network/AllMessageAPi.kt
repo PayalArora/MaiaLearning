@@ -72,6 +72,15 @@ interface AllMessageAPi {
         @Body id: MessageReqAttachModel
     ): Deferred<JsonObject>
 
+    @GET("v1/messaging/messages/presigned")
+    fun downloadFile(
+        @Header("x-access-token") AutToken: String,
+        @Query("fileType") fileType: String,
+        @Query("filename") filename: String,
+        @Query("key") key: String,
+        @Query("type") type: String,
+    ): Deferred<JsonObject>
+
     @PUT
     fun uploadImage(
         @Url() url: String,

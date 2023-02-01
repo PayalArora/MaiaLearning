@@ -535,21 +535,22 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
 
     private fun selectDoc() {
         val mimeTypes = arrayOf(
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // .doc & .docx
-            "application/vnd.ms-powerpoint",
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation",  // .ppt & .pptx
-            "application/vnd.ms-excel",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  // .xls & .xlsx
-            "text/plain",
-            "text/comma-separated-values",
-            "application/pdf"
+            //"application/msword",
+//            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // .doc & .docx
+//            "application/vnd.ms-powerpoint",
+//            "application/vnd.openxmlformats-officedocument.presentationml.presentation",  // .ppt & .pptx
+//            "application/vnd.ms-excel",
+//            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  // .xls & .xlsx
+//            "text/plain",
+//            "text/comma-separated-values",
+           "application/pdf"
         )
         val intent = Intent()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             intent.type = if (mimeTypes.size == 1) mimeTypes[0] else "*/*"
             if (mimeTypes.size > 0) {
                 intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
             }
         } else {
             var mimeTypesStr = ""

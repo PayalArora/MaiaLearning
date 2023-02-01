@@ -32,7 +32,7 @@ class FilesAdapter(val onItemClick: OnItemClickId,var attachedArray:ArrayList<At
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-       // viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position,attachedArray[position].url) }
+       viewHolder. binding.root.setOnClickListener { onItemClick.onClick(position,attachedArray[position].schoolNid ) }
             viewHolder. binding.textTitle.setText(attachedArray[position].name)
 //            viewHolder.binding.note.setImageDrawable( viewHolder. binding.root.context.getDrawable(R.drawable.sheet))
 

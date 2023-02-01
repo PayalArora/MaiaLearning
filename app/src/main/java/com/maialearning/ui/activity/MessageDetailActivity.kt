@@ -1,10 +1,15 @@
 package com.maialearning.ui.activity
 
 import android.app.Dialog
+import android.app.DownloadManager
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.text.Html
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -17,11 +22,13 @@ import com.maialearning.model.AttachMessages
 import com.maialearning.ui.adapter.FilesAdapter
 import com.maialearning.util.getDate
 import com.maialearning.util.getDateTime
+import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.MessageViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 
 class MessageDetailActivity : AppCompatActivity(), OnItemClickId {
     private lateinit var mBinding: MessageDetailBinding
@@ -58,10 +65,47 @@ class MessageDetailActivity : AppCompatActivity(), OnItemClickId {
     }
 
     override fun onClick(positiion: Int, id: String) {
-        startActivity(Intent(this, LoadUrlActivity::class.java).putExtra("url", id))
+        dialog.show()
+       // startActivity(Intent(this, LoadUrlActivity::class.java).putExtra("url", id))
+        messageViewModel.getFile(
+            SharedHelper(this).jwtToken, attachedArray.get(positiion).name ?: "", attachedArray.get(positiion).type,
+            attachedArray.get(positiion).key
+        )
     }
 
     private fun observer() {
+        messageViewModel.fileUrlObserver.observe(this) {
+            dialog.dismiss()
+            var url = ""
+            if (it.get("url").toString() != "") {
+                url = it.get("url").toString()
+                val manager =
+                   getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+                val uri = Uri.parse(url.replace("\"", ""))
+                val file =
+                    File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path.toString() + "/" +  File(uri.path).name)
+
+                val request = DownloadManager.Request(uri)
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                request.setAllowedOverRoaming(true)
+                Log.e("FILE", file.absolutePath)
+                request.setDestinationUri(
+                    Uri.fromFile(
+                        //File(
+//                            context?.getExternalFilesDir(
+//                                Environment.DIRECTORY_DOWNLOADS
+//                            ).toString(), File(uri.path).name
+                        file
+
+
+                    )
+                )
+
+                manager.enqueue(request)
+            }
+        }
         messageViewModel.inboxObserver.observe(this) { it ->
             it?.let {
                 dialog.dismiss()
