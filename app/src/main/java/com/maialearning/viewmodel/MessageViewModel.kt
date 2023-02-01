@@ -36,6 +36,7 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
     val createObserver = MutableLiveData<JsonObject>()
     val showError = SingleLiveEvent<String>()
     val imageUrlObserver = MutableLiveData<JsonObject>()
+    val fileUrlObserver = MutableLiveData<JsonObject>()
     val uploadImageObserver = MutableLiveData<String>()
     val fileVirusObserver = MutableLiveData<JsonObject>()
     val deleteMessageObserver = MutableLiveData<JsonObject>()
@@ -150,6 +151,23 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
             }
         }
     }
+
+    fun getFile(token: String, filename: String,ext:String,key:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getFile(token, filename,ext,key)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> fileUrlObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
     fun uploadImage(content:String,url: String, body: RequestBody) {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -204,4 +222,5 @@ class MessageViewModel(private val catRepository: MessageRepository) : ViewModel
         // Clear our job when the linked activity is destroyed to avoid memory leaks
         job.cancel()
     }
+
 }
