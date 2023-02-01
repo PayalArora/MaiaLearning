@@ -11,6 +11,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.*
 import android.provider.OpenableColumns
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
@@ -31,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.JsonArray
+import com.maialearning.BuildConfig
 import com.maialearning.R
 import com.maialearning.databinding.LayoutTeacherBinding
 import com.maialearning.databinding.RecommendationLayoutBinding
@@ -795,20 +797,31 @@ class RecommendationFragment : Fragment(), onClick {
 
 
     private fun checkStoragePermissionAndOpenImageSelection() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            showDialog()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ) {
+            if (true == Environment.isExternalStorageManager()) {
+                showDialog()
+            }
+            else{
+
+                val uri =  Uri.parse("package:" + BuildConfig.APPLICATION_ID);
+                startActivity(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
+            }
         } else {
-            //changed here
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    REQUEST_FILE_ACCESS
-                )
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                showDialog()
+            } else {
+                //changed here
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    ActivityCompat.requestPermissions(
+                        requireActivity(),
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        REQUEST_FILE_ACCESS
+                    )
+                }
             }
         }
     }
