@@ -20,10 +20,10 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image"
-            android:layout_width="@dimen/_50dp"
-            android:layout_height="@dimen/_50dp"
+            android:layout_width="@dimen/_40dp"
+            android:layout_height="@dimen/_40dp"
             android:layout_marginStart="@dimen/_10dp"
-            android:layout_marginTop="@dimen/_20dp"
+            android:layout_marginTop="@dimen/_10dp"
             android:contentDescription="@string/about"
             android:src="@drawable/static_coll"
             app:layout_constraintStart_toStartOf="parent"
@@ -89,10 +89,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/_10dp"
-            android:fontFamily="@font/inter_medium"
+            android:fontFamily="@font/inter"
             android:text="Glendale, CA"
             android:textColor="@color/black_1"
-            android:textSize="@dimen/_14sp"
+            android:textSize="@dimen/_12sp"
 
             app:layout_constraintStart_toEndOf="@id/image"
             app:layout_constraintTop_toBottomOf="@id/view" />
@@ -102,10 +102,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:fontFamily="@font/inter_medium"
+            android:fontFamily="@font/inter"
             android:text="United States"
             android:textColor="@color/grey"
-            android:textSize="@dimen/_14sp"
+            android:textSize="@dimen/_12sp"
             app:layout_constraintEnd_toStartOf="@id/profit"
             app:layout_constraintStart_toEndOf="@id/image"
             app:layout_constraintTop_toBottomOf="@id/name" />

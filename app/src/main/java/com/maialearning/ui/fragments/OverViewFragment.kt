@@ -67,7 +67,7 @@ class OverViewFragment : Fragment() {
         if ((SharedHelper(context as UniversitiesActivity).country ?: "US") == "US") {
             model = (context as UniversitiesActivity).getData()
             if (model != null && model?.basicInfo != null) {
-                mBinding.aboutdes.text = " ${model?.basicInfo?.description}"
+                mBinding.aboutdes.text = "${model?.basicInfo?.description}"
                 mBinding.phoneNo.text = " ${model?.basicInfo?.phone}"
                 mBinding.webUrl.text = " ${model?.basicInfo?.webAddr}"
                 mBinding.entType.text = " ${model?.basicInfo?.environmentType}"
@@ -75,7 +75,7 @@ class OverViewFragment : Fragment() {
                 mBinding.intsType.text = " ${model?.basicInfo?.institutionType}"
                 mBinding.degree.text = " ${model?.basicInfo?.award?.joinToString(",")}"
                 mBinding.locTxt.text =
-                    " ${model?.basicInfo?.city + "," + model?.basicInfo?.state + "," + model?.basicInfo?.zip}"
+                    "${model?.basicInfo?.city + "," + model?.basicInfo?.state + "," + model?.basicInfo?.zip}"
                 mModel.getCollegeNid(
                     "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                     "222178"
@@ -129,7 +129,7 @@ class OverViewFragment : Fragment() {
                 }
         }
     }else if (modelOther != null && modelOther?.basicInfo?.basicInfo?.name != null) {
-                mBinding.aboutdes.text = " ${modelOther?.basicInfo?.basicInfo?.description}"
+                mBinding.aboutdes.text = "${modelOther?.basicInfo?.basicInfo?.description}"
                 mBinding.phoneNo.text = " ${modelOther?.basicInfo?.basicInfo?.phone}"
                 mBinding.webUrl.text = " ${modelOther?.basicInfo?.basicInfo?.webAddr}"
                 mBinding.entType.text = " ${modelOther?.basicInfo?.basicInfo?.environmentType}"
@@ -137,7 +137,7 @@ class OverViewFragment : Fragment() {
                 mBinding.intsType.text = " ${modelOther?.basicInfo?.basicInfo?.institutionType}"
                 mBinding.degree.text = " ${modelOther?.basicInfo?.basicInfo?.award}"
                 mBinding.locTxt.text =
-                    " ${ parseEmpty(modelOther?.basicInfo?.basicInfo?.addr) + parseEmpty(modelOther?.basicInfo?.basicInfo?.city) +  parseEmpty(modelOther?.basicInfo?.basicInfo?.state) +   parseEmpty(modelOther?.basicInfo?.basicInfo?.zip)}"
+                    "${ parseEmpty(modelOther?.basicInfo?.basicInfo?.addr) + parseEmpty(modelOther?.basicInfo?.basicInfo?.city) +  parseEmpty(modelOther?.basicInfo?.basicInfo?.state) +   parseEmpty(modelOther?.basicInfo?.basicInfo?.zip)}"
                 mModel.getCollegeNid(
                     "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                     "222178"

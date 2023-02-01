@@ -232,7 +232,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         if (SharedHelper(this).picture != null && SharedHelper(this).picture?.length!! > 5) {
             Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
         }
-        loadFragment(SearchFragment())
+
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -327,7 +327,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
 //        TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
 //            tab.setText(tabArray[position])
 //        }.attach()
-
+        loadFragment(SearchFragment())
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (binding.tabs.selectedTabPosition == 1 ||binding.tabs.selectedTabPosition == 2) {
@@ -1089,21 +1089,26 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         mModel.getFilterCollege()
         mainDialog?.show()
         sheetBindingUniv!!.clearText.setOnClickListener {
-            for (i in countries) {
-                if (i.select) {
-                    SharedHelper(this).country = i.code
-                }
-            }
+//            for (i in countries) {
+//                if (i.select) {
+//                  //  SharedHelper(this).country = i.code
+//                    savedCountry = i.code
+//                }
+//            }
+            Log.d("saved",savedCountry)
+            Log.d("country",savedCountry)
 
             if (savedCountry != SharedHelper(this).country) {
                 // change single done
+                if (!selectedAddUniv)
+                SharedHelper(this).country= savedCountry
                 dialogP = showLoadingDialog(this)
                 dialogP.show()
                 mModel.setSaveCountry()
                 listUni.clear()
                 if (!selectedAddUniv)
                 resetFilters()
-                SharedHelper(this).country?.let { savedCountry = it }
+
             } else {
                 //  resetFilters()
                 initView()
@@ -2386,7 +2391,8 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             add_univ_country = country
             adapterAddUniv?.notifyDataSetChanged()
             getSelectedCountryUniversities(country)
-        }
+        } else
+        savedCountry = country
     }
 
     private fun getSelectedCountryUniversities(country: String) {
@@ -2511,6 +2517,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 savedCountry = it.get(0).toString().replaceInvertedComas().replace("\\", "")
                 SharedHelper(this).country = savedCountry
                 initView()
+
             }
         }
         mModel.countryFilterObserver.observe(this) {

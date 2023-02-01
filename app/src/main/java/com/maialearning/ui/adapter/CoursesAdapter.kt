@@ -11,6 +11,8 @@ import com.maialearning.model.GermanUniversitiesResponse
 import com.maialearning.model.IndustryModel
 
 import com.maialearning.model.UkResponseModel
+import com.maialearning.util.toCapitalComma
+import com.maialearning.util.toUpperCase
 
 class CoursesAdapter(
     var context: Context,
@@ -46,12 +48,12 @@ class CoursesAdapter(
             viewHolder.binding.name.text = list?.get(position)?.courseName
             viewHolder.binding.option.text = list?.get(position)?.optionCount + " Options"
             if (list?.get(position)?.aLevel != "null" && list?.get(position)?.aLevel != "") {
-                viewHolder.binding.alevels.text = "A Lvi: " + list?.get(position)?.aLevel
+                viewHolder.binding.alevels.text = "A Lvi: " + list?.get(position)?.aLevel?.toCapitalComma()
             } else {
                 viewHolder.binding.alevels.text = "A Lvi: -- "
             }
             if (list?.get(position)?.ib != "null" && list?.get(position)?.ib != "") {
-                viewHolder.binding.ib.text = list?.get(position)?.ib
+                viewHolder.binding.ib.text = list?.get(position)?.ib?.toCapitalComma()
             } else {
                 viewHolder.binding.ib.text = " -- "
             }
@@ -67,12 +69,12 @@ class CoursesAdapter(
             viewHolder.binding.name.text = listGerman?.get(position)?.courseName
             viewHolder.binding.option.visibility = View.GONE
             if (listGerman?.get(position)?.studyMode != "null" && listGerman?.get(position)?.studyMode != "") {
-                viewHolder.binding.alevels.text = listGerman?.get(position)?.studyMode
+                viewHolder.binding.alevels.text = listGerman?.get(position)?.studyMode?.toCapitalComma()
             } else {
                 viewHolder.binding.alevels.text = " -- "
             }
             if (listGerman?.get(position)?.location != "null" && listGerman?.get(position)?.location != "") {
-                viewHolder.binding.ib.text = listGerman?.get(position)?.location
+                viewHolder.binding.ib.text = listGerman?.get(position)?.location?.toCapitalComma()
             } else {
                 viewHolder.binding.ib.text = " -- "
             }

@@ -28,11 +28,12 @@
         app:layout_constraintEnd_toStartOf="@id/menu"
         app:layout_constraintStart_toEndOf="@+id/note"
         android:paddingLeft="@dimen/_15dp"
+        android:fontFamily="@font/inter"
         android:textStyle="bold"
 android:layout_marginHorizontal="@dimen/_10dp"
         android:text="Assignment Making\nHabits Stick"
         android:textColor="@color/black_1"
-        android:textSize="@dimen/_16sp"
+        android:textSize="@dimen/_14sp"
         />
     <ImageButton
         android:id="@+id/menu"

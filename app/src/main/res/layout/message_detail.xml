@@ -30,6 +30,7 @@
                 android:layout_marginTop="@dimen/_15dp"
                 android:lineSpacingExtra="@dimen/_2sp"
                 android:text="Message Headline"
+                android:fontFamily="@font/inter_black"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold"
@@ -44,6 +45,7 @@
                 android:layout_marginTop="@dimen/_15dp"
                 android:lineSpacingExtra="@dimen/_2sp"
                 android:textColor="@color/black_1"
+                android:fontFamily="@font/inter"
                 android:textSize="@dimen/_16sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/subject" />
@@ -84,6 +86,7 @@
                 android:layout_marginTop="@dimen/_20dp"
                 android:lineSpacingExtra="@dimen/_2sp"
                 android:text="@string/attached_files"
+                android:fontFamily="@font/inter_black"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold"

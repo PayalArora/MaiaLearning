@@ -76,15 +76,18 @@ class MessageDetailActivity : AppCompatActivity(), OnItemClickId {
                 )
                 //  mBinding.textDescription.text = Html.fromHtml(json.getString("messageBody"))
                 mBinding.textDate.text= "Sent on : "+ getDateTime(json.getString("sentTimestamp"), "MMM dd YYYY, hh:mm a")
-                val array = json.optJSONArray("attachment_urls")
+                val array = json.optJSONArray("attachments")
                 if (array!=null) {
                     for (j in 0 until array.length()) {
                         mBinding.textFiles.visibility = View.VISIBLE
                         val objectProgram = array.optJSONObject(j)
                         attachedArray.add(
                             AttachMessages(
-                                objectProgram.getString("name"),
-                                objectProgram.getString("url")
+                                objectProgram.getString("filename"),
+                                objectProgram.getString("type"),
+                                objectProgram.getString("fileType"),
+                                objectProgram.getString("key"),
+                                objectProgram.getString("schoolNid")
                             )
                         )
                     }

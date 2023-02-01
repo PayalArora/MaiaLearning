@@ -354,6 +354,22 @@ fun checkNonNull(str:String?): Boolean{
 }
 
 fun String.toUpperCase():String = this.replaceFirstChar { it.toUpperCase() }
+fun String.toCapitalComma():String{
+
+    val words = this.split("; ")
+
+    var newStr = ""
+    if (words.size>1)
+    words.forEach {
+        newStr += it.capitalize() + "; "
+    }
+    else
+        words.forEach {
+            newStr += it.capitalize()
+        }
+    return newStr
+}
+
 
  fun TextView.showDatePicker(con: Context,  deadlineClick: (date:String) -> Unit) {
 

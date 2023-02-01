@@ -37,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textSize="22sp"
+                android:textSize="18sp"
+                android:maxLines="2"
                 android:text="jyjvvjj"
                 android:paddingHorizontal="@dimen/_8dp"
                 />
