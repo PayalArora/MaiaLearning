@@ -15,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -76,6 +77,9 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     private var url: String? = null
     var arrayList = ArrayList<HashMap<String, String>>()
     var attachList = ArrayList<AttachmentModel>()
+
+    private val REQUEST_CHOOSE_PDF_UPCOMING_DETAIL = 23
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = NewMessageBinding.inflate(layoutInflater)
@@ -284,7 +288,7 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
 
     private fun selectImage(context: Context) {
         val options =
-            arrayOf<CharSequence>("Take Photo", "Choose from Gallery", "Cancel")
+            arrayOf<CharSequence>("Take Photo", "Choose from Gallery", "Choose Document", "Cancel")
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setTitle("Choose your profile picture")
         builder.setItems(options, DialogInterface.OnClickListener { dialogInterface, item ->
@@ -292,6 +296,8 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
                 checkCameraPermissionAndOpen()
             } else if (options[item] == "Choose from Gallery") {
                 openAlbum()
+            } else if (options[item] == "Choose Document") {
+                selectDoc()
             } else if (options[item] == "Cancel") {
                 dialogInterface.dismiss()
             }
@@ -334,12 +340,39 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         }
     }
 
+    @SuppressLint("Range")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             setData(requestCode, data)
         } else if (requestCode == REQUEST_CHOOSE_PHOTO && resultCode == RESULT_OK) {
             setData(requestCode, data)
+        } else if (requestCode == REQUEST_CHOOSE_PDF_UPCOMING_DETAIL && resultCode == RESULT_OK) {
+            fileUri = data?.data!!
+            val uri: Uri = data?.data!!
+            val uriString: String = uri.toString()
+            var pdfName: String? = null
+            if (uriString.startsWith("content://")) {
+                var myCursor: Cursor? = null
+                try {
+                    // Setting the PDF to the TextView
+                    myCursor = contentResolver.query(uri, null, null, null, null)
+                    if (myCursor != null && myCursor.moveToFirst()) {
+                        pdfName =
+                            myCursor.getString(myCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+//                        sheetBinding.nameEdt.setText(pdfName)
+//                        sheetBinding.fileName.setText(pdfName)
+                    }
+                } finally {
+                    myCursor?.close()
+                }
+            }
+
+            imagePath = PathUtil.getDriveFilePath(this, uri);
+            fileName = imagePath!!.substring(imagePath?.lastIndexOf("/")!! + 1)
+            imageExt = uri?.let { getMimeType(this, it) }
+
+            uploadImageWork()
         }
     }
 
@@ -497,4 +530,39 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
         }
         objPic = JSONObject(it.toString())
     }
+
+    // Doc work
+
+    private fun selectDoc() {
+        val mimeTypes = arrayOf(
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // .doc & .docx
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",  // .ppt & .pptx
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  // .xls & .xlsx
+            "text/plain",
+            "text/comma-separated-values",
+            "application/pdf"
+        )
+        val intent = Intent()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent.type = if (mimeTypes.size == 1) mimeTypes[0] else "*/*"
+            if (mimeTypes.size > 0) {
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+            }
+        } else {
+            var mimeTypesStr = ""
+            for (mimeType in mimeTypes) {
+                mimeTypesStr += "$mimeType|"
+            }
+            intent.type = mimeTypesStr.substring(0, mimeTypesStr.length - 1)
+        }
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(
+            Intent.createChooser(intent, "Select Doc"),
+            REQUEST_CHOOSE_PDF_UPCOMING_DETAIL
+        )
+    }
+
 }
