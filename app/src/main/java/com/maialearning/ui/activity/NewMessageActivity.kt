@@ -343,6 +343,8 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     @SuppressLint("Range")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.e("onActivityResult", "onActivityResult"+requestCode)
+        Log.e("onActivityResult", "resultCode"+resultCode)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             setData(requestCode, data)
         } else if (requestCode == REQUEST_CHOOSE_PHOTO && resultCode == RESULT_OK) {
@@ -558,11 +560,22 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
             }
             intent.type = mimeTypesStr.substring(0, mimeTypesStr.length - 1)
         }
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(
-            Intent.createChooser(intent, "Select Doc"),
-            REQUEST_CHOOSE_PDF_UPCOMING_DETAIL
-        )
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+//        if (Build.VERSION_CODES.S>=Build.VERSION_CODES.R){
+//                intent.action = Intent.ACTION_OPEN_DOCUMENT_TREE
+//                intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI,  Environment.DIRECTORY_DOCUMENTS)
+//                startActivityForResult(
+//                    Intent.createChooser(intent, "Select Doc"),
+//                    REQUEST_CHOOSE_PDF_UPCOMING_DETAIL
+//                )
+//        }
+//            else {
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(
+                Intent.createChooser(intent, "Select Doc"),
+                REQUEST_CHOOSE_PDF_UPCOMING_DETAIL
+            )
+       // }
     }
 
 }

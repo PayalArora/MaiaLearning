@@ -730,7 +730,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun getColFactSheet(token: String, id: String): UseCaseResult<JsonObject> {
         return try {
             val url =
-                "https://maia2-staging.maialearning.com/v2/atlas-static-data/college-factsheet/${id}.json"
+                "${CAT_API_MSG_URL}v2/atlas-static-data/college-factsheet/${id}.json"
             val result = catApi.getColFactSheetAsync(url).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -746,7 +746,7 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     ): UseCaseResult<FactsheetModelOther> {
         return try {
             val url =
-                "https://maia2-staging-backend.maialearning.com/ajs-services/all_international_factsheet_info/${id}"
+                "${BASE_URL}all_international_factsheet_info/${id}"
             val result = catApi.getColFactSheetOtherAsync(url, token).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
