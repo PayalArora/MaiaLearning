@@ -127,7 +127,7 @@ class ConsiderAdapter(
                         deadlineValue.showDatePicker(root.context, ::deadlineClick)
                     }
                     //|| (if selected plan has a deadline)
-                    name.setText(created_name)
+                    name.setText("by: $created_name")
 
                     if (college_priority_choice.equals("null")) {
                         countTxt.setText("--")

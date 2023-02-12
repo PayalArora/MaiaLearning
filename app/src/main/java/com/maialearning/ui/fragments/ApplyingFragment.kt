@@ -1430,14 +1430,16 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     fun showDialogDate(postion: Int) {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+
         val width: Int =
             (requireContext().getResources()
                 .getDisplayMetrics().widthPixels) - 30 //<-- int width=400;
         dialog.setContentView(R.layout.submitted_date_lay)
         dialog.window?.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
-        val back = ColorDrawable(Color.WHITE)
+        val back = ColorDrawable(Color.TRANSPARENT)
         val inset = InsetDrawable(back, 16, -8, 16, -8)
         dialog.window!!.setBackgroundDrawable(inset)
+
         dialog.setCancelable(false)
 
         // dialog.setContentView(R.layout.submitted_date_lay)
@@ -1445,7 +1447,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         text.setOnClickListener {
             text.showDatePicker(requireContext(), ::setDate)
         }
-        val dialogButton = dialog.findViewById<View>(R.id.btn_submit) as Button
+        val dialogButton = dialog.findViewById<View>(R.id.btn_submit) as TextView
         dialogButton.setOnClickListener {
             if (!text.text.toString().isNullOrEmpty()) {
                 var updateStudentPlan = UpdateStudentPlan()
@@ -1476,7 +1478,7 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 dialog?.dismiss()
             }
         }
-        val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_cancel) as Button
+        val dialogButtonCancel = dialog.findViewById<View>(R.id.btn_cancel) as TextView
         dialogButtonCancel.setOnClickListener { dialog.dismiss() }
         dialog.show()
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="wrap_content">
-    <RadioButton
+    <CheckBox
         android:id="@+id/check"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp"
@@ -13,7 +13,6 @@
         android:fontFamily="@font/inter_bold"
         android:paddingStart="@dimen/_10dp"
         android:button="@drawable/radiobutton"
-        android:checked="false"
         android:text="@string/early_action"/>
     <View
         android:id="@+id/view2"

@@ -115,11 +115,11 @@ class SearchParser(val it: JsonObject) {
                     UkResponseModel.Data.CollegeData(
                         data.getString("college_nid"),
                         data.getString("college_name"),
-                        data.getInt("parchment"),
-                        data.getInt("slate"),
-                        data.getString("course_count"),
-                        data.getInt("top_pick_flag"),
-                        data.getString("file_name"),
+                        data.optInt("parchment"),
+                        data.optInt("slate"),
+                        data.optString("course_count"),
+                        data.optInt("top_pick_flag"),
+                        data.optString("file_name"),
                         varArray
                     )
                 )
