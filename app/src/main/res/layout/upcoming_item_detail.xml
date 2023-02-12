@@ -382,7 +382,7 @@
                 android:background="@drawable/white_rounded"
                 android:backgroundTint="@color/blue"
                 android:fontFamily="@font/inter"
-                android:text="@string/complete"
+                android:text="@string/complete_btn"
                 android:textAllCaps="false"
                 android:visibility="gone" />
 
