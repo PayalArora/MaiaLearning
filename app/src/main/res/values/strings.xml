@@ -746,5 +746,6 @@
     <string name="add_note">Add note</string>
     <string name="enter_note_hint">Enter Note</string>
     <string name="editing_note">Editing note</string>
+    <string name="complete_btn">Complete</string>
 
 </resources>

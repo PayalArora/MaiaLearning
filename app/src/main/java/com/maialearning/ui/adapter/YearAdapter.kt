@@ -1,11 +1,14 @@
 package com.maialearning.ui.adapter
 
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.maialearning.databinding.ItemListFilterBinding
 import com.maialearning.databinding.RadiobuttonItemFilterBinding
 import com.maialearning.model.KeyVal
 import com.maialearning.ui.activity.ClickFilters
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.util.toUpperCase
 
 class YearAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters) :
@@ -33,7 +36,7 @@ class YearAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters) :
         viewHolder.binding.apply {
             check.setText(arr.get(position).value.toUpperCase())
 
-            // check.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+           // check.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
 
             check.setOnClickListener({
                 for (i in arr.indices) {
@@ -44,7 +47,7 @@ class YearAdapter(val arr: ArrayList<KeyVal>, val onItemClick: ClickFilters) :
                     }
                 }
 
-                notifyDataSetChanged();
+              notifyDataSetChanged();
             })
 
             if (arr.get(position).checked== true) {

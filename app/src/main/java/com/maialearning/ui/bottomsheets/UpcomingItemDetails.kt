@@ -12,6 +12,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,6 +37,7 @@ import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardFragViewModel
 import jp.wasabeef.richeditor.RichEditor
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
 import java.util.*
 
 
@@ -58,7 +60,8 @@ class UpcomingItemDetails(
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         dialog.show()
-        observer(dialog)
+
+        observer()
 
         if (data.category?.contains("Academic") == true) {
             sheetBinding.textCarr.text = data.category
@@ -104,6 +107,12 @@ class UpcomingItemDetails(
                 downloadWorkSheet(data?.worksheetFileId?.get(0)?.id)
             }
         }
+        sheetBinding.downloadFile.setOnClickListener{
+//            if (data.filename.isNullOrEmpty()) {
+//                downloadWorkSheet(data?.fid as String?)
+//            }
+        }
+
 
         if (data.completed != 1) {
             sheetBinding.completeBtn.visibility = View.VISIBLE
@@ -135,24 +144,49 @@ class UpcomingItemDetails(
             clickType("resetCompleteWork", dialog, progress, data.nid)
 
         }
+
     }
 
-    private fun observer(dialog: BottomSheetDialog) {
-        dashboardViewModel.preAssignedDownloadObserver.observe(con) {
-            val url = it.get(0).toString().replace("\"", "")
-            val manager =
-                con.requireContext().getSystemService(DOWNLOAD_SERVICE) as DownloadManager?
-            val uri: Uri =
-                Uri.parse(url)
-            val request: DownloadManager.Request = DownloadManager.Request(uri)
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            val reference: Long = manager?.enqueue(request)!!
+    private fun observer() {
+        if (!dashboardViewModel.preAssignedDownloadObserver.hasObservers()) {
+            dashboardViewModel.preAssignedDownloadObserver.observe(con.viewLifecycleOwner) {
+                val url = it.get(0).toString().replace("\"", "")
+                val manager =
+                    con.requireContext().getSystemService(DOWNLOAD_SERVICE) as DownloadManager?
+                val uri: Uri =
+                    Uri.parse(url.replace("\"", ""))
+                val file = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path.toString() + "/" + File(
+                        uri.path
+                    ).name
+                )
+                val request: DownloadManager.Request = DownloadManager.Request(uri)
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+                request.setAllowedOverRoaming(true)
+                request.setDestinationUri(
+                    Uri.fromFile(
+                        //File(
+//                            context?.getExternalFilesDir(
+//                                Environment.DIRECTORY_DOWNLOADS
+//                            ).toString(), File(uri.path).name
+                        file
 
+
+                    )
+                )
+
+                manager?.enqueue(request)
+
+            }
         }
-        dashboardViewModel.showError.observe(con) {
-            progress.dismiss()
-            Toast.makeText(con.requireContext(), "Something went wrong", Toast.LENGTH_SHORT).show()
-        }
+        if (!dashboardViewModel.showError.hasObservers()){
+            dashboardViewModel.showError.observe(con.viewLifecycleOwner) {
+                progress.dismiss()
+                Toast.makeText(con.requireContext(), "Something went wrong", Toast.LENGTH_SHORT)
+                    .show()
+            }
+    }
     }
 
     private fun downloadWorkSheet(fileId: String?) {
@@ -171,8 +205,12 @@ class UpcomingItemDetails(
             LinearLayoutManager(con.requireContext(), LinearLayoutManager.HORIZONTAL, false)
         sheetBinding.attachList.layoutManager = linearLayoutManager
         sheetBinding.attachList.adapter =
-            AttachmentAdapter(con.requireContext(), data.worksheetFileId)
+            AttachmentAdapter(con.requireContext(), data.worksheetFileId, ::click)
         sheetBinding.worksheet.visibility = View.VISIBLE
+    }
+
+    private fun click(s: String) {
+        downloadWorkSheet(s)
     }
 
     // Write work
