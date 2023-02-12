@@ -49,14 +49,23 @@ const val CAT_API_BASE_URL = "https://app-www-maia.maialearning.com/ajs-services
 const val CAT_API_MSG_URL = "https://maia2-msg.maialearning.com/"
 //var BASE_URL = "https://maia2-staging-backend.maialearning.com/ajs-services/"
 var BASE_URL = "https://app-www-maia.maialearning.com/ajs-services/"
-var UNIV_LOGO_URL="https://college-images-staging.maialearning.com/"
-const val ORIGIN = "https://maia2-staging.maialearning.com"
+
+//var UNIV_LOGO_URL="https://college-images-staging.maialearning.com/"
+var UNIV_LOGO_URL="https://college-images.maialearning.com/"
+//const val ORIGIN = "https://maia2-staging.maialearning.com"
+const val ORIGIN = "https://www.maialearning.com"
 const val ACCEPT_JSON = "application/json, text/plain, */*"
-const val ML_URL = "https://ml-api-staging.maialearning.com/"
+const val ML_URL = "https://ml-api.maialearning.com/"
+//const val ML_URL = "https://ml-api-staging.maialearning.com/"
 //const val ANTI_VIRUS = "https://api-gw-staging.maialearning.com/ml-s3-antivirus-status"
-const val ANTI_VIRUS = "https://api-gw.maialearning.com/ml-s3-antivirus-status"
-const val CARRER_URL = "https://maia2-staging.maialearning.com/atlas-static-data/career-factsheet/"
-const val CONSIDERING_APPLYING_WITH="https://maia2-staging.maialearning.com/atlas-static-data/get_allowed_values_list/field_transcript_applicationtype.json"
+//const val API_SW_URL = "https://api-gw-staging.maialearning.com/"
+const val API_SW_URL = "https://api-gw.maialearning.com/"
+const val ANTI_VIRUS = "${API_SW_URL}-s3-antivirus-status"
+const val MAIA_STATIC_URL = "https://www.maialearning.com/atlas-static-data/"
+//const val MAIA_STATIC_URL = "https://maia2-staging.maialearning.com/atlas-static-data/"
+const val CARRER_URL = "${MAIA_STATIC_URL}career-factsheet/"
+//const val CARRER_URL = "https://maia2-staging.maialearning.com/atlas-static-data/career-factsheet/"
+const val CONSIDERING_APPLYING_WITH="${MAIA_STATIC_URL}get_allowed_values_list/field_transcript_applicationtype.json"
 const val CAREER_FACTSHEET = "/career_search_factsheet.json"
 const val TITLE = "title"
 const val DESCRIPTION = "description"
@@ -69,7 +78,8 @@ const val CAREER_CLIENT = "?client=serviceinfinity"
 const val SEARCH_CLIENT = "&client=serviceinfinity"
 const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
 const val US_SEARCH= "get_military_careers_data?pager=1&service="
-var COLLEGE_JSON = "https://api-gw-staging.maialearning.com/college-json-filter"
+//var COLLEGE_JSON = "https://api-gw-staging.maialearning.com/college-json-filter"
+var COLLEGE_JSON = "${API_SW_URL}/college-json-filter"
 val   CommonApp = "3"
 object URL{
     var BASEURL = 0
@@ -281,6 +291,14 @@ fun parseEmpty(string: String?): String {
         return ""
     } else {
         return string+ "\n"+ "\n"
+    }
+}
+
+fun parseEmptySpace(string: String?): String {
+    if (string == null || string == "null" || string.isNullOrEmpty()) {
+        return ""
+    } else {
+        return string
     }
 }
 

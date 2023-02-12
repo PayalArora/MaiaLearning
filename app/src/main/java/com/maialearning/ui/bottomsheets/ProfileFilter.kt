@@ -41,6 +41,8 @@ import com.maialearning.model.ProfileResponse
 import com.maialearning.model.UpdateUserData
 import com.maialearning.network.AllAPi
 import com.maialearning.ui.adapter.*
+import com.maialearning.util.parseEmpty
+import com.maialearning.util.parseEmptySpace
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.ProfileViewModel
@@ -140,14 +142,14 @@ class ProfileFilter(val con: FragmentActivity, val layoutInflater: LayoutInflate
             }
         }
         profileModel.observer.observe(con, {
-            sheetBinding.nameTxt.setText("${it.info?.lastName}, ${it.info?.firstName} ${it.info?.middleName}")
+            sheetBinding.nameTxt.setText("${parseEmptySpace(it.info?.lastName)}, ${parseEmptySpace(it.info?.firstName)} ${parseEmptySpace(it.info?.middleName)}")
             if (SharedHelper(con).convention ?: false) {
-                sheetBinding.gradeTxt.setText("ID: ${it.info?.nid} (Grade ${it.info?.grade})")
+                sheetBinding.gradeTxt.setText("ID: ${parseEmptySpace(it.info?.nid)} (Grade ${parseEmptySpace(it.info?.grade)})")
             } else {
                 if (it.info?.grade?.isInt() == true)
-                    sheetBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade.toInt() + 1})")
+                    sheetBinding.gradeTxt.setText("ID: ${parseEmptySpace(it.info?.nid)} (Year ${it.info?.grade.toInt() + 1})")
                 else
-                    sheetBinding.gradeTxt.setText("ID: ${it.info?.nid} (Year ${it.info?.grade})")
+                    sheetBinding.gradeTxt.setText("ID: ${parseEmptySpace(it.info?.nid)} (Year ${parseEmptySpace(it.info?.grade)})")
             }
             Picasso.with(con).load(it.info?.profilePic).into(sheetBinding.toolbarProf)
             if (it.info?.profilePic != null) {
