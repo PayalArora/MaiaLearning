@@ -37,6 +37,7 @@ import com.maialearning.ui.activity.LoginActivity
 import com.maialearning.ui.adapter.CitizenshipAdapter
 import com.maialearning.ui.adapter.EthnicityAdapter
 import com.maialearning.ui.adapter.RaceAdapter
+import com.maialearning.util.parseNA
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.ProfileViewModel
@@ -98,9 +99,9 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
 
     @SuppressLint("SetTextI18n")
     private fun setData(it: ProfileResponse?) {
-        mBinding.emailTxt.text = it?.info?.mail
-        mBinding.secEmailTxt.text = it?.info?.secondaryEmail
-        mBinding.nicknameTxt.text = it?.info?.nickName
+        mBinding.emailTxt.text =  parseNA(it?.info?.mail)
+        mBinding.secEmailTxt.text =  parseNA(it?.info?.secondaryEmail)
+        mBinding.nicknameTxt.text =  parseNA(it?.info?.nickName)
 
         raceList.clear()
         for (i in it?.info?.race?.indices!!) {
@@ -108,24 +109,24 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
         }
 
         mBinding.raceTxt.text = raceList.let {
-            android.text.TextUtils.join(
+             android.text.TextUtils.join(
                 ", ",
                 raceList
             )
-        }
+        }?: "N/A"
         mBinding.phoneTxt.text = "+"  + it?.info?.primaryPhone
         mBinding.addTxt.text = it?.info?.citizenship?.let { it1 ->
             android.text.TextUtils.join(
                 ",",
                 it1
             )
-        }
-        mBinding.idTxt.text = it?.info?.studentNumber
-        mBinding.stateidTxt.text = it?.info?.studentStateId
-        mBinding.yearTxt.text = it?.info?.gradYear
-        mBinding.dobTxt.text = it?.info?.dob
-        mBinding.appYearTxt.text = it?.info?.applicationYear
-        mBinding.addressTxt.text = it?.info?.address
+        }?: "N/A"
+        mBinding.idTxt.text = parseNA(it?.info?.studentNumber)
+        mBinding.stateidTxt.text = parseNA(it?.info?.studentStateId)
+        mBinding.yearTxt.text = parseNA(it?.info?.gradYear)
+        mBinding.dobTxt.text = parseNA(it?.info?.dob)
+        mBinding.appYearTxt.text = parseNA(it?.info?.applicationYear)
+        mBinding.addressTxt.text = parseNA(it?.info?.address)
         if (it?.info?.gender == ("F"))
             mBinding.genderTxt.text = "Female"
         else if (it?.info?.gender == ("M"))
@@ -144,8 +145,8 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
             mBinding.transcriptBtn.isChecked = false
         }
         mBinding.transcriptBtn.isEnabled = false
-        mBinding.schoolAddTxt.text = it?.schoolInfo?.district
-        mBinding.schoolNameTxt.text = it?.schoolInfo?.schoolName
+        mBinding.schoolAddTxt.text = parseNA(it?.schoolInfo?.district)
+        mBinding.schoolNameTxt.text = parseNA(it?.schoolInfo?.schoolName)
         mBinding.fullAddressTxt.text =
             it?.schoolInfo?.address?.addressLine1 + "," + it?.schoolInfo?.address?.addressLine2 + "\n" + it?.schoolInfo?.address?.city + ", " + it?.schoolInfo?.address?.stateName + ", " + it?.schoolInfo?.address?.countryName
         mBinding.ceebTxt.text = it?.schoolInfo?.ceebCode
@@ -159,7 +160,7 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 ", ",
                 ethinicityList
             )
-        }
+        }?:"N/A"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -120,7 +120,7 @@ class ApplyingAdapter(
                     positio = position
                     deadlineValue.showDatePicker(root.context, ::deadlineClick)
                 }
-                name.setText(created_name)
+                name.setText("by: $created_name")
 
                 if (college_priority_choice.equals("null")) {
                     countTxt.setText("--")

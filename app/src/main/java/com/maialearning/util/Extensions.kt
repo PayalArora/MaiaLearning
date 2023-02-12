@@ -79,7 +79,7 @@ const val SEARCH_CLIENT = "&client=serviceinfinity"
 const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
 const val US_SEARCH= "get_military_careers_data?pager=1&service="
 //var COLLEGE_JSON = "https://api-gw-staging.maialearning.com/college-json-filter"
-var COLLEGE_JSON = "${API_SW_URL}/college-json-filter"
+var COLLEGE_JSON = "${API_SW_URL}college-json-filter"
 val   CommonApp = "3"
 object URL{
     var BASEURL = 0

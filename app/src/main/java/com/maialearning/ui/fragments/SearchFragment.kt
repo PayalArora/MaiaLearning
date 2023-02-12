@@ -420,7 +420,9 @@ class SearchFragment : Fragment() {
      payload.ucas_college_type = UniversitiesActivity.selectedGbCollege
      payload.sort_parameter = "college_name"
      payload.sort_order = "asc"
-     payload.academic_year = "2023"
+     if ( UniversitiesActivity.selectedYear.size>0) {
+         payload.academic_year = UniversitiesActivity.selectedYear.get(0)
+     }
      payload.college_list = UniversitiesActivity.selectedGbUniversity
 
  }

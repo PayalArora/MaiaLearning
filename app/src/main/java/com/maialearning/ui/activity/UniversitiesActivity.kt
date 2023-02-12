@@ -46,6 +46,8 @@ import com.squareup.picasso.Picasso
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class UniversitiesActivity : FragmentActivity(), ClickFilters {
@@ -91,6 +93,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
     private val fieldOfStudyAny: ArrayList<KeyVal> = ArrayList()
     private val fieldOfStudyProgramAny: ArrayList<KeyVal> = ArrayList()
     private val fieldOfStudyMazorAny: ArrayList<KeyVal> = ArrayList()
+    private val arrYear: ArrayList<KeyVal> = ArrayList()
     var anyFilterArray = arrayOf("Country", "University List", "Field of Study", "Program", "Major")
     var filterArrayEuropean = arrayOf("Country", "University List", "Discipline", "Sub Discipline")
     var filterArrayDE = arrayOf(
@@ -233,6 +236,16 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             Picasso.with(this).load(SharedHelper(this).picture).into(binding.toolbarProf)
         }
 
+        val year = Calendar.getInstance().get(Calendar.YEAR);
+        val prev = year -1
+        val next = year + 1
+        val key1 = "$prev-$year"
+        val key2 = "$year-$next"
+
+        arrYear.add(KeyVal("$prev", key1, false))
+        arrYear.add(KeyVal("$year", key2, false))
+        UniversitiesActivity.selectedYear.add("$year")
+
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -302,6 +315,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         selectedFOS = ""
         selectedProgramAny = ""
         selectedMazorAny = ""
+        arrYear.clear()
     }
 
     private fun initView() {
@@ -1249,7 +1263,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 var gbFilterArray = resources.getStringArray(R.array.GBFilters)
                 val selectedCount: Array<Int> =
                     arrayOf(0, selectedListFilter.size, 0, selectedGbUniversity.size, 0, 0, 0, 0, 0)
-
+                var year = "Year"
+                for (j in selectedYear) {
+                    if (checkNonNull(j)) {
+                        for (i in arrYear) {
+                            if (i.key == j) {
+                                year = i.value
+                            }
+                        }
+                    }
+                }
+                gbFilterArray[2] = year
 
                 var sub = "Subject Guide"
                 for (j in selectedGermanSubject) {
@@ -1390,6 +1414,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                 } else if (SharedHelper(this).country == "DE") {
                     disciplineFilter("Subject")
                 } else if (SharedHelper(this).country == "GB") {
+                    disciplineFilter("Year")
 
                 } else if (SharedHelper(this).continent == "EU") {
                     disciplineFilter("Discipline")
@@ -1702,7 +1727,20 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
                     dialogP.show()
                     mModel.getGbSubchild(selectedAreaStudy.get(0), false)
                 }
-            } else if (type.equals("Program")) {
+            } else if (type.equals("Year")){
+                for (i in arrYear.indices) {
+                    if (arrYear.get(i).checked) {
+                        selectedYear.clear()
+                        if (!selectedYear.contains(arrYear.get(i).key))
+                        selectedYear.add(arrYear.get(i).key)
+                        ar[selType] = arrYear.get(i).value
+                        sheetBindingUniv?.reciepentList?.adapter =
+                            UnivFilterAdapter(ar, this)
+                    }
+                }
+            }
+
+            else if (type.equals("Program")) {
                 for (i in programGBStudy.indices) {
                     if (programGBStudy.get(i).checked) {
                         selectedFieldSubject.clear()
@@ -1885,6 +1923,17 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
             }
             sheetBinding.reciepentList.adapter =
                 DiversityAdapter(areaGBStudy, this)
+        }
+        else if (type.equals("Year") && arrYear != null && arrYear.size > 0) {
+            for (i in arrYear) {
+                if (selectedYear.contains(i.key)) {
+                    i.checked = true
+                } else {
+                    i.checked = false
+                }
+            }
+            sheetBinding.reciepentList.adapter =
+                YearAdapter(arrYear, this)
         } else if (type.equals("Program") && programGBStudy != null && programGBStudy.size > 0) {
             for (i in programGBStudy) {
                 if (selectedFieldSubject.contains(i.key)) {
@@ -3422,6 +3471,7 @@ class UniversitiesActivity : FragmentActivity(), ClickFilters {
         var selectedSubDiscipline: ArrayList<String> = arrayListOf()
         var selectedGermanSubject: ArrayList<String> = arrayListOf()
         var selectedAreaStudy: ArrayList<String> = arrayListOf()
+        var selectedYear: ArrayList<String> = arrayListOf()
         var selectedFieldSubject: ArrayList<String> = arrayListOf()
         var selectedModeAdmission: String = ""
         var selectedModeStudy: String = ""
