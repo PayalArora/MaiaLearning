@@ -282,6 +282,14 @@ fun parseEmpty(string: String?): String {
     }
 }
 
+fun parseEmptySpace(string: String?): String {
+    if (string == null || string == "null" || string.isNullOrEmpty()) {
+        return ""
+    } else {
+        return string
+    }
+}
+
 fun parsePercentNA(string: String?): String {
 
     if (string == null || string == "null") {

@@ -13,12 +13,9 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.provider.OpenableColumns
-import android.provider.Settings
-import android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
 import android.util.Log
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -32,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.maialearning.BuildConfig
 import com.maialearning.R
 import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickId
@@ -272,24 +268,15 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
     }
 
     private fun checkStoragePermissionAndOpenImageSelection() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ) {
-            if (true == Environment.isExternalStorageManager()) {
-                selectImage(this)
-            }
-            else{
-
-                    val uri =  Uri.parse("package:" + BuildConfig.APPLICATION_ID);
-                    startActivity(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri));
-            }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            selectImage(this)
         } else {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                selectImage(this)
-            } else {
-                //changed here
+            //changed here
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -548,14 +535,14 @@ class NewMessageActivity : AppCompatActivity(), OnItemClickId, OnItemClick {
 
     private fun selectDoc() {
         val mimeTypes = arrayOf(
-            //"application/msword",
-//            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // .doc & .docx
-//            "application/vnd.ms-powerpoint",
-//            "application/vnd.openxmlformats-officedocument.presentationml.presentation",  // .ppt & .pptx
-//            "application/vnd.ms-excel",
-//            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  // .xls & .xlsx
-//            "text/plain",
-//            "text/comma-separated-values",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  // .doc & .docx
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",  // .ppt & .pptx
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",  // .xls & .xlsx
+            "text/plain",
+            "text/comma-separated-values",
            "application/pdf"
         )
         val intent = Intent()

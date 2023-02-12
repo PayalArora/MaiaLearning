@@ -32,7 +32,6 @@
             android:fontFamily="@font/inter_bold"
             android:gravity="top"
             android:paddingHorizontal="@dimen/_15dp"
-            android:text="Ms. Karishma Coulson"
             android:textColor="@color/black"
             android:textSize="@dimen/_21sp"
             android:textStyle="bold" />

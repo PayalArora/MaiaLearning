@@ -363,9 +363,12 @@ class ProfileFragment(val viewModel: ProfileViewModel) : Fragment(), OnItemClick
                 sheetBinding.phoneLay.visibility = View.VISIBLE
                 sheetBinding.ccp.setCountryForNameCode(profileResponse.info?.countryCode)
 
-                sheetBinding.ccp.registerCarrierNumberEditText(sheetBinding.editTextCarrierNumber)
-                sheetBinding.editTextCarrierNumber.setText(profileResponse.info?.primaryPhone?.replace(sheetBinding.ccp.selectedCountryCode,""))
-            }
+                if (profileResponse.info?.primaryPhone?.split(" ")?.size?:0 > 0) {
+                    val code = profileResponse.info?.primaryPhone?.split(" ")?.get(0)
+                    //sheetBinding.ccp.registerCarrierNumberEditText(sheetBinding.editTextCarrierNumber)
+                    sheetBinding.editTextCarrierNumber.setText(profileResponse.info?.primaryPhone?.replaceFirst(code.toString(),""))
+                }
+                   }
             "dob" -> {
                 sheetBinding.filters.text = requireActivity().getString(R.string.birthday)
                 sheetBinding.emailEdt.setText(profileResponse.info?.dob)
