@@ -268,6 +268,7 @@ class LoginActivity : AppCompatActivity() {
                 SharedHelper(this).login = "1"
                 SharedHelper(this).id=it.user?.uid
                 SharedHelper(this).schoolId=it.user?.ogUserNode?.und?.get(0)?.targetId
+                SharedHelper(this).uuid=it.user?.uuid
                 SharedHelper(this).ethnicityTarget=it.user?.ogUserNode?.und?.get(0)?.targetId
                 if (it.mlSchoolConfigData?.gradeConvention?.usConvention == 1?:0){
                     SharedHelper(this).convention= true
