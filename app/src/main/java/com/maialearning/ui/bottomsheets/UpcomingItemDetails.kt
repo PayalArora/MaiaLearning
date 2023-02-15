@@ -17,10 +17,8 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,10 +32,12 @@ import com.maialearning.ui.adapter.*
 import com.maialearning.util.getDate
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
+import com.maialearning.util.showToast
 import com.maialearning.viewmodel.DashboardFragViewModel
 import jp.wasabeef.richeditor.RichEditor
+import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
+import java.io.*
 import java.util.*
 
 
@@ -52,8 +52,10 @@ class UpcomingItemDetails(
     private val dashboardViewModel: DashboardFragViewModel by con.viewModel()
     private lateinit var progress: Dialog
 
-    fun showDialog() {
-        progress = showLoadingDialog(con.requireContext())
+
+    fun showDialog(progressR: Dialog) {
+
+        progress = progressR
         val dialog = BottomSheetDialog(con.requireContext())
         val sheetBinding: UpcomingItemDetailBinding =
             UpcomingItemDetailBinding.inflate(layoutInflater)
@@ -108,9 +110,10 @@ class UpcomingItemDetails(
             }
         }
         sheetBinding.downloadFile.setOnClickListener{
-//            if (data.filename.isNullOrEmpty()) {
-//                downloadWorkSheet(data?.fid as String?)
-//            }
+           if (!data.filename.isNullOrEmpty()) {
+               progress.show()
+               dashboardViewModel.downloadAttachment(data?.fid as String)
+            }
         }
 
 
@@ -146,7 +149,18 @@ class UpcomingItemDetails(
         }
 
     }
-
+    var attachmentDownloadCompleteReceive: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            val action = intent.action
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == action) {
+                val downloadId = intent.getLongExtra(
+                    DownloadManager.EXTRA_DOWNLOAD_ID, 0
+                )
+               // openDownloadedAttachment(context, downloadId)
+                con.context?.showToast("Downloaded File Successfully")
+            }
+        }
+    }
     private fun observer() {
         if (!dashboardViewModel.preAssignedDownloadObserver.hasObservers()) {
             dashboardViewModel.preAssignedDownloadObserver.observe(con.viewLifecycleOwner) {
@@ -161,6 +175,8 @@ class UpcomingItemDetails(
                     ).name
                 )
                 val request: DownloadManager.Request = DownloadManager.Request(uri)
+                con.activity?.registerReceiver(attachmentDownloadCompleteReceive,  IntentFilter(
+                        DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                 request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 request.setAllowedOverRoaming(true)
@@ -175,7 +191,7 @@ class UpcomingItemDetails(
 
                     )
                 )
-
+                con.context?.showToast("Downloading..")
                 manager?.enqueue(request)
 
             }
@@ -187,6 +203,55 @@ class UpcomingItemDetails(
                     .show()
             }
     }
+//        if (dashboardViewModel.attachmentDownloadObserver.hasObservers()){
+//            dashboardViewModel.attachmentDownloadObserver.removeObserver(observer)
+//        }
+        if (!dashboardViewModel.attachmentDownloadObserver.hasObservers()) {
+            dashboardViewModel.attachmentDownloadObserver.observe(con.viewLifecycleOwner) {
+                progress.dismiss()
+                val json = JSONObject(it.toString())
+                val imageData = json.optString("file")
+                imageData.let { saveImage(it, json.optString("filename")) }
+            }
+        }
+   // }
+    }
+    fun saveImage( imageData: String?,filename:String?): File? {
+        val imgBytesData = android.util.Base64.decode(
+            imageData,
+            android.util.Base64.DEFAULT
+        )
+      // val file = File.createTempFile("image", null, context.cacheDir)
+        val file = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path.toString() + "/" + File(
+               " ${System.currentTimeMillis()}_${ filename}"
+            ).name
+        )
+
+        val fileOutputStream: FileOutputStream
+        try {
+            fileOutputStream = FileOutputStream(file)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+            return null
+        }
+        val bufferedOutputStream = BufferedOutputStream(
+            fileOutputStream
+        )
+        try {
+            bufferedOutputStream.write(imgBytesData)
+            con.context?.showToast("Downloaded File Successfully")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        } finally {
+            try {
+                bufferedOutputStream.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return file
     }
 
     private fun downloadWorkSheet(fileId: String?) {

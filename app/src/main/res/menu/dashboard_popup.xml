@@ -4,25 +4,25 @@
     >
     <item
         android:id="@+id/navigation_view"
-        android:icon="@drawable/ic_view"
         android:title="@string/view" />
+<!--    android:icon="@drawable/ic_view"-->
     <item
         android:id="@+id/navigation_write"
-        android:icon="@drawable/ic_write"
         android:title="@string/write" />
-
+<!--    android:icon="@drawable/ic_write"-->
     <item
         android:id="@+id/navigation_file_upload"
-        android:icon="@drawable/ic_upload"
         android:title="@string/upload_file"/>
-
+<!--    android:icon="@drawable/ic_upload"-->
     <item
         android:id="@+id/navigation_complete"
-        android:icon="@drawable/ic_reset"
-        android:title="@string/complete"/>
+        android:title="@string/complete_btn"/>
+<!--        android:icon="@drawable/ic_reset"-->
+
     <item
         android:id="@+id/navigation_reset_complete"
         android:visible="false"
-        android:icon="@drawable/ic_reset"
         android:title="@string/reset_Comp"/>
+<!--        android:icon="@drawable/ic_reset"-->
+
 </menu>

@@ -203,20 +203,32 @@ class OverDueAdapter(
             viewHolder.binding.textSubmittedDoc.visibility = View.GONE
         }
         viewHolder.itemView.setOnClickListener {
-            if (!overdueList.get(position).category.equals("Survey")) {
+            if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
+                 !overdueList.get(position).category.equals("Webinar") ) {
+
                 UpcomingItemDetails(
                     fragment,
                     inflater,
                     overdueList.get(position),
                     ::clickDetail
-                ).showDialog()
+                ).showDialog(progress)
             } else {
 
             }
         }
+        if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
+            !overdueList.get(position).category.equals("Webinar") ){
+
+            viewHolder.binding.menuClick.visibility = View.VISIBLE
+        }
+        else {
+            viewHolder.binding.menuClick.visibility = View.GONE
+        }
         viewHolder.binding.menuClick.setOnClickListener {
-            if (!overdueList.get(position).category.equals("Survey"))
+            if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
+                !overdueList.get(position).category.equals("Webinar") ) {
                 menuPopUp(position, it)
+            }
         }
         viewHolder.binding.academicMenuClick.setOnClickListener {
             if (!overdueList.get(position).category.equals("Survey"))
@@ -253,7 +265,7 @@ class OverDueAdapter(
                             inflater,
                             overdueList.get(position),
                             ::clickDetail
-                        ).showDialog()
+                        ).showDialog(progress)
                 }
                 R.id.navigation_write -> {
                     gapText = ""

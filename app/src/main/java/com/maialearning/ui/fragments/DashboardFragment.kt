@@ -136,7 +136,7 @@ class DashboardFragment : Fragment() {
             Log.e("Response ", " " + it.assignment?.size)
             lifecycleScope.launch(Dispatchers.Main) {
                 dataSet(it)
-                dashboardViewModel.showLoading.value = false
+               dashboardViewModel.showLoading.value = false
                 if (mBinding.tabs.selectedTabPosition == 0) {
                     upcomingFragment?.setAdapter(upcomingList)
                 } else if (mBinding.tabs.selectedTabPosition == 1)
@@ -158,19 +158,23 @@ class DashboardFragment : Fragment() {
                     )
                 }
                 surveySet(it.data, it.studentSurveyResponses)
-                dashboardViewModel.showLoading.value = false
+              //  dashboardViewModel.showLoading.value = false
             }
         }
         dashboardViewModel.webinarObserver.observe(viewLifecycleOwner) {
             Log.e("Response Webinar", " " + it.data?.size)
             webinarList.clear()
             lifecycleScope.launch(Dispatchers.Main) {
-                dashboardViewModel.showLoading.value = false
+              //  dashboardViewModel.showLoading.value = false
                  webinarList =   it.data?.filter { it1->(it1?.webinar != null &&  (it1.webinar.startTime != null && compareDate(
                     it1.webinar.startTime?.toLong()
                         ?.let { it1 -> getDate(it1, "E dd MMM, yyyy") })))
                 } as ArrayList<WebinarDataItem?>
                 Log.e("Response Webinar", " " + webinarList?.size)
+                dashboardViewModel.getSurveys(
+                    "Bearer " + SharedHelper(requireContext()).authkey,
+                    ML_URL + "v2/surveys"
+                )
             }
 
         }
@@ -178,12 +182,6 @@ class DashboardFragment : Fragment() {
     }
 
     private fun listing() {
-
-        dashboardViewModel.getSurveys(
-            "Bearer " + SharedHelper(requireContext()).authkey,
-            ML_URL + "v2/surveys"
-        )
-
         dashboardViewModel.getWebinar(
             "Bearer " + SharedHelper(requireContext()).authkey,
             "${ML_URL}v1/university-fairs/registered?fields=webinar,webinar.uuid,webinar.topic,webinar.university_name,webinar.university_introduction,webinar.session_type,webinar.program,chosen_university,webinar.external_registration,uuid,join_url,webinar.end_time,webinar.start_time&limit=50&offset=0&order_by=ASC&show=upcoming&sort_by=webinar:start_time&webinar:session_delivery=live&webinar:status=published"
@@ -199,9 +197,19 @@ class DashboardFragment : Fragment() {
             for (i in data.indices) {
                 if ((data.get(i)?.endTime == null || data.get(i)?.endTime.equals("0"))) {
                     if (data.get(i)?.status == "active") {
-                        var assignmentItem = DashboardOverdueResponse.AssignmentItem()
+                        val jobj: JsonObject? = survey?.get(data.get(i)?.uuid) as JsonObject?
+
+                            var assignmentItem = DashboardOverdueResponse.AssignmentItem()
                         assignmentItem.date = null
                         assignmentItem.status = 1
+                        if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
+                            assignmentItem.completed = 0
+                        } else
+                        {
+                            if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
+                                assignmentItem.completed = 1
+                            }
+                        }
                         assignmentItem.start_time =  data.get(i)?.startTime
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
@@ -209,7 +217,8 @@ class DashboardFragment : Fragment() {
 //                        assignmentItem.status=data.get(i)?.status
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
-                    }
+                    //}
+                }
                 } else if (data.get(i)?.status == "closed" && (data.get(i)?.assignedWithUser?.contains(
                         SharedHelper(requireContext()).uuid
                     )) ?: false
@@ -255,9 +264,7 @@ class DashboardFragment : Fragment() {
 
         }
 
-      surveyListUpcoming =  assignment.filter { it.status==1 &&(it.start_time == null || (it.start_time != null && compareDate(
-                it.start_time?.toLong()
-                    ?.let { it1 -> getDate(it1, "E dd MMM, yyyy") })))
+      surveyListUpcoming =  assignment.filter { it.status==1 && it.completed == 0
         } as ArrayList<DashboardOverdueResponse.AssignmentItem>
         Log.e("survey list size", " " + surveyListUpcoming.size)
 

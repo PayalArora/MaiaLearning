@@ -12,6 +12,7 @@ data class DashboardOverdueResponse(
         @field:SerializedName("date")
         var date: String? = null,
         var start_time: String? = null,
+        var response_status: String? = null,
         @field:SerializedName("written_response")
         var writtenResponse: Any? = null,
 
