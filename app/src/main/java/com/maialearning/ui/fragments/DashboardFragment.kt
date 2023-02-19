@@ -238,6 +238,7 @@ class DashboardFragment : Fragment() {
                         assignmentItem.response_status = jobj?.get("response_status").toString()?.replaceInvertedComas()
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
+                        Log.e("survey list size", " " + jobj?.get("response_status").toString()?.replaceInvertedComas())
                     }
                 }
             }
@@ -271,7 +272,7 @@ class DashboardFragment : Fragment() {
         } as ArrayList<DashboardOverdueResponse.AssignmentItem>
         Log.e("survey list size", " " + surveyListUpcoming.size)
 
-        surveyListCompleted =  assignment.filter {it.completed == 1
+        surveyListCompleted =  assignment.filter {it.response_status == "completed"||it.response_status == "incomplete"
         } as ArrayList<DashboardOverdueResponse.AssignmentItem>
         Log.e("survey list size", " " + surveyListCompleted.size)
         var mappedList = assignment.groupBy {
