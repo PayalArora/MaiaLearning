@@ -48,14 +48,15 @@
             android:id="@+id/like"
             android:layout_width="@dimen/_30dp"
             android:layout_height="@dimen/_30dp"
-            android:layout_marginTop="@dimen/_30dp"
+
             android:layout_marginEnd="@dimen/_10dp"
             android:background="@drawable/circle"
             android:contentDescription="@string/like"
             android:padding="@dimen/_7dp"
             android:src="@drawable/like"
+            app:layout_constraintBottom_toBottomOf="@id/image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/image" />
 
         <View
             android:id="@+id/view"

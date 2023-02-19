@@ -24,10 +24,8 @@ import com.maialearning.databinding.ApplicationFilterBinding
 import com.maialearning.databinding.DashbordFragBinding
 import com.maialearning.databinding.DateFilterBinding
 import com.maialearning.model.*
-import com.maialearning.util.ML_URL
-import com.maialearning.util.getDate
+import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardFragViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +47,9 @@ class DashboardFragment : Fragment() {
     var endCompletedList = arrayListOf<SortedDateModel>()
     var upcomingList = arrayListOf<SortedDateModel>()
     var surveyList = arrayListOf<SortedDateModel>()
+    var webinarList = arrayListOf<WebinarDataItem?>()
+    var surveyListUpcoming = arrayListOf<DashboardOverdueResponse.AssignmentItem>()
+    var surveyListCompleted = arrayListOf<DashboardOverdueResponse.AssignmentItem>()
     private var upcomingFragment: UpcomingFragment? = null
     private var surveyFragment: SurveyFragment? = null
     private var overDueFragment: OverDueFragment? = null
@@ -134,7 +135,7 @@ class DashboardFragment : Fragment() {
             Log.e("Response ", " " + it.assignment?.size)
             lifecycleScope.launch(Dispatchers.Main) {
                 dataSet(it)
-                dashboardViewModel.showLoading.value = false
+               dashboardViewModel.showLoading.value = false
                 if (mBinding.tabs.selectedTabPosition == 0) {
                     upcomingFragment?.setAdapter(upcomingList)
                 } else if (mBinding.tabs.selectedTabPosition == 1)
@@ -149,67 +150,95 @@ class DashboardFragment : Fragment() {
         dashboardViewModel.surveysObserver.observe(viewLifecycleOwner) {
             Log.e("Response Surveys", " " + it.data?.size)
             lifecycleScope.launch(Dispatchers.Main) {
+                SharedHelper(requireContext()).id?.let {
+                    dashboardViewModel.getOverDueCompleted(
+                        "Bearer " + SharedHelper(requireContext()).authkey,
+                        it
+                    )
+                }
                 surveySet(it.data, it.studentSurveyResponses)
-                dashboardViewModel.showLoading.value = false
+              //  dashboardViewModel.showLoading.value = false
             }
         }
         dashboardViewModel.webinarObserver.observe(viewLifecycleOwner) {
             Log.e("Response Webinar", " " + it.data?.size)
+            webinarList.clear()
             lifecycleScope.launch(Dispatchers.Main) {
-                dashboardViewModel.showLoading.value = false
+              //  dashboardViewModel.showLoading.value = false
+                 webinarList =   it.data?.filter { it1->(it1?.webinar != null &&  (it1.webinar.startTime != null && compareDate(
+                    it1.webinar.startTime?.toLong()
+                        ?.let { it1 -> getDate(it1, "E dd MMM, yyyy") })))
+                } as ArrayList<WebinarDataItem?>
+                Log.e("Response Webinar", " " + webinarList?.size)
+                dashboardViewModel.getSurveys(
+                    "Bearer " + SharedHelper(requireContext()).authkey,
+                    ML_URL + "v2/surveys"
+                )
             }
+
         }
 
     }
 
     private fun listing() {
-        SharedHelper(requireContext()).id?.let {
-            dashboardViewModel.getOverDueCompleted(
-                "Bearer " + SharedHelper(requireContext()).authkey,
-                it
-            )
-        }
-        dashboardViewModel.getSurveys(
-            "Bearer " + SharedHelper(requireContext()).authkey,
-            ML_URL + "v2/surveys"
-        )
-
         dashboardViewModel.getWebinar(
             "Bearer " + SharedHelper(requireContext()).authkey,
             "${ML_URL}v1/university-fairs/registered?fields=webinar,webinar.uuid,webinar.topic,webinar.university_name,webinar.university_introduction,webinar.session_type,webinar.program,chosen_university,webinar.external_registration,uuid,join_url,webinar.end_time,webinar.start_time&limit=50&offset=0&order_by=ASC&show=upcoming&sort_by=webinar:start_time&webinar:session_delivery=live&webinar:status=published"
         )
+
     }
 
     private fun surveySet(data: List<SurveyDataItem?>?, survey: JsonObject?) {
         var assignment = ArrayList<DashboardOverdueResponse.AssignmentItem>()
+        surveyListUpcoming.clear()
+        surveyListCompleted.clear()
         // var noDueList = arrayListOf<SortedDateModel>()
         if (data != null) {
             for (i in data.indices) {
                 if ((data.get(i)?.endTime == null || data.get(i)?.endTime.equals("0"))) {
                     if (data.get(i)?.status == "active") {
-                        var assignmentItem = DashboardOverdueResponse.AssignmentItem()
+                        val jobj: JsonObject? = survey?.get(data.get(i)?.uuid) as JsonObject?
+
+                            var assignmentItem = DashboardOverdueResponse.AssignmentItem()
                         assignmentItem.date = null
+                        assignmentItem.status = 1
+                        if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
+                            assignmentItem.completed = 0
+                        } else
+                        {
+                                assignmentItem.completed = 1
+                        }
+                        assignmentItem.response_status = jobj?.get("response_status").toString()?.replaceInvertedComas()
+                        assignmentItem.start_time =  data.get(i)?.startTime
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
                         assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
 //                        assignmentItem.status=data.get(i)?.status
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
-                    }
-                } else if (data.get(i)?.status == "closed" && (data.get(i)?.assignedWithUser?.contains(
-                        SharedHelper(requireContext()).uuid
-                    )) ?: false
-                ) {
-                    val jobj: JsonObject? = survey?.get(data.get(i)?.uuid) as JsonObject?
-                    if (jobj?.get("response_status").toString()?.replace("\"", "") == "completed") {
+                    //}
+                }
+                } else if (data.get(i)?.status == "closed") {
+                    val jobj: JsonObject? = survey?.get(data.get(i)?.uuid?.replaceInvertedComas()) as JsonObject?
+                    if (jobj?.get("response_status").toString()?.replace("\"", "") == "completed"|| jobj?.get("response_status").toString()?.replace("\"", "") == "incomplete") {
                         var assignmentItem = DashboardOverdueResponse.AssignmentItem()
                         assignmentItem.date = data.get(i)?.endTime
+                        assignmentItem.start_time =  data.get(i)?.startTime
                         assignmentItem.category = "Survey"
+                        assignmentItem.status = 0
+                        if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
+                            assignmentItem.completed = 0
+                        } else
+                        {
+                            assignmentItem.completed = 1
+                        }
                         assignmentItem.body = data.get(i)?.title
                         assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
 //                        assignmentItem.status=data.get(i)?.status
+                        assignmentItem.response_status = jobj?.get("response_status").toString()?.replaceInvertedComas()
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
+                        Log.e("survey list size", " " + jobj?.get("response_status").toString()?.replaceInvertedComas())
                     }
                 }
             }
@@ -226,6 +255,7 @@ class DashboardFragment : Fragment() {
         //  var nodueList = assignmentList.filter { it.date.isNullOrEmpty() }
 
         Log.e("survey list size", " " + assignment.size)
+        Log.e("survey uuid", " " + SharedHelper(requireContext()).uuid)
         assignment.sortBy {
             it.date?.toLong()?.let { it1 ->
                 LocalDate.parse(
@@ -238,6 +268,13 @@ class DashboardFragment : Fragment() {
 
         }
 
+      surveyListUpcoming =  assignment.filter { it.status==1 && it.completed == 0
+        } as ArrayList<DashboardOverdueResponse.AssignmentItem>
+        Log.e("survey list size", " " + surveyListUpcoming.size)
+
+        surveyListCompleted =  assignment.filter {it.response_status == "completed"||it.response_status == "incomplete"
+        } as ArrayList<DashboardOverdueResponse.AssignmentItem>
+        Log.e("survey list size", " " + surveyListCompleted.size)
         var mappedList = assignment.groupBy {
             it.date?.toLong()?.let { it1 ->
                 getDate(
@@ -284,6 +321,18 @@ class DashboardFragment : Fragment() {
                     it.date?.toLong()
                         ?.let { it1 -> getDate(it1, "E dd MMM, yyyy") })))
             } as ArrayList<DashboardOverdueResponse.AssignmentItem>
+
+        for (i in webinarList){
+            val assignment = DashboardOverdueResponse.AssignmentItem()
+            assignment.date = i?.webinar?.startTime.toString()
+            assignment.body = i?.webinar?.topic
+            assignment.task = i?.webinar?.topic
+            assignment.category = "Webinar"
+            assignment.categoryId = i?.webinar?.uuid
+            upcoming.add(assignment)
+        }
+        upcoming.addAll(surveyListUpcoming)
+
 
         Log.e("upcoming list size", " " + upcoming.size)
         upcoming.sortBy {
@@ -344,6 +393,7 @@ class DashboardFragment : Fragment() {
             } else {
                 TODO("VERSION.SDK_INT < O")
             }
+        completedList.addAll(surveyListCompleted)
         completedList.sortBy {
             it.date?.toLong()?.let { it1 ->
                 LocalDate.parse(

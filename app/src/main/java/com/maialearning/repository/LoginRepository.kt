@@ -404,6 +404,10 @@ interface LoginRepository {
         id: String
     ): UseCaseResult<JsonArray>
 
+    suspend fun downloadAttachment(
+        id: String
+    ): UseCaseResult<JsonObject>
+
     suspend fun saveTopPickNote(
         id: String, note: String
     ): UseCaseResult<Unit>
@@ -2080,6 +2084,20 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
     override suspend fun programDetails(id: String): UseCaseResult<JsonArray> {
         return try {
             val result = catApi.programDetails(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun downloadAttachment(id: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.downloadAttachment(
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 id
             ).await()

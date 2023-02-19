@@ -168,6 +168,14 @@ class OverDueAdapter(
             setVisibility(viewHolder.binding, survey_lay = 1)
             viewHolder.binding.textType.text = overdueList?.get(position)?.category
             viewHolder.binding.descrptionSurvey.text =overdueList?.get(position)?.body
+            if (overdueList?.get(position)?.response_status == "pending"){
+                viewHolder.binding.completeText.text = "Start"
+            } else if (overdueList?.get(position)?.response_status == "in_progress") {
+                viewHolder.binding.completeText.text = "Continue"
+            }else if (overdueList?.get(position)?.response_status == "completed") {
+                viewHolder.binding.completeText.text = "View"
+            }
+
         } else {
             setVisibility(viewHolder.binding, carrier_lay = 1)
             viewHolder.binding.textType.text = overdueList?.get(position)?.category
@@ -203,20 +211,32 @@ class OverDueAdapter(
             viewHolder.binding.textSubmittedDoc.visibility = View.GONE
         }
         viewHolder.itemView.setOnClickListener {
-            if (!overdueList.get(position).category.equals("Survey")) {
+            if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
+                 !overdueList.get(position).category.equals("Webinar") ) {
+
                 UpcomingItemDetails(
                     fragment,
                     inflater,
                     overdueList.get(position),
                     ::clickDetail
-                ).showDialog()
+                ).showDialog(progress)
             } else {
 
             }
         }
+        if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
+            !overdueList.get(position).category.equals("Webinar") ){
+
+            viewHolder.binding.menuClick.visibility = View.VISIBLE
+        }
+        else {
+            viewHolder.binding.menuClick.visibility = View.GONE
+        }
         viewHolder.binding.menuClick.setOnClickListener {
-            if (!overdueList.get(position).category.equals("Survey"))
+            if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
+                !overdueList.get(position).category.equals("Webinar") ) {
                 menuPopUp(position, it)
+            }
         }
         viewHolder.binding.academicMenuClick.setOnClickListener {
             if (!overdueList.get(position).category.equals("Survey"))
@@ -253,7 +273,7 @@ class OverDueAdapter(
                             inflater,
                             overdueList.get(position),
                             ::clickDetail
-                        ).showDialog()
+                        ).showDialog(progress)
                 }
                 R.id.navigation_write -> {
                     gapText = ""

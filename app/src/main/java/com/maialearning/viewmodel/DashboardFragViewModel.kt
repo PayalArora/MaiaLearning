@@ -28,6 +28,7 @@ class DashboardFragViewModel(private val catRepository: LoginRepository) : ViewM
     val surveysObserver = MutableLiveData<SurveysResponse>()
     val webinarObserver = MutableLiveData<WebinarResponse>()
     val preAssignedDownloadObserver = MutableLiveData<JsonArray>()
+    val attachmentDownloadObserver = MutableLiveData<JsonObject>()
     val writeToCounselerObserver = MutableLiveData<JsonArray>()
     val presignedUrlObserver = MutableLiveData<JsonObject>()
     var liveDataMerger: MediatorLiveData<*> = MediatorLiveData<Any>()
@@ -45,7 +46,7 @@ class DashboardFragViewModel(private val catRepository: LoginRepository) : ViewM
             val result = withContext(Dispatchers.Main) {
                 catRepository.getOverDueCompleted(token,id)
             }
-           showLoading.value = false
+           //showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> overdueObserver.value = result.data
                 is UseCaseResult.Error -> {
@@ -66,7 +67,7 @@ class DashboardFragViewModel(private val catRepository: LoginRepository) : ViewM
             val result = withContext(Dispatchers.Main) {
                 catRepository.getSurveys(url,token)
             }
-            // showLoading.value = false
+         //   showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> surveysObserver.value = result.data
                 is UseCaseResult.Error -> {
@@ -112,6 +113,27 @@ class DashboardFragViewModel(private val catRepository: LoginRepository) : ViewM
             // showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> preAssignedDownloadObserver.value = result.data
+                is UseCaseResult.Error -> {
+                    showLoading.value = false
+                    showError.value = result.exception.response()?.errorBody()?.string()
+                }
+                is UseCaseResult.Exception -> {
+                    showLoading.value = false
+                    showError.value = result.exception.message}
+
+            }
+        }
+    }
+
+    fun downloadAttachment(file_id:String){
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.downloadAttachment(file_id)
+            }
+            // showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> attachmentDownloadObserver.value = result.data
                 is UseCaseResult.Error -> {
                     showLoading.value = false
                     showError.value = result.exception.response()?.errorBody()?.string()

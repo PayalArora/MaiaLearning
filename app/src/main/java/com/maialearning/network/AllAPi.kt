@@ -3,6 +3,7 @@ package com.maialearning.network
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.maialearning.model.*
+import dagger.hilt.internal.GeneratedEntryPoint
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
 import org.json.JSONObject
@@ -797,4 +798,9 @@ interface AllAPi {
         @Field("transcript_nid") id: String,
         @Field("note") note: String
     ): Deferred<Unit>
+
+    @GET("file//{id}")
+    fun downloadAttachment(
+        @Header("Authorization") Authorization: String,
+        @Path("id") id: String):Deferred<JsonObject>
 }

@@ -11,7 +11,8 @@ data class DashboardOverdueResponse(
 
         @field:SerializedName("date")
         var date: String? = null,
-
+        var start_time: String? = null,
+        var response_status: String? = null,
         @field:SerializedName("written_response")
         var writtenResponse: Any? = null,
 
@@ -70,7 +71,7 @@ data class DashboardOverdueResponse(
         var allowEditDelete: Int? = null,
 
         @field:SerializedName("status")
-        var status: Int? = null,
+        var status: Int? = 0,
 
         @field:SerializedName("filename")
         var filename: String? = null,
