@@ -168,6 +168,14 @@ class OverDueAdapter(
             setVisibility(viewHolder.binding, survey_lay = 1)
             viewHolder.binding.textType.text = overdueList?.get(position)?.category
             viewHolder.binding.descrptionSurvey.text =overdueList?.get(position)?.body
+            if (overdueList?.get(position)?.response_status == "pending"){
+                viewHolder.binding.completeText.text = "Start"
+            } else if (overdueList?.get(position)?.response_status == "in_progress") {
+                viewHolder.binding.completeText.text = "Continue"
+            }else if (overdueList?.get(position)?.response_status == "completed") {
+                viewHolder.binding.completeText.text = "View"
+            }
+
         } else {
             setVisibility(viewHolder.binding, carrier_lay = 1)
             viewHolder.binding.textType.text = overdueList?.get(position)?.category

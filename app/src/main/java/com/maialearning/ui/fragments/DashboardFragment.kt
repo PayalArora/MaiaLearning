@@ -24,10 +24,8 @@ import com.maialearning.databinding.ApplicationFilterBinding
 import com.maialearning.databinding.DashbordFragBinding
 import com.maialearning.databinding.DateFilterBinding
 import com.maialearning.model.*
-import com.maialearning.util.ML_URL
-import com.maialearning.util.getDate
+import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
-import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardFragViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,6 +49,7 @@ class DashboardFragment : Fragment() {
     var surveyList = arrayListOf<SortedDateModel>()
     var webinarList = arrayListOf<WebinarDataItem?>()
     var surveyListUpcoming = arrayListOf<DashboardOverdueResponse.AssignmentItem>()
+    var surveyListCompleted = arrayListOf<DashboardOverdueResponse.AssignmentItem>()
     private var upcomingFragment: UpcomingFragment? = null
     private var surveyFragment: SurveyFragment? = null
     private var overDueFragment: OverDueFragment? = null
@@ -192,6 +191,7 @@ class DashboardFragment : Fragment() {
     private fun surveySet(data: List<SurveyDataItem?>?, survey: JsonObject?) {
         var assignment = ArrayList<DashboardOverdueResponse.AssignmentItem>()
         surveyListUpcoming.clear()
+        surveyListCompleted.clear()
         // var noDueList = arrayListOf<SortedDateModel>()
         if (data != null) {
             for (i in data.indices) {
@@ -206,10 +206,9 @@ class DashboardFragment : Fragment() {
                             assignmentItem.completed = 0
                         } else
                         {
-                            if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
                                 assignmentItem.completed = 1
-                            }
                         }
+                        assignmentItem.response_status = jobj?.get("response_status").toString()?.replaceInvertedComas()
                         assignmentItem.start_time =  data.get(i)?.startTime
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
@@ -219,20 +218,24 @@ class DashboardFragment : Fragment() {
                         Log.e("survey list size", " " + assignmentItem.body)
                     //}
                 }
-                } else if (data.get(i)?.status == "closed" && (data.get(i)?.assignedWithUser?.contains(
-                        SharedHelper(requireContext()).uuid
-                    )) ?: false
-                ) {
-                    val jobj: JsonObject? = survey?.get(data.get(i)?.uuid) as JsonObject?
-                    if (jobj?.get("response_status").toString()?.replace("\"", "") == "completed") {
+                } else if (data.get(i)?.status == "closed") {
+                    val jobj: JsonObject? = survey?.get(data.get(i)?.uuid?.replaceInvertedComas()) as JsonObject?
+                    if (jobj?.get("response_status").toString()?.replace("\"", "") == "completed"|| jobj?.get("response_status").toString()?.replace("\"", "") == "incomplete") {
                         var assignmentItem = DashboardOverdueResponse.AssignmentItem()
                         assignmentItem.date = data.get(i)?.endTime
                         assignmentItem.start_time =  data.get(i)?.startTime
                         assignmentItem.category = "Survey"
                         assignmentItem.status = 0
+                        if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
+                            assignmentItem.completed = 0
+                        } else
+                        {
+                            assignmentItem.completed = 1
+                        }
                         assignmentItem.body = data.get(i)?.title
                         assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
 //                        assignmentItem.status=data.get(i)?.status
+                        assignmentItem.response_status = jobj?.get("response_status").toString()?.replaceInvertedComas()
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
                     }
@@ -268,6 +271,9 @@ class DashboardFragment : Fragment() {
         } as ArrayList<DashboardOverdueResponse.AssignmentItem>
         Log.e("survey list size", " " + surveyListUpcoming.size)
 
+        surveyListCompleted =  assignment.filter {it.completed == 1
+        } as ArrayList<DashboardOverdueResponse.AssignmentItem>
+        Log.e("survey list size", " " + surveyListCompleted.size)
         var mappedList = assignment.groupBy {
             it.date?.toLong()?.let { it1 ->
                 getDate(
@@ -386,6 +392,7 @@ class DashboardFragment : Fragment() {
             } else {
                 TODO("VERSION.SDK_INT < O")
             }
+        completedList.addAll(surveyListCompleted)
         completedList.sortBy {
             it.date?.toLong()?.let { it1 ->
                 LocalDate.parse(
