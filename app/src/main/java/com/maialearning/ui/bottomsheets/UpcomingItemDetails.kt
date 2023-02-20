@@ -23,6 +23,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.GsonBuilder
+import com.google.gson.internal.LinkedTreeMap
 import com.maialearning.R
 import com.maialearning.databinding.PrimaryEmailSheetBinding
 import com.maialearning.databinding.RicheditorBinding
@@ -39,6 +41,7 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /*{student_uid: "9375", file_id: "zYd3VPnBDomb", document_type: "itask"}*/
@@ -46,7 +49,8 @@ import java.util.*
 class UpcomingItemDetails(
     val con: Fragment,
     val layoutInflater: LayoutInflater,
-    val data: DashboardOverdueResponse.AssignmentItem, var clickType: (type: String, dialog: BottomSheetDialog, progress: Dialog, nid:String?) -> Unit
+    val data: DashboardOverdueResponse.AssignmentItem, var clickType: (type: String, dialog: BottomSheetDialog, progress: Dialog, nid:String?) -> Unit,
+    var clickCounscellor:(type: String)-> Unit
 ) : RichEditor.OnTextChangeListener {
     private val chooseClick: ChooseClick = con as ChooseClick
     private val dashboardViewModel: DashboardFragViewModel by con.viewModel()
@@ -94,11 +98,29 @@ class UpcomingItemDetails(
             sheetBinding.attachFiles.visibility = View.VISIBLE
             sheetBinding.attachList.visibility = View.VISIBLE
             sheetBinding.textSubmitted.visibility = View.VISIBLE
+           data.writtenResponse?.let { if(it.toString().startsWith("{")) {
+               val gson = GsonBuilder().create()
+               val jsonObject = gson.toJsonTree(it as LinkedTreeMap<String, String>).asJsonObject
+               val json = JSONObject(jsonObject.toString())
+               val arrayList = arrayListOf<DashboardOverdueResponse.AssignmentItem.WrittenResponse>()
+               val x = json.keys() as Iterator<String>
+               while (x.hasNext()) {
+                   val key: String = x.next().toString()
+                   (data.worksheetFileId as ArrayList).add(
+                       DashboardOverdueResponse.AssignmentItem.WorksheetFileIdItem(json.get(key).toString(),
+                           key,
+                           "text"
+                       )
+                   )
+               }
+           } }
+
             setAdapter(sheetBinding, dialog)
         } else {
             sheetBinding.chooseFile.visibility = View.VISIBLE
         }
         sheetBinding.close.setOnClickListener { dialog.dismiss() }
+        println("Written"+data.writtenResponse.toString())
 
         if (!data.filename.isNullOrEmpty()) {
             sheetBinding.fileLay.visibility = View.VISIBLE
@@ -270,12 +292,18 @@ class UpcomingItemDetails(
             LinearLayoutManager(con.requireContext(), LinearLayoutManager.HORIZONTAL, false)
         sheetBinding.attachList.layoutManager = linearLayoutManager
         sheetBinding.attachList.adapter =
-            AttachmentAdapter(con.requireContext(), data.worksheetFileId, ::click)
+            AttachmentAdapter(con.requireContext(), data.worksheetFileId,::click)
+        if (data.worksheetFileId?.size?:0>0)
         sheetBinding.worksheet.visibility = View.VISIBLE
     }
 
-    private fun click(s: String) {
+    private fun click(s: String, type: String) {
+        if (type=="file")
         downloadWorkSheet(s)
+        else
+        {
+            clickCounscellor(s)
+        }
     }
 
     // Write work

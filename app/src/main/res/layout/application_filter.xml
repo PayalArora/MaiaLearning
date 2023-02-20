@@ -51,7 +51,7 @@
             android:layout_height="@dimen/_50dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:button="@drawable/radiobutton"
-            android:checked="false"
+            android:checked="true"
             android:paddingStart="@dimen/_10dp"
             android:text="@string/all_assignments"
             android:textSize="@dimen/_16sp" />
@@ -66,11 +66,11 @@
 
         <RadioButton
             android:id="@+id/rb_app"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_50dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:button="@drawable/radiobutton"
-            android:checked="true"
+            android:checked="false"
             android:paddingStart="@dimen/_10dp"
             android:text="@string/Applications"
             android:textSize="@dimen/_16sp" />
@@ -85,11 +85,11 @@
 
         <RadioButton
             android:id="@+id/rb_assignments"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_50dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:button="@drawable/radiobutton"
-            android:checked="true"
+            android:checked="false"
             android:paddingStart="@dimen/_10dp"
             android:text="@string/assignment"
             android:textSize="@dimen/_16sp" />
@@ -105,11 +105,11 @@
 
         <RadioButton
             android:id="@+id/rb_fairs"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_50dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:button="@drawable/radiobutton"
-            android:checked="true"
+            android:checked="false"
             android:paddingStart="@dimen/_10dp"
             android:text="@string/fairs"
             android:textSize="@dimen/_16sp" />
@@ -127,7 +127,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:button="@drawable/radiobutton"
-            android:checked="true"
+            android:checked="false"
             android:paddingStart="@dimen/_10dp"
 
             android:text="@string/meetings"
@@ -143,11 +143,10 @@
 
         <RadioButton
             android:id="@+id/rb_surveys"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:button="@drawable/radiobutton"
-            android:checked="true"
             android:paddingStart="@dimen/_10dp"
 
             android:text="@string/survey"

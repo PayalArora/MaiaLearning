@@ -10,7 +10,7 @@ import com.maialearning.databinding.AttachItemRowBinding
 import com.maialearning.model.DashboardOverdueResponse
 
 
-class AttachmentAdapter(val con: Context,val  worksheetFileId: List<DashboardOverdueResponse.AssignmentItem.WorksheetFileIdItem?>?,  var click: (id: String) -> Unit): RecyclerView.Adapter<AttachmentAdapter.ViewHolder>() {
+class AttachmentAdapter(val con: Context,val  worksheetFileId: List<DashboardOverdueResponse.AssignmentItem.WorksheetFileIdItem?>?,  var click: (id: String, type:String) -> Unit): RecyclerView.Adapter<AttachmentAdapter.ViewHolder>() {
     var isSelected = false
 
     /**
@@ -35,13 +35,16 @@ class AttachmentAdapter(val con: Context,val  worksheetFileId: List<DashboardOve
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 //        if (position ==0 ){
             viewHolder.binding.image.setImageDrawable( getDrawable(con,R.drawable.ic_documents))
+        if (worksheetFileId?.get(position)?.type=="file")
             viewHolder.binding.textName.setText(worksheetFileId?.get(position)?.fileName)
+        else
+            viewHolder.binding.textName.setText("Text Entry")
 //        }else{
 //            viewHolder.binding.image.setImageDrawable(getDrawable(con,R.drawable.ic_excel))
 //            viewHolder.binding.textName.setText("Spreadsheet File")
 //        }
         viewHolder.binding.textName.setOnClickListener {
-            worksheetFileId?.get(position)?.id?.let { it1 -> click(it1) }
+            worksheetFileId?.get(position)?.id?.let { it1 -> click(worksheetFileId?.get(position)?.fileName?:"", worksheetFileId?.get(position)?.type!!) }
         }
 
 
