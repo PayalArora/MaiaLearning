@@ -84,7 +84,7 @@ class UpcomingFragment(
 
      fun setAdapter(list:ArrayList<SortedDateModel>? = endList) {
         // mBinding.upcomingList.adapter = OverDueHeadAdapter(overdueList = , this)
-        ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).overdueList = endList
+        ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).overdueList = list
         ((mBinding.upcomingList.adapter) as OverDueHeadAdapter).notifyDataSetChanged()
     }
 

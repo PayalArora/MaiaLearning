@@ -44,6 +44,7 @@ class DashboardFragment : Fragment() {
     private lateinit var dialog: Dialog
     var assignmentList = arrayListOf<DashboardOverdueResponse.AssignmentItem>()
     var endList = arrayListOf<SortedDateModel>()
+    var filteredUpcomingList = arrayListOf<SortedDateModel>()
     var endCompletedList = arrayListOf<SortedDateModel>()
     var upcomingList = arrayListOf<SortedDateModel>()
     var surveyList = arrayListOf<SortedDateModel>()
@@ -53,6 +54,11 @@ class DashboardFragment : Fragment() {
     private var upcomingFragment: UpcomingFragment? = null
     private var surveyFragment: SurveyFragment? = null
     private var overDueFragment: OverDueFragment? = null
+    private lateinit var toolbarBinding: Toolbar
+    private lateinit var applicationFilterBinding: ApplicationFilterBinding
+    var selectedApplication = "All Assignments"
+    var selectedAppType= "All"
+    var selectedTimeType= 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,25 +76,140 @@ class DashboardFragment : Fragment() {
         toolbarBinding.title = getString(R.string.dashboard)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: DateFilterBinding = DateFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        val appFilter = showApplicationFilter(dialog)
+
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).setOnClickListener {
-            val dialog = BottomSheetDialog(requireContext())
-            val sheetBinding: DateFilterBinding = DateFilterBinding.inflate(layoutInflater)
-            sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-            dialog.setContentView(sheetBinding.root)
-            dialog.show()
+            if (!dialog.isShowing)
+                dialog.show()
+            handleRadioButtonVisibility(sheetBinding)
             sheetBinding.close.setOnClickListener { dialog.dismiss() }
             sheetBinding.applictaion.setOnClickListener {
-                showApplicationFilter()
+                if (!appFilter.isShowing) {
+                    handleApplicationRadioButtons(applicationFilterBinding)
+                    appFilter.show()
+                }
             }
             sheetBinding.rbThisWeek.setOnClickListener {
-//                upcomingList.filter {  }
+                var new_list = getAppTypeData(selectedAppType, filteredUpcomingList)
+                selectedTimeType = 1
+                new_list = handleTimeFiter(selectedTimeType,new_list)
+
+
+//                val new_list = filteredUpcomingList.filter {
+//                    it.date != "No Due Date" && compareDateWeek(it.date,
+//                        currentWeekDays().split(" - ")[0], currentWeekDays().split(" - ")[1])
+//                } as ArrayList<SortedDateModel>
+                upcomingFragment?.setAdapter(new_list)
+              //  filteredUpcomingList = new_list
+                Log.e("rbThisWeek ", " " + new_list.size)
+                if (dialog.isShowing)
+                    dialog.dismiss()
             }
+
+            sheetBinding.rbNextWeek.setOnClickListener {
+                var new_list = getAppTypeData(selectedAppType, filteredUpcomingList)
+                selectedTimeType = 2
+                new_list = handleTimeFiter(selectedTimeType,new_list)
+//                val new_list = filteredUpcomingList.filter {
+//                    it.date != "No Due Date" && compareDateWeek(it.date,
+//                        getNextWeek().split(" - ")[0], getNextWeek().split(" - ")[1])
+//                } as ArrayList<SortedDateModel>
+              //  filteredUpcomingList = new_list
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+            sheetBinding.rbThisMnth.setOnClickListener {
+                var new_list = getAppTypeData(selectedAppType, filteredUpcomingList)
+//                 new_list = new_list.filter {
+//                    it.date != "No Due Date" && compareDateWeek(it.date,
+//                        getCurrentMonth().split(" - ")[0], getCurrentMonth().split(" - ")[1])
+//                } as ArrayList<SortedDateModel>
+                selectedTimeType = 3
+                new_list = handleTimeFiter(selectedTimeType,new_list)
+                  //  filteredUpcomingList = new_list
+                upcomingFragment?.setAdapter(new_list)
+
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+            sheetBinding.rbNextMonth.setOnClickListener {
+                println("nxt" + getNextMonth())
+                var new_list = getAppTypeData(selectedAppType, filteredUpcomingList)
+                selectedTimeType = 4
+                new_list = handleTimeFiter(selectedTimeType,new_list)
+
+//                val new_list = filteredUpcomingList.filter {
+//                    it.date != "No Due Date" && compareDateWeek(it.date,
+//                        getNextMonth().split(" - ")[0], getNextMonth().split(" - ")[1])
+//                } as ArrayList<SortedDateModel>
+              //  filteredUpcomingList = new_list
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+
+            sheetBinding.rbUpcoming.setOnClickListener {
+              //  filteredUpcomingList = upcomingList
+                //upcomingFragment?.setAdapter(upcomingList)
+                var new_list = getAppTypeData(selectedAppType, filteredUpcomingList)
+                selectedTimeType = 0
+                new_list = handleTimeFiter(selectedTimeType,new_list)
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+            }
+            sheetBinding.applictaion.text = selectedApplication
+
         }
         // setAdapter()
 
 
         return mBinding.root
 
+    }
+
+    fun handleTimeFiter( selectedAppType: Int,filteredUpcomingList:ArrayList<SortedDateModel>):ArrayList<SortedDateModel>{
+        var new_list = arrayListOf<SortedDateModel>()
+        if (selectedAppType ==3 ){
+            new_list = filteredUpcomingList.filter {
+                it.date != "No Due Date" && compareDateWeek(it.date,
+                    getCurrentMonth().split(" - ")[0], getCurrentMonth().split(" - ")[1])
+            } as ArrayList<SortedDateModel>
+
+        } else if (selectedAppType == 1){
+            new_list = filteredUpcomingList.filter {
+                it.date != "No Due Date" && compareDateWeek(it.date,
+                    currentWeekDays().split(" - ")[0], currentWeekDays().split(" - ")[1])
+            } as ArrayList<SortedDateModel>
+        }else if (selectedAppType == 2){
+            new_list = filteredUpcomingList.filter {
+                it.date != "No Due Date" && compareDateWeek(it.date,
+                    getNextWeek().split(" - ")[0], getNextWeek().split(" - ")[1])
+            } as ArrayList<SortedDateModel>
+        }else if (selectedAppType == 4){
+            new_list =  filteredUpcomingList.filter {
+                it.date != "No Due Date" && compareDateWeek(it.date,
+                    getNextMonth().split(" - ")[0], getNextMonth().split(" - ")[1])
+            } as ArrayList<SortedDateModel>
+        }else if (selectedAppType == 0){
+            new_list =  filteredUpcomingList
+        }
+        return new_list
+    }
+
+    private fun handleRadioButtonVisibility(sheetBinding: DateFilterBinding) {
+        when (mBinding.tabs.selectedTabPosition) {
+            0 -> {
+                sheetBinding.radioGroupDate.visibility = View.VISIBLE
+            }
+            else ->
+                sheetBinding.radioGroupDate.visibility = View.GONE
+        }
     }
 
     private fun click(type: String) {
@@ -102,16 +223,239 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    fun showApplicationFilter() {
+    fun showApplicationFilter(dialog1: BottomSheetDialog): BottomSheetDialog {
         val dialog = BottomSheetDialog(requireContext())
-        val sheetBinding: ApplicationFilterBinding =
+        applicationFilterBinding =
             ApplicationFilterBinding.inflate(layoutInflater)
-        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
-        dialog.setContentView(sheetBinding.root)
-        dialog.show()
-        sheetBinding.backBtn.setOnClickListener { dialog.dismiss() }
+        applicationFilterBinding.root.minimumHeight =
+            ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(applicationFilterBinding.root)
+        applicationFilterBinding.backBtn.setOnClickListener {
+            if (dialog.isShowing)
+                dialog.dismiss()
+        }
+        applicationFilterBinding.rbSurveys.setOnClickListener {
+             selectedApplication = context?.getString(R.string.survey).toString()
+            selectedAppType=  "Survey"
+            when (mBinding.tabs.selectedTabPosition) {
+                3 -> {
+                    val new_list = arrayListOf<SortedDateModel>()
+                    for (it in endCompletedList){
+                        val assignment = it.assignment?.filter { it?.category == "Survey" }
+                        if (assignment?.size?:0>0) {
+                            val model = SortedDateModel(it.date, assignment)
+                            new_list.add(model)
+                        }
+                    }
+                    overDueFragment?.setAdapter(new_list)
+
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                    if (dialog1.isShowing)
+                        dialog1.dismiss()
+                }
+//                0 -> {
+//                 val new_list = arrayListOf<SortedDateModel>()
+//                    for (it in filteredUpcomingList){
+//                        val assignment = it.assignment?.filter { it?.category == "Survey" }
+//                        if (assignment?.size?:0>0) {
+//                            val model = SortedDateModel(it.date, assignment)
+//                            new_list.add(model)
+//                        }
+//                    }
+//                    upcomingFragment?.setAdapter(new_list)
+//                    if (dialog.isShowing)
+//                        dialog.dismiss()
+//                    if (dialog1.isShowing)
+//                        dialog1.dismiss()
+//                }
+
+            }
+            handleUpcomingListApplicationFilters(dialog1,dialog,"Survey",filteredUpcomingList)
+
+        }
+        applicationFilterBinding.rbAssignments.setOnClickListener {
+            selectedApplication = context?.getString(R.string.assignment).toString()
+            selectedAppType=  "Assignments"
+            when (mBinding.tabs.selectedTabPosition) {
+                3 -> {
+                    val new_list = arrayListOf<SortedDateModel>()
+                    for (it in endCompletedList) {
+                        val assignment = it.assignment?.filter { it?.category != "Survey" && it?.category != "Webinar" && it?.category != "Applications" }
+                        if (assignment?.size ?: 0 > 0) {
+                            val model = SortedDateModel(it.date, assignment)
+                            new_list.add(model)
+                        }
+                    }
+                    overDueFragment?.setAdapter(new_list)
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                    if (dialog1.isShowing)
+                        dialog1.dismiss()
+                }
+
+//                0 -> {
+//                    val new_list = arrayListOf<SortedDateModel>()
+//                    for (it in filteredUpcomingList){
+//                        val assignment = it.assignment?.filter { it?.category != "Survey"&& it?.category != "Webinar" && it?.category != "Applications"  }
+//                        if (assignment?.size?:0>0) {
+//                            val model = SortedDateModel(it.date, assignment)
+//                            new_list.add(model)
+//                        }
+//                    }
+//                   // filteredUpcomingList = new_list
+//                    upcomingFragment?.setAdapter(new_list)
+//                    if (dialog.isShowing)
+//                        dialog.dismiss()
+//                    if (dialog1.isShowing)
+//                        dialog1.dismiss()
+//                }
+            }
+            handleUpcomingListApplicationFilters(dialog1,dialog,selectedApplication,filteredUpcomingList)
+        }
+        applicationFilterBinding.rbAllAssignments.setOnClickListener {
+            selectedApplication = context?.getString(R.string.all_assignments).toString()
+            selectedAppType ="All"
+            when (mBinding.tabs.selectedTabPosition) {
+                3 -> {
+                    overDueFragment?.setAdapter(endCompletedList)
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                }
+            0 -> {
+                handleUpcomingListApplicationFilters(dialog1,dialog,"All",filteredUpcomingList)
+        }}
+    }
+        applicationFilterBinding.rbFairs.setOnClickListener {
+            selectedApplication = context?.getString(R.string.fairs).toString()
+            selectedAppType=  "Webinar"
+//            when (mBinding.tabs.selectedTabPosition) {
+//                0 -> {
+//                    val new_list = arrayListOf<SortedDateModel>()
+//                    for (it in filteredUpcomingList){
+//                        val assignment = it.assignment?.filter { it?.category == "Webinar"}
+//                        if (assignment?.size?:0>0) {
+//                            val model = SortedDateModel(it.date, assignment)
+//                            new_list.add(model)
+//                        }
+//                    }
+//                    //filteredUpcomingList = new_list
+//                    upcomingFragment?.setAdapter(new_list)
+//
+//                    if (dialog.isShowing)
+//                        dialog.dismiss()
+//                    if (dialog1.isShowing)
+//                        dialog1.dismiss()
+//                }
+//            }
+            handleUpcomingListApplicationFilters(dialog1,dialog,"Webinar",filteredUpcomingList)
+        }
+        applicationFilterBinding.rbApp.setOnClickListener {
+            selectedApplication = context?.getString(R.string.Applications).toString()
+            selectedAppType=  selectedApplication
+//            when (mBinding.tabs.selectedTabPosition) {
+//                0 -> {
+//                    val new_list = arrayListOf<SortedDateModel>()
+//                    for (it in filteredUpcomingList){
+//                        val assignment = it.assignment?.filter { it?.category == "Applications"}
+//                        if (assignment?.size?:0>0) {
+//                            val model = SortedDateModel(it.date, assignment)
+//                            new_list.add(model)
+//                        }
+//                    }
+//                  //  filteredUpcomingList = new_list
+//                    upcomingFragment?.setAdapter(new_list)
+//                    if (dialog.isShowing)
+//                        dialog.dismiss()
+//                    if (dialog1.isShowing)
+//                        dialog1.dismiss()
+//                }
+//            }
+            handleUpcomingListApplicationFilters(dialog1,dialog,selectedApplication,filteredUpcomingList)
+        }
+        applicationFilterBinding.rbMeetings.setOnClickListener {
+            selectedApplication = context?.getString(R.string.meetings).toString()
+            selectedAppType=  selectedApplication
+            handleUpcomingListApplicationFilters(dialog1,dialog,selectedApplication,filteredUpcomingList)
+        }
+        applicationFilterBinding.radioApplication.setOnCheckedChangeListener { group, checkedId ->
+            if (dialog.isShowing)
+                dialog.dismiss()
+            if (dialog1.isShowing)
+                dialog1.dismiss()
+        }
+        return dialog
     }
 
+    private fun handleApplicationRadioButtons(sheetBinding: ApplicationFilterBinding) {
+        when (mBinding.tabs.selectedTabPosition) {
+            3 -> {
+                sheetBinding.rbFairs.visibility = View.GONE
+                sheetBinding.rbMeetings.visibility = View.GONE
+                sheetBinding.rbAssignments.visibility = View.VISIBLE
+                sheetBinding.rbApp.visibility = View.GONE
+                sheetBinding.rbAllAssignments.visibility = View.VISIBLE
+                sheetBinding.rbSurveys.visibility = View.VISIBLE
+
+            }
+            2 -> {
+
+                sheetBinding.rbFairs.visibility = View.GONE
+                sheetBinding.rbMeetings.visibility = View.GONE
+                sheetBinding.rbSurveys.visibility = View.GONE
+                sheetBinding.rbApp.visibility = View.GONE
+                sheetBinding.rbAllAssignments.visibility = View.VISIBLE
+                sheetBinding.rbAssignments.visibility = View.VISIBLE
+            }
+            else -> {
+                sheetBinding.rbFairs.visibility = View.VISIBLE
+                sheetBinding.rbMeetings.visibility = View.VISIBLE
+                sheetBinding.rbSurveys.visibility = View.VISIBLE
+                sheetBinding.rbApp.visibility = View.VISIBLE
+                sheetBinding.rbAllAssignments.visibility = View.VISIBLE
+                sheetBinding.rbAssignments.visibility = View.VISIBLE
+            }
+        }
+
+    }
+
+    fun  handleUpcomingListApplicationFilters(dialog1: BottomSheetDialog, dialog: BottomSheetDialog, selectedAppType:String,
+                                              filteredUpcomingList:ArrayList<SortedDateModel>){
+        when (mBinding.tabs.selectedTabPosition) {
+            0 -> {
+                var new_list = getAppTypeData(selectedAppType, filteredUpcomingList)
+                new_list = handleTimeFiter(selectedTimeType,new_list)
+                //  filteredUpcomingList = new_list
+                upcomingFragment?.setAdapter(new_list)
+                if (dialog.isShowing)
+                    dialog.dismiss()
+                if (dialog1.isShowing)
+                    dialog1.dismiss()
+            }
+        }
+    }
+
+    fun getAppTypeData(selectedAppType: String ,filteredUpcomingList:ArrayList<SortedDateModel>):ArrayList<SortedDateModel>{
+        val new_list = arrayListOf<SortedDateModel>()
+        if(selectedAppType == "All"){
+         return filteredUpcomingList
+        }
+        for (it in filteredUpcomingList) {
+            var assignment:List<DashboardOverdueResponse.AssignmentItem?>? = null
+            if (selectedAppType == "Assignments" ){
+                assignment = it.assignment?.filter {  it?.category != "Survey" && it?.category != "Webinar" && it?.category != "Applications"  }
+            }
+            else{
+                assignment = it.assignment?.filter { it?.category == selectedAppType }
+            }
+
+            if (assignment?.size ?: 0 > 0) {
+                val model = SortedDateModel(it.date, assignment)
+                new_list.add(model)
+            }
+        }
+        return new_list
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog = showLoadingDialog(requireContext())
@@ -137,13 +481,16 @@ class DashboardFragment : Fragment() {
                 dataSet(it)
                dashboardViewModel.showLoading.value = false
                 if (mBinding.tabs.selectedTabPosition == 0) {
+                    filteredUpcomingList = upcomingList
                     upcomingFragment?.setAdapter(upcomingList)
-                } else if (mBinding.tabs.selectedTabPosition == 1)
+                } else if (mBinding.tabs.selectedTabPosition == 1) {
                     surveyFragment?.setAdapter(surveyList)
-                else if (mBinding.tabs.selectedTabPosition == 2)
-                    overDueFragment?.setAdapter(endList)
-                else if (mBinding.tabs.selectedTabPosition == 3)
+                }
+                else if (mBinding.tabs.selectedTabPosition == 2) {
+                    overDueFragment?.setAdapter(endList)}
+                else if (mBinding.tabs.selectedTabPosition == 3){
                     overDueFragment?.setAdapter(endCompletedList)
+                }
 
             }
         }
@@ -498,14 +845,23 @@ class DashboardFragment : Fragment() {
                         loadFragment(upcomingFragment)
                     }
                     1 -> {
+                        val toolbarBinding: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
+                            View.GONE
                         surveyFragment = SurveyFragment(dashboardViewModel, surveyList, ::click)
                         loadFragment(surveyFragment)
                     }
                     2 -> {
+                        val toolbarBinding: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
+                            View.VISIBLE
                         overDueFragment = OverDueFragment(dashboardViewModel, endList, ::click)
                         loadFragment(overDueFragment)
                     }
                     3 -> {
+                        val toolbarBinding: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+                        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
+                            View.VISIBLE
                         overDueFragment =
                             OverDueFragment(dashboardViewModel, endCompletedList, ::click)
                         loadFragment(overDueFragment)

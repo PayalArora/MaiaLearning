@@ -49,6 +49,7 @@ class OverDueAdapter(
     lateinit var inflater: LayoutInflater
     private lateinit var progress: Dialog
     private val click: OnClick = fragment as OnClick
+    var clickedPos = 0
 
     /**
      * Provide a reference to the type of views that you are using
@@ -213,17 +214,18 @@ class OverDueAdapter(
         viewHolder.itemView.setOnClickListener {
             if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
                  !overdueList.get(position).category.equals("Webinar") ) {
-
+                clickedPos = position
                 UpcomingItemDetails(
                     fragment,
                     inflater,
                     overdueList.get(position),
-                    ::clickDetail
+                    ::clickDetail, ::clickCounscellor
                 ).showDialog(progress)
             } else {
 
             }
         }
+
         if (!overdueList.get(position).category.equals("Survey") && !overdueList.get(position).category.equals("Applications")  &&
             !overdueList.get(position).category.equals("Webinar") ){
 
@@ -272,7 +274,7 @@ class OverDueAdapter(
                             fragment,
                             inflater,
                             overdueList.get(position),
-                            ::clickDetail
+                            ::clickDetail,::clickCounscellor
                         ).showDialog(progress)
                 }
                 R.id.navigation_write -> {
@@ -400,6 +402,7 @@ class OverDueAdapter(
             setPadding(10, 10, 10, 10);
             setPlaceholder(con.resources.getString(R.string.write_to_conselor));
             setBackground(resources.getDrawable(R.drawable.white_rect_border));
+            html = gapText
         }
 
         setEditor(mEditor, dilBinding.richeditor)
@@ -439,10 +442,12 @@ class OverDueAdapter(
                 }
             }
         }
-        dashboardViewModel.writeToCounselerObserver.observe(fragment) {
-            progress.dismiss()
-            Toast.makeText(con, "Response Updated", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
+        if (!dashboardViewModel.writeToCounselerObserver.hasObservers()) {
+            dashboardViewModel.writeToCounselerObserver.observe(fragment) {
+                progress.dismiss()
+                Toast.makeText(con, "Response Updated", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
         }
 
 //        clickListener(s, sheetBinding, dialog!!)
@@ -644,7 +649,10 @@ class OverDueAdapter(
         intent.type = type
         con.startActivityForResult(intent, REQUEST_CHOOSE_PHOTO_UPCOMING_DETAIL)
     }
-
+    fun clickCounscellor(s: String) {
+        gapText = s
+        showSheet(clickedPos)
+    }
     private fun clickDetail(
         type: String,
         dialog: BottomSheetDialog,

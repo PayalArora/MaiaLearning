@@ -1,5 +1,6 @@
 package com.maialearning.model
 
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 
 data class DashboardOverdueResponse(
@@ -15,7 +16,6 @@ data class DashboardOverdueResponse(
         var response_status: String? = null,
         @field:SerializedName("written_response")
         var writtenResponse: Any? = null,
-
         @field:SerializedName("task")
         var task: String? = null,
 
@@ -102,7 +102,8 @@ data class DashboardOverdueResponse(
             val fileName: String? = null,
 
             @field:SerializedName("id")
-            val id: String? = null
+            val id: String? = null,
+            val type: String = "file"
         )
     }
 }

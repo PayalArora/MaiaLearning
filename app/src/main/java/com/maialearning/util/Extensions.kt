@@ -341,6 +341,115 @@ fun String.replaceNextLine(): String {
 fun String.replaceInvertedComas():String {
     return this.replace("\"", "")
 }
+fun currentWeekDays():String{
+    val mCalendar = Calendar.getInstance()
+    val date = Date()
+    mCalendar.setTime(date)
+
+    // 1 = Sunday, 2 = Monday, etc.
+
+    // 1 = Sunday, 2 = Monday, etc.
+    val day_of_week: Int = mCalendar.get(Calendar.DAY_OF_WEEK)
+    val monday_offset: Int
+    monday_offset = if (day_of_week == 1) {
+        -6
+    } else 1 - day_of_week // need to minus back
+
+    mCalendar.add(Calendar.DAY_OF_YEAR, monday_offset)
+
+    val mDateMonday: Date = mCalendar.getTime()
+
+    // return 6 the next days of current day (object cal save current day)
+
+    // return 6 the next days of current day (object cal save current day)
+    mCalendar.add(Calendar.DAY_OF_YEAR, 6)
+    val mDateSunday: Date = mCalendar.getTime()
+
+    //Get format date
+
+    //Get format date
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+
+    var SUNDAY = sdf.format(mDateMonday)
+    val SATURDAY = sdf.format(mDateSunday)
+
+    return "$SUNDAY - $SATURDAY"
+
+}
+fun getNextWeek(): String {
+    val mCalendar = Calendar.getInstance()
+    val day_of_week: Int = mCalendar.get(Calendar.DAY_OF_WEEK)
+    // Monday
+    mCalendar.add(Calendar.DAY_OF_YEAR, 7 - day_of_week + 1)
+    val mDateMonday = mCalendar.time
+
+    // Sunday
+    mCalendar.add(Calendar.DAY_OF_YEAR, 6)
+    val Week_Sunday_Date = mCalendar.time
+
+    // Date format
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+    var MONDAY = sdf.format(mDateMonday)
+    val SUNDAY = sdf.format(Week_Sunday_Date)
+
+    return "$MONDAY - $SUNDAY"
+}
+
+fun getCurrentMonth(): String {
+    val c = Calendar.getInstance()
+    val year = c[Calendar.YEAR]
+    val month = c[Calendar.MONTH]
+    val day = 1
+    c[year, month] = day
+    val numOfDaysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH)
+    val first = c.time
+    c.add(Calendar.DAY_OF_MONTH, numOfDaysInMonth - 1)
+    val second = c.time
+
+    // Date format
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+    var MONDAY = sdf.format(first)
+    val SUNDAY = sdf.format(second)
+
+    return "$MONDAY - $SUNDAY"
+}
+fun compareDateWeek(date: String?, date2:String, date3:String ): Boolean {
+    if (date != null) {
+        val sdf = SimpleDateFormat("dd-MMM-yyyy")
+        val sdf1 = SimpleDateFormat("E dd MMM, yyyy")
+        val strDate: Date = sdf1.parse(date)
+        val strDate1: Date = sdf.parse(date2)
+        val strDate2: Date = sdf.parse(date3)
+
+        if (strDate.after(strDate1) && strDate.before(strDate2)) {
+            return true
+        } else
+            return false
+    } else
+        return false
+}
+fun getNextMonth(): String {
+    val c = Calendar.getInstance()
+    val year = c[Calendar.YEAR]
+    val month = c[Calendar.MONTH] +1
+    val day = 1
+    c[year, month] = day
+    val numOfDaysInMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH)
+    val first = c.time
+    c.add(Calendar.DAY_OF_MONTH, numOfDaysInMonth - 1)
+    val second = c.time
+
+    // Date format
+    val strDateFormat = "dd-MMM-yyyy"
+    val sdf = SimpleDateFormat(strDateFormat)
+    var MONDAY = sdf.format(first)
+    val SUNDAY = sdf.format(second)
+
+    return "$MONDAY - $SUNDAY"
+}
 
 fun String.replaceCrossBracketsComas():String {
     return this.replace("[", "").replace("]", "").replace("\"", "")
