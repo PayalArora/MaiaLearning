@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <CheckBox
+        android:id="@+id/check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_14sp"
+        android:gravity="top"
+        android:paddingTop="@dimen/_5dp"
+        android:text="fff"
+        android:textColor="@color/black_1"
+        android:paddingStart="@dimen/_10dp"
+        />
+</LinearLayout>

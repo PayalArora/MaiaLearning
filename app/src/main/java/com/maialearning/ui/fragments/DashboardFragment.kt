@@ -560,6 +560,7 @@ class DashboardFragment : Fragment() {
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
                         assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
+                        assignmentItem.categoryId = data.get(i)?.uuid
 //                        assignmentItem.status=data.get(i)?.status
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
@@ -572,6 +573,7 @@ class DashboardFragment : Fragment() {
                         assignmentItem.date = data.get(i)?.endTime
                         assignmentItem.start_time =  data.get(i)?.startTime
                         assignmentItem.category = "Survey"
+                        assignmentItem.categoryId = data.get(i)?.uuid
                         assignmentItem.status = 0
                         if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
                             assignmentItem.completed = 0

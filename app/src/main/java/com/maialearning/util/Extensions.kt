@@ -145,6 +145,7 @@ val appModules = module {
     viewModel { RelatedCareerViewModel(catRepository = get()) }
 
     viewModel { PortfolioViewModel(catRepository = get()) }
+    viewModel { SurveyDetailViewModel(catRepository = get()) }
 }
 val appModules1 = module{
     single {

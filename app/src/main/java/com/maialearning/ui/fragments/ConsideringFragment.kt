@@ -382,7 +382,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("university_nid"),
                             object_.getString("unitid"),
                             object_.getString("internal_deadline"),
-                            object_.getString("due_date"),
+                            dueDate = object_.getString("due_date"),
                             arrayProgram,
                             0,
                             object_.getString("notes"),

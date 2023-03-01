@@ -19,6 +19,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +29,10 @@ import com.maialearning.databinding.PrimaryEmailSheetBinding
 import com.maialearning.databinding.RicheditorBinding
 import com.maialearning.databinding.UpcomingItemRowBinding
 import com.maialearning.model.DashboardOverdueResponse
+import com.maialearning.ui.activity.MessageDetailActivity
+import com.maialearning.ui.activity.SurveyDetail
 import com.maialearning.ui.bottomsheets.UpcomingItemDetails
+
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.replaceNextLine
 import com.maialearning.util.showLoadingDialog
@@ -38,7 +42,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+const val ID:String = "ID"
 class OverDueAdapter(
     var overdueList: ArrayList<DashboardOverdueResponse.AssignmentItem>,
     val con: FragmentActivity,
@@ -50,6 +54,7 @@ class OverDueAdapter(
     private lateinit var progress: Dialog
     private val click: OnClick = fragment as OnClick
     var clickedPos = 0
+
 
     /**
      * Provide a reference to the type of views that you are using
@@ -221,7 +226,19 @@ class OverDueAdapter(
                     overdueList.get(position),
                     ::clickDetail, ::clickCounscellor
                 ).showDialog(progress)
-            } else {
+            } else if(overdueList.get(position).category.equals("Survey")){
+                if (overdueList?.get(position)?.response_status == "pending"){
+
+                } else if (overdueList?.get(position)?.response_status == "in_progress") {
+
+                }else if (overdueList?.get(position)?.response_status == "completed"|| overdueList?.get(position)?.response_status == "incomplete") {
+                    //loadFragment(SurveyDetail(),fragment.activity)
+                    overdueList?.get(position)?.categoryId?.let {
+                        val intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it)
+                        fragment.activity?.startActivity(intent)
+                    }
+
+                }
 
             }
         }
@@ -667,6 +684,11 @@ class OverDueAdapter(
             resetCompleteWork(nid)
         }
     }
+}
+private fun loadFragment(fragment: Fragment, con: FragmentActivity?) {
+    val transaction = con?.supportFragmentManager?.beginTransaction()
+    transaction?.replace(R.id.host_nav, fragment)
+    transaction?.commit()
 }
 
 interface OnClick {

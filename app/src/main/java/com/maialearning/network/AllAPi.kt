@@ -803,4 +803,8 @@ interface AllAPi {
     fun downloadAttachment(
         @Header("Authorization") Authorization: String,
         @Path("id") id: String):Deferred<JsonObject>
+
+    @GET
+    fun getSurveyResponses( @Url url: String,
+        @Header("Authorization") Authorization: String):Deferred<JsonObject>
 }

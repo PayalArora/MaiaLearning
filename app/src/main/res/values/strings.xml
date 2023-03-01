@@ -747,5 +747,7 @@
     <string name="enter_note_hint">Enter Note</string>
     <string name="editing_note">Editing note</string>
     <string name="complete_btn">Complete</string>
+    <string name="enter_answer_hint">Enter Answer</string>
+    <string name="congracts">Congratulations! You have completed the survey!</string>
 
 </resources>
