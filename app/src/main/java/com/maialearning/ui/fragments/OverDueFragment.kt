@@ -107,6 +107,8 @@ class OverDueFragment(
                 nId, dialogDetail
             ).showDialog()
 
+        } else  if (requestCode==101){
+            clickType("refresh")
         }
     }
 

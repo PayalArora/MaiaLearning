@@ -135,6 +135,7 @@
 
     <string name="like">Like</string>
     <string name="close">close</string>
+    <string name="close_btn">Close</string>
     <string name="overview">Overview</string>
     <string name="college_info">College Information</string>
     <string name="prog_list">Program List</string>
@@ -747,5 +748,13 @@
     <string name="enter_note_hint">Enter Note</string>
     <string name="editing_note">Editing note</string>
     <string name="complete_btn">Complete</string>
+    <string name="enter_answer_hint">Enter Answer</string>
+    <string name="congracts">Congratulations! You have completed the survey!</string>
+    <string name="finish">Finish Later</string>
+    <string name="finished"><![CDATA[You have answered all the questions in the survey. Click the \'Finalize & Close\' button below to complete the survey. You can not edit the answers that you have given after you finalize the survey. \n\nIf you are not ready to finalize your answers, click \'Finish Later\'. Use the \'Previous\' button to go back and review your answers.]]></string>
+    <string name="finalize"><![CDATA[Finalize & Close]]></string>
+    <string name="get_start">Get Started</string>
+    <string name="personal_review">Personal Review</string>
+    <string name="mid_nov">Plan to by mid-November?</string>
 
 </resources>

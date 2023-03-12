@@ -8,9 +8,10 @@
 
     <RelativeLayout
         android:id="@+id/select_lay"
-        android:layout_marginTop="@dimen/_10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10dp">
+
         <TextView
             android:id="@+id/universitis_counte"
             android:layout_width="wrap_content"
@@ -142,6 +143,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/select_btns"
             android:layout_width="match_parent"
@@ -150,6 +152,7 @@
             android:layout_below="@+id/linear_transcript_btns"
             android:backgroundTint="@color/blue_alpha"
             android:orientation="horizontal">
+
             <CheckBox
                 android:id="@+id/select_all"
                 android:layout_width="@dimen/_100dp"
@@ -162,6 +165,7 @@
                 android:text="@string/select_all"
                 android:textSize="11sp"
                 android:visibility="gone" />
+
             <TextView
                 android:id="@+id/delete_btn"
                 android:layout_width="wrap_content"
@@ -171,8 +175,8 @@
                 android:drawableLeft="@drawable/cross"
                 android:drawablePadding="@dimen/_7dp"
                 android:drawableTint="@color/red"
+                android:gravity="center_vertical"
                 android:paddingHorizontal="@dimen/_15dp"
-              android:gravity="center_vertical"
                 android:text="@string/delete_selected"
                 android:textColor="@color/red"
                 android:textStyle="bold"

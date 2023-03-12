@@ -382,7 +382,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             object_.getString("university_nid"),
                             object_.getString("unitid"),
                             object_.getString("internal_deadline"),
-                            object_.getString("due_date"),
+                            dueDate = object_.getString("due_date"),
                             arrayProgram,
                             0,
                             object_.getString("notes"),
@@ -1067,15 +1067,25 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         sheetBinding.close.setOnClickListener {
             dialog.dismiss()
         }
+        sheetBinding.noRadio.setOnClickListener {
+            sheetBinding.radioMidNov.visibility = View.VISIBLE
+            sheetBinding.midNov.visibility = View.VISIBLE
+        }
+        sheetBinding.yesRadio.setOnClickListener {
+            sheetBinding.radioMidNov.visibility = View.GONE
+            sheetBinding.midNov.visibility = View.GONE
+        }
+
         sheetBinding.saveBtn.setOnClickListener {
             var updateStudentPlan = UpdateStudentPlan()
             updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
             updateStudentPlan.college_nid = finalArray[postion].university_nid
+            if (checkNonNull(sheetBinding.schoolWithinUniv.text.toString()))
             updateStudentPlan.school_within_university =
                 sheetBinding.schoolWithinUniv.text.toString()
-            updateStudentPlan.app_type = "4"
-            updateStudentPlan.request_transcript =
-                finalArray.get(typeTermPosition).requestTranscript
+            //updateStudentPlan.app_type = "4"
+//            updateStudentPlan.request_transcript =
+//                finalArray.get(typeTermPosition).requestTranscript
             if (sheetBinding.rateSpinner.selectedItemPosition != 0) {
                 updateStudentPlan.college_interest =
                     sheetBinding.rateSpinner.selectedItemPosition.toString()
@@ -1090,7 +1100,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             } else {
                 updateStudentPlan.campus_tour = "0"
             }
-
+            if (sheetBinding.yesRadioMid.isChecked) {
+                updateStudentPlan.mid_november = "1"
+            } else {
+                updateStudentPlan.mid_november = "0"
+            }
+            dialogP = showLoadingDialog(requireContext())
             dialogP.show()
             homeModel.updateStudentPlan(updateStudentPlan)
             homeModel.updateStudentPlanObserver.observe(requireActivity()) {
@@ -1287,6 +1302,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             when (item!!.itemId) {
                 R.id.del_coll -> {
                     confirmPopup(position)
+                }
+                R.id.review_coll -> {
+                    bottonSheetInfo(position)
                 }
             }
 

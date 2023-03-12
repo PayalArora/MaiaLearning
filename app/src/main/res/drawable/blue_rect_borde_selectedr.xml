@@ -7,6 +7,6 @@
         android:radius="@dimen/_8dp" />
     <solid
         android:color="@color/white" />
-    <stroke android:color="@color/stroke"
+    <stroke android:color="@color/blue"
         android:width="2dp"/>
 </shape>

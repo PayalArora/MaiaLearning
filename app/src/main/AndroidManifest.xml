@@ -46,6 +46,10 @@
             android:exported="false"
             android:theme="@style/NewMessage" />
         <activity
+            android:name=".ui.activity.SurveyDetail"
+            android:exported="false"
+            android:theme="@style/NewMessage" />
+        <activity
             android:name=".ui.activity.NewMessageActivity"
             android:exported="false"
             android:theme="@style/NewMessage" />

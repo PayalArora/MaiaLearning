@@ -16,7 +16,6 @@ data class DashboardOverdueResponse(
         var response_status: String? = null,
         @field:SerializedName("written_response")
         var writtenResponse: Any? = null,
-        var writtenResponseArray: WrittenResponse? = null,
         @field:SerializedName("task")
         var task: String? = null,
 
@@ -38,6 +37,13 @@ data class DashboardOverdueResponse(
         @field:SerializedName("title")
         var title: Any? = null,
 
+        @field:SerializedName("description")
+        var description: Any? = null,
+
+        var authorF: String? = null,
+
+        var authorL: String? = null,
+        var questionSize: String? = null,
         @field:SerializedName("fid")
         var fid: Any? = null,
 
@@ -106,7 +112,6 @@ data class DashboardOverdueResponse(
             val id: String? = null,
             val type: String = "file"
         )
-        data class WrittenResponse(val id: String, val value:String?)
     }
 }
 

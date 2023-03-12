@@ -803,4 +803,16 @@ interface AllAPi {
     fun downloadAttachment(
         @Header("Authorization") Authorization: String,
         @Path("id") id: String):Deferred<JsonObject>
+
+    @GET
+    fun getSurveyResponses( @Url url: String,
+        @Header("Authorization") Authorization: String):Deferred<JsonObject>
+    @POST
+    fun updateAnswer( @Url url: String,
+        @Header("Authorization") Authorization: String , @Body body:UpdateSurveyAnswerReq):Deferred<JsonObject>
+    @PATCH
+    fun completeSurvey( @Url url: String,
+                      @Header("Authorization") Authorization: String , @Body body:CompleteSurveyReq):Deferred<JsonObject>
+
+    // https://ml-api-staging.maialearning.com/v2/survey-response/7b5e6dd8-6ccd-4512-be63-b773752909dd
 }

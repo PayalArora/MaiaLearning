@@ -1,10 +1,12 @@
 package com.maialearning.ui.fragments
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +17,7 @@ import com.maialearning.model.SortedDateModel
 import com.maialearning.ui.adapter.OnClick
 import com.maialearning.ui.adapter.OverDueHeadAdapter
 import com.maialearning.ui.adapter.UpcomingBannerAdapter
+import com.maialearning.ui.bottomsheets.SelectAttachmentSheet
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.DashboardFragViewModel
 import kotlinx.coroutines.Dispatchers
@@ -82,6 +85,12 @@ class SurveyFragment(
     override fun onClick(positiion: Int) {
 
 
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode==101){
+            clickType("refresh")
+        }
     }
 
     override fun click(type: String) {

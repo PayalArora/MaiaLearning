@@ -1614,7 +1614,57 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
     override fun onMenuClick(postion: Int, it: View?) {
         menuPopUp(postion, it)
     }
+    private fun bottonSheetInfo(postion: Int) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: ConsideringInfoSheetBinding =
+            ConsideringInfoSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.close.setOnClickListener {
+            dialog.dismiss()
+        }
+        sheetBinding.saveBtn.setOnClickListener {
+            var updateStudentPlan = UpdateStudentPlan()
+            updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
+            updateStudentPlan.college_nid = finalArray[postion].university_nid
+            if (checkNonNull(sheetBinding.schoolWithinUniv.text.toString()))
+                updateStudentPlan.school_within_university =
+                    sheetBinding.schoolWithinUniv.text.toString()
+            //updateStudentPlan.app_type = "4"
+//            updateStudentPlan.request_transcript =
+//                finalArray.get(typeTermPosition).requestTranscript
+            if (sheetBinding.rateSpinner.selectedItemPosition != 0) {
+                updateStudentPlan.college_interest =
+                    sheetBinding.rateSpinner.selectedItemPosition.toString()
+            }
+            if (sheetBinding.interviewSpinner.selectedItemPosition != 0) {
+                updateStudentPlan.interview_interest =
+                    sheetBinding.interviewSpinner.selectedItemPosition.toString()
+            }
 
+            if (sheetBinding.yesRadio.isChecked) {
+                updateStudentPlan.campus_tour = "1"
+            } else {
+                updateStudentPlan.campus_tour = "0"
+            }
+            if (sheetBinding.yesRadioMid.isChecked) {
+                updateStudentPlan.mid_november = "1"
+            } else {
+                updateStudentPlan.mid_november = "0"
+            }
+            dialogP = showLoadingDialog(requireContext())
+            dialogP.show()
+            homeModel.updateStudentPlan(updateStudentPlan)
+            homeModel.updateStudentPlanObserver.observe(requireActivity()) {
+                dialog.dismiss()
+                dialogP.dismiss()
+            }
+            homeModel.showError.observe(requireActivity()) {
+                dialogP.dismiss()
+            }
+        }
+    }
     private fun menuPopUp(position: Int, it: View?) {
 
         val popupMenu = PopupMenu(requireContext(), it)
@@ -1629,6 +1679,9 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
             when (item!!.itemId) {
                 R.id.del_coll -> {
                     confirmPopup(position)
+                }
+                R.id.review_coll -> {
+                    bottonSheetInfo(position)
                 }
             }
 

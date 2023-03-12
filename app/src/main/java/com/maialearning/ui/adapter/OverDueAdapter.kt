@@ -19,7 +19,9 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
+
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -28,7 +30,11 @@ import com.maialearning.databinding.PrimaryEmailSheetBinding
 import com.maialearning.databinding.RicheditorBinding
 import com.maialearning.databinding.UpcomingItemRowBinding
 import com.maialearning.model.DashboardOverdueResponse
+import com.maialearning.ui.activity.MessageDetailActivity
+import com.maialearning.ui.activity.SurveyDetail
 import com.maialearning.ui.bottomsheets.UpcomingItemDetails
+import com.maialearning.util.checkNonNull
+
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.replaceNextLine
 import com.maialearning.util.showLoadingDialog
@@ -38,6 +44,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
+const val ID:String = "ID"
+const val TITLE:String = "TITLE"
+const val DESCRIPTION:String = "DESCRIPTION"
+const val DESC:String = "DESC"
+const val STATUS:String = "STATUS"
 
 class OverDueAdapter(
     var overdueList: ArrayList<DashboardOverdueResponse.AssignmentItem>,
@@ -50,6 +61,7 @@ class OverDueAdapter(
     private lateinit var progress: Dialog
     private val click: OnClick = fragment as OnClick
     var clickedPos = 0
+
 
     /**
      * Provide a reference to the type of views that you are using
@@ -173,8 +185,11 @@ class OverDueAdapter(
                 viewHolder.binding.completeText.text = "Start"
             } else if (overdueList?.get(position)?.response_status == "in_progress") {
                 viewHolder.binding.completeText.text = "Continue"
-            }else if (overdueList?.get(position)?.response_status == "completed") {
+            }else if (overdueList?.get(position)?.response_status == "completed"|| overdueList?.get(position)?.response_status == "incomplete") {
                 viewHolder.binding.completeText.text = "View"
+            } else{
+                overdueList?.get(position)?.response_status= "pending"
+                viewHolder.binding.completeText.text = "Start"
             }
 
         } else {
@@ -221,7 +236,56 @@ class OverDueAdapter(
                     overdueList.get(position),
                     ::clickDetail, ::clickCounscellor
                 ).showDialog(progress)
-            } else {
+            } else if(overdueList.get(position).category.equals("Survey")){
+                if (overdueList?.get(position)?.response_status == "pending"){
+                    overdueList?.get(position)?.categoryId?.let {
+                         var desc=""
+                        if (checkNonNull(overdueList?.get(position)?.authorF))
+                            desc = "Author:${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.authorL))
+                            desc = "$desc${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.questionSize))
+                            desc = "$desc \n\nThere are ${overdueList?.get(position)?.questionSize} questions in this survey"
+                        var intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it).putExtra(TITLE,  overdueList?.get(position)?.body.toString()).putExtra(
+                            DESCRIPTION, desc).putExtra(STATUS, overdueList?.get(position)?.response_status).putExtra(
+                            DESC, overdueList?.get(position)?.description.toString())
+                        //fragment.activity?.startActivity(intent)
+                       fragment.activity?.startActivityFromFragment(fragment,intent, 101)
+
+                    }
+                } else if (overdueList?.get(position)?.response_status == "in_progress") {
+                    overdueList?.get(position)?.categoryId?.let {
+                        var desc=""
+                        if (checkNonNull(overdueList?.get(position)?.authorF))
+                            desc = "Author:${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.authorL))
+                            desc = "$desc${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.questionSize))
+                            desc = "$desc \n\nThere are ${overdueList?.get(position)?.questionSize} questions in this survey"
+                        var intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it).putExtra(TITLE,  overdueList?.get(position)?.body.toString()).putExtra(
+                            DESCRIPTION, desc).putExtra(STATUS, overdueList?.get(position)?.response_status).putExtra(
+                            DESC, overdueList?.get(position)?.description.toString())
+                        fragment.activity?.startActivityFromFragment(fragment,intent, 101)
+
+                    }
+                }else if (overdueList?.get(position)?.response_status == "completed"|| overdueList?.get(position)?.response_status == "incomplete") {
+                    //loadFragment(SurveyDetail(),fragment.activity)
+                    overdueList?.get(position)?.categoryId?.let {
+                        var desc=""
+                        if (checkNonNull(overdueList?.get(position)?.authorF))
+                            desc = "Author:${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.authorL))
+                            desc = "$desc${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.questionSize))
+                            desc = "$desc \n\nThere are ${overdueList?.get(position)?.questionSize} questions in this survey"
+                         val intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it).putExtra(TITLE,  overdueList?.get(position)?.body.toString()).putExtra(
+                            DESCRIPTION,  desc).putExtra(STATUS, overdueList?.get(position)?.response_status).putExtra(
+                             DESC, overdueList?.get(position)?.description.toString())
+                        fragment.activity?.startActivityFromFragment(fragment,intent, 101)
+
+                    }
+
+                }
 
             }
         }
@@ -404,7 +468,6 @@ class OverDueAdapter(
             setBackground(resources.getDrawable(R.drawable.white_rect_border));
             html = gapText
         }
-
 
         setEditor(mEditor, dilBinding.richeditor)
 
@@ -668,6 +731,11 @@ class OverDueAdapter(
             resetCompleteWork(nid)
         }
     }
+}
+private fun loadFragment(fragment: Fragment, con: FragmentActivity?) {
+    val transaction = con?.supportFragmentManager?.beginTransaction()
+    transaction?.replace(R.id.host_nav, fragment)
+    transaction?.commit()
 }
 
 interface OnClick {

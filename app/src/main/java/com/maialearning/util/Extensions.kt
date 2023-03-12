@@ -133,6 +133,7 @@ val appModules = module {
     viewModel { RelatedCareerViewModel(catRepository = get()) }
 
     viewModel { PortfolioViewModel(catRepository = get()) }
+    viewModel { SurveyDetailViewModel(catRepository = get()) }
 }
 val appModules1 = module{
     single {
@@ -175,7 +176,7 @@ fun createHttpClient(): OkHttpClient {
 }
 
 
-fun getDate(timestamp: Long, format: String= "MMM dd yyyy"): String {
+fun getDate(timestamp: Long, format: String): String {
     val calendar = Calendar.getInstance(Locale.ENGLISH)
     calendar.timeInMillis = timestamp * 1000L
     val date = DateFormat.format(format, calendar).toString()

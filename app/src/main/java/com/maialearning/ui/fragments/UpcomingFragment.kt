@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,7 @@ import com.maialearning.ui.adapter.*
 import com.maialearning.ui.bottomsheets.ChooseClick
 import com.maialearning.ui.bottomsheets.SelectAttachmentSheet
 import com.maialearning.util.showLoadingDialog
+import com.maialearning.util.showToast
 import com.maialearning.viewmodel.DashboardFragViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -104,6 +106,8 @@ class UpcomingFragment(
                 this, nId, dialogDetail
             ).showDialog()
 
+        } else if (requestCode==101){
+            clickType("refresh")
         }
     }
 

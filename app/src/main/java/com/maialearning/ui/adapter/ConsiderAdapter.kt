@@ -357,14 +357,14 @@ class ConsiderAdapter(
                                 if (planitem.decision_plan.replaceInvertedComas() == key) {
                                     if (checkNonNull(planitem.deadline_date)) {
                                         appDeadline.isEnabled = false
-                                        deadlineValue.setText(planitem.deadline_date
-                                            ?.let {
-                                                formateDateFromstring(
-                                                    "MM/dd/yyyy",
-                                                    "MMM dd yyyy",
-                                                    it
-                                                )
-                                            })
+//                                        deadlineValue.setText(planitem.deadline_date
+//                                            ?.let {
+//                                                formateDateFromstring(
+//                                                    "MM/dd/yyyy",
+//                                                    "MMM dd yyyy",
+//                                                    it
+//                                                )
+//                                            })
 
                                     }
                                     // array.get(position).selectedAppPlanValue = item.value

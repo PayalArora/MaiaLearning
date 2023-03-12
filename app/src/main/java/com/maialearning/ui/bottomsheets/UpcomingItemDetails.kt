@@ -102,7 +102,6 @@ class UpcomingItemDetails(
                val gson = GsonBuilder().create()
                val jsonObject = gson.toJsonTree(it as LinkedTreeMap<String, String>).asJsonObject
                val json = JSONObject(jsonObject.toString())
-               val arrayList = arrayListOf<DashboardOverdueResponse.AssignmentItem.WrittenResponse>()
                val x = json.keys() as Iterator<String>
                while (x.hasNext()) {
                    val key: String = x.next().toString()
