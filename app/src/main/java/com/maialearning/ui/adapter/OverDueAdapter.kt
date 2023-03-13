@@ -215,6 +215,13 @@ class OverDueAdapter(
                 val plainText = String(chars)
                 viewHolder.binding.textDescription.setText(plainText.trim().replaceNextLine())
             }
+            if(!overdueList?.get(position)?.filename.isNullOrEmpty())
+            {
+                viewHolder.binding.downloadIcon.visibility=View.VISIBLE
+            }else{
+                viewHolder.binding.downloadIcon.visibility=View.GONE
+            }
+
         }
 
         if (overdueList.get(position).worksheetFileId != null && overdueList.get(position).worksheetFileId!!.size > 0) {

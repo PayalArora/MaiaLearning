@@ -756,5 +756,8 @@
     <string name="get_start">Get Started</string>
     <string name="personal_review">Personal Review</string>
     <string name="mid_nov">Plan to by mid-November?</string>
+    <string name="anticipated_costs">Anticipated Costs</string>
+    <string name="actual_costs">Actual Costs</string>
+
 
 </resources>

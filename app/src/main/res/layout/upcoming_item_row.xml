@@ -10,15 +10,14 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/carrier_lay"
         android:layout_width="match_parent"
-        app:cardCornerRadius="@dimen/_18dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        app:cardCornerRadius="@dimen/_18dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_5dp"
-          >
+            android:padding="@dimen/_5dp">
 
             <TextView
                 android:id="@+id/text_type"
@@ -36,11 +35,11 @@
                 android:textSize="@dimen/_14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/text_submitted_doc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_gravity="center"
                 android:layout_marginVertical="@dimen/_5dp"
                 android:layout_marginStart="@dimen/_5dp"
@@ -53,36 +52,48 @@
                 android:padding="@dimen/_5dp"
                 android:text="@string/submitted"
                 android:textColor="@color/green_1"
-                android:textSize="@dimen/_12sp" />
+                android:textSize="@dimen/_12sp"
+                android:visibility="gone" />
 
-
-            <ImageButton
-                android:id="@+id/menu_click"
-                android:layout_width="@dimen/_30dp"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/_5dp"
-                android:layout_marginRight="@dimen/_15dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/menu_dots" />
+                android:layout_alignParentRight="true">
 
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/webview_lay"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@+id/text_type"-->
-<!--                tools:ignore="WebViewLayout">-->
+                <ImageView
+                    android:id="@+id/download_icon"
+                    android:visibility="gone"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:src="@drawable/ic_download" />
 
-<!--                <WebView-->
-<!--                    android:id="@+id/text_description"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    android:layout_marginHorizontal="@dimen/_15dp"-->
-<!--                    android:layout_marginTop="@dimen/_5dp"-->
-<!--                    android:layout_marginBottom="@dimen/_10dp"-->
-<!--                    android:maxHeight="@dimen/_100dp"-->
-<!--                    app:layout_constraintTop_toTopOf="parent" />-->
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+                <ImageButton
+                    android:id="@+id/menu_click"
+                    android:layout_width="@dimen/_30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5dp"
+                    android:layout_toRightOf="@+id/download_icon"
+                    android:layout_marginRight="@dimen/_15dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/menu_dots" />
+            </RelativeLayout>
+            <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--                android:id="@+id/webview_lay"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@+id/text_type"-->
+            <!--                tools:ignore="WebViewLayout">-->
+
+            <!--                <WebView-->
+            <!--                    android:id="@+id/text_description"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="0dp"-->
+            <!--                    android:layout_marginHorizontal="@dimen/_15dp"-->
+            <!--                    android:layout_marginTop="@dimen/_5dp"-->
+            <!--                    android:layout_marginBottom="@dimen/_10dp"-->
+            <!--                    android:maxHeight="@dimen/_100dp"-->
+            <!--                    app:layout_constraintTop_toTopOf="parent" />-->
+            <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <TextView
                 android:id="@+id/text_description"
@@ -99,6 +110,7 @@
                 android:textColor="@color/univ_name"
                 android:textSize="@dimen/_14sp"
                 app:layout_constraintLeft_toLeftOf="parent" />
+
             <View
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
@@ -109,43 +121,42 @@
                 android:background="@color/grey_1" />
 
             <LinearLayout
+                android:id="@+id/docs_lay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view1"
                 android:orientation="horizontal"
-                android:id="@+id/docs_lay"
-                android:visibility="gone"
-                android:padding="@dimen/_10dp">
+                android:padding="@dimen/_10dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="@dimen/_25dp"
-                    android:layout_gravity="center"
                     android:layout_height="@dimen/_25dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_doc" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+
                     <TextView
+                        android:id="@+id/submision_txt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_academic"
                         android:layout_marginHorizontal="@dimen/_15dp"
                         android:layout_marginTop="@dimen/_5dp"
                         android:fontFamily="@font/inter"
-                        android:id="@+id/submision_txt"
                         android:lineSpacingExtra="@dimen/_2sp"
                         android:text="@string/submission"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_14sp"
-                        />
+                        android:textSize="@dimen/_14sp" />
 
                     <TextView
+                        android:id="@+id/docs_attached"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/docs_attached"
                         android:layout_below="@+id/text_academic"
                         android:layout_marginHorizontal="@dimen/_15dp"
                         android:layout_marginTop="@dimen/_5dp"
@@ -153,8 +164,7 @@
                         android:lineSpacingExtra="@dimen/_2sp"
                         android:text="@string/five_docs"
                         android:textColor="@color/univ_name"
-                        android:textSize="@dimen/_14sp"
-                        />
+                        android:textSize="@dimen/_14sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -165,10 +175,10 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/academic_lay"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        app:cardCornerRadius="@dimen/_18dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/_18dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -195,7 +205,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginVertical="@dimen/_5dp"
-                android:visibility="gone"
                 android:layout_marginStart="@dimen/_5dp"
                 android:layout_toRightOf="@+id/text_academic"
                 android:background="@drawable/univ_rounded_icon"
@@ -206,7 +215,8 @@
                 android:padding="@dimen/_5dp"
                 android:text="@string/required"
                 android:textColor="@color/banner_orange"
-                android:textSize="@dimen/_12sp" />
+                android:textSize="@dimen/_12sp"
+                android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/academic_menu_click"
@@ -225,9 +235,9 @@
                 android:layout_below="@+id/text_academic"
                 android:layout_marginHorizontal="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_5dp"
-                android:maxLines="2"
                 android:fontFamily="@font/inter"
                 android:lineSpacingExtra="@dimen/_2sp"
+                android:maxLines="2"
                 android:text="@string/ensure_your"
                 android:textColor="@color/univ_name"
                 android:textSize="@dimen/_14sp" />
@@ -244,21 +254,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/view"
-                android:visibility="gone"
                 android:orientation="horizontal"
-                android:padding="@dimen/_10dp">
+                android:padding="@dimen/_10dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="@dimen/_25dp"
-                    android:layout_gravity="center"
                     android:layout_height="@dimen/_25dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_doc" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -269,8 +279,7 @@
                         android:lineSpacingExtra="@dimen/_2sp"
                         android:text="@string/submission"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_14sp"
-                        />
+                        android:textSize="@dimen/_14sp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -282,20 +291,20 @@
                         android:lineSpacingExtra="@dimen/_2sp"
                         android:text="@string/five_docs"
                         android:textColor="@color/univ_name"
-                        android:textSize="@dimen/_14sp"
-                        />
+                        android:textSize="@dimen/_14sp" />
 
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/submitted_lay"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/_18dp"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/_18dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -309,8 +318,8 @@
                 android:layout_gravity="center"
                 android:layout_marginVertical="@dimen/_10dp"
                 android:drawableStart="@drawable/career"
-                android:drawableTint="@color/blue_2"
                 android:drawablePadding="@dimen/_5dp"
+                android:drawableTint="@color/blue_2"
                 android:fontFamily="@font/inter_bold"
                 android:paddingStart="@dimen/_10dp"
                 android:text="@string/career"
@@ -374,15 +383,15 @@
 
                 <ImageView
                     android:layout_width="@dimen/_25dp"
-                    android:layout_gravity="center"
                     android:layout_height="@dimen/_25dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_doc" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -393,8 +402,7 @@
                         android:lineSpacingExtra="@dimen/_2sp"
                         android:text="@string/submission"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_14sp"
-                        />
+                        android:textSize="@dimen/_14sp" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -406,20 +414,20 @@
                         android:lineSpacingExtra="@dimen/_2sp"
                         android:text="@string/five_docs"
                         android:textColor="@color/univ_name"
-                        android:textSize="@dimen/_14sp"
-                        />
+                        android:textSize="@dimen/_14sp" />
 
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/fair_lay"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/_18dp"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/_18dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -526,28 +534,29 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="end"
                     android:layout_marginHorizontal="@dimen/_15dp"
                     android:layout_marginTop="@dimen/_5dp"
-                    android:fontFamily="@font/inter"
-                    android:backgroundTint="@color/alpha_blue_t"
                     android:background="@drawable/white_rounded"
+                    android:backgroundTint="@color/alpha_blue_t"
+                    android:fontFamily="@font/inter"
                     android:lineSpacingExtra="@dimen/_2sp"
-                    android:text="@string/time"
-                    android:layout_centerVertical="true"
                     android:padding="@dimen/_5dp"
+                    android:text="@string/time"
                     android:textColor="@color/alpha_blue1"
                     android:textSize="@dimen/_14sp" />
             </RelativeLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/fair_join_lay"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        app:cardCornerRadius="@dimen/_18dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/_18dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -679,21 +688,22 @@
                     android:backgroundTint="@color/alpha_blue_t"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="@dimen/_2sp"
-                    android:paddingVertical="@dimen/_5dp"
                     android:paddingHorizontal="@dimen/_10dp"
+                    android:paddingVertical="@dimen/_5dp"
                     android:text="@string/joined"
                     android:textColor="@color/alpha_blue1"
                     android:textSize="@dimen/_14sp" />
             </RelativeLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/approved_lay"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/_18dp"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/_18dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -707,8 +717,8 @@
                 android:layout_gravity="center"
                 android:layout_marginVertical="@dimen/_10dp"
                 android:drawableStart="@drawable/career"
-                android:drawableTint="@color/blue_2"
                 android:drawablePadding="@dimen/_5dp"
+                android:drawableTint="@color/blue_2"
                 android:fontFamily="@font/inter_bold"
                 android:paddingStart="@dimen/_10dp"
                 android:text="@string/career"
@@ -824,8 +834,8 @@
                     android:backgroundTint="@color/alpha_blue_t"
                     android:fontFamily="@font/inter"
                     android:lineSpacingExtra="@dimen/_2sp"
-                    android:paddingVertical="@dimen/_5dp"
                     android:paddingHorizontal="@dimen/_10dp"
+                    android:paddingVertical="@dimen/_5dp"
                     android:text="@string/worksheet"
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_14sp" />
@@ -841,20 +851,21 @@
                     android:layout_toRightOf="@+id/worksheet"
                     android:background="@drawable/white_rounded"
                     android:backgroundTint="@color/alpha_blue_t"
-                    android:src="@drawable/green_tick"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="@dimen/_2sp"
                     android:padding="@dimen/_5dp"
+                    android:src="@drawable/green_tick"
                     android:textSize="@dimen/_14sp" />
             </RelativeLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/deadline_lay"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -893,22 +904,23 @@
                 android:layout_below="@+id/text_deadline"
                 android:layout_marginHorizontal="@dimen/_15dp"
                 android:layout_marginTop="@dimen/_5dp"
+                android:layout_marginBottom="@dimen/_10dp"
                 android:fontFamily="@font/inter"
                 android:lineSpacingExtra="@dimen/_2sp"
                 android:text="@string/cali_text"
-                android:layout_marginBottom="@dimen/_10dp"
                 android:textColor="@color/univ_name"
                 android:textSize="@dimen/_14sp"
                 app:layout_constraintLeft_toLeftOf="parent" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/survey_lay"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/_18dp"
-        android:layout_margin="@dimen/_5dp">
+        android:layout_margin="@dimen/_5dp"
+        android:visibility="visible"
+        app:cardCornerRadius="@dimen/_18dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -954,6 +966,7 @@
                 android:textColor="@color/univ_name"
                 android:textSize="@dimen/_14sp"
                 app:layout_constraintLeft_toLeftOf="parent" />
+
             <View
                 android:id="@+id/view6"
                 android:layout_width="match_parent"

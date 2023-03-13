@@ -70,6 +70,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val cancelRoundObserver = MutableLiveData<JsonObject>()
     val savePrefRecoObserver = MutableLiveData<JsonObject>()
     val saveTopPickNoteObserver= MutableLiveData<Unit>()
+    val getAnticipatedCostsObserver= MutableLiveData<JsonObject>()
 
 
 
@@ -845,6 +846,19 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> saveTopPickNoteObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.exception.message
+            }
+        }
+    }
+    fun getAnticipatedCosts(id: Array<String>, isStudent: String,pref:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getAnticipatedCosts(id, isStudent,pref)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getAnticipatedCostsObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.exception.message
             }
         }

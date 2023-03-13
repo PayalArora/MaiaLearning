@@ -29,6 +29,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 const val type: String = "UCAS"
 const val term = "Spring 2022"
@@ -86,11 +88,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         dialogP.show()
         getConsideringList()
         val filter = activity?.findViewById<ImageView>(R.id.toolbar_messanger)
-       // val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
+        // val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
         //if (viewPager?.currentItem == 1) {
-            filter?.setOnClickListener {
-                filterWork()
-            }
+        filter?.setOnClickListener {
+            filterWork()
+        }
         //}
     }
 
@@ -386,18 +388,23 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             arrayProgram,
                             0,
                             object_.getString("notes"),
-                            arrayCounselor, object_.getString("request_transcript"),
+                            arrayCounselor,
+                            object_.getString("request_transcript"),
                             object_.getString("application_type"),
                             object_.optString("application_term"),
                             object_.getString("application_mode"),
                             object_.getString("application_status_name"),
                             object_.getString("app_by_program_supported"),
-                            object_.getInt("confirm_applied"), null, requiredRecs,
+                            object_.getInt("confirm_applied"),
+                            null,
+                            requiredRecs,
                             object_.getInt("manual_update"),
                             object_.optString("applicaton_round"),
                             null,
                             object_.optString("status"),
-                            object_.optBoolean("isCommonApp"),object_.optString("naviance_mapping"),collComapre
+                            object_.optBoolean("isCommonApp"),
+                            object_.optString("naviance_mapping"),
+                            collComapre
                         )
                         array.add(model)
                         array.sortBy { it.naviance_college_name }
@@ -433,7 +440,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         ids.add(finalArray[i].universityNid)
                         selectedUnivId = finalArray[i].universityNid
                     }
-                  //  UniversitiesActivity.collegeList = finalArray
+                    //  UniversitiesActivity.collegeList = finalArray
                     univModel.university_nids = ids
                     dialogP.show()
                     homeModel.getCollegeJsonFilter(COLLEGE_JSON, univModel)
@@ -686,11 +693,11 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
             }
-          //  UniversitiesActivity.collegeList = finalArray
+            //  UniversitiesActivity.collegeList = finalArray
             if (selectedConsider == ACTIVE_CONSIDER) {
                 activeArray = finalArray
-               // considerAdapter = ConsiderAdapter(this, activeArray, ::notesClick)
-              //  mBinding.consideringList.adapter = considerAdapter
+                // considerAdapter = ConsiderAdapter(this, activeArray, ::notesClick)
+                //  mBinding.consideringList.adapter = considerAdapter
                 mBinding.universitisCounte.text = activeArray.size.toString() + " Universities"
                 activeConsideringWork()
             } else {
@@ -755,12 +762,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
         mBinding.selectAll.setOnClickListener {
             mBinding.btnLay.visibility = View.VISIBLE
-            if (mBinding.selectAll.isChecked){
-                for (i in filteredArray){
+            if (mBinding.selectAll.isChecked) {
+                for (i in filteredArray) {
                     i.selected = true
                 }
-             } else {
-                for (i in filteredArray){
+            } else {
+                for (i in filteredArray) {
                     i.selected = false
                 }
             }
@@ -770,23 +777,23 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         }
         mBinding.deleteBtn.setOnClickListener {
             bulkMoveList.clear()
-            if (selectedConsider== ACTIVE_CONSIDER) {
+            if (selectedConsider == ACTIVE_CONSIDER) {
                 for (i in filteredArray.indices) {
                     if (filteredArray.get(i).selected) {
                         bulkMoveList.add("" + filteredArray.get(i).transcriptNid)
                     }
                 }
             }
-                if (bulkMoveList != null && bulkMoveList.size > 0) {
-                    confirmSelectedDeletePopup(
-                        true,
-                        resources.getString(R.string.delete_considering)
-                    )
-                }
+            if (bulkMoveList != null && bulkMoveList.size > 0) {
+                confirmSelectedDeletePopup(
+                    true,
+                    resources.getString(R.string.delete_considering)
+                )
+            }
 
         }
         mBinding.transcriptBtn.setOnClickListener {
-            if (selectedConsider== ACTIVE_CONSIDER) {
+            if (selectedConsider == ACTIVE_CONSIDER) {
                 bulkMoveList.clear()
                 for (i in filteredArray.indices) {
                     if (filteredArray.get(i).selected) {
@@ -902,7 +909,10 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                             val array = arrayListOf<String>()
                             array.clear()
                             array.addAll(it)
-                            if (checkNonNull(finalArray[arratlistPosition].applicationTerm)&& !array.contains("Reset"))
+                            if (checkNonNull(finalArray[arratlistPosition].applicationTerm) && !array.contains(
+                                    "Reset"
+                                )
+                            )
                                 array!!.add("Reset")
                             recyclerView.adapter = ConsideringTermAdapter(
                                 array, type, this
@@ -913,7 +923,10 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                         val array = arrayListOf<String>()
                         array.clear()
                         array.addAll(resources.getStringArray(R.array.APPLICATION_TERM))
-                        if (checkNonNull(finalArray[arratlistPosition].applicationTerm)&& !array.contains("Reset"))
+                        if (checkNonNull(finalArray[arratlistPosition].applicationTerm) && !array.contains(
+                                "Reset"
+                            )
+                        )
                             array!!.add("Reset")
                         recyclerView.adapter = ConsideringTermAdapter(
                             array,
@@ -1081,8 +1094,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             updateStudentPlan.student_uid = SharedHelper(requireContext()).id.toString()
             updateStudentPlan.college_nid = finalArray[postion].university_nid
             if (checkNonNull(sheetBinding.schoolWithinUniv.text.toString()))
-            updateStudentPlan.school_within_university =
-                sheetBinding.schoolWithinUniv.text.toString()
+                updateStudentPlan.school_within_university =
+                    sheetBinding.schoolWithinUniv.text.toString()
             //updateStudentPlan.app_type = "4"
 //            updateStudentPlan.request_transcript =
 //                finalArray.get(typeTermPosition).requestTranscript
@@ -1152,7 +1165,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
             sheetBinding.addMore.visibility = View.VISIBLE
             sheetBinding.save.text = "Add note"
-            sheetBinding.save.visibility=View.VISIBLE
+            sheetBinding.save.visibility = View.VISIBLE
         }
 
         sheetBinding.editStudentNote.setOnClickListener {
@@ -1305,6 +1318,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 }
                 R.id.review_coll -> {
                     bottonSheetInfo(position)
+                }
+                R.id.review_coll -> {
+                    bottonSheetAnticiptedCosts(position)
                 }
             }
 
@@ -1492,15 +1508,16 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
                 ACTIVE_CONSIDER -> {
                     activeSelection()
-                    if (type  == "Country") {
-                    for (i in countryArrayActive) {
-                        if (i.checked) {
-                            selectedCountryActive = i.key
-                            break
-                        } else {
-                            selectedCountryActive = ""
+                    if (type == "Country") {
+                        for (i in countryArrayActive) {
+                            if (i.checked) {
+                                selectedCountryActive = i.key
+                                break
+                            } else {
+                                selectedCountryActive = ""
+                            }
                         }
-                    }} else {
+                    } else {
                         for (i in applyingWithList) {
                             if (i.checked) {
                                 selectedApplyingActive = i.value
@@ -1512,16 +1529,17 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                     }
                 }
                 DELETED -> {
-                   resetSelection()
-                    if (type  == "Country") {
-                    for (i in countryArrayDeleted) {
-                        if (i.checked) {
-                            selectedCountryDeleted = i.key
-                            break
-                        } else {
-                            selectedCountryDeleted = ""
+                    resetSelection()
+                    if (type == "Country") {
+                        for (i in countryArrayDeleted) {
+                            if (i.checked) {
+                                selectedCountryDeleted = i.key
+                                break
+                            } else {
+                                selectedCountryDeleted = ""
+                            }
                         }
-                    }} else {
+                    } else {
                         for (i in applyingWithList) {
                             if (i.checked) {
                                 selectedApplyingDeleted = i.value
@@ -1535,7 +1553,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
             }
 
             if (selectedConsider == ACTIVE_CONSIDER) {
-               activeConsideringWork()
+                activeConsideringWork()
 
             } else {
                 deletedConsideringWork()
@@ -1546,8 +1564,8 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         sheetBinding.close.setOnClickListener {
             sheetBinding.searchText.setText("")
         }
-        Log.e("Country"," "+ selectedCountryActive)
-        Log.e("Applying"," "+ selectedApplyingActive)
+        Log.e("Country", " " + selectedCountryActive)
+        Log.e("Applying", " " + selectedApplyingActive)
 
         if (type.equals("Country")) {
             when (selectedConsider) {
@@ -1582,11 +1600,12 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 
             sheetBinding.reciepentList.adapter =
                 ConsiderCountryFilterAdapter(applyingWithList)
-        } else if (type.equals("Compare All")){
-            filterCompare(finalArray,sheetBinding )
+        } else if (type.equals("Compare All")) {
+            filterCompare(finalArray, sheetBinding)
         }
 
     }
+
     private fun filterCompare(
         finalArray: ArrayList<ConsiderModel.Data>,
         sheetBinding: UniversityFilterBinding
@@ -1609,6 +1628,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 CompareAllAdapter(filteredApplying)
         }
     }
+
     private fun activeSelection() {
         mBinding.selectAll.visibility = View.GONE
         mBinding.selected.visibility = View.VISIBLE
@@ -1633,6 +1653,35 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
 //            )
         mBinding.consideringList.adapter = considerAdapter
         mBinding.universitisCounte.text = filteredArray.size.toString() + " Universities"
+    }
+
+    private fun bottonSheetAnticiptedCosts(position: Int) {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: AnticipatedBottomSheetBinding =
+            AnticipatedBottomSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialog.show()
+        sheetBinding.clearText.setOnClickListener {
+            dialog.dismiss()
+        }
+        val array: Array<String> =
+            finalArray.get(position).universityNid.toCharArray().map { it.toString() }
+                .toTypedArray()
+
+        SharedHelper(requireContext()).id?.let {
+            homeModel.getAnticipatedCosts(
+                array,
+                it, finalArray.get(position).college_priority_choice
+            )
+        }
+        homeModel.getAnticipatedCostsObserver.observe(requireActivity()) {
+            val json = JSONObject(it.toString())
+            val jsonArray = json.optJSONArray("college_cost_compare")
+            val array: HashMap<String, ArrayList<DynamicKeyValue>>
+//            array.put(jsonArray[0].)
+        }
+
     }
 
     private fun deletedConsideringWork() {
@@ -1682,10 +1731,10 @@ interface OnItemClickOption {
     fun onPlanClick(postion: Int)
     fun onCommentClick(position: Int)
     fun onAddClick(postion: Int)
-    fun onInfoClick(postion: Int, )
+    fun onInfoClick(postion: Int)
     fun onApplyingClick(postion: Int)
     fun onMenuClick(postion: Int, it: View?)
     fun onTranscriptRequest(postion: Int, checked: String)
     fun onDeadlineClick(postion: Int, deadline: String)
-    fun onRoundClick(postion: Int, round:Boolean)
+    fun onRoundClick(postion: Int, round: Boolean)
 }

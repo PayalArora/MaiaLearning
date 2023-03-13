@@ -815,4 +815,17 @@ interface AllAPi {
                       @Header("Authorization") Authorization: String , @Body body:CompleteSurveyReq):Deferred<JsonObject>
 
     // https://ml-api-staging.maialearning.com/v2/survey-response/7b5e6dd8-6ccd-4512-be63-b773752909dd
+
+//    cost-comparisons
+@POST("cost-comparisons")
+@FormUrlEncoded
+fun getAnticipatedCosts(
+    @Header("Authorization") Authorization: String,
+    @Field("college_ids") id: Array<String>,
+    @Field("student_uid") student_id: String,
+    @Field("inflation_rate") inf_rate:String
+): Deferred<JsonObject>
+
 }
+
+
