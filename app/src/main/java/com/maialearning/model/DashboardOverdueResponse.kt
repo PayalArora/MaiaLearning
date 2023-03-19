@@ -37,6 +37,13 @@ data class DashboardOverdueResponse(
         @field:SerializedName("title")
         var title: Any? = null,
 
+        @field:SerializedName("description")
+        var description: Any? = null,
+
+        var authorF: String? = null,
+
+        var authorL: String? = null,
+        var questionSize: String? = null,
         @field:SerializedName("fid")
         var fid: Any? = null,
 

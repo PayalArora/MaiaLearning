@@ -35,6 +35,7 @@
     <string name="message">Message</string>
     <string name="note">Note</string>
     <string name="notes">Counselor Notes</string>
+    <string name="notes_tab">Notes</string>
     <string name="dashboard">Dashboard</string>
     <string name="character">Character</string>
     <string name="careers">Careers</string>
@@ -88,6 +89,7 @@
     <string name="fairs"><![CDATA[Fairs & Webinars]]></string>
     <string name="meetings">Meetings</string>
     <string name="survey">Surveys</string>
+    <string name="survey_title">Survey</string>
     <string name="select_plan">Select Application Plan</string>
     <string name="early_action">Early Action</string>
     <string name="early_action2">Early Action II</string>
@@ -135,6 +137,7 @@
 
     <string name="like">Like</string>
     <string name="close">close</string>
+    <string name="close_btn">Close</string>
     <string name="overview">Overview</string>
     <string name="college_info">College Information</string>
     <string name="prog_list">Program List</string>
@@ -749,5 +752,14 @@
     <string name="complete_btn">Complete</string>
     <string name="enter_answer_hint">Enter Answer</string>
     <string name="congracts">Congratulations! You have completed the survey!</string>
+    <string name="finish">Finish Later</string>
+    <string name="finished"><![CDATA[You have answered all the questions in the survey. Click the \'Finalize & Close\' button below to complete the survey. You can not edit the answers that you have given after you finalize the survey. \n\nIf you are not ready to finalize your answers, click \'Finish Later\'. Use the \'Previous\' button to go back and review your answers.]]></string>
+    <string name="finalize"><![CDATA[Finalize & Close]]></string>
+    <string name="get_start">Get Started</string>
+    <string name="personal_review">Personal Review</string>
+    <string name="mid_nov">Plan to by mid-November?</string>
+    <string name="anticipated_costs">Anticipated Costs</string>
+    <string name="actual_costs">Actual Costs</string>
+
 
 </resources>

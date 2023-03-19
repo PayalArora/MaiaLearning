@@ -4,17 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.databinding.RadiobuttonItemFilterBinding
+import com.maialearning.databinding.SurveymultichoiceBinding
 import com.maialearning.databinding.SurveysinglechoiceBinding
 import com.maialearning.model.KeyVal
 import org.json.JSONArray
 
-class SurveySingleChoiceAdapter(val arr: ArrayList<KeyVal>, val isenabled:Boolean= false) :
-    RecyclerView.Adapter<SurveySingleChoiceAdapter.ViewHolder>() {
+class RangeAdapter(val arr: ArrayList<KeyVal>) :
+    RecyclerView.Adapter<RangeAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
      */
-    class ViewHolder(val binding: SurveysinglechoiceBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(val binding: SurveymultichoiceBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             // Define click listener for the ViewHolder's View.
         }
@@ -23,7 +24,7 @@ class SurveySingleChoiceAdapter(val arr: ArrayList<KeyVal>, val isenabled:Boolea
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(viewGroup.context)
-        val binding = SurveysinglechoiceBinding.inflate(inflater, viewGroup, false)
+        val binding = SurveymultichoiceBinding.inflate(inflater, viewGroup, false)
 
         return ViewHolder(binding)
     }
@@ -31,28 +32,23 @@ class SurveySingleChoiceAdapter(val arr: ArrayList<KeyVal>, val isenabled:Boolea
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
-            check.setText(arr.get(position).value)
+            check.setText(arr.get(position).value.uppercase())
 
            // check.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
-            if (isenabled){
-                check.isEnabled = true
-            } else{
-                check.isEnabled = false
-            }
             if (arr.get(position).checked)  {
                 check.isChecked = true
             }else{
                 check.isChecked=false
             }
             check.setOnClickListener({
-                for (i in arr.indices) {
-                    if (i != position) {
-                        arr.get(i).checked = false
-                    }
-                }
+//                for (i in arr.indices) {
+//                    if (i != position) {
+//                        arr.get(i).checked = false
+//                    }
+//                }
 
-                arr[position].checked=true
-                notifyDataSetChanged();
+//                arr[position].checked=true
+//                notifyDataSetChanged();
             })
 
 

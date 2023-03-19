@@ -167,6 +167,7 @@
                             android:id="@+id/info_icon"
                             android:layout_width="@dimen/_15dp"
                             android:layout_height="@dimen/_15dp"
+                            android:visibility="gone"
                             android:layout_marginStart="@dimen/_5dp"
                             android:layout_marginTop="@dimen/_3dp"
                             android:src="@drawable/info_icon"

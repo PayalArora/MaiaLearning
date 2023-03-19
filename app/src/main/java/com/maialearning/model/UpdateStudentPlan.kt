@@ -18,7 +18,7 @@ class UpdateStudentPlan {
     lateinit var multiple_decision_round: String
     lateinit var program_name: String
     lateinit var major_name: String
-    lateinit var school_within_university: String
+     var school_within_university: String?=null
     lateinit var campus_tour: String
     lateinit var mid_november: String
     lateinit var college_interest: String

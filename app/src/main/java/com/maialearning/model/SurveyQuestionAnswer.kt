@@ -41,6 +41,6 @@ data class SurveyQuestionAnswer (
 
     @field:SerializedName("required")
     var required: Boolean? = null,
-
+    var arr_choice:ArrayList<KeyVal>? = null,
 
     )

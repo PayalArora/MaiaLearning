@@ -44,7 +44,7 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/inter"
                 android:paddingHorizontal="@dimen/_8dp"
-                android:text="@string/survey"
+                android:text="@string/survey_title"
                 android:textSize="18sp" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -62,70 +62,144 @@
         android:layout_above="@+id/btns"
         android:layout_below="@+id/toolbar_lay"
         android:layout_height="wrap_content">
-
+        <include
+            android:id="@+id/start_screen"
+            android:visibility="visible"
+            layout="@layout/start_screen"/>
 
         <include
             android:id="@+id/survey_adapter"
+            android:visibility="gone"
             layout="@layout/survey_question_row" />
     </LinearLayout>
+
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:id="@+id/btns"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/white"
+        android:id="@+id/btns"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_60dp"
         android:layout_alignParentBottom="true"
+        android:background="@color/white"
         android:elevation="@dimen/_0dp"
-        app:cardCornerRadius="@dimen/_15dp"
-        android:layout_height="@dimen/_60dp">
+        app:cardCornerRadius="@dimen/_15dp">
+
         <LinearLayout
             android:id="@+id/write_lay"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="@dimen/_10dp"
             android:layout_marginVertical="@dimen/_10dp"
-            android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             android:visibility="visible">
-
+            <TextView
+                android:id="@+id/started"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginHorizontal="@dimen/_5dp"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/blue"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/_2sp"
+                android:layout_gravity="center"
+                android:paddingHorizontal="@dimen/_5dp"
+                android:text="@string/get_start"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sp"
+                android:visibility="gone" />
             <TextView
                 android:id="@+id/back_btn"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_40dp"
+                android:visibility="gone"
 
-                android:layout_marginHorizontal="@dimen/_10dp"
+                android:layout_marginHorizontal="@dimen/_5dp"
                 android:layout_weight="1"
                 android:background="@drawable/white_rect_15"
                 android:backgroundTint="@color/blue_alpha"
                 android:drawablePadding="@dimen/_10dp"
+                android:drawableTint="@color/blue"
                 android:fontFamily="@font/inter"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_2sp"
                 android:paddingHorizontal="@dimen/_5dp"
-                android:text="@string/back"
-                android:drawableTint="@color/blue"
+                android:text="@string/previous"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/_14sp" />
-
+            <TextView
+                android:id="@+id/finish_later"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginHorizontal="@dimen/_5dp"
+                android:layout_weight="1"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/blue_alpha"
+                android:drawablePadding="@dimen/_10dp"
+                android:drawableTint="@color/blue"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:visibility="gone"
+                android:lineSpacingExtra="@dimen/_2sp"
+                android:paddingHorizontal="@dimen/_5dp"
+                android:text="@string/finish"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_14sp" />
             <TextView
                 android:id="@+id/next"
                 android:layout_width="0dp"
-                android:visibility="visible"
                 android:layout_height="@dimen/_40dp"
-                android:layout_marginHorizontal="@dimen/_10dp"
+                android:layout_marginHorizontal="@dimen/_5dp"
                 android:layout_weight="1"
                 android:background="@drawable/white_rect_15"
                 android:backgroundTint="@color/blue"
+                android:drawableTint="@color/white"
                 android:fontFamily="@font/inter"
                 android:gravity="center"
-                android:paddingHorizontal="@dimen/_5dp"
-
-                android:drawableTint="@color/white"
                 android:lineSpacingExtra="@dimen/_2sp"
+                android:layout_gravity="center"
+                android:paddingHorizontal="@dimen/_5dp"
                 android:text="@string/next"
                 android:textColor="@color/white"
+                android:textSize="@dimen/_14sp"
+                android:visibility="gone" />
+            <TextView
+                android:id="@+id/close_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginHorizontal="@dimen/_5dp"
+                android:layout_weight="1"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/blue_alpha"
+                android:drawablePadding="@dimen/_10dp"
+                android:drawableTint="@color/blue"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/_2sp"
+                android:paddingHorizontal="@dimen/_5dp"
+                android:text="@string/close_btn"
+                android:visibility="gone"
+                android:textColor="@color/blue"
                 android:textSize="@dimen/_14sp" />
-
-        </LinearLayout>
+            <TextView
+                android:id="@+id/finalize_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_40dp"
+                android:layout_marginHorizontal="@dimen/_5dp"
+                android:layout_weight="1.2"
+                android:background="@drawable/white_rect_15"
+                android:backgroundTint="@color/blue"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/_2sp"
+                android:layout_gravity="center"
+                android:paddingHorizontal="@dimen/_5dp"
+                android:text="@string/finalize"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_14sp"
+                android:visibility="gone" />        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

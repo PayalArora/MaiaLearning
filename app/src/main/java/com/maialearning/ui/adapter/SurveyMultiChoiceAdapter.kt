@@ -9,7 +9,7 @@ import com.maialearning.databinding.SurveysinglechoiceBinding
 import com.maialearning.model.KeyVal
 import org.json.JSONArray
 
-class SurveyMultiChoiceAdapter(val arr: ArrayList<KeyVal>) :
+class SurveyMultiChoiceAdapter(val arr: ArrayList<KeyVal>, val isenabled:Boolean= false) :
     RecyclerView.Adapter<SurveyMultiChoiceAdapter.ViewHolder>() {
     /**
      * Provide a reference to the type of views that you are using
@@ -32,9 +32,14 @@ class SurveyMultiChoiceAdapter(val arr: ArrayList<KeyVal>) :
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.binding.apply {
-            check.setText(arr.get(position).value.uppercase())
+            check.setText(arr.get(position).value)
 
            // check.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+            if (isenabled){
+                check.isEnabled = true
+            } else{
+                check.isEnabled = false
+            }
             if (arr.get(position).checked)  {
                 check.isChecked = true
             }else{
@@ -47,8 +52,8 @@ class SurveyMultiChoiceAdapter(val arr: ArrayList<KeyVal>) :
 //                    }
 //                }
 
-//                arr[position].checked=true
-//                notifyDataSetChanged();
+                arr[position].checked=true
+                notifyDataSetChanged();
             })
 
 

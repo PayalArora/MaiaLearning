@@ -220,6 +220,9 @@ class DashboardFragment : Fragment() {
             RESET -> {
                 listing()
             }
+            REFRESH->{
+                listing()
+            }
         }
     }
 
@@ -542,8 +545,9 @@ class DashboardFragment : Fragment() {
         // var noDueList = arrayListOf<SortedDateModel>()
         if (data != null) {
             for (i in data.indices) {
-                if ((data.get(i)?.endTime == null || data.get(i)?.endTime.equals("0"))) {
-                    if (data.get(i)?.status == "active") {
+
+                if (data.get(i)?.status == "active") {
+                    if ((data.get(i)?.endTime == null || data.get(i)?.endTime.equals("0"))) {
                         val jobj: JsonObject? = survey?.get(data.get(i)?.uuid) as JsonObject?
 
                             var assignmentItem = DashboardOverdueResponse.AssignmentItem()
@@ -559,35 +563,79 @@ class DashboardFragment : Fragment() {
                         assignmentItem.start_time =  data.get(i)?.startTime
                         assignmentItem.category = "Survey"
                         assignmentItem.body = data.get(i)?.title
+                        assignmentItem.authorF = data.get(i)?.authorData?.data?.firstName
+                        assignmentItem.authorL = data.get(i)?.authorData?.data?.lastName
+                        assignmentItem.questionSize = data.get(i)?.surveyQuestion?.size.toString()
+                        assignmentItem.description = data.get(i)?.description
                         assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
                         assignmentItem.categoryId = data.get(i)?.uuid
 //                        assignmentItem.status=data.get(i)?.status
                         assignment.add(assignmentItem)
                         Log.e("survey list size", " " + assignmentItem.body)
                     //}
-                }
-                } else if (data.get(i)?.status == "closed") {
-                    val jobj: JsonObject? = survey?.get(data.get(i)?.uuid?.replaceInvertedComas()) as JsonObject?
-                    if (jobj?.get("response_status").toString()?.replace("\"", "") == "completed"|| jobj?.get("response_status").toString()?.replace("\"", "") == "incomplete") {
+                } else {
+                        val jobj: JsonObject? = survey?.get(data.get(i)?.uuid) as JsonObject?
+
                         var assignmentItem = DashboardOverdueResponse.AssignmentItem()
                         assignmentItem.date = data.get(i)?.endTime
-                        assignmentItem.start_time =  data.get(i)?.startTime
-                        assignmentItem.category = "Survey"
-                        assignmentItem.categoryId = data.get(i)?.uuid
-                        assignmentItem.status = 0
+                        assignmentItem.status = 1
                         if (jobj?.get("response_status").toString()?.replace("\"", "") != "completed") {
                             assignmentItem.completed = 0
                         } else
                         {
                             assignmentItem.completed = 1
                         }
-                        assignmentItem.body = data.get(i)?.title
-                        assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
-//                        assignmentItem.status=data.get(i)?.status
                         assignmentItem.response_status = jobj?.get("response_status").toString()?.replaceInvertedComas()
+                        assignmentItem.start_time =  data.get(i)?.startTime
+                        assignmentItem.category = "Survey"
+                        assignmentItem.authorF = data.get(i)?.authorData?.data?.firstName
+                        assignmentItem.authorL = data.get(i)?.authorData?.data?.lastName
+                        assignmentItem.questionSize = data.get(i)?.surveyQuestion?.size.toString()
+                        assignmentItem.body = data.get(i)?.title
+                        assignmentItem.description = data.get(i)?.description
+                        assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
+                        assignmentItem.categoryId = data.get(i)?.uuid
+//                        assignmentItem.status=data.get(i)?.status
                         assignment.add(assignmentItem)
-                        Log.e("survey list size", " " + assignmentItem.body)
-                        Log.e("survey list size", " " + jobj?.get("response_status").toString()?.replaceInvertedComas())
+                }
+                } else if (data.get(i)?.status == "closed") {
+                    if ((data.get(i)?.endTime != null && !data.get(i)?.endTime.equals("0"))) {
+                        val jobj: JsonObject? =
+                            survey?.get(data.get(i)?.uuid?.replaceInvertedComas()) as JsonObject?
+                        if (jobj?.get("response_status").toString()
+                                ?.replace("\"", "") == "completed" || jobj?.get("response_status")
+                                .toString()?.replace("\"", "") == "incomplete"
+                        ) {
+                            var assignmentItem = DashboardOverdueResponse.AssignmentItem()
+                            assignmentItem.date = data.get(i)?.endTime
+                            assignmentItem.start_time = data.get(i)?.startTime
+                            assignmentItem.category = "Survey"
+                            assignmentItem.categoryId = data.get(i)?.uuid
+                            assignmentItem.status = 0
+                            if (jobj?.get("response_status").toString()
+                                    ?.replace("\"", "") != "completed"
+                            ) {
+                                assignmentItem.completed = 0
+                            } else {
+                                assignmentItem.completed = 1
+                            }
+                            assignmentItem.body = data.get(i)?.title
+                            assignmentItem.description = data.get(i)?.description
+                            assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
+                            assignmentItem.authorF = data.get(i)?.authorData?.data?.firstName
+                            assignmentItem.authorL = data.get(i)?.authorData?.data?.lastName
+                            assignmentItem.questionSize = data.get(i)?.surveyQuestion?.size.toString()
+                            assignmentItem.surveyQuestion = data.get(i)?.surveyQuestion
+//                        assignmentItem.status=data.get(i)?.status
+                            assignmentItem.response_status =
+                                jobj?.get("response_status").toString()?.replaceInvertedComas()
+                            assignment.add(assignmentItem)
+                            Log.e("survey list size", " " + assignmentItem.body)
+                            Log.e("survey list size",
+                                " " + jobj?.get("response_status").toString()
+                                    ?.replaceInvertedComas()
+                            )
+                        }
                     }
                 }
             }
@@ -919,5 +967,6 @@ class DashboardFragment : Fragment() {
     companion object {
         const val COMPLETE = "complete"
         const val RESET = "reset"
+        const val REFRESH = "refresh"
     }
 }

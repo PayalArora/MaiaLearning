@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
+
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -32,6 +33,7 @@ import com.maialearning.model.DashboardOverdueResponse
 import com.maialearning.ui.activity.MessageDetailActivity
 import com.maialearning.ui.activity.SurveyDetail
 import com.maialearning.ui.bottomsheets.UpcomingItemDetails
+import com.maialearning.util.checkNonNull
 
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.replaceNextLine
@@ -43,6 +45,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 const val ID:String = "ID"
+const val TITLE:String = "TITLE"
+const val DESCRIPTION:String = "DESCRIPTION"
+const val DESC:String = "DESC"
+const val STATUS:String = "STATUS"
+
 class OverDueAdapter(
     var overdueList: ArrayList<DashboardOverdueResponse.AssignmentItem>,
     val con: FragmentActivity,
@@ -178,8 +185,11 @@ class OverDueAdapter(
                 viewHolder.binding.completeText.text = "Start"
             } else if (overdueList?.get(position)?.response_status == "in_progress") {
                 viewHolder.binding.completeText.text = "Continue"
-            }else if (overdueList?.get(position)?.response_status == "completed") {
+            }else if (overdueList?.get(position)?.response_status == "completed"|| overdueList?.get(position)?.response_status == "incomplete") {
                 viewHolder.binding.completeText.text = "View"
+            } else{
+                overdueList?.get(position)?.response_status= "pending"
+                viewHolder.binding.completeText.text = "Start"
             }
 
         } else {
@@ -205,6 +215,13 @@ class OverDueAdapter(
                 val plainText = String(chars)
                 viewHolder.binding.textDescription.setText(plainText.trim().replaceNextLine())
             }
+            if(!overdueList?.get(position)?.filename.isNullOrEmpty())
+            {
+                viewHolder.binding.downloadIcon.visibility=View.VISIBLE
+            }else{
+                viewHolder.binding.downloadIcon.visibility=View.GONE
+            }
+
         }
 
         if (overdueList.get(position).worksheetFileId != null && overdueList.get(position).worksheetFileId!!.size > 0) {
@@ -228,14 +245,51 @@ class OverDueAdapter(
                 ).showDialog(progress)
             } else if(overdueList.get(position).category.equals("Survey")){
                 if (overdueList?.get(position)?.response_status == "pending"){
+                    overdueList?.get(position)?.categoryId?.let {
+                         var desc=""
+                        if (checkNonNull(overdueList?.get(position)?.authorF))
+                            desc = "Author:${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.authorL))
+                            desc = "$desc${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.questionSize))
+                            desc = "$desc \n\nThere are ${overdueList?.get(position)?.questionSize} questions in this survey"
+                        var intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it).putExtra(TITLE,  overdueList?.get(position)?.body.toString()).putExtra(
+                            DESCRIPTION, desc).putExtra(STATUS, overdueList?.get(position)?.response_status).putExtra(
+                            DESC, overdueList?.get(position)?.description.toString())
+                        //fragment.activity?.startActivity(intent)
+                       fragment.activity?.startActivityFromFragment(fragment,intent, 101)
 
+                    }
                 } else if (overdueList?.get(position)?.response_status == "in_progress") {
+                    overdueList?.get(position)?.categoryId?.let {
+                        var desc=""
+                        if (checkNonNull(overdueList?.get(position)?.authorF))
+                            desc = "Author:${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.authorL))
+                            desc = "$desc${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.questionSize))
+                            desc = "$desc \n\nThere are ${overdueList?.get(position)?.questionSize} questions in this survey"
+                        var intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it).putExtra(TITLE,  overdueList?.get(position)?.body.toString()).putExtra(
+                            DESCRIPTION, desc).putExtra(STATUS, overdueList?.get(position)?.response_status).putExtra(
+                            DESC, overdueList?.get(position)?.description.toString())
+                        fragment.activity?.startActivityFromFragment(fragment,intent, 101)
 
+                    }
                 }else if (overdueList?.get(position)?.response_status == "completed"|| overdueList?.get(position)?.response_status == "incomplete") {
                     //loadFragment(SurveyDetail(),fragment.activity)
                     overdueList?.get(position)?.categoryId?.let {
-                        val intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it)
-                        fragment.activity?.startActivity(intent)
+                        var desc=""
+                        if (checkNonNull(overdueList?.get(position)?.authorF))
+                            desc = "Author:${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.authorL))
+                            desc = "$desc${overdueList?.get(position)?.authorF}"
+                        if (checkNonNull(overdueList?.get(position)?.questionSize))
+                            desc = "$desc \n\nThere are ${overdueList?.get(position)?.questionSize} questions in this survey"
+                         val intent = Intent(fragment.activity, SurveyDetail::class.java).putExtra(ID, it).putExtra(TITLE,  overdueList?.get(position)?.body.toString()).putExtra(
+                            DESCRIPTION,  desc).putExtra(STATUS, overdueList?.get(position)?.response_status).putExtra(
+                             DESC, overdueList?.get(position)?.description.toString())
+                        fragment.activity?.startActivityFromFragment(fragment,intent, 101)
+
                     }
 
                 }

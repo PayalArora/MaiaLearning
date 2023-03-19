@@ -412,9 +412,23 @@ interface LoginRepository {
         id: String
     ): UseCaseResult<JsonObject>
 
+    suspend fun updateAnswer(
+        body: UpdateSurveyAnswerReq
+    ): UseCaseResult<JsonObject>
+
+    suspend fun completeSurvey(
+        body: CompleteSurveyReq, id: String
+    ): UseCaseResult<JsonObject>
+
     suspend fun saveTopPickNote(
         id: String, note: String
     ): UseCaseResult<Unit>
+
+    suspend fun getAnticipatedCosts(
+        id: Array<String>,
+        idStudent: String,
+        infRate: String
+    ): UseCaseResult<JsonObject>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -2127,11 +2141,60 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getSurveyResponses(id:String): UseCaseResult<JsonObject> {
-       val url = "${ML_URL}v2/survey-responses/${id}?response_type=by_respondent"
+    override suspend fun getAnticipatedCosts(
+        id: Array<String>,
+        idStudent: String,
+        infRate: String
+    ): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.getAnticipatedCosts(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                id, idStudent, infRate
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getSurveyResponses(id: String): UseCaseResult<JsonObject> {
+        val url = "${ML_URL}v2/survey-responses/${id}?response_type=by_respondent"
         return try {
             val result = catApi.getSurveyResponses(
-                url,"Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+                url, "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun updateAnswer(body: UpdateSurveyAnswerReq): UseCaseResult<JsonObject> {
+        val url = "${ML_URL}v2/survey-question-answer"
+        return try {
+            val result = catApi.updateAnswer(
+                url, "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun completeSurvey(
+        body: CompleteSurveyReq,
+        id: String
+    ): UseCaseResult<JsonObject> {
+        val url = "${ML_URL}v2/survey-response/$id"
+        return try {
+            val result = catApi.completeSurvey(
+                url, "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
