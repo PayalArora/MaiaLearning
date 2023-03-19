@@ -35,6 +35,7 @@
     <string name="message">Message</string>
     <string name="note">Note</string>
     <string name="notes">Counselor Notes</string>
+    <string name="notes_tab">Notes</string>
     <string name="dashboard">Dashboard</string>
     <string name="character">Character</string>
     <string name="careers">Careers</string>
@@ -88,6 +89,7 @@
     <string name="fairs"><![CDATA[Fairs & Webinars]]></string>
     <string name="meetings">Meetings</string>
     <string name="survey">Surveys</string>
+    <string name="survey_title">Survey</string>
     <string name="select_plan">Select Application Plan</string>
     <string name="early_action">Early Action</string>
     <string name="early_action2">Early Action II</string>

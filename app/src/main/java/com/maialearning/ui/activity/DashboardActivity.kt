@@ -137,7 +137,7 @@ class DashboardActivity : AppCompatActivity() {
                     loadFragment(ShortcutFragment())
                 }
                 R.id.menu_notes -> {
-                    binding.toolbar.title = getString(R.string.notes)
+                    binding.toolbar.title = getString(R.string.notes_tab)
                     toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
                     toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility =
                         View.GONE

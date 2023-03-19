@@ -17,9 +17,9 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:padding="@dimen/_15dp"
-            android:text="@string/notes_only"
+            android:text="@string/anticipated_costs"
             android:textColor="@color/black"
-            android:textSize="@dimen/_21sp"
+            android:textSize="@dimen/_16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -29,8 +29,9 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:padding="@dimen/_15dp"
-            android:text="@string/close"
-            android:textSize="@dimen/_16sp" />
+            android:text="@string/close_btn"
+            android:textColor="@color/black_1"
+            android:textSize="@dimen/_14sp" />
     </RelativeLayout>
 
     <View
@@ -43,7 +44,7 @@
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_55dp"
-        android:paddingVertical="@dimen/_5dp"
+
         android:paddingHorizontal="@dimen/_10dp"
         android:layout_below="@+id/view1"
         android:orientation="horizontal">
@@ -54,6 +55,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:gravity="center"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10dp"
             android:background="@drawable/white_rounded_withboundary"
@@ -64,14 +66,17 @@
             android:text="@string/anticipated_costs" />
 
         <TextView
+            android:id="@+id/actual"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:textColor="@color/black_1"
             android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/anticipated_cost"
             android:layout_marginStart="@dimen/_10dp"
             android:background="@drawable/white_rounded_withboundary"
             android:padding="@dimen/_10dp"
+            android:layout_gravity="center_vertical"
             android:fontFamily="@font/inter_semibold"
             android:text="@string/actual_costs" />
     </LinearLayout>
@@ -82,10 +87,11 @@
         android:background="@color/divider_color" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_anticipated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/_10dp"
+        android:paddingVertical="@dimen/_10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/anticipated_row_item" />
 

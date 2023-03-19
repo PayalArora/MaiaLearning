@@ -425,7 +425,9 @@ interface LoginRepository {
     ): UseCaseResult<Unit>
 
     suspend fun getAnticipatedCosts(
-        id: Array<String>, id: String, infRate: String
+        id: Array<String>,
+        idStudent: String,
+        infRate: String
     ): UseCaseResult<JsonObject>
 }
 

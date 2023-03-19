@@ -44,7 +44,7 @@
                 android:textStyle="bold"
                 android:fontFamily="@font/inter"
                 android:paddingHorizontal="@dimen/_8dp"
-                android:text="@string/survey"
+                android:text="@string/survey_title"
                 android:textSize="18sp" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

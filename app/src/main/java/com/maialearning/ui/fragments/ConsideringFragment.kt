@@ -22,6 +22,7 @@ import com.maialearning.databinding.*
 import com.maialearning.model.*
 import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.*
+import com.maialearning.ui.model.AntiscipatedParser
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
@@ -1309,7 +1310,9 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             popupMenu.setForceShowIcon(true)
         };
-
+        if (filteredArray.get(position).country!= "US") {
+            popupMenu.getMenu().findItem(R.id.anticipated_cost).setVisible(false)
+        }
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
 
             when (item!!.itemId) {
@@ -1319,7 +1322,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
                 R.id.review_coll -> {
                     bottonSheetInfo(position)
                 }
-                R.id.review_coll -> {
+                R.id.anticipated_cost -> {
                     bottonSheetAnticiptedCosts(position)
                 }
             }
@@ -1656,30 +1659,51 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
     }
 
     private fun bottonSheetAnticiptedCosts(position: Int) {
+        var anticipatedModel =  AntiscipatedModel()
+        var actualModel =  AntiscipatedModel()
         val dialog = BottomSheetDialog(requireContext())
         val sheetBinding: AnticipatedBottomSheetBinding =
             AnticipatedBottomSheetBinding.inflate(layoutInflater)
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
+        dialogP = showLoadingDialog(requireContext())
         dialog.show()
         sheetBinding.clearText.setOnClickListener {
             dialog.dismiss()
         }
-        val array: Array<String> =
-            finalArray.get(position).universityNid.toCharArray().map { it.toString() }
-                .toTypedArray()
+        sheetBinding.actual.setOnClickListener {
+            sheetBinding.actual.setTextColor(resources.getColor(R.color.alpha_blue1))
+            sheetBinding.anticipatedCost.setTextColor(resources.getColor(R.color.black_1))
+            sheetBinding.rvAnticipated.adapter = context?.let { it1 -> AntiscipatedAdapter(it1,actualModel) }
+        }
+        sheetBinding.anticipatedCost.setOnClickListener {
+            sheetBinding.anticipatedCost.setTextColor(resources.getColor(R.color.alpha_blue1))
+            sheetBinding.actual.setTextColor(resources.getColor(R.color.black_1))
+            sheetBinding.rvAnticipated.adapter = context?.let { it1 -> AntiscipatedAdapter(it1,anticipatedModel) }
+        }
+
 
         SharedHelper(requireContext()).id?.let {
+            dialogP.show()
             homeModel.getAnticipatedCosts(
-                array,
-                it, finalArray.get(position).college_priority_choice
+                arrayOf(filteredArray.get(position).university_nid),
+                it, "5"
             )
         }
         homeModel.getAnticipatedCostsObserver.observe(requireActivity()) {
+            dialogP.dismiss()
             val json = JSONObject(it.toString())
-            val jsonArray = json.optJSONArray("college_cost_compare")
-            val array: HashMap<String, ArrayList<DynamicKeyValue>>
-//            array.put(jsonArray[0].)
+            var (antiscipatedModel,actual) = AntiscipatedParser(json).parse()
+            anticipatedModel = antiscipatedModel
+            actualModel = actual
+//            antiscipatedModel?.collegeCostCompare?.let {
+//                for (i in it)  {
+//                    i.keyValue = i.keyValue.filter {
+//                        it?.type == type_main
+//                    } as ArrayList<AnticipatedKeyVal?>
+//                }
+//            }
+            sheetBinding.rvAnticipated.adapter = context?.let { it1 -> AntiscipatedAdapter(it1,anticipatedModel) }
         }
 
     }
