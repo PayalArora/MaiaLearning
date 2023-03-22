@@ -19,6 +19,7 @@ import okhttp3.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.http.Field
+import retrofit2.http.Query
 
 
 interface LoginRepository {
@@ -429,6 +430,11 @@ interface LoginRepository {
         idStudent: String,
         infRate: String
     ): UseCaseResult<JsonObject>
+
+    suspend fun geNotes(
+        assignedTo: String
+    ): UseCaseResult<NotesModel>
+  //  , offset:String,  limit:String,  sort_by:String, order_by:String
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -2195,6 +2201,23 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         return try {
             val result = catApi.completeSurvey(
                 url, "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, body
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun geNotes(
+       assignedTo:String
+    ): UseCaseResult<NotesModel> {
+        val url = "${ML_URL}v1/notes"
+        return try {
+            val result = catApi.getNotes(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                assignedTo, "0", "100", "created", "DESC"
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

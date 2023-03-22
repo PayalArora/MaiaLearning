@@ -128,7 +128,7 @@ class HomeViewModel(private val catRepository: LoginRepository) : ViewModel(), C
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getNotes(id)
+                catRepository.geNotes(id)
             }
             showLoading.value = false
             when (result) {

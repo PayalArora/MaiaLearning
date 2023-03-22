@@ -8,28 +8,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.maialearning.R
-import com.maialearning.calbacks.OnItemClick
 import com.maialearning.calbacks.OnItemClickType
 import com.maialearning.databinding.CommentsSheetBinding
-import com.maialearning.databinding.ConsideringLayoutBinding
-import com.maialearning.databinding.FragmentDashboardBinding
 import com.maialearning.databinding.LayoutRecyclerviewBinding
-import com.maialearning.model.ConsiderModel
 import com.maialearning.model.NotesModel
 import com.maialearning.ui.activity.NotesDetailActivity
 import com.maialearning.ui.adapter.CommentAdapter
-import com.maialearning.ui.adapter.ConsiderAdapter
 import com.maialearning.ui.adapter.NotesAdapter
 import com.maialearning.util.DESCRIPTION
 import com.maialearning.util.TITLE
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.HomeViewModel
-import org.json.JSONArray
-import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NotesFragment : Fragment(), OnItemClickType {
@@ -57,7 +49,7 @@ class NotesFragment : Fragment(), OnItemClickType {
         dialogP = showLoadingDialog(requireContext())
         dialogP.show()
         SharedHelper(requireContext()).id?.let {
-            val userid = SharedHelper(requireContext()).id!!
+            val userid = SharedHelper(requireContext()).uuid!!
             homeModel.getNotes(userid)
         }
 
@@ -69,10 +61,7 @@ class NotesFragment : Fragment(), OnItemClickType {
             it?.let {
                 dialogP?.dismiss()
                 notesModel = it
-
-                mBinding.recyclerList.adapter =NotesAdapter(this,it)
-
-
+                it.data?.let {mBinding.recyclerList.adapter =NotesAdapter(this,it)  }
             }
         }
     }
@@ -87,9 +76,10 @@ class NotesFragment : Fragment(), OnItemClickType {
         }
         else if (type == "root"){
             var intent = Intent(requireActivity(), NotesDetailActivity::class.java)
-            intent.putExtra(TITLE, notesModel?.get(positiion)?.noteTitle)
-            intent.putExtra(DESCRIPTION, notesModel?.get(positiion)?.noteDescription )
-            intent.putExtra("DATA",notesModel?.get(positiion))
+            intent.putExtra(TITLE, notesModel?.data?.get(positiion)?.title)
+            intent.putExtra(DESCRIPTION, notesModel?.data?.get(positiion)?.description )
+            notesModel?.data?.get(positiion)?.let {  intent.putExtra("DATA",it)}
+
             startActivity(intent)
         }
     }
