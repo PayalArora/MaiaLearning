@@ -5,5 +5,5 @@ data class AntiscipatedModel(
     var nid: String? = null,
     var collegeCostCompare: List<CollegeCostCompareItem>? = null
 ){
-    data class CollegeCostCompareItem(var key:String, var keyValue: ArrayList<AnticipatedKeyVal?>)
+    data class CollegeCostCompareItem(var key:String,var value:String, var keyValue: ArrayList<AnticipatedKeyVal?>)
 }

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -1313,6 +1314,7 @@ class ConsideringFragment : Fragment(), OnItemClickOption, OnItemClick, ClickOpt
         if (filteredArray.get(position).country!= "US") {
             popupMenu.getMenu().findItem(R.id.anticipated_cost).setVisible(false)
         }
+        popupMenu.getMenu().findItem(R.id.del_coll).title = Html.fromHtml("<font color='#E94235'>Delete College</font>")
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
 
             when (item!!.itemId) {

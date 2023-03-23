@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     >
-    <item
-        android:id="@+id/del_coll"
-        android:iconTint="@color/black_4"
-        android:icon="@drawable/ic_baseline_delete_24"
-        android:title="@string/delete_coll" />
+
     <item
         android:id="@+id/anticipated_cost"
         android:iconTint="@color/black_4"
-        android:icon="@drawable/info_icon"
         android:title="@string/anticipated_costs" />
     <item
         android:id="@+id/review_coll"
         android:iconTint="@color/black_4"
-        android:icon="@drawable/info_icon"
         android:title="@string/personal_review" />
+    <item
+        android:id="@+id/del_coll"
+        android:iconTint="@color/black_4"
+        android:title="@string/delete_coll">
+       </item>
     </menu>

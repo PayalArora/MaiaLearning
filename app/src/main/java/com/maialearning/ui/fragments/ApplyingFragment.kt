@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -24,6 +25,7 @@ import com.maialearning.calbacks.OnItemClick
 import com.maialearning.databinding.*
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.*
+import com.maialearning.ui.model.AntiscipatedParser
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.HomeViewModel
@@ -1673,6 +1675,10 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             popupMenu.setForceShowIcon(true)
         };
+        if (finalArray.get(position).country!= "US") {
+            popupMenu.getMenu().findItem(R.id.anticipated_cost).setVisible(false)
+        }
+        popupMenu.getMenu().findItem(R.id.del_coll).title = Html.fromHtml("<font color='#E94235'>Delete College</font>")
 
         popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item: MenuItem? ->
 
@@ -1683,13 +1689,64 @@ class ApplyingFragment(val tabs: TabLayout) : Fragment(), OnItemClickOption, OnI
                 R.id.review_coll -> {
                     bottonSheetInfo(position)
                 }
+                R.id.anticipated_cost -> {
+                    bottonSheetAnticiptedCosts(position)
+                }
             }
 
             true
 
         })
     }
+    private fun bottonSheetAnticiptedCosts(position: Int) {
+        var anticipatedModel =  AntiscipatedModel()
+        var actualModel =  AntiscipatedModel()
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetBinding: AnticipatedBottomSheetBinding =
+            AnticipatedBottomSheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        dialogP = showLoadingDialog(requireContext())
+        dialog.show()
+        sheetBinding.clearText.setOnClickListener {
+            dialog.dismiss()
+        }
+        sheetBinding.actual.setOnClickListener {
+            sheetBinding.actual.setTextColor(resources.getColor(R.color.alpha_blue1))
+            sheetBinding.anticipatedCost.setTextColor(resources.getColor(R.color.black_1))
+            sheetBinding.rvAnticipated.adapter = context?.let { it1 -> AntiscipatedAdapter(it1,actualModel) }
+        }
+        sheetBinding.anticipatedCost.setOnClickListener {
+            sheetBinding.anticipatedCost.setTextColor(resources.getColor(R.color.alpha_blue1))
+            sheetBinding.actual.setTextColor(resources.getColor(R.color.black_1))
+            sheetBinding.rvAnticipated.adapter = context?.let { it1 -> AntiscipatedAdapter(it1,anticipatedModel) }
+        }
 
+
+        SharedHelper(requireContext()).id?.let {
+            dialogP.show()
+            homeModel.getAnticipatedCosts(
+                arrayOf(finalArray.get(position).university_nid),
+                it, "5"
+            )
+        }
+        homeModel.getAnticipatedCostsObserver.observe(requireActivity()) {
+            dialogP.dismiss()
+            val json = JSONObject(it.toString())
+            var (antiscipatedModel,actual) = AntiscipatedParser(json).parse()
+            anticipatedModel = antiscipatedModel
+            actualModel = actual
+//            antiscipatedModel?.collegeCostCompare?.let {
+//                for (i in it)  {
+//                    i.keyValue = i.keyValue.filter {
+//                        it?.type == type_main
+//                    } as ArrayList<AnticipatedKeyVal?>
+//                }
+//            }
+            sheetBinding.rvAnticipated.adapter = context?.let { it1 -> AntiscipatedAdapter(it1,anticipatedModel) }
+        }
+
+    }
     private fun confirmPopup(position: Int) {
         AlertDialog.Builder(requireContext())
             .setIcon(android.R.drawable.ic_dialog_alert)

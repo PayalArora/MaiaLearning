@@ -23,6 +23,7 @@ class AntiscipatedParser(val json: JSONObject) {
                 val arractual = arrayListOf<AntiscipatedModel.CollegeCostCompareItem>()
                 while (x.hasNext()){
                     val key: String = x.next()
+                    var value = ""
                     if (key != "name" && key != "nid" && key!="iped_id"){
                         val yobj =  obj.optJSONObject(key)
                         val subKey = yobj?.keys() as Iterator<String>
@@ -35,7 +36,31 @@ class AntiscipatedParser(val json: JSONObject) {
                                 var type:Int = 0
                                 var unit:String = ""
 
+                                when(key){
+                                    "admission"->{
+                                        value = "Admission"
+                                    }
+                                    "cost"->{
+                                        value = "Costs"
+                                    }
+                                    "anticipated_college_funding"->{
+                                        value = "Anticipated College Funding"
+                                    }
+                                    "financial_aid_statistics"->{
+                                        value = "Financial Aid Statistics"
+                                    }
+                                    "projection"->{
+                                        value = "Projection"
+                                    }
+                                    "financial_aid_package"->{
+                                        value = "Financial Aid Package Details"
+                                    }
+                                    "college_funding"->{
+                                        value = "College Funding"
+                                    }
+                                }
                                 if (key == "admission" || key == "cost"||  key == "anticipated_college_funding"||key == "financial_aid_statistics"||key == "projection"|| key == "financial_aid_package") {
+
                                     when (subkey) {
                                         "no_of_applicants" -> {
                                             keyDisplay = "Number of Applicants"
@@ -438,12 +463,12 @@ class AntiscipatedParser(val json: JSONObject) {
                         }
                         if (arrDynamic.size>0) {
                             val collgCompar =
-                                AntiscipatedModel.CollegeCostCompareItem(key, arrDynamic)
+                                AntiscipatedModel.CollegeCostCompareItem(key, value , arrDynamic)
                             arr.add(collgCompar)
                         }
                         if (arrDynamicActual.size>0) {
                             val collgComparActual =
-                                AntiscipatedModel.CollegeCostCompareItem(key, arrDynamicActual)
+                                AntiscipatedModel.CollegeCostCompareItem(key,value , arrDynamicActual)
                             arractual.add(collgComparActual)
                         }
                     }

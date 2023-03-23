@@ -36,7 +36,7 @@ class AntiscipatedAdapter(var context: Context, val model: AntiscipatedModel) :
         val item = model.collegeCostCompare?.get(position)
         viewHolder.binding.apply {
             college.setText(model.name?.capitalize())
-            title.setText(item?.key?.capitalize()?:"")
+            title.setText(item?.value?.capitalize()?:"")
             subList.adapter= item?.keyValue?.let { AntiscipatedSubAdapter(context, it) }
         }
 
