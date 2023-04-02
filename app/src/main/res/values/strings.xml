@@ -663,12 +663,9 @@
     </string-array>
 
     <string-array name="SEARCH_ARRAY">
-        <item>Keyword</item>
-        <item>Bright Outlook</item>
-        <item>Career Clusters</item>
-        <item>Industry</item>
-        <item>Work Values</item>
-        <item>U.S. Military</item>
+        <item>Search by Keyword</item>
+        <item>Search by Pathway</item>
+        <item>Search by Category</item>
     </string-array>
 
     <string-array name="OUT_ARRAY">
@@ -760,6 +757,7 @@
     <string name="mid_nov">Plan to by mid-November?</string>
     <string name="anticipated_costs">Anticipated Costs</string>
     <string name="actual_costs">Actual Costs</string>
+    <string name="search_cat">Search By Category</string>
 
 
 </resources>

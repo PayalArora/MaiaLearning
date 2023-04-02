@@ -799,6 +799,15 @@ interface AllAPi {
         @Field("note") note: String
     ): Deferred<Unit>
 
+    @POST("add-fav-career")
+    @FormUrlEncoded
+    fun addFavCareer(
+        @Header("Authorization") Authorization: String,
+        @Field("code") code: String,
+        @Field("student_uid") student_uid: String,
+        @Field("title") title: String,
+    ): Deferred<JsonObject>
+
     @GET("file//{id}")
     fun downloadAttachment(
         @Header("Authorization") Authorization: String,
@@ -824,11 +833,25 @@ fun getAnticipatedCosts(
     @Field("inflation_rate") inf_rate:String
 ): Deferred<JsonObject>
 
-  //  https://ml-api-staging.maialearning.com/v1/notes?assigned_to=7f4dbf5c-e62e-4992-8539-a22bcfdec542&offset=0&limit=100&sort_by=changed&order_by=DESC
-  @GET
+@GET
   fun getNotes( @Url url: String,
                     @Header("Authorization") Authorization: String ,  @Query("assigned_to") assigned_to:String,@Query("offset") offset:String, @Query("limit") limit:String,  @Query("sort_by") sort_by:String,@Query("order_by") order_by:String ):Deferred<NotesModel>
+    suspend fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String
+    )
+@GET
+  fun getCareerSearch( @Url url: String,
+                    @Header("Authorization") Authorization: String ,  @Query("searchBy") searchBy:String,@Query("searchValue") searchValue:String,@Query("offset") offset:String, @Query("limit") limit:String , @Query("regionLevel") regionLevel:String?, @Query("regionCode")regionCode:String?):Deferred<ArrayList<CareerSearchResponseItem>>
+
+@GET
+fun getCareerCategories(@Url url: String,
+                  @Header("Authorization") Authorization: String ):Deferred<ArrayList<CareerCategoryResponseItem>>
+
+@GET
+fun getCareerPathways(@Url url: String,
+                  @Header("Authorization") Authorization: String ):Deferred<ArrayList<CareerCategoryResponseItem>>
 
 }
 
+
+//https://api-gw-staging.maialearning.com/careers/search?searchBy=category&searchValue=1&offset=0&limit=30
 

@@ -424,8 +424,12 @@ interface LoginRepository {
     suspend fun saveTopPickNote(
         id: String, note: String
     ): UseCaseResult<Unit>
-
-    suspend fun getAnticipatedCosts(
+    suspend fun addFavCareer(
+        code: String,
+        student_uid: String,
+        title: String
+    ): UseCaseResult<JsonObject>
+        suspend fun getAnticipatedCosts(
         id: Array<String>,
         idStudent: String,
         infRate: String
@@ -434,7 +438,14 @@ interface LoginRepository {
     suspend fun geNotes(
         assignedTo: String
     ): UseCaseResult<NotesModel>
-  //  , offset:String,  limit:String,  sort_by:String, order_by:String
+
+    suspend fun getCareerCategories(
+    ): UseCaseResult<ArrayList<CareerCategoryResponseItem>>
+    suspend fun getCareerPathways(
+    ): UseCaseResult<ArrayList<CareerCategoryResponseItem>>
+
+    suspend fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String
+    ): UseCaseResult<ArrayList<CareerSearchResponseItem>>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -2147,6 +2158,22 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
+    override suspend fun addFavCareer(code: String,
+                                   student_uid: String,
+                                     title: String): UseCaseResult<JsonObject> {
+        return try {
+            val result = catApi.addFavCareer(
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
+                code, student_uid,title
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
     override suspend fun getAnticipatedCosts(
         id: Array<String>,
         idStudent: String,
@@ -2218,6 +2245,51 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             val result = catApi.getNotes(url,
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,
                 assignedTo, "0", "100", "created", "DESC"
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerCategories(
+    ): UseCaseResult<ArrayList<CareerCategoryResponseItem>> {
+        val url = "${CAREER}careers/search/filters/categories"
+        return try {
+            val result = catApi.getCareerCategories(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerPathways(
+    ): UseCaseResult<ArrayList<CareerCategoryResponseItem>> {
+        val url = "${CAREER}careers/search/filters/pathways"
+        return try {
+            val result = catApi.getCareerPathways(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String
+    ): UseCaseResult<ArrayList<CareerSearchResponseItem>> {
+        val url = "${CAREER}careers/search"
+        return try {
+            val result = catApi.getCareerSearch(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, searchBy, searchValue,offset,limit, null, null
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {

@@ -51,7 +51,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
         get() = ("[{\"key\":\"1\",\"name\":\"ARMY\"}" + ",{\"key\":\"2\",\"name\":\"MARINE_CORPS\"}" + ",{\"key\":\"3\",\"name\":\"AIR_FORCE\"}" + ",{\"key\":\"4\",\"name\":\"NAVY\"}" + ",{\"key\":\"5\",\"name\":\"COAST_GUArD\"}]")
     private lateinit var tableLayout: TabLayout
     private var adapType:Int = 1
-
+    var arrayTopPick: ArrayList<RelatedCareerModel> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +67,10 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
         mBinding = SearchCareerLayBinding.inflate(inflater, container, false)
         tableLayout = requireActivity().findViewById<TabLayout>(R.id.tabs)
+        progress.show()
+        SharedHelper(requireContext()).id?.let {
+            careerViewModel.getStudentTopPick(it)
+        }
         return mBinding.root
 
     }
@@ -100,7 +104,13 @@ class SearchCareerFragment(var type: String) : Fragment() {
         mBinding.text2.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 progress.show()
-                careerViewModel.getKeyboardSearch(mBinding.text2.text.toString().getURLSearch())
+                careerViewModel.getCareerSearch(
+                    "keyword",
+                    mBinding.text2.text.toString(),
+                    "0",
+                    "30"
+                )
+              //  careerViewModel.getKeyboardSearch(mBinding.text2.text.toString().getURLSearch())
                 return@OnEditorActionListener true
             }
             false
@@ -130,22 +140,19 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 id: Long
             ) {
                 val selectedItem = parent.getItemAtPosition(position).toString()
-                if (selectedItem == "Bright Outlook") {
-                    setOutlookSpinner()
-                } else if (selectedItem == "Career Clusters") {
-                    mBinding.workLayout.visibility = View.GONE
-                    mBinding.spinnerLay1.visibility = View.VISIBLE
+                mBinding.outSpinner.visibility = View.VISIBLE
+                mBinding.text2.visibility= View.GONE
+                if (selectedItem == "Search by Category") {
                     progress.show()
-                    careerViewModel.getCareerCluster(CAREER_AFFINITY)
-                } else if (selectedItem == "Industry") {
-                    setIndustrySpinner()
-                } else if (selectedItem == "Work Values") {
-                    setWorkSpinner()
-                } else if (selectedItem == "U.S. Military") {
-                    mBinding.workLayout.visibility = View.GONE
-                    mBinding.spinnerLay1.visibility = View.VISIBLE
-                    mBinding.outSpinner.visibility = View.VISIBLE
-                    setUsSpinner()
+                    careerViewModel.getCareerCategories()
+                } else if(selectedItem == "Search by Pathway"){
+                    progress.show()
+                    careerViewModel.getCareerPathways()
+                }else if(selectedItem == "Search by Keyword"){
+                    mBinding.outSpinner.visibility = View.GONE
+                    mBinding.text2.visibility= View.VISIBLE
+                   // progress.show()
+                    //careerViewModel.getCareerPathways()
                 }
             } // to close the onItemSelected
 
@@ -386,12 +393,110 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
 
     }
+    private fun setCategorySpinner(resp:ArrayList<CareerCategoryResponseItem>, type:String) {
+        mBinding.workLayout.visibility = View.GONE
+        mBinding.text2.visibility = View.GONE
+        mBinding.spinnerLay1.visibility = View.VISIBLE
+        mBinding.outSpinner.visibility = View.VISIBLE
 
+        val adapter =  CategoriesAdapter(requireContext(), resp, ::clickCategoryItem)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        mBinding.outSpinner.setAdapter(
+            NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.nothing_adapter_category,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                requireContext()
+            )
+        )
+
+      //  mBinding.outSpinner.setSelection(0)
+        mBinding.outSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (position>0) {
+                    progress.show()
+                    careerViewModel.getCareerSearch(
+                        type,
+                        resp.get(position - 1).id.toString(),
+                        "0",
+                        "30"
+                    )
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+
+    }
     var arrayList: ArrayList<CareerTopPickResponseItem?>? = arrayListOf()
     var arrayListOut: ArrayList<BrightOutlookModel.Data?>? = arrayListOf()
     var arrayListUs: ArrayList<CareerUSModel.Data?>? = arrayListOf()
 
     private fun initObserver() {
+        careerViewModel.unlikeObserver.observe(viewLifecycleOwner){
+            progress.dismiss()
+            SharedHelper(requireContext()).id?.let {
+                careerViewModel.getStudentTopPick(it)
+            }
+        }
+        careerViewModel.addFavObserver.observe(viewLifecycleOwner){
+            progress.dismiss()
+            SharedHelper(requireContext()).id?.let {
+                careerViewModel.getStudentTopPick(it)
+            }
+        }
+        careerViewModel.topPickObserver.observe(viewLifecycleOwner) {
+            progress.dismiss()
+            arrayTopPick = arrayListOf()
+            if (it != null) {
+                for (i in it) {
+                    val toppick = gson.fromJson(i, RelatedCareerModel::class.java)
+                    arrayTopPick.add(toppick)
+                }
+
+            }
+        }
+        careerViewModel.getCareerCategoryObserver.observe(viewLifecycleOwner){
+            progress.dismiss()
+            setCategorySpinner(it, "category")
+        }
+
+        careerViewModel.getCareerPathwayObserver.observe(viewLifecycleOwner){
+            progress.dismiss()
+            setCategorySpinner(it, "pathway")
+        }
+        careerViewModel.getCareerSearchObserver.observe(viewLifecycleOwner){
+            progress.dismiss()
+            if (it.size > 0) {
+                mBinding.list.visibility = View.VISIBLE
+                mBinding.searchLay.visibility = View.GONE
+                for (item in arrayTopPick) {
+                    for ( i in it) {
+                        if (item.code ==i.onetId){
+                            i.isfav = true
+                            i.nid = item.nid
+                        }
+                    }
+                }
+                mBinding.listProgram.adapter =
+                    SearchCareerAdapter(requireContext(), it, ::clickCategorySearchLike)
+                mBinding.listProgram.scrollToPosition(0)
+            } else {
+                mBinding.list.visibility = View.GONE
+                mBinding.searchLay.visibility = View.VISIBLE
+                context?.showToast(getString(R.string.no_data_found))
+            }
+
+            //setCategorySpinner(it)
+        }
         careerViewModel.careerUsObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             if (it.data.size > 0) {
@@ -729,4 +834,30 @@ class SearchCareerFragment(var type: String) : Fragment() {
             }
         })
     }
+    fun clickCategorySearchLike(code: String?,
+                                title: String?, type: Boolean?) {
+        SharedHelper(requireContext()).id?.let {
+            code?.let { it1 ->
+                if (title != null) {
+                    progress.show()
+                    if (type == true){
+                    careerViewModel.addFavCareer(it1,it, title )
+                    }
+                    else{
+                        val deleteContent = DeleteContent()
+                        deleteContent.nid = code
+                        careerViewModel.unLikeWork(deleteContent)
+                    }
+                }
+            }
+        }
+
+
+    }
+}
+
+
+
+fun clickCategoryItem(careerCategoryResponseItem: CareerCategoryResponseItem) {
+
 }

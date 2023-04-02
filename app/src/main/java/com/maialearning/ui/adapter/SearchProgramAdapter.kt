@@ -21,7 +21,6 @@ class SearchProgramAdapter(
 ) : RecyclerView.Adapter<SearchProgramAdapter.ViewHolder>() {
     var isSelected = false
     var count = 0
-    var selectedPostion = -1
 
     /**
      * Provide a reference to the type of views that you are using

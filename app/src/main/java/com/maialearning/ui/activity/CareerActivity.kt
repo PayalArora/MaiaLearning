@@ -100,7 +100,7 @@ class CareerActivity : Fragment() {
         val adapter = CareerStateAdapter(fm, lifecycle, tabArray.size)
 
         binding.viewPager.adapter = adapter
-
+       binding.viewPager.setUserInputEnabled(false);
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.setText(tabArray[position])
         }.attach()

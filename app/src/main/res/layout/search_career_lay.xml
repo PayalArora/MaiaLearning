@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40dp"
                         android:dropDownVerticalOffset="20dp"
-                        android:fontFamily="@font/inter_regular"
+                        android:fontFamily="@font/inter"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
                         android:theme="@style/MatchSpinnerTheme" />
@@ -69,9 +69,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/white_rounded_withboundary"
-                        android:drawableEnd="@drawable/drop_arrow"
                         android:drawableTint="@color/black_1"
-                        android:hint="By keyword"
+                        android:hint="@string/search"
                         android:padding="@dimen/_10dp"
                         android:visibility="gone"
                         app:layout_constraintEnd_toStartOf="@id/text2"
@@ -82,26 +81,27 @@
                         android:id="@+id/outSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40dp"
-                        android:layout_marginStart="@dimen/_10dp"
+                        android:layout_marginStart="@dimen/_5dp"
                         android:dropDownVerticalOffset="20dp"
                         android:fontFamily="@font/inter_regular"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
                         android:theme="@style/MatchSpinnerTheme"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/spinner_lay"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <EditText
                         android:id="@+id/text2"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="@dimen/_40dp"
                         android:layout_marginStart="@dimen/_10dp"
-                        android:background="@drawable/white_rounded_withboundary"
+                        android:background="@null"
                         android:drawableStart="@drawable/ic_baseline_search_24"
                         android:drawableTint="@color/black_1"
                         android:hint="Search"
+                        android:textSize="@dimen/_12sp"
                         android:imeOptions="actionSearch"
                         android:padding="@dimen/_10dp"
                         android:singleLine="true"
@@ -246,7 +246,7 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/text"
@@ -271,9 +271,11 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text"
-                tools:listitem="@layout/search_career_adapter" />
+                app:layout_constraintVertical_bias="1.0"
+                tools:listitem="@layout/search_career_item" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

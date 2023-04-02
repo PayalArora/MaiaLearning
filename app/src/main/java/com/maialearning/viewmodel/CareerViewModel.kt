@@ -39,6 +39,12 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val studentCareerPlanObserver = MutableLiveData<JsonObject>()
     val careerComparisonsObserver = MutableLiveData<JsonObject>()
     val getVideoCodeObserver = MutableLiveData<JsonObject>()
+    val getCareerCategoryObserver = MutableLiveData<ArrayList<CareerCategoryResponseItem>>()
+    val getCareerPathwayObserver = MutableLiveData<ArrayList<CareerCategoryResponseItem>>()
+    val getCareerSearchObserver = MutableLiveData<ArrayList<CareerSearchResponseItem>>()
+    val topPickObserver = MutableLiveData<JsonArray?>()
+    val addFavObserver = MutableLiveData<JsonObject?>()
+    val unlikeObserver = MutableLiveData<JsonObject>()
 
     fun getKeyboardSearch(id: String) {
         showLoading.value = true
@@ -280,6 +286,102 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             when (result) {
                 is UseCaseResult.Success -> getVideoCodeObserver.value = result.data
                 is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
+
+    fun getCareerCategories() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerCategories()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getCareerCategoryObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
+
+ fun getCareerPathways() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerPathways()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getCareerPathwayObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
+
+    fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerSearch(searchBy, searchValue, offset,limit)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getCareerSearchObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
+    fun getStudentTopPick(id: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getStudentTopPick(id)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> topPickObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+
+    fun addFavCareer( code: String,
+                      student_uid: String,
+                      title: String) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.addFavCareer(code, student_uid, title)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> addFavObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+    fun unLikeWork(content: DeleteContent) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.unlikeRelatedCareer(content)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> unlikeObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
 
             }
         }

@@ -37,8 +37,10 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.UnsupportedEncodingException
+import java.math.RoundingMode
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -68,6 +70,7 @@ const val SEARCH_CLIENT = "&client=serviceinfinity"
 const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/career_search_onet"
 const val US_SEARCH= "get_military_careers_data?pager=1&service="
 var COLLEGE_JSON = "https://api-gw-staging.maialearning.com/college-json-filter"
+var CAREER = "https://api-gw-staging.maialearning.com/"
 val   CommonApp = "3"
 object URL{
     var BASEURL = 0
@@ -503,6 +506,14 @@ fun String.toCapitalSpace():String {
         }
     return newStr
 }
+
+fun Double.roundOffDecimal(): Double? {
+//    val df = DecimalFormat("#.##")
+//    df.roundingMode = RoundingMode.CEILING
+    val rounded = this.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+    return rounded
+}
+
  fun TextView.showDatePicker(con: Context,  deadlineClick: (date:String) -> Unit) {
 
     val date =
