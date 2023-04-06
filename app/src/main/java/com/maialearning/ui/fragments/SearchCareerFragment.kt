@@ -1,7 +1,9 @@
 package com.maialearning.ui.fragments
 
 import android.app.Dialog
+import android.content.res.Resources
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,7 +24,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.maialearning.R
+import com.maialearning.databinding.DateFilterBinding
 import com.maialearning.databinding.SearchCareerLayBinding
+import com.maialearning.databinding.SearchDetailBinding
 import com.maialearning.model.*
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.*
@@ -48,7 +52,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 ",{\"id\":\"42\",\"name\":\"Wholesale Trade\"}]")
 
     private val usData: String
-        get() = ("[{\"key\":\"1\",\"name\":\"ARMY\"}" + ",{\"key\":\"2\",\"name\":\"MARINE_CORPS\"}" + ",{\"key\":\"3\",\"name\":\"AIR_FORCE\"}" + ",{\"key\":\"4\",\"name\":\"NAVY\"}" + ",{\"key\":\"5\",\"name\":\"COAST_GUArD\"}]")
+        get() = ("[{\"key\":\"1\",\"name\":\"Army\"}" + ",{\"key\":\"2\",\"name\":\"Marine Corps\"}" + ",{\"key\":\"3\",\"name\":\"Air Force\"}" + ",{\"key\":\"4\",\"name\":\"Navy\"}" + ",{\"key\":\"5\",\"name\":\"Coast Guard\"}]")
     private lateinit var tableLayout: TabLayout
     private var adapType:Int = 1
     var arrayTopPick: ArrayList<RelatedCareerModel> = arrayListOf()
@@ -153,6 +157,13 @@ class SearchCareerFragment(var type: String) : Fragment() {
                     mBinding.text2.visibility= View.VISIBLE
                    // progress.show()
                     //careerViewModel.getCareerPathways()
+                }else if (selectedItem == "Search by U.S. Military") {
+                    mBinding.workLayout.visibility = View.VISIBLE
+                    mBinding.three.visibility = View.GONE
+                    mBinding.two.visibility = View.INVISIBLE
+                    mBinding.spinnerLay1.visibility = View.VISIBLE
+                    mBinding.outSpinner.visibility = View.VISIBLE
+                    setUsSpinner()
                 }
             } // to close the onItemSelected
 
@@ -168,15 +179,23 @@ class SearchCareerFragment(var type: String) : Fragment() {
             val user = IndustryModel(obj.getInt("key"), obj.getString("name"))
             list.add(user)
         }
-        mBinding.text2.visibility = View.GONE
         mBinding.outSpinner.visibility = View.VISIBLE
         val adapter = IndustryClusterAdapter(requireContext(), list, ::clickUSItem)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        mBinding.outSpinner.setAdapter(
+            NothingSelectedSpinnerAdapter(
+                adapter,
+                R.layout.nothing_adapter_us_military,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+                requireContext()
+            )
+        )
 //        val adapter = ArrayAdapter(
 //            requireContext(),
 //            R.layout.spinner_text, list
 //        )
-        mBinding.outSpinner.adapter = adapter
-        mBinding.outSpinner.setSelection(0)
+       // mBinding.outSpinner.adapter = adapter
         mBinding.outSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -185,7 +204,11 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 id: Long
             ) {
                 progress.show()
-                 careerViewModel.getUSSearch(list.get(position).id.toString().getUSIndustry())
+                if (position>0) {
+                    careerViewModel.getUSSearch(list.get(position).id.toString().getUSIndustry("1"))
+                } else{
+                    careerViewModel.getUSSearch("1".getUSIndustryNoService())
+                }
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -487,7 +510,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                     }
                 }
                 mBinding.listProgram.adapter =
-                    SearchCareerAdapter(requireContext(), it, ::clickCategorySearchLike)
+                    SearchCareerAdapter(requireContext(), it, ::clickCategorySearchLike,::itemClick)
                 mBinding.listProgram.scrollToPosition(0)
             } else {
                 mBinding.list.visibility = View.GONE
@@ -668,6 +691,11 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
     }
 
+    private fun itemClick(url: String?, title: String?) {
+        if (url!=null && title!=null)
+     bottomSheetDetail(title,url)
+    }
+
 
     private fun loadFragment(position: Int) {
         if (type != "trafic") {
@@ -700,6 +728,32 @@ class SearchCareerFragment(var type: String) : Fragment() {
 //        dialog?.show()
     }
 
+    private fun bottomSheetDetail(name:String, url:String) {
+
+        val dialog = BottomSheetDialog(requireContext())
+
+        val sheetBinding: SearchDetailBinding = SearchDetailBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialog.setContentView(sheetBinding.root)
+        sheetBinding.name.text = name
+        val mediaController = MediaController(requireContext())
+        mediaController.setAnchorView(sheetBinding.videoView)
+        mediaController.setMediaPlayer(sheetBinding.videoView)
+        sheetBinding.videoView.setVideoURI(Uri.parse(url))
+        sheetBinding.videoView.requestFocus();//give focus to a specific view
+
+        sheetBinding.videoView.start()
+        sheetBinding.videoView.setMediaController(mediaController)
+        dialog.show()
+
+
+         sheetBinding. close.setOnClickListener {
+            dialog?.dismiss()
+        }
+        sheetBinding.saveBtn.setOnClickListener {
+            dialog?.dismiss()
+        }
+    }
     private fun bottomSheetCompareSearch() {
         var onet_code = ArrayList<String>()
         var compareList = ArrayList<BrightOutlookModel.Data>()

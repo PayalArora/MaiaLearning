@@ -17,7 +17,9 @@ class SearchCareerAdapter(
     var context: Context,
     val arrayList: ArrayList<CareerSearchResponseItem>?,
     var likeClick: (code: String?,
-                    title: String?, type:Boolean?) -> Unit
+                    title: String?, type:Boolean?) -> Unit,
+    var itemClick:(url: String?,
+                   title: String?)-> Unit,
 ) : RecyclerView.Adapter<SearchCareerAdapter.ViewHolder>() {
     var isSelected = false
     var count = 0
@@ -75,6 +77,9 @@ class SearchCareerAdapter(
                }
                notifyDataSetChanged()
                }
+           root.setOnClickListener{
+               itemClick(item?.videoUrl,arrayList?.get(position)?.title )
+           }
 
        }
     }
