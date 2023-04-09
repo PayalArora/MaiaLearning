@@ -6,39 +6,28 @@
     android:layout_height="match_parent"
     android:background="@color/white_1">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10dp"
-        android:layout_marginTop="@dimen/_10dp"
-        android:paddingVertical="@dimen/_10dp"
-        app:cardBackgroundColor="@color/blue"
-        app:cardCornerRadius="@dimen/_10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
         <LinearLayout
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="@dimen/_10dp"
+            android:paddingVertical="@dimen/_10dp"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_20dp"
+                android:layout_marginTop="@dimen/_20dp"
                 android:layout_marginStart="@dimen/_10dp"
                 android:layout_marginEnd="@dimen/_10dp">
 
                 <LinearLayout
                     android:id="@+id/spinner_lay"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/white_rounded_withboundary"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/spinner_lay1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -48,7 +37,7 @@
                         android:layout_height="@dimen/_40dp"
                         android:gravity="center_vertical"
                         android:paddingVertical="@dimen/_5dp"
-                        android:paddingHorizontal="@dimen/_10dp"
+                        android:paddingHorizontal="@dimen/_12dp"
                         android:text="@string/search_by_keyword"
 
                         android:textSize="@dimen/_12sp"
@@ -70,14 +59,14 @@
 
                 <LinearLayout
                     android:id="@+id/spinner_lay1"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/_5dp"
+                    android:layout_marginTop="@dimen/_15dp"
                     android:background="@drawable/white_rounded_withboundary"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/spinner_lay"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/spinner_lay">
 
                     <EditText
                         android:id="@+id/text1"
@@ -97,7 +86,6 @@
                         android:id="@+id/outSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40dp"
-                        android:layout_marginStart="@dimen/_5dp"
                         android:dropDownVerticalOffset="20dp"
                         android:fontFamily="@font/inter_regular"
                         android:overlapAnchor="false"
@@ -116,8 +104,9 @@
                         android:singleLine="true"
                         android:ellipsize="end"
                         android:visibility="gone"
+
                         android:paddingVertical="@dimen/_5dp"
-                        android:paddingHorizontal="@dimen/_10dp"
+                        android:paddingHorizontal="@dimen/_12dp"
                         android:text="@string/search_by_keyword"
                         android:textSize="@dimen/_12sp"
                         android:drawablePadding="@dimen/_10dp"
@@ -129,7 +118,7 @@
                         android:id="@+id/text2"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40dp"
-                        android:layout_marginStart="@dimen/_10dp"
+
                         android:background="@null"
                         android:drawableStart="@drawable/ic_baseline_search_24"
                         android:drawableTint="@color/black_1"
@@ -226,7 +215,7 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/search_lay"
@@ -234,7 +223,7 @@
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_view">
+        app:layout_constraintTop_toBottomOf="@id/cardView">
 
         <ImageView
             android:id="@+id/search"
@@ -271,9 +260,9 @@
         android:layout_marginBottom="@dimen/_10dp"
         android:padding="@dimen/_10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/card_view"
-        app:layout_constraintStart_toStartOf="@id/card_view"
-        app:layout_constraintTop_toBottomOf="@id/card_view">
+        app:layout_constraintEnd_toEndOf="@id/cardView"
+        app:layout_constraintStart_toStartOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@id/cardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/list"

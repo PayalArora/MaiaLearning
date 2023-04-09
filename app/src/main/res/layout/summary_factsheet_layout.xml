@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/_10dp"
+    android:background="@color/white_1"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/image">
+                <VideoView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_250dp"
+                    android:scaleType="fitXY"
+                    android:id="@+id/video_view"
+                    android:src="@drawable/video_dummy"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitXY"
+                    android:padding="@dimen/_15dp"
+                    android:id="@+id/play_btn"
+                    android:src="@drawable/polygon"
+                    android:background="@drawable/background_curve_rectangle_white_filled"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/responsibilities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/image">
+
+                <ImageView
+                    android:id="@+id/res"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:src="@drawable/hex_tick"
+                    app:layout_constraintTop_toTopOf="@id/ethc"
+                    app:layout_constraintBottom_toBottomOf="@id/ethc"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:id="@+id/ethc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Responsibilities"
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@id/res"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:id="@+id/ethcview"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/ethc" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressView"
+                    app:layout_constraintTop_toBottomOf="@id/ethcview"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/activities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/responsibilities">
+                <ImageView
+                    android:id="@+id/wres"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:src="@drawable/bag_hex"
+                    app:layout_constraintTop_toTopOf="@id/act"
+                    app:layout_constraintBottom_toBottomOf="@id/act"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/act"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Work Activities"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:textColor="@color/blue_1"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@id/wres"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:id="@+id/actview"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/act" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/actView"
+                    app:layout_constraintTop_toBottomOf="@id/actview"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/knowledge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/activities">
+
+                <ImageView
+                    android:id="@+id/kres"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:src="@drawable/deg_red"
+                    app:layout_constraintTop_toTopOf="@id/know"
+                    app:layout_constraintBottom_toBottomOf="@id/know"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:id="@+id/know"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:text="Education Level"
+                    android:textColor="@color/red_1"
+                    android:textSize="18sp"
+                    android:padding="@dimen/_10dp"
+                    app:layout_constraintStart_toEndOf="@id/kres"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:id="@+id/knowview"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/know" />
+
+                <TextView
+                    android:padding="@dimen/_10dp"
+                    android:id="@+id/know_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_light"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Most Air Traffic Controllers have \n- Some College Courses \n- High School Diploma  \n- Post-Secondary Certificate"
+                    android:textColor="@color/black_1"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/knowview" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/academic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/knowledge">
+
+                <ImageView
+                    android:id="@+id/acres"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:src="@drawable/deg_blue"
+                    app:layout_constraintTop_toTopOf="@id/acde"
+                    app:layout_constraintBottom_toBottomOf="@id/acde"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:id="@+id/acde"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:text="Academic Knowledge"
+                    android:textColor="@color/blue_2"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@id/acres"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:id="@+id/academicview"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/acde" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/acdeView"
+                    app:layout_constraintTop_toBottomOf="@id/academicview"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/growth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/academic">
+
+
+                <TextView
+                    android:id="@+id/growSkil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Salary &amp; Potential \nGrowth"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+
+                    android:layout_marginBottom="@dimen/_30dp"
+                    android:background="@drawable/white_rounded_withboundary"
+                    android:backgroundTint="@color/green_tint"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/dollar"
+                        android:layout_marginBottom="@dimen/_2dp"
+                        android:layout_marginTop="@dimen/_2dp"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
+                        android:layout_marginStart="@dimen/_5dp"
+                        android:gravity="center"
+                        android:padding="@dimen/_2dp"
+                        android:text="$"
+                        android:textSize="@dimen/_12sp"
+                        app:layout_constraintEnd_toStartOf="@id/text2"
+                        android:textColor="@color/green_1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:paddingTop="@dimen/_5dp"
+                        android:paddingBottom="@dimen/_5dp"
+                        android:paddingEnd="@dimen/_5sp"
+                        android:paddingStart="@dimen/_5sp"
+                        android:text="49,860"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textColor="@color/green_1"
+                        android:textSize="@dimen/_12sp"
+                        app:layout_constraintStart_toEndOf="@id/dollar"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/viewSkill"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/growSkil" />
+                <TextView
+                    android:padding="@dimen/_10dp"
+                    android:id="@+id/skil_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_light"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Salary is the payment people receive for doing work. In other words, when you have a job, your salary will be the money you earn. The national median salary is an average salary, based on how much different people earn, for doing the same job across the country."
+                    android:textColor="@color/black_1"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/viewSkill"/>
+                <ImageView
+                    android:id="@+id/skil_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_250dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/map"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/skil_text"
+                    app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:padding="@dimen/_10dp"
+                    android:id="@+id/skil_text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:fontFamily="@font/inter_light"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Depending on the state, this career may have Below Average, Average, or Above Average opportunities. Job opportunity data may not be available for all states."
+                    android:textColor="@color/black_1"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/skil_image"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/skills"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/growth">
+
+                <ImageView
+                    android:id="@+id/sres"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:src="@drawable/doc_file"
+                    app:layout_constraintTop_toTopOf="@id/skil"
+                    app:layout_constraintBottom_toBottomOf="@id/skil"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/skil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Skills"
+                    android:textColor="@color/banner_orange"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@id/sres"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:id="@+id/skillsview"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/skil" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/skillsView"
+                    app:layout_constraintTop_toBottomOf="@id/skillsview"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/interests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/skills">
+
+                <ImageView
+                    android:id="@+id/ires"
+                    android:layout_width="@dimen/_20dp"
+                    android:layout_height="@dimen/_20dp"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:src="@drawable/doc_file"
+                    app:layout_constraintTop_toTopOf="@id/inter"
+                    app:layout_constraintBottom_toBottomOf="@id/inter"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/inter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:fontFamily="@font/inter_bold"
+                    android:lineSpacingExtra="2sp"
+                    android:text="Interests"
+                    android:textColor="@color/blue"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@id/ires"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <View
+                    android:id="@+id/interestsview"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:background="@color/tint"
+                    app:layout_constraintTop_toBottomOf="@id/inter" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/interView"
+                    app:layout_constraintTop_toBottomOf="@id/interestsview"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

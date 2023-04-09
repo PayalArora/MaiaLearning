@@ -29,6 +29,7 @@
                 android:layout_height="@dimen/_30dp"
                 android:layout_gravity="center|top"
                 android:layout_marginEnd="@dimen/_10dp"
+                android:visibility="gone"
 
                 android:checked="false"
                 android:textSize="11sp"

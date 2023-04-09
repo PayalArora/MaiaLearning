@@ -24,21 +24,22 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_21sp" />
 
-    <RelativeLayout
-        android:id="@+id/close"
-        android:layout_width="@dimen/_30dp"
-        android:layout_height="@dimen/_30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/_10dp"
+        <RelativeLayout
+            android:id="@+id/close"
+            android:layout_width="25dp"
+            android:layout_height="26dp"
+            android:visibility="visible"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
 
-        android:background="@drawable/circle_lay">
+            android:background="@drawable/circle_lay">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/cross" />
-    </RelativeLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/cross" />
+        </RelativeLayout>
     </RelativeLayout>
     <View
         android:id="@+id/view"
