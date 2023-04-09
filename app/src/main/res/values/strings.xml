@@ -760,6 +760,8 @@
     <string name="actual_costs">Actual Costs</string>
     <string name="search_cat">Search By Category</string>
     <string name="select_military">Select Military Service</string>
+    <string name="search_by_keyword">Search by Keyword</string>
+    <string name="select_category">Select Category</string>
 
 
 </resources>

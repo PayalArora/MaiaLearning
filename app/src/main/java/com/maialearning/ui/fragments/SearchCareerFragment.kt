@@ -11,12 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -24,7 +26,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.maialearning.R
-import com.maialearning.databinding.DateFilterBinding
+import com.maialearning.databinding.CareerFilterBottomsheetBinding
 import com.maialearning.databinding.SearchCareerLayBinding
 import com.maialearning.databinding.SearchDetailBinding
 import com.maialearning.model.*
@@ -35,10 +37,14 @@ import com.maialearning.viewmodel.CareerViewModel
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SearchCareerFragment(var type: String) : Fragment() {
     var dialog: BottomSheetDialog? = null
+    var dialogCareerFilterBottomsheetBinding:BottomSheetDialog?= null
+    var dialogResultBottomsheetBinding:BottomSheetDialog?= null
     private lateinit var mBinding: SearchCareerLayBinding
     private val careerViewModel: CareerViewModel by viewModel()
     private lateinit var progress: Dialog
@@ -54,8 +60,10 @@ class SearchCareerFragment(var type: String) : Fragment() {
     private val usData: String
         get() = ("[{\"key\":\"1\",\"name\":\"Army\"}" + ",{\"key\":\"2\",\"name\":\"Marine Corps\"}" + ",{\"key\":\"3\",\"name\":\"Air Force\"}" + ",{\"key\":\"4\",\"name\":\"Navy\"}" + ",{\"key\":\"5\",\"name\":\"Coast Guard\"}]")
     private lateinit var tableLayout: TabLayout
-    private var adapType:Int = 1
+    private var adapType: Int = 1
     var arrayTopPick: ArrayList<RelatedCareerModel> = arrayListOf()
+    var type_search:String?= null
+    var response:ArrayList<CareerCategoryResponseItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,12 +90,23 @@ class SearchCareerFragment(var type: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObserver()
+        mBinding.spinner.setOnClickListener {
+            showBottomSheet()
+        }
+        mBinding.outSpinnerText.setOnClickListener {
+            type_search?.let {
+                if (it == "category"){
+                    response?.let { it1 -> showSearchResultBottomSheet(it, it1) }
+                }
+            }
+
+        }
         if (type == "list") {
             mBinding.searchLay.visibility = View.GONE
             mBinding.cardView.visibility = View.GONE
             mBinding.list.visibility = View.VISIBLE
             if (tableLayout.selectedTabPosition == 1)
-            progress.show()
+                progress.show()
             SharedHelper(requireContext()).id?.let { careerViewModel.getCareerList(it) }
         } else if (type == "trafic") {
             mBinding.searchLay.visibility = View.GONE
@@ -99,7 +118,8 @@ class SearchCareerFragment(var type: String) : Fragment() {
             mBinding.searchLay.visibility = View.VISIBLE
             mBinding.cardView.visibility = View.VISIBLE
             mBinding.list.visibility = View.GONE
-            setSearchSpinner()
+         //   setSearchSpinner()
+
         }
         mBinding.searchLay.setOnClickListener {
             mBinding.searchLay.visibility = View.GONE
@@ -114,7 +134,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                     "0",
                     "30"
                 )
-              //  careerViewModel.getKeyboardSearch(mBinding.text2.text.toString().getURLSearch())
+                //  careerViewModel.getKeyboardSearch(mBinding.text2.text.toString().getURLSearch())
                 return@OnEditorActionListener true
             }
             false
@@ -123,53 +143,153 @@ class SearchCareerFragment(var type: String) : Fragment() {
         val fab = activity?.findViewById<RelativeLayout>(R.id.add_fab)
         fab?.setOnClickListener {
             if (adapType == 1)
-            bottomSheetCompareSearch()
+                bottomSheetCompareSearch()
             else
                 bottomSheetCompareList()
         }
     }
 
-    private fun setSearchSpinner() {
-        val adapter = ArrayAdapter(
-            requireContext(),
-            R.layout.spinner_text, resources.getStringArray(R.array.SEARCH_ARRAY)
-        )
-        mBinding.spinner.adapter = adapter
-        mBinding.spinner.setSelection(0)
-        mBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                val selectedItem = parent.getItemAtPosition(position).toString()
-                mBinding.outSpinner.visibility = View.VISIBLE
-                mBinding.text2.visibility= View.GONE
-                if (selectedItem == "Search by Category") {
-                    progress.show()
-                    careerViewModel.getCareerCategories()
-                } else if(selectedItem == "Search by Pathway"){
-                    progress.show()
-                    careerViewModel.getCareerPathways()
-                }else if(selectedItem == "Search by Keyword"){
-                    mBinding.outSpinner.visibility = View.GONE
-                    mBinding.text2.visibility= View.VISIBLE
-                   // progress.show()
-                    //careerViewModel.getCareerPathways()
-                }else if (selectedItem == "Search by U.S. Military") {
-                    mBinding.workLayout.visibility = View.VISIBLE
-                    mBinding.three.visibility = View.GONE
-                    mBinding.two.visibility = View.INVISIBLE
-                    mBinding.spinnerLay1.visibility = View.VISIBLE
-                    mBinding.outSpinner.visibility = View.VISIBLE
-                    setUsSpinner()
-                }
-            } // to close the onItemSelected
+    private fun showBottomSheet() {
+         dialogCareerFilterBottomsheetBinding = BottomSheetDialog(requireContext())
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        val sheetBinding: CareerFilterBottomsheetBinding = CareerFilterBottomsheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialogCareerFilterBottomsheetBinding?.setContentView(sheetBinding.root)
+        dialogCareerFilterBottomsheetBinding?.show()
+        sheetBinding.search.visibility = View.GONE
+
+       sheetBinding. close.setOnClickListener {
+           dialogCareerFilterBottomsheetBinding?.dismiss()
+        }
+
+
+        val adapter = CareerFilterAdapter(
+            requireContext(),
+            resources.getStringArray(R.array.SEARCH_ARRAY), ::clickMainDropdown
+        )
+        var decor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        getDrawable(requireContext(),R.drawable.divider)?.let { decor.setDrawable(it) }
+        sheetBinding.listing.addItemDecoration(decor)
+
+
+        sheetBinding.listing.adapter = adapter
+
+
+    }
+    private fun showSearchResultBottomSheet(type: String, resp: ArrayList<CareerCategoryResponseItem>) {
+        dialogResultBottomsheetBinding = BottomSheetDialog(requireContext())
+
+        val sheetBinding: CareerFilterBottomsheetBinding = CareerFilterBottomsheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialogResultBottomsheetBinding?.setContentView(sheetBinding.root)
+        dialogResultBottomsheetBinding?.show()
+        sheetBinding.search.visibility = View.GONE
+
+        sheetBinding. close.setOnClickListener {
+            dialogResultBottomsheetBinding?.dismiss()
+        }
+
+
+        val adapter = SearchCareerClusterAdapter(
+            requireContext(),
+            resp, ::clickMainDropDownResult
+        )
+        var decor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        getDrawable(requireContext(),R.drawable.divider)?.let { decor.setDrawable(it) }
+        sheetBinding.listing.addItemDecoration(decor)
+
+
+        sheetBinding.listing.adapter = adapter
+
+
+    }
+
+    private fun clickMainDropDownResult(s: String, item:CareerCategoryResponseItem) {
+        dialogResultBottomsheetBinding?.dismiss()
+        mBinding.outSpinnerText.text = item.name
+        progress.show()
+        type_search?.let {
+            careerViewModel.getCareerSearch(
+                it,
+                s,
+                "0",
+                "30"
+            )
         }
     }
+
+    private fun clickMainDropdown(selectedItem: String) {
+        mBinding.outSpinner.visibility = View.GONE
+        mBinding.outSpinnerText.visibility = View.GONE
+            mBinding.text2.visibility = View.GONE
+        dialogCareerFilterBottomsheetBinding?.dismiss()
+        mBinding.spinner.text = selectedItem
+            if (selectedItem == "Search by Category") {
+                mBinding.outSpinnerText.visibility = View.VISIBLE
+                progress.show()
+                careerViewModel.getCareerCategories()
+                mBinding.outSpinnerText.text = getString(R.string.select_category)
+            } else if (selectedItem == "Search by Pathway") {
+                progress.show()
+                careerViewModel.getCareerPathways()
+            } else if (selectedItem == "Search by Keyword") {
+                mBinding.outSpinner.visibility = View.GONE
+                mBinding.outSpinnerText.visibility = View.GONE
+                mBinding.text2.visibility = View.VISIBLE
+                // progress.show()
+                //careerViewModel.getCareerPathways()
+            } else if (selectedItem == "Search by U.S. Military") {
+                mBinding.workLayout.visibility = View.VISIBLE
+                mBinding.three.visibility = View.GONE
+                mBinding.two.visibility = View.INVISIBLE
+                mBinding.spinnerLay1.visibility = View.VISIBLE
+                mBinding.outSpinner.visibility = View.VISIBLE
+                setUsSpinner()
+            }
+ }
+
+
+//private fun setSearchSpinner() {
+//    val adapter = ArrayAdapter(
+//        requireContext(),
+//        R.layout.spinner_text, resources.getStringArray(R.array.SEARCH_ARRAY)
+//    )
+//    mBinding.spinner.adapter = adapter
+//    mBinding.spinner.setSelection(0)
+//    mBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//        override fun onItemSelected(
+//            parent: AdapterView<*>,
+//            view: View?,
+//            position: Int,
+//            id: Long
+//        ) {
+//            val selectedItem = parent.getItemAtPosition(position).toString()
+//            mBinding.outSpinner.visibility = View.VISIBLE
+//            mBinding.text2.visibility = View.GONE
+//            if (selectedItem == "Search by Category") {
+//                progress.show()
+//                careerViewModel.getCareerCategories()
+//            } else if (selectedItem == "Search by Pathway") {
+//                progress.show()
+//                careerViewModel.getCareerPathways()
+//            } else if (selectedItem == "Search by Keyword") {
+//                mBinding.outSpinner.visibility = View.GONE
+//                mBinding.text2.visibility = View.VISIBLE
+//                // progress.show()
+//                //careerViewModel.getCareerPathways()
+//            } else if (selectedItem == "Search by U.S. Military") {
+//                mBinding.workLayout.visibility = View.VISIBLE
+//                mBinding.three.visibility = View.GONE
+//                mBinding.two.visibility = View.INVISIBLE
+//                mBinding.spinnerLay1.visibility = View.VISIBLE
+//                mBinding.outSpinner.visibility = View.VISIBLE
+//                setUsSpinner()
+//            }
+//        } // to close the onItemSelected
+//
+//        override fun onNothingSelected(parent: AdapterView<*>?) {}
+//    }
+//}
 
     private fun setUsSpinner() {
         val list = ArrayList<IndustryModel>()
@@ -195,7 +315,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
 //            requireContext(),
 //            R.layout.spinner_text, list
 //        )
-       // mBinding.outSpinner.adapter = adapter
+        // mBinding.outSpinner.adapter = adapter
         mBinding.outSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -204,9 +324,9 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 id: Long
             ) {
                 progress.show()
-                if (position>0) {
+                if (position > 0) {
                     careerViewModel.getUSSearch(list.get(position).id.toString().getUSIndustry("1"))
-                } else{
+                } else {
                     careerViewModel.getUSSearch("1".getUSIndustryNoService())
                 }
             }
@@ -238,24 +358,24 @@ class SearchCareerFragment(var type: String) : Fragment() {
             ) {
 
                 if (!url.contains("first_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "?first_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "?first_value=" + parent.getItemAtPosition(position).toString()
                 } else if (!url.contains("second_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "&second_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "&second_value=" + parent.getItemAtPosition(position).toString()
                 } else if (!url.contains("third_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "&third_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "&third_value=" + parent.getItemAtPosition(position).toString()
                 } else {
-                    if(parent.selectedItemPosition!=0)
-                    url = url.replace(
-                        url.substring(url.indexOf("first_value="), url.indexOf("&")),
-                        "first_value=" + parent.getItemAtPosition(position).toString()
-                    )
+                    if (parent.selectedItemPosition != 0)
+                        url = url.replace(
+                            url.substring(url.indexOf("first_value="), url.indexOf("&")),
+                            "first_value=" + parent.getItemAtPosition(position).toString()
+                        )
                 }
-                if(parent.selectedItemPosition!=0) {
+                if (parent.selectedItemPosition != 0) {
                     if (!progress.isShowing)
-                    progress.show()
+                        progress.show()
                     careerViewModel.getWorkSearch(url)
                 }
             } // to close the onItemSelected
@@ -270,25 +390,25 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 id: Long
             ) {
                 if (!url.contains("first_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "?first_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "?first_value=" + parent.getItemAtPosition(position).toString()
                 } else if (!url.contains("second_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "&second_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "&second_value=" + parent.getItemAtPosition(position).toString()
                 } else if (!url.contains("third_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "&third_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "&third_value=" + parent.getItemAtPosition(position).toString()
                 } else {
-                    if(parent.selectedItemPosition!=0)
-                    url = url.replace(
-                        url.substring(url.indexOf("second_value="), url.indexOf("&")),
-                        "second_value=" + parent.getItemAtPosition(position).toString()
-                    )
+                    if (parent.selectedItemPosition != 0)
+                        url = url.replace(
+                            url.substring(url.indexOf("second_value="), url.indexOf("&")),
+                            "second_value=" + parent.getItemAtPosition(position).toString()
+                        )
 
                 }
-                if(parent.selectedItemPosition!=0) {
+                if (parent.selectedItemPosition != 0) {
                     if (!progress.isShowing)
-                    progress.show()
+                        progress.show()
                     careerViewModel.getWorkSearch(url)
                 }
             } // to close the onItemSelected
@@ -303,25 +423,25 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 id: Long
             ) {
                 if (!url.contains("first_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "?first_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "?first_value=" + parent.getItemAtPosition(position).toString()
                 } else if (!url.contains("second_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "&second_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "&second_value=" + parent.getItemAtPosition(position).toString()
                 } else if (!url.contains("third_value")) {
-                    if(parent.selectedItemPosition!=0)
-                    url += "&third_value=" + parent.getItemAtPosition(position).toString()
+                    if (parent.selectedItemPosition != 0)
+                        url += "&third_value=" + parent.getItemAtPosition(position).toString()
                 } else {
-                    if(parent.selectedItemPosition!=0)
-                    url = url.replace(
-                        url.substring(url.indexOf("third_value="), url.length),
-                        "third_value=" + parent.getItemAtPosition(position).toString()
-                    )
+                    if (parent.selectedItemPosition != 0)
+                        url = url.replace(
+                            url.substring(url.indexOf("third_value="), url.length),
+                            "third_value=" + parent.getItemAtPosition(position).toString()
+                        )
 
                 }
-                if(parent.selectedItemPosition!=0) {
+                if (parent.selectedItemPosition != 0) {
                     if (!progress.isShowing)
-                    progress.show()
+                        progress.show()
                     careerViewModel.getWorkSearch(url)
                 }
 
@@ -359,8 +479,8 @@ class SearchCareerFragment(var type: String) : Fragment() {
     }
 
     private fun clickUSItem(item: IndustryModel) {
-      //  progress.show()
-       // careerViewModel.getUSSearch(item.id.toString().getUSIndustry())
+        //  progress.show()
+        // careerViewModel.getUSSearch(item.id.toString().getUSIndustry())
     }
 
     private fun clickIndustryItem(item: IndustryModel) {
@@ -416,13 +536,14 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
 
     }
-    private fun setCategorySpinner(resp:ArrayList<CareerCategoryResponseItem>, type:String) {
+
+    private fun setCategorySpinner(resp: ArrayList<CareerCategoryResponseItem>, type: String) {
         mBinding.workLayout.visibility = View.GONE
         mBinding.text2.visibility = View.GONE
         mBinding.spinnerLay1.visibility = View.VISIBLE
         mBinding.outSpinner.visibility = View.VISIBLE
 
-        val adapter =  CategoriesAdapter(requireContext(), resp, ::clickCategoryItem)
+        val adapter = CategoriesAdapter(requireContext(), resp, ::clickCategoryItem)
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
@@ -434,7 +555,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
             )
         )
 
-      //  mBinding.outSpinner.setSelection(0)
+        //  mBinding.outSpinner.setSelection(0)
         mBinding.outSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -442,7 +563,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                if (position>0) {
+                if (position > 0) {
                     progress.show()
                     careerViewModel.getCareerSearch(
                         type,
@@ -459,18 +580,19 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
 
     }
+
     var arrayList: ArrayList<CareerTopPickResponseItem?>? = arrayListOf()
     var arrayListOut: ArrayList<BrightOutlookModel.Data?>? = arrayListOf()
     var arrayListUs: ArrayList<CareerUSModel.Data?>? = arrayListOf()
 
     private fun initObserver() {
-        careerViewModel.unlikeObserver.observe(viewLifecycleOwner){
+        careerViewModel.unlikeObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             SharedHelper(requireContext()).id?.let {
                 careerViewModel.getStudentTopPick(it)
             }
         }
-        careerViewModel.addFavObserver.observe(viewLifecycleOwner){
+        careerViewModel.addFavObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             SharedHelper(requireContext()).id?.let {
                 careerViewModel.getStudentTopPick(it)
@@ -487,30 +609,37 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
             }
         }
-        careerViewModel.getCareerCategoryObserver.observe(viewLifecycleOwner){
+        careerViewModel.getCareerCategoryObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
-            setCategorySpinner(it, "category")
+            //setCategorySpinner(it, "category")
+            response = it
+            type_search = "category"
         }
 
-        careerViewModel.getCareerPathwayObserver.observe(viewLifecycleOwner){
+        careerViewModel.getCareerPathwayObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             setCategorySpinner(it, "pathway")
         }
-        careerViewModel.getCareerSearchObserver.observe(viewLifecycleOwner){
+        careerViewModel.getCareerSearchObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             if (it.size > 0) {
                 mBinding.list.visibility = View.VISIBLE
                 mBinding.searchLay.visibility = View.GONE
                 for (item in arrayTopPick) {
-                    for ( i in it) {
-                        if (item.code ==i.onetId){
+                    for (i in it) {
+                        if (item.code == i.onetId) {
                             i.isfav = true
                             i.nid = item.nid
                         }
                     }
                 }
                 mBinding.listProgram.adapter =
-                    SearchCareerAdapter(requireContext(), it, ::clickCategorySearchLike,::itemClick)
+                    SearchCareerAdapter(
+                        requireContext(),
+                        it,
+                        ::clickCategorySearchLike,
+                        ::itemClick
+                    )
                 mBinding.listProgram.scrollToPosition(0)
             } else {
                 mBinding.list.visibility = View.GONE
@@ -692,8 +821,8 @@ class SearchCareerFragment(var type: String) : Fragment() {
     }
 
     private fun itemClick(url: String?, title: String?) {
-        if (url!=null && title!=null)
-     bottomSheetDetail(title,url)
+        if (url != null && title != null)
+            bottomSheetDetail(title, url)
     }
 
 
@@ -728,7 +857,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
 //        dialog?.show()
     }
 
-    private fun bottomSheetDetail(name:String, url:String) {
+    private fun bottomSheetDetail(name: String, url: String) {
 
         val dialog = BottomSheetDialog(requireContext())
 
@@ -747,13 +876,14 @@ class SearchCareerFragment(var type: String) : Fragment() {
         dialog.show()
 
 
-         sheetBinding. close.setOnClickListener {
+        sheetBinding.close.setOnClickListener {
             dialog?.dismiss()
         }
         sheetBinding.saveBtn.setOnClickListener {
             dialog?.dismiss()
         }
     }
+
     private fun bottomSheetCompareSearch() {
         var onet_code = ArrayList<String>()
         var compareList = ArrayList<BrightOutlookModel.Data>()
@@ -763,8 +893,10 @@ class SearchCareerFragment(var type: String) : Fragment() {
         if (arrayListOut != null) {
             for (i in arrayListOut?.indices!!) {
                 if (arrayListOut?.get(i)?.selected == true) {
-                    arrayListOut?.get(i)?.ccode?.let { onet_code.add(it)
-                        compareList.add(arrayListOut?.get(i)!!)}
+                    arrayListOut?.get(i)?.ccode?.let {
+                        onet_code.add(it)
+                        compareList.add(arrayListOut?.get(i)!!)
+                    }
 
                 }
             }
@@ -812,6 +944,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
             }
         }
     }
+
     private fun bottomSheetCompareList() {
         var onet_code = ArrayList<String>()
         var compareList = ArrayList<CareerTopPickResponseItem>()
@@ -822,8 +955,10 @@ class SearchCareerFragment(var type: String) : Fragment() {
         if (arrayList != null) {
             for (i in arrayList?.indices!!) {
                 if (arrayList?.get(i)?.selected == true) {
-                    arrayList?.get(i)?.ccode?.let { onet_code.add(it)
-                        compareList.add(arrayList?.get(i)!!)}
+                    arrayList?.get(i)?.ccode?.let {
+                        onet_code.add(it)
+                        compareList.add(arrayList?.get(i)!!)
+                    }
 
                 }
             }
@@ -861,9 +996,15 @@ class SearchCareerFragment(var type: String) : Fragment() {
             val gson = Gson()
             val json = gson.toJson(it)
             val resp = JSONObject(json)
-            for (item in compareList){
-                val model = BrightOutlookModel.Data(item.ccode, item.title,
-                    item.education as ArrayList<String>,item.salary, item.brightOutlook as ArrayList<String>, item.nid, item.selected
+            for (item in compareList) {
+                val model = BrightOutlookModel.Data(
+                    item.ccode,
+                    item.title,
+                    item.education as ArrayList<String>,
+                    item.salary,
+                    item.brightOutlook as ArrayList<String>,
+                    item.nid,
+                    item.selected
                 )
                 compareListNew.add(model)
             }
@@ -880,6 +1021,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
             }
         }
     }
+
     fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
         observe(lifecycleOwner, object : Observer<T> {
             override fun onChanged(t: T?) {
@@ -888,16 +1030,18 @@ class SearchCareerFragment(var type: String) : Fragment() {
             }
         })
     }
-    fun clickCategorySearchLike(code: String?,
-                                title: String?, type: Boolean?) {
+
+    fun clickCategorySearchLike(
+        code: String?,
+        title: String?, type: Boolean?
+    ) {
         SharedHelper(requireContext()).id?.let {
             code?.let { it1 ->
                 if (title != null) {
                     progress.show()
-                    if (type == true){
-                    careerViewModel.addFavCareer(it1,it, title )
-                    }
-                    else{
+                    if (type == true) {
+                        careerViewModel.addFavCareer(it1, it, title)
+                    } else {
                         val deleteContent = DeleteContent()
                         deleteContent.nid = code
                         careerViewModel.unLikeWork(deleteContent)
@@ -908,10 +1052,9 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
 
     }
-}
 
 
+    fun clickCategoryItem(careerCategoryResponseItem: CareerCategoryResponseItem) {
 
-fun clickCategoryItem(careerCategoryResponseItem: CareerCategoryResponseItem) {
-
+    }
 }

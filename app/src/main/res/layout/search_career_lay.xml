@@ -42,7 +42,22 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <Spinner
+                    <TextView
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40dp"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="@dimen/_5dp"
+                        android:paddingHorizontal="@dimen/_10dp"
+                        android:text="@string/search_by_keyword"
+
+                        android:textSize="@dimen/_12sp"
+                        android:drawablePadding="@dimen/_10dp"
+                       app:drawableTint="@color/black_1"
+                        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        android:fontFamily="@font/inter"
+                        />
+                 <!--   <Spinner
                         android:id="@+id/spinner"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40dp"
@@ -50,7 +65,7 @@
                         android:fontFamily="@font/inter"
                         android:overlapAnchor="false"
                         android:spinnerMode="dropdown"
-                        android:theme="@style/MatchSpinnerTheme" />
+                        android:theme="@style/MatchSpinnerTheme" />-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -77,6 +92,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+
                     <Spinner
                         android:id="@+id/outSpinner"
                         android:layout_width="match_parent"
@@ -85,13 +101,30 @@
                         android:dropDownVerticalOffset="20dp"
                         android:fontFamily="@font/inter_regular"
                         android:overlapAnchor="false"
+
                         android:spinnerMode="dropdown"
                         android:theme="@style/MatchSpinnerTheme"
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/spinner_lay"
                         app:layout_constraintTop_toTopOf="parent" />
-
+                    <TextView
+                        android:id="@+id/out_spinner_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_40dp"
+                        android:gravity="center_vertical"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:visibility="gone"
+                        android:paddingVertical="@dimen/_5dp"
+                        android:paddingHorizontal="@dimen/_10dp"
+                        android:text="@string/search_by_keyword"
+                        android:textSize="@dimen/_12sp"
+                        android:drawablePadding="@dimen/_10dp"
+                        app:drawableTint="@color/black_1"
+                        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                        android:fontFamily="@font/inter"
+                        />
                     <EditText
                         android:id="@+id/text2"
                         android:layout_width="match_parent"
