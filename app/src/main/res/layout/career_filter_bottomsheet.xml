@@ -26,16 +26,16 @@
             android:textStyle="bold" />
 
 
-    <ImageView
-        android:id="@+id/back_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
-        android:drawablePadding="@dimen/_5dp"
-        android:gravity="center"
-        android:paddingVertical="@dimen/_15dp"
-        android:textSize="@dimen/_14sp" />
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:drawablePadding="@dimen/_5dp"
+            android:gravity="center"
+            android:paddingVertical="@dimen/_15dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
+            android:textSize="@dimen/_14sp" />
 
         <TextView
             android:id="@+id/clear_text"
@@ -75,6 +75,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/_15dp"
+            android:visibility="gone"
             android:background="@drawable/circle_lay">
 
             <ImageView

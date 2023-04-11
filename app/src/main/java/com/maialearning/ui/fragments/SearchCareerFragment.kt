@@ -5,6 +5,8 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -95,7 +97,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
         }
         mBinding.outSpinnerText.setOnClickListener {
             type_search?.let {
-                if (it == "category"){
+                if (it == "category"|| it == "pathway"){
                     response?.let { it1 -> showSearchResultBottomSheet(it, it1) }
                 }
             }
@@ -158,7 +160,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
         dialogCareerFilterBottomsheetBinding?.show()
         sheetBinding.search.visibility = View.GONE
 
-       sheetBinding. close.setOnClickListener {
+       sheetBinding.backBtn.setOnClickListener {
            dialogCareerFilterBottomsheetBinding?.dismiss()
         }
 
@@ -183,25 +185,70 @@ class SearchCareerFragment(var type: String) : Fragment() {
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialogResultBottomsheetBinding?.setContentView(sheetBinding.root)
         dialogResultBottomsheetBinding?.show()
+        if (type == "Search by Keyword")
         sheetBinding.search.visibility = View.GONE
 
-        sheetBinding. close.setOnClickListener {
+        sheetBinding. backBtn.setOnClickListener {
             dialogResultBottomsheetBinding?.dismiss()
         }
+        sheetBinding.searchText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                if (sheetBinding.searchText.text.toString().trim() != "") {
+                    val filterList =
+                        findData(sheetBinding.searchText.text.toString().trim(), resp)
+                    val adapter = SearchCareerClusterAdapter(
+                        requireContext(),
+                        filterList, ::clickMainDropDownResult
+                    )
 
 
+                    sheetBinding.listing.adapter = adapter
+                } else {
+                    val adapter = SearchCareerClusterAdapter(
+                        requireContext(),
+                        resp, ::clickMainDropDownResult
+                    )
+
+
+                    sheetBinding.listing.adapter = adapter
+                }
+
+            }
+
+
+        })
+
+        var decor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        getDrawable(requireContext(),R.drawable.divider)?.let { decor.setDrawable(it) }
+        sheetBinding.listing.addItemDecoration(decor)
         val adapter = SearchCareerClusterAdapter(
             requireContext(),
             resp, ::clickMainDropDownResult
         )
-        var decor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        getDrawable(requireContext(),R.drawable.divider)?.let { decor.setDrawable(it) }
-        sheetBinding.listing.addItemDecoration(decor)
-
-
         sheetBinding.listing.adapter = adapter
 
 
+    }
+
+    private fun findData(name: String, resp: ArrayList<CareerCategoryResponseItem>): ArrayList<CareerCategoryResponseItem> {
+        val filterList:  ArrayList<CareerCategoryResponseItem> = ArrayList()
+        for (member in resp) {
+            if ((member.name?.lowercase()?.contains(name?.lowercase() ?: "")
+                    ?: false) ?: false
+            ) {
+                filterList.add(member)
+                // return member when name found
+            }
+        }
+        return filterList
     }
 
     private fun clickMainDropDownResult(s: String, item:CareerCategoryResponseItem) {
@@ -230,8 +277,10 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 careerViewModel.getCareerCategories()
                 mBinding.outSpinnerText.text = getString(R.string.select_category)
             } else if (selectedItem == "Search by Pathway") {
+                mBinding.outSpinnerText.visibility = View.VISIBLE
                 progress.show()
                 careerViewModel.getCareerPathways()
+                mBinding.outSpinnerText.text = getString(R.string.select_pathway)
             } else if (selectedItem == "Search by Keyword") {
                 mBinding.outSpinner.visibility = View.GONE
                 mBinding.outSpinnerText.visibility = View.GONE
@@ -618,7 +667,9 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
         careerViewModel.getCareerPathwayObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
-            setCategorySpinner(it, "pathway")
+           // setCategorySpinner(it, "pathway")
+            response = it
+            type_search = "pathway"
         }
         careerViewModel.getCareerSearchObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
