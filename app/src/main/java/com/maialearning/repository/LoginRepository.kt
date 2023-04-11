@@ -241,6 +241,10 @@ interface LoginRepository {
         id: String, url: String
     ): UseCaseResult<JsonObject>
 
+  suspend fun getCareerFactsheetDetail(
+        id: String,regionLevel:String?,regionCode:String?
+    ): UseCaseResult<JsonObject>
+
     suspend fun getKeyboardSearch(
         url: String
     ): UseCaseResult<CareerSearchCodesModel>
@@ -1485,6 +1489,24 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
 
             val result = catApi.getCareerTopPicksDetails(
                 "$url$id$CAREER_FACTSHEET"
+
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerFactsheetDetail(
+        id: String,
+        regionLevel: String?,
+        regionCode: String?
+    ): UseCaseResult<JsonObject> {
+        return try {
+             val result = catApi.getCareerFactsheetetails(
+                "${CAREER}careers/factsheet/$id", "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,regionLevel, regionCode
 
             ).await()
             UseCaseResult.Success(result)

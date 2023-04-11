@@ -1,6 +1,7 @@
 package com.maialearning.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class CareerSearchResponse(
 
@@ -26,4 +27,4 @@ data class CareerSearchResponseItem(
 	val onetId: String? = null,
     var isfav: Boolean = false,
 	var nid: String?
-)
+)  : Serializable

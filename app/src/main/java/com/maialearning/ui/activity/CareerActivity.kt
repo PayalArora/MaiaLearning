@@ -108,7 +108,7 @@ class CareerActivity : Fragment() {
 
         binding.tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (binding.tabs.selectedTabPosition != 0 && binding.tabs.selectedTabPosition != 1) {
+                if (binding.tabs.selectedTabPosition != 1) {
                     binding.addFab.visibility = View.GONE
                 } else
                     binding.addFab.visibility = View.VISIBLE

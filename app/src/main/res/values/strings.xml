@@ -763,6 +763,12 @@
     <string name="search_by_keyword">Search by Keyword</string>
     <string name="select_category">Select Category</string>
     <string name="select_pathway">Select Pathway</string>
+    <string name="career_cluster">Career Cluster</string>
+    <string name="career_pathway">Career Pathways</string>
+    <string name="work_activities">%1$s %2$s</string>
+    <string name="change_region">Change Region Selection</string>
+    <string name="default_selection">My default region selection is\n</string>
+    <string name="select_region">Select region for which you want to filter this data</string>
 
 
 </resources>

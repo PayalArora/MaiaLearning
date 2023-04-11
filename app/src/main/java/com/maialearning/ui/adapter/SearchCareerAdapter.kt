@@ -20,6 +20,7 @@ class SearchCareerAdapter(
                     title: String?, type:Boolean?) -> Unit,
     var itemClick:(url: String?,
                    title: String?)-> Unit,
+    var openFactsheet:(item:CareerSearchResponseItem, position:Int)->Unit
 ) : RecyclerView.Adapter<SearchCareerAdapter.ViewHolder>() {
     var isSelected = false
     var count = 0
@@ -79,6 +80,9 @@ class SearchCareerAdapter(
                }
            root.setOnClickListener{
                itemClick(item?.videoUrl,arrayList?.get(position)?.title )
+           }
+           name.setOnClickListener {
+               arrayList?.get(position)?.let { it1 -> openFactsheet(it1, position) }
            }
 
        }

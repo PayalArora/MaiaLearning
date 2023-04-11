@@ -71,6 +71,7 @@ const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/c
 const val US_SEARCH= "get_military_careers_data?"
 var COLLEGE_JSON = "https://api-gw-staging.maialearning.com/college-json-filter"
 var CAREER = "https://api-gw-staging.maialearning.com/"
+
 val   CommonApp = "3"
 object URL{
     var BASEURL = 0

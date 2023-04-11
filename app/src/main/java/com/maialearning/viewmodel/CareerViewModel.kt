@@ -26,6 +26,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val showLoading = MutableLiveData<Boolean>()
     val showError = SingleLiveEvent<String>()
     val careerListDetailObserver = MutableLiveData<JsonObject>()
+    val careerListFactsheetObserver = MutableLiveData<JsonObject>()
     val careerKeyboardObserver = MutableLiveData<CareerSearchCodesModel>()
     val careerClusterObserver = MutableLiveData<CareerClusterModel>()
     val careerClusterListObserver = MutableLiveData<CareerClusterListModel>()
@@ -175,6 +176,22 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> careerListDetailObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+    fun getCareerFactsheetDetail(id: String, regionLevel: String?, regionCode: String?) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerFactsheetDetail(id, regionLevel, regionCode)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerListFactsheetObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
                         ?.replaceCrossBracketsComas()

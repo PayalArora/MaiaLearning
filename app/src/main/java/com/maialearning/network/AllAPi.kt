@@ -522,7 +522,13 @@ interface AllAPi {
     fun getCareerTopPicksDetails(
         @Url() url: String,
     ): Deferred<JsonObject>
-
+    @GET
+    fun getCareerFactsheetetails(
+        @Url() url: String,
+        @Header("Authorization") Authorization: String ,
+        @Query("regionLevel") regionLevel: String?,
+        @Query("regionCode") regionCode: String?,
+    ): Deferred<JsonObject>
     @GET
     fun getKeyboardSearch(
         @Url() url: String,

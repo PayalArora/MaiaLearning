@@ -689,7 +689,7 @@ class SearchCareerFragment(var type: String) : Fragment() {
                         requireContext(),
                         it,
                         ::clickCategorySearchLike,
-                        ::itemClick
+                        ::itemClick,::openFactsheet
                     )
                 mBinding.listProgram.scrollToPosition(0)
             } else {
@@ -883,6 +883,16 @@ class SearchCareerFragment(var type: String) : Fragment() {
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             val bundle = Bundle()
             bundle.putSerializable("data", arrayList?.get(position))
+            fragment.arguments = bundle
+            transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
+            transaction.addToBackStack("name")
+            transaction.commit()
+        } else if(type==""){
+            val fragment = SearchDetailFragment()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            val bundle = Bundle()
+            bundle.putSerializable("data", arrayList?.get(position))
+            bundle.putString("title", response?.get(position)?.name)
             fragment.arguments = bundle
             transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
             transaction.addToBackStack("name")
@@ -1108,4 +1118,17 @@ class SearchCareerFragment(var type: String) : Fragment() {
     fun clickCategoryItem(careerCategoryResponseItem: CareerCategoryResponseItem) {
 
     }
+    fun openFactsheet(careerSearchResponseItem: CareerSearchResponseItem, position: Int) {
+        val fragment = SearchDetailFragment()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        val bundle = Bundle()
+        bundle.putSerializable("data", careerSearchResponseItem)
+        bundle.putString("title",careerSearchResponseItem.title)
+        fragment.arguments = bundle
+        transaction.add(R.id.nav_host_fragment_content_dashboard, fragment)
+        transaction.addToBackStack("name")
+        transaction.commit()
+    }
 }
+
+
