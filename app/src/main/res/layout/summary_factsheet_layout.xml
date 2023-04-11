@@ -275,8 +275,8 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
-                    android:layout_marginStart="@dimen/_10dp"
-                    android:text="@string/career_pathway"
+
+                    android:text="@string/related_career"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:padding="@dimen/_10dp"
