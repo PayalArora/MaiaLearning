@@ -34,23 +34,26 @@ class CareerActivity : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = ActivityCareerBinding.inflate(inflater, container, false)
-        val toolbar: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-        toolbar.visibility = View.GONE
-        toolbarBinding = binding.toolbar
-        binding.toolbar.contentInsetStartWithNavigation = 0
-        binding.toolbar.setNavigationIcon(
-            getDrawable(
-                requireContext(),
-                R.drawable.ic_baseline_keyboard_arrow_left_24
-            )
-        )
-        binding.toolbar.title = getString(R.string.careers)
+        val toolbarBinding: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
+        toolbarBinding.title = getString(R.string.careers)
         toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
+        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.GONE
+        toolbarBinding.visibility = View.VISIBLE
+      //  toolbarBinding = binding.toolbar
+        //binding.toolbar.contentInsetStartWithNavigation = 0
+//        binding.toolbar.setNavigationIcon(
+//            getDrawable(
+//                requireContext(),
+//                R.drawable.ic_baseline_keyboard_arrow_left_24
+//            )
+//        )
+     //   binding.toolbar.title = getString(R.string.careers)
+      //  toolbarBinding.findViewById<ImageView>(R.id.toolbar_maia).visibility = View.GONE
 //        toolbarBinding.findViewById<ImageView>(R.id.toolbar_messanger).visibility = View.VISIBLE
 //        toolbarBinding.findViewById<ImageView>(R.id.toolbar_arrow).visibility = View.VISIBLE
-        toolbarBinding.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
-        }
+//        toolbarBinding.setNavigationOnClickListener {
+//            requireActivity().onBackPressed()
+//        }
         initView()
 
 //        binding.addFab.setOnClickListener {

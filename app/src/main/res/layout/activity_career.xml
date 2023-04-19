@@ -23,6 +23,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/Theme.MalaLearning.PopupOverlay"
             app:title="@string/careers"
+            android:visibility="gone"
             app:titleTextAppearance="@style/ToolbarText"
             app:titleTextColor="@color/white">
 
@@ -67,6 +68,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tabBackground="@color/color_acent"
+            android:paddingHorizontal="@dimen/_15dp"
             app:tabIndicatorColor="@color/white"
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/white"

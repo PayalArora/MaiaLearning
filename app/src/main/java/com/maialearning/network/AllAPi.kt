@@ -856,6 +856,11 @@ fun getCareerCategories(@Url url: String,
 fun getCareerPathways(@Url url: String,
                   @Header("Authorization") Authorization: String ):Deferred<ArrayList<CareerCategoryResponseItem>>
 
+
+@GET
+fun getSessionData(@Url url: String,
+                      @Header("Authorization") Authorization: String ):Deferred<SessionDataResponse>
+
 }
 
 

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/_15dp"
     android:backgroundTint="@color/white"
-    android:background="@drawable/background_top_curve_white_filled_with_border"
->
+    android:background="@drawable/background_top_curve_white_filled_with_border">
     <RelativeLayout
         android:layout_width="match_parent"
         android:id="@+id/layout"
@@ -17,22 +16,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_5dp"
-            android:layout_marginTop="@dimen/_10dp"
+            android:paddingVertical="@dimen/_1dp"
+
             android:fontFamily="@font/inter_bold"
             android:lineSpacingExtra="2sp"
             android:paddingStart="@dimen/_10dp"
+            android:text="jghhb"
             android:textColor="@color/black"
             android:textSize="@dimen/_21sp" />
 
         <RelativeLayout
             android:id="@+id/close"
             android:layout_width="25dp"
-            android:layout_height="26dp"
-            android:visibility="visible"
+            android:layout_height="25dp"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="15dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/circle_lay"
 
-            android:background="@drawable/circle_lay">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -41,21 +43,31 @@
                 android:src="@drawable/cross" />
         </RelativeLayout>
     </RelativeLayout>
+
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/tint"
-      android:layout_below="@id/layout" />
+        android:layout_below="@id/layout"
 
-    <VideoView
-        android:id="@+id/video_view"
+        android:background="@color/tint" />
+
+<!--    <VideoView-->
+<!--        android:id="@+id/video_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@+id/save_btn"-->
+<!--        android:layout_below="@+id/view"-->
+<!--        android:scaleType="fitXY"-->
+<!--        android:src="@drawable/video_dummy" />-->
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/youtube_player_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view"
-        android:scaleType="fitXY"
+        android:layout_height="match_parent"
         android:layout_above="@+id/save_btn"
-        android:src="@drawable/video_dummy" />
+        android:layout_below="@+id/view"
+        android:layout_marginTop="@dimen/_10dp"
+        android:scaleType="fitXY" />
 
     <Button
         android:id="@+id/save_btn"

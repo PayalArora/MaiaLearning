@@ -27,6 +27,7 @@
                     android:id="@+id/spinner_lay"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:background="@drawable/white_rect_15"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -56,6 +57,28 @@
                         android:spinnerMode="dropdown"
                         android:theme="@style/MatchSpinnerTheme" />-->
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/out_spinner_text1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    android:background="@drawable/white_rect_15"
+                    android:layout_marginTop="@dimen/_15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/spinner_lay"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner_lay"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_12dp"
+                    android:text="@string/select_military"
+                    android:textSize="@dimen/_12sp"
+                    android:drawablePadding="@dimen/_10dp"
+                    app:drawableTint="@color/black_1"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:fontFamily="@font/inter"
+                    />
 
                 <LinearLayout
                     android:id="@+id/spinner_lay1"
@@ -66,7 +89,7 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/spinner_lay"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner_lay">
+                    app:layout_constraintTop_toBottomOf="@+id/out_spinner_text1">
 
                     <EditText
                         android:id="@+id/text1"
@@ -96,6 +119,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/spinner_lay"
                         app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:id="@+id/out_spinner_text"
                         android:layout_width="match_parent"
@@ -131,6 +155,109 @@
                         app:layout_constraintStart_toEndOf="@id/spinner_lay"
                         app:layout_constraintTop_toTopOf="parent" />
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/out_spinner_text2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    android:background="@drawable/white_rect_15"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/spinner_lay1"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner_lay1"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_12dp"
+                    android:text="@string/select_cluster"
+                    android:textSize="@dimen/_12sp"
+                    android:drawablePadding="@dimen/_10dp"
+                    app:drawableTint="@color/black_1"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:fontFamily="@font/inter"
+                    />
+                <TextView
+                    android:id="@+id/out_spinner_text3"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    android:background="@drawable/white_rect_15"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/out_spinner_text2"
+                    app:layout_constraintTop_toBottomOf="@+id/out_spinner_text2"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_12dp"
+                    android:text="@string/select_region_type"
+                    android:textSize="@dimen/_12sp"
+                    android:drawablePadding="@dimen/_10dp"
+                    app:drawableTint="@color/black_1"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:fontFamily="@font/inter"
+                    />
+                <TextView
+                    android:id="@+id/out_spinner_text4"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:background="@drawable/white_rect_15"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/out_spinner_text3"
+                    app:layout_constraintTop_toBottomOf="@+id/out_spinner_text3"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_12dp"
+                    android:text="@string/select_region_name"
+                    android:textSize="@dimen/_12sp"
+                    android:drawablePadding="@dimen/_10dp"
+                    app:drawableTint="@color/black_1"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:fontFamily="@font/inter"
+                    />
+                <TextView
+                    android:id="@+id/out_spinner_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_45dp"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:visibility="gone"
+                    android:background="@drawable/white_rect_15"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/out_spinner_text4"
+                    app:layout_constraintTop_toBottomOf="@+id/out_spinner_text4"
+                    android:paddingVertical="@dimen/_5dp"
+                    android:paddingHorizontal="@dimen/_12dp"
+                    android:text="@string/select_status"
+                    android:textSize="@dimen/_12sp"
+                    android:drawablePadding="@dimen/_10dp"
+                    app:drawableTint="@color/black_1"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:fontFamily="@font/inter"
+                    />
+                <Button
+                    android:id="@+id/save_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:fontFamily="@font/inter_bold"
+                    android:background="@drawable/white_rect_15"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/out_spinner_status"
+                    app:layout_constraintTop_toBottomOf="@+id/out_spinner_status"
+
+                    android:backgroundTint="@color/blue"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textAllCaps="false" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

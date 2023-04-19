@@ -86,14 +86,18 @@ fun String.getURLCluster():String{
 fun String.getURLIndustry():String{
     return "$INDUSTRY_LIST$this$CAREER_CLIENT"
 }
-fun String.getUSIndustry(page:String):String{
-    return "$BASE_URL${US_SEARCH}service=${this}&pager=$page"
+fun String.getUSService():String{
+    return "service=${this}&pager=$this"
 }
-
+fun String.getUSIndustryCluster():String{
+    return "cluster=${this}}&pager=$this"
+}
 fun String.getUSIndustryNoService():String{
     return "$BASE_URL${US_SEARCH}pager=$this"
 }
-
+fun getCareerUsSearch():String{
+    return "$BASE_URL${US_SEARCH}"
+}
 fun Context.isNetworkConnected(): Boolean {
     val connectivityManager: ConnectivityManager? =
         getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -542,5 +546,14 @@ fun Double.roundOffDecimal(): Double? {
     ).show()
 
 }
+fun extractYoutubeId(url: String?): String? {
+    val param = url?.split("embed/")?.toTypedArray()
+    var id: String? = null
+    if (param != null&& param.size>1 ) {
 
+        id = param[1]
+
+    }
+    return id
+}
 private val myCalendar = Calendar.getInstance()

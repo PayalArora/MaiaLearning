@@ -15,11 +15,13 @@ import com.maialearning.ui.adapter.FactsheetPathwayAdapter
 import com.maialearning.ui.adapter.RelatedAdapter
 import com.maialearning.ui.adapter.WorkActivityCareerAdapter
 import com.maialearning.util.checkNonNull
+import com.maialearning.util.toCapitalSpace
+import com.maialearning.util.toUpperCase
 import com.maialearning.viewmodel.CareerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class SummaryNewFragment(var response: CareerFactsheetResponse) : Fragment() {
+class SummaryNewFragment(var response: CareerFactsheetResponse, var sessionDataResponse: SessionDataResponse?) : Fragment() {
 
     var dialog: BottomSheetDialog? = null
     private val careerViewModel: CareerViewModel by viewModel()
@@ -65,7 +67,14 @@ class SummaryNewFragment(var response: CareerFactsheetResponse) : Fragment() {
         mBinding.relatedCareersList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         mBinding.relatedCareersList.adapter = RelatedAdapter(response.relatedCareers as ArrayList<CareerFactsheetResponse.RelatedCareersItem>?)
-        mBinding.txtRegion.text = "${getString(R.string.default_selection)}${response.regionLevel}"
+        mBinding.txtRegion.text ="${getString(R.string.select_region)}"
+        sessionDataResponse?.data?.users?.careerRegionPreference?.regionLevel?.let {
+            sessionDataResponse?.data?.users?.careerRegionPreference?.regionName?.let { it1 ->
+
+                    mBinding.txtRegion.text = "${getString(R.string.default_selection)}${it.toUpperCase()} ${getString(R.string.space)} ${it1.toUpperCase()}"
+
+            }
+        }
 //
 //        val arrayAct = ArrayList<WorkActivitiesItem?>()
 //        arrayAct.addAll(response.workActivities!!)

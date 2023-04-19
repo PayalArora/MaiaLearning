@@ -42,6 +42,7 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val getVideoCodeObserver = MutableLiveData<JsonObject>()
     val getCareerCategoryObserver = MutableLiveData<ArrayList<CareerCategoryResponseItem>>()
     val getCareerPathwayObserver = MutableLiveData<ArrayList<CareerCategoryResponseItem>>()
+    val getSessionObserver = MutableLiveData<SessionDataResponse>()
     val getCareerSearchObserver = MutableLiveData<ArrayList<CareerSearchResponseItem>>()
     val topPickObserver = MutableLiveData<JsonArray?>()
     val addFavObserver = MutableLiveData<JsonObject?>()
@@ -337,7 +338,20 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+    fun getCareerSessionData() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getSessionData()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getSessionObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
 
+            }
+        }
+    }
     fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String) {
         showLoading.value = true
         Coroutines.mainWorker {

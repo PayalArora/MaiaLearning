@@ -1,6 +1,7 @@
 package com.maialearning.ui.fragments
 
 import android.app.Dialog
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.net.Uri
@@ -31,11 +32,15 @@ import com.maialearning.R
 import com.maialearning.databinding.CareerFilterBottomsheetBinding
 import com.maialearning.databinding.SearchCareerLayBinding
 import com.maialearning.databinding.SearchDetailBinding
+import com.maialearning.databinding.UniversityFilterBinding
 import com.maialearning.model.*
+import com.maialearning.ui.activity.UniversitiesActivity
 import com.maialearning.ui.adapter.*
 import com.maialearning.util.*
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.viewmodel.CareerViewModel
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import org.json.JSONArray
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -46,26 +51,33 @@ import kotlin.collections.ArrayList
 class SearchCareerFragment(var type: String) : Fragment() {
     var dialog: BottomSheetDialog? = null
     var dialogCareerFilterBottomsheetBinding:BottomSheetDialog?= null
+    var dialogRegionTypeBottomsheetBinding:BottomSheetDialog?= null
     var dialogResultBottomsheetBinding:BottomSheetDialog?= null
+    var statusdialog:BottomSheetDialog?= null
+    var  usMilitaryBinding:BottomSheetDialog?= null
+    var  clusterBinding:BottomSheetDialog?= null
     private lateinit var mBinding: SearchCareerLayBinding
     private val careerViewModel: CareerViewModel by viewModel()
     private lateinit var progress: Dialog
     lateinit var gson: Gson
     private val listData: String
-        get() = ("[{\"id\":\"72\",\"name\":\"Accommodation Food Services\"}" + ",{\"id\":\"56\",\"name\":\"Administrative Support Services\"}" + ",{\"id\":\"11\",\"name\":\"Agriculture Forestry Fishing Hinting\"}" +
-                ",{\"id\":\"71\",\"name\":\"Arts Entertainment Recreation\"}" + ",{\"id\":\"23\",\"name\":\"Construction\"}" + ",{\"id\":\"61\",\"name\":\"Educational Services\"}" + ",{\"id\":\"52\",\"name\":\"Finance Insurance\"}" +
-                ",{\"id\":\"93\",\"name\":\"Government\"}" + ",{\"id\":\"62\",\"name\":\"Health Care Social Assistance\"}" + ",{\"id\":\"51\",\"name\":\"Information\"}" + ",{\"id\":\"55\",\"name\":\"Management Companies Enterprise\"}" +
-                ",{\"id\":\"31\",\"name\":\"Manufacturing\"}" + ",{\"id\":\"21\",\"name\":\"Mining Quarrying Iol Gas Extraction\"}" + ",{\"id\":\"81\",\"name\":\"Other Services Exc Pub Administration\"}" + ",{\"id\":\"54\",\"name\":\"Professional Scientific Technical Service\"}" +
-                ",{\"id\":\"53\",\"name\":\"Real Estate Rental Leasing\"}" + ",{\"id\":\"44\",\"name\":\"Real Trade\"}" + ",{\"id\":\"94\",\"name\":\"Self Employed\"}" + ",{\"id\":\"48\",\"name\":\"Transportation Warehousing\"}" + ",{\"id\":\"22\",\"name\":\"Utilities\"}" +
-                ",{\"id\":\"42\",\"name\":\"Wholesale Trade\"}]")
+        get() = ("[{\"id\":\"15\",\"name\":\"Transportation, Distribution & Logistics\"}" + ",{\"id\":\"1\",\"name\":\"Architecture & Construction\"}" + ",{\"id\":\"2\",\"name\":\"Arts, Audio/Video Technology & Communications\"}" +
+                ",{\"id\":\"9\",\"name\":\"Agriculture, Food & Natural Resources\"}" + ",{\"id\":\"3\",\"name\":\"Business Management & Administration\"}" + ",{\"id\":\"4\",\"name\":\"Education & Training\"}" + ",{\"id\":\"10\",\"name\":\"Finance\"}" +
+                ",{\"id\":\"11\",\"name\":\"Government & Public Administration\"}" + ",{\"id\":\"12\",\"name\":\"Health Science\"}" + ",{\"id\":\"5\",\"name\":\"Hospitality & Tourism\"}" + ",{\"id\":\"13\",\"name\":\"Human Services\"}" +
+                ",{\"id\":\"16\",\"name\":\"Information Technology\"}" + ",{\"id\":\"14\",\"name\":\"Law, Public Safety, Corrections & Security\"}" + ",{\"id\":\"6\",\"name\":\"Manufacturing\"}" + ",{\"id\":\"7\",\"name\":\"Marketing\"}" +
+                ",{\"id\":\"8\",\"name\":\"Science, Technology, Engineering & Mathematics\"}]")
 
     private val usData: String
         get() = ("[{\"key\":\"1\",\"name\":\"Army\"}" + ",{\"key\":\"2\",\"name\":\"Marine Corps\"}" + ",{\"key\":\"3\",\"name\":\"Air Force\"}" + ",{\"key\":\"4\",\"name\":\"Navy\"}" + ",{\"key\":\"5\",\"name\":\"Coast Guard\"}]")
+
     private lateinit var tableLayout: TabLayout
     private var adapType: Int = 1
     var arrayTopPick: ArrayList<RelatedCareerModel> = arrayListOf()
     var type_search:String?= null
     var response:ArrayList<CareerCategoryResponseItem>? = null
+    var military = ""
+    var cluster = ""
+    var status = arrayListOf<Region>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +114,65 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 }
             }
 
+        }
+        mBinding.outSpinnerText1.setOnClickListener {
+            val list: ArrayList<IndustryModel> = arrayListOf()
+            val jsonArry = JSONArray(usData)
+            for (i in 0 until jsonArry.length()) {
+                val obj = jsonArry.getJSONObject(i)
+                val user = IndustryModel(obj.getInt("key"), obj.getString("name"))
+                list.add(user)
+            }
+            showUsMilitaryBottomSheet("us", list)
+        }
+        mBinding.outSpinnerText2.setOnClickListener {
+            val list: ArrayList<IndustryModel> = arrayListOf()
+            val jsonArry = JSONArray(listData)
+            for (i in 0 until jsonArry.length()) {
+                val obj = jsonArry.getJSONObject(i)
+                val user = IndustryModel(obj.getString("id").toInt(), obj.getString("name"))
+                list.add(user)
+            }
+            showClusterBottomSheet("cluster", list)
+        }
+
+        mBinding.outSpinnerStatus.setOnClickListener {
+            context?.let { it1 -> showBottomSheetStatus(it1) }
+
+        }
+        mBinding.outSpinnerText3.setOnClickListener {
+            context?.let { it1 -> showBottomSheetRegionType() }
+
+        }
+        mBinding.saveBtn.setOnClickListener {
+            val pager = "1"
+            var url = pager.getUSIndustryNoService()
+            if (checkNonNull(military)){
+              url = "${getCareerUsSearch()}${military.getUSService()}"
+            }
+            if (checkNonNull(cluster)){
+              url = "${getCareerUsSearch()}${cluster.getUSIndustryCluster()}"
+            }
+
+           for (i in status){
+                   when(i.reigon?.replaceInvertedComas()){
+                     "Enlisted"->{
+                         url = "$url&enlisted=1"
+                       }
+                       "Active Duty"->{
+                           url = "$url&active_duty=1"
+                       }
+                       "Reserve"->{
+                           url =    "$url&reserve=1"
+                       }
+                       "Officer"->{
+                           url = "$url&officer=1"
+                       }
+                   }
+           }
+
+            progress.show()
+            careerViewModel.getUSSearch(url)
         }
         if (type == "list") {
             mBinding.searchLay.visibility = View.GONE
@@ -149,6 +220,55 @@ class SearchCareerFragment(var type: String) : Fragment() {
             else
                 bottomSheetCompareList()
         }
+    }
+
+    private fun showBottomSheetStatus(con: Context) {
+         statusdialog = BottomSheetDialog(con)
+        var reigonList = arrayListOf<Region>()
+        val sheetBinding: UniversityFilterBinding = UniversityFilterBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        statusdialog?.setContentView(sheetBinding.root)
+        sheetBinding.clearText.setText(con.resources.getString(R.string.done))
+        sheetBinding.search.visibility = View.GONE
+        sheetBinding.filters.setText(getString(R.string.careers))
+        statusdialog?.show()
+
+        sheetBinding.spinnerLay.visibility  = View.GONE
+        sheetBinding.invisibleLay.visibility  = View.GONE
+        sheetBinding.backBtn.setOnClickListener { statusdialog?.dismiss() }
+
+        sheetBinding.clearText.setOnClickListener {
+            var selectedStatus = arrayListOf<Region>()
+            var selectedRegion = arrayListOf<String>()
+            for (i in status){
+                if (i.checked ){
+                    selectedStatus.add(i)
+                    selectedRegion.add(i.reigon.toString())
+                }
+            }
+            status.clear()
+            status.addAll(selectedStatus)
+            mBinding.outSpinnerStatus.setText(
+                android.text.TextUtils.join(
+                    ", ",
+                    selectedRegion
+                )
+            )
+            statusdialog?.dismiss()
+        }
+
+            for (i in con.resources.getStringArray(R.array.us_military_status)) {
+                reigonList.add(Region(i, false))
+            }
+            sheetBinding.reciepentList.adapter =
+                ReigonAdapter(reigonList, ::selectedStatus)
+            sheetBinding.spinnerLay.visibility = View.GONE
+
+    }
+
+    private fun selectedStatus(arrayList: ArrayList<Region>) {
+     status = arrayList
+
     }
 
     private fun showBottomSheet() {
@@ -237,6 +357,81 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
 
     }
+    private fun showUsMilitaryBottomSheet(type: String, resp: ArrayList<IndustryModel>) {
+        usMilitaryBinding = BottomSheetDialog(requireContext())
+
+        val sheetBinding: CareerFilterBottomsheetBinding = CareerFilterBottomsheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        usMilitaryBinding?.setContentView(sheetBinding.root)
+        usMilitaryBinding?.show()
+        sheetBinding. backBtn.setOnClickListener {
+            usMilitaryBinding?.dismiss()
+        }
+        sheetBinding.search.visibility = View.GONE
+
+        var decor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        getDrawable(requireContext(),R.drawable.divider)?.let { decor.setDrawable(it) }
+        sheetBinding.listing.addItemDecoration(decor)
+        val adapter = IndustryClusterAdapter(
+            requireContext(),
+            resp, ::clickMilitaryService, type
+        )
+        sheetBinding.listing.adapter = adapter
+
+
+    }
+    private fun showClusterBottomSheet(type: String, resp: ArrayList<IndustryModel>) {
+        clusterBinding = BottomSheetDialog(requireContext())
+
+        val sheetBinding: CareerFilterBottomsheetBinding = CareerFilterBottomsheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        clusterBinding?.setContentView(sheetBinding.root)
+        clusterBinding?.show()
+        sheetBinding. backBtn.setOnClickListener {
+            clusterBinding?.dismiss()
+        }
+        sheetBinding.search.visibility = View.GONE
+
+        var decor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        getDrawable(requireContext(),R.drawable.divider)?.let { decor.setDrawable(it) }
+        sheetBinding.listing.addItemDecoration(decor)
+        val adapter = IndustryClusterAdapter(
+            requireContext(),
+            resp, ::clickMilitaryService, type
+        )
+        sheetBinding.listing.adapter = adapter
+
+
+    }
+    private fun showBottomSheetRegionType() {
+        dialogRegionTypeBottomsheetBinding = BottomSheetDialog(requireContext())
+
+        val sheetBinding: CareerFilterBottomsheetBinding = CareerFilterBottomsheetBinding.inflate(layoutInflater)
+        sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
+        dialogRegionTypeBottomsheetBinding?.setContentView(sheetBinding.root)
+        dialogRegionTypeBottomsheetBinding?.show()
+        sheetBinding.search.visibility = View.GONE
+
+        sheetBinding.backBtn.setOnClickListener {
+            dialogRegionTypeBottomsheetBinding?.dismiss()
+        }
+
+
+        val adapter = CareerFilterAdapter(
+            requireContext(),
+            resources.getStringArray(R.array.REGION_TYPE), ::clickRegionType
+        )
+        var decor = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        getDrawable(requireContext(),R.drawable.divider)?.let { decor.setDrawable(it) }
+        sheetBinding.listing.addItemDecoration(decor)
+        sheetBinding.listing.adapter = adapter
+    }
+
+    private fun clickRegionType(s: String) {
+        mBinding.outSpinnerText3.text = s
+        dialogRegionTypeBottomsheetBinding?.dismiss()
+    }
+
 
     private fun findData(name: String, resp: ArrayList<CareerCategoryResponseItem>): ArrayList<CareerCategoryResponseItem> {
         val filterList:  ArrayList<CareerCategoryResponseItem> = ArrayList()
@@ -268,7 +463,12 @@ class SearchCareerFragment(var type: String) : Fragment() {
     private fun clickMainDropdown(selectedItem: String) {
         mBinding.outSpinner.visibility = View.GONE
         mBinding.outSpinnerText.visibility = View.GONE
-            mBinding.text2.visibility = View.GONE
+        mBinding.text2.visibility = View.GONE
+        mBinding.outSpinnerText1.visibility = View.GONE
+        mBinding.outSpinnerText2.visibility = View.GONE
+        mBinding.outSpinnerStatus.visibility = View.GONE
+        mBinding.outSpinnerText3.visibility = View.GONE
+        mBinding.outSpinnerText4.visibility = View.GONE
         dialogCareerFilterBottomsheetBinding?.dismiss()
         mBinding.spinner.text = selectedItem
             if (selectedItem == "Search by Category") {
@@ -285,15 +485,38 @@ class SearchCareerFragment(var type: String) : Fragment() {
                 mBinding.outSpinner.visibility = View.GONE
                 mBinding.outSpinnerText.visibility = View.GONE
                 mBinding.text2.visibility = View.VISIBLE
+                mBinding.saveBtn.visibility = View.GONE
                 // progress.show()
                 //careerViewModel.getCareerPathways()
             } else if (selectedItem == "Search by U.S. Military") {
-                mBinding.workLayout.visibility = View.VISIBLE
+                mBinding.workLayout.visibility = View.GONE
                 mBinding.three.visibility = View.GONE
                 mBinding.two.visibility = View.INVISIBLE
                 mBinding.spinnerLay1.visibility = View.VISIBLE
-                mBinding.outSpinner.visibility = View.VISIBLE
-                setUsSpinner()
+                mBinding.outSpinnerText.visibility = View.GONE
+                mBinding.outSpinnerText2.visibility = View.VISIBLE
+                mBinding.outSpinnerStatus.visibility = View.VISIBLE
+                mBinding.outSpinnerText1.visibility = View.VISIBLE
+                mBinding.saveBtn.visibility = View.VISIBLE
+                mBinding.outSpinnerText1.setText(getString(R.string.select_military))
+                mBinding.outSpinnerText2.setText(getString(R.string.select_cluster))
+                mBinding.outSpinnerStatus.setText(getString(R.string.select_status))
+               // mBinding.outSpinner.visibility = View.VISIBLE
+               // setUsSpinner()
+            }else if (selectedItem == "Search by High Demand Jobs") {
+                mBinding.workLayout.visibility = View.GONE
+                mBinding.three.visibility = View.GONE
+                mBinding.two.visibility = View.INVISIBLE
+                mBinding.spinnerLay1.visibility = View.VISIBLE
+                mBinding.outSpinnerText.visibility = View.GONE
+                mBinding.saveBtn.visibility = View.VISIBLE
+                mBinding.saveBtn.isClickable = false
+                mBinding.outSpinnerText3.visibility = View.VISIBLE
+                mBinding.outSpinnerText4.visibility = View.VISIBLE
+                mBinding.outSpinnerText3.setText(getString(R.string.select_region_type))
+                mBinding.outSpinnerText4.setText(getString(R.string.select_region_name))
+                // mBinding.outSpinner.visibility = View.VISIBLE
+                // setUsSpinner()
             }
  }
 
@@ -340,51 +563,51 @@ class SearchCareerFragment(var type: String) : Fragment() {
 //    }
 //}
 
-    private fun setUsSpinner() {
-        val list = ArrayList<IndustryModel>()
-        val jsonArry = JSONArray(usData)
-        for (i in 0 until jsonArry.length()) {
-            val obj = jsonArry.getJSONObject(i)
-            val user = IndustryModel(obj.getInt("key"), obj.getString("name"))
-            list.add(user)
-        }
-        mBinding.outSpinner.visibility = View.VISIBLE
-        val adapter = IndustryClusterAdapter(requireContext(), list, ::clickUSItem)
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        mBinding.outSpinner.setAdapter(
-            NothingSelectedSpinnerAdapter(
-                adapter,
-                R.layout.nothing_adapter_us_military,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
-                requireContext()
-            )
-        )
-//        val adapter = ArrayAdapter(
-//            requireContext(),
-//            R.layout.spinner_text, list
+//    private fun setUsSpinner() {
+//        val list = ArrayList<IndustryModel>()
+//        val jsonArry = JSONArray(usData)
+//        for (i in 0 until jsonArry.length()) {
+//            val obj = jsonArry.getJSONObject(i)
+//            val user = IndustryModel(obj.getInt("key"), obj.getString("name"))
+//            list.add(user)
+//        }
+//        mBinding.outSpinner.visibility = View.VISIBLE
+//        val adapter = IndustryClusterAdapter(requireContext(), list, ::clickUSItem)
+//
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//
+//        mBinding.outSpinner.setAdapter(
+//            NothingSelectedSpinnerAdapter(
+//                adapter,
+//                R.layout.nothing_adapter_us_military,  // R.layout.contact_spinner_nothing_selected_dropdown, // Optional
+//                requireContext()
+//            )
 //        )
-        // mBinding.outSpinner.adapter = adapter
-        mBinding.outSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                progress.show()
-                if (position > 0) {
-                    careerViewModel.getUSSearch(list.get(position).id.toString().getUSIndustry("1"))
-                } else {
-                    careerViewModel.getUSSearch("1".getUSIndustryNoService())
-                }
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-        }
-    }
+////        val adapter = ArrayAdapter(
+////            requireContext(),
+////            R.layout.spinner_text, list
+////        )
+//        // mBinding.outSpinner.adapter = adapter
+//        mBinding.outSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                progress.show()
+//                if (position > 0) {
+//                    careerViewModel.getUSSearch(list.get(position).id.toString().getUSIndustry("1"))
+//                } else {
+//                    careerViewModel.getUSSearch("1".getUSIndustryNoService())
+//                }
+//            }
+//
+//            override fun onNothingSelected(p0: AdapterView<*>?) {
+//                TODO("Not yet implemented")
+//            }
+//        }
+//    }
 
     private fun setWorkSpinner() {
         mBinding.spinnerLay1.visibility = View.GONE
@@ -498,24 +721,6 @@ class SearchCareerFragment(var type: String) : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-    }
-
-    private fun setIndustrySpinner() {
-        mBinding.workLayout.visibility = View.GONE
-        mBinding.spinnerLay1.visibility = View.VISIBLE
-        val list = ArrayList<IndustryModel>()
-        val jsonArry = JSONArray(listData)
-        for (i in 0 until jsonArry.length()) {
-            val obj = jsonArry.getJSONObject(i)
-            val user = IndustryModel(obj.getInt("id"), obj.getString("name"))
-            list.add(user)
-        }
-        mBinding.text2.visibility = View.GONE
-        mBinding.outSpinner.visibility = View.VISIBLE
-        val adapter = IndustryClusterAdapter(requireContext(), list, ::clickIndustryItem)
-        mBinding.outSpinner.adapter = adapter
-        mBinding.outSpinner.setSelection(0)
-
     }
 
     private fun setClusterAdapter(it: CareerClusterModel?) {
@@ -926,14 +1131,13 @@ class SearchCareerFragment(var type: String) : Fragment() {
         sheetBinding.root.minimumHeight = ((Resources.getSystem().displayMetrics.heightPixels))
         dialog.setContentView(sheetBinding.root)
         sheetBinding.name.text = name
-        val mediaController = MediaController(requireContext())
-        mediaController.setAnchorView(sheetBinding.videoView)
-        mediaController.setMediaPlayer(sheetBinding.videoView)
-        sheetBinding.videoView.setVideoURI(Uri.parse(url))
-        sheetBinding.videoView.requestFocus();//give focus to a specific view
-
-        sheetBinding.videoView.start()
-        sheetBinding.videoView.setMediaController(mediaController)
+        getLifecycle().addObserver(sheetBinding.youtubePlayerView);
+        val videoId = extractYoutubeId(url)
+        sheetBinding.youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                videoId?.let { youTubePlayer.cueVideo(it, 0f) }
+            }
+        })
         dialog.show()
 
 
@@ -1129,6 +1333,30 @@ class SearchCareerFragment(var type: String) : Fragment() {
         transaction.addToBackStack("name")
         transaction.commit()
     }
+    fun clickMilitaryService(industryModel: IndustryModel, type: String) {
+        if (type == "us") {
+            military = industryModel.id.toString()
+           usMilitaryBinding?.dismiss()
+            mBinding.outSpinnerText1.setText(industryModel.name)
+//            progress.show()
+//            careerViewModel.getUSSearch(industryModel.id.toString().getUSIndustry("1"))
+        } else if (type == "cluster"){
+            mBinding.outSpinnerText2.setText(industryModel.name)
+            cluster = industryModel.id.toString()
+         clusterBinding?.dismiss()
+//            progress.show()
+//           careerViewModel.getUSSearch(industryModel.id.toString().getUSIndustryCluster("1"))
+        }
+
+
+//                if (position > 0) {
+//                    careerViewModel.getUSSearch(list.get(position).id.toString().getUSIndustry("1"))
+//                } else {
+//                    careerViewModel.getUSSearch("1".getUSIndustryNoService())
+//                }
+    }
 }
+
+
 
 

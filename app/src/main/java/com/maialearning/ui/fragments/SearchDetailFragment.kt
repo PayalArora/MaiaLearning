@@ -42,8 +42,12 @@ class SearchDetailFragment : Fragment() {
     private lateinit var toolbarBinding: Toolbar
     private val careerViewModel: CareerViewModel by viewModel()
     var careerSearchResponseItem:CareerSearchResponseItem?= null
+    var sessionDataResponse:SessionDataResponse?= null
     private lateinit var progress: Dialog
     var itModel = CareerFactsheetResponse()
+    var regionName = ""
+    var regionLevel = "nation"
+    var regionCode = "0"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,14 +84,26 @@ class SearchDetailFragment : Fragment() {
 //        }
 
         progress.show()
-        careerViewModel.getCareerFactsheetDetail("" + careerSearchResponseItem?.onetId,"nation","0")
+        careerViewModel.getCareerSessionData()
+       // careerViewModel.getCareerFactsheetDetail("" + careerSearchResponseItem?.onetId,"nation","0")
+        observers()
+        return binding.root
+    }
+    private fun observers(){
+        careerViewModel.getSessionObserver.observe(viewLifecycleOwner){
+            progress.dismiss()
+            progress.show()
+            sessionDataResponse = it
+            it.data?.users?.careerRegionPreference?.regionCode?.let {it1->
+                careerViewModel.getCareerFactsheetDetail("" + careerSearchResponseItem?.onetId,it?.data?.users?.careerRegionPreference?.regionLevel,it1)
+            }?:careerViewModel.getCareerFactsheetDetail("" + careerSearchResponseItem?.onetId,"nation","0")
+        }
         careerViewModel.careerListFactsheetObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             val gson = GsonBuilder().create()
             itModel = gson.fromJson(it, CareerFactsheetResponse::class.java)
             initView()
         }
-        return binding.root
     }
 
 
@@ -102,7 +118,7 @@ class SearchDetailFragment : Fragment() {
 
         }
         val fm: FragmentManager = requireActivity().supportFragmentManager
-        val adapter = CareerFactsheetStateAdapter(fm, lifecycle, tabArray.size, itModel)
+        val adapter = CareerFactsheetStateAdapter(fm, lifecycle, tabArray.size, itModel, sessionDataResponse)
 
         binding.viewPager.adapter = adapter
 

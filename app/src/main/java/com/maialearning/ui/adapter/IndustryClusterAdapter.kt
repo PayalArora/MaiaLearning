@@ -7,48 +7,39 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.annotation.NonNull
+import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
+import com.maialearning.databinding.CareerFilterItemRowBinding
 import com.maialearning.model.CareerClusterModel
 import com.maialearning.model.IndustryModel
 
 class IndustryClusterAdapter(
-    context: Context?,
-    algorithmList: ArrayList<IndustryModel>,
-    var click:(IndustryModel)->Unit
-) :
-    ArrayAdapter<IndustryModel>(context!!, 0, algorithmList) {
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return initView(position, convertView, parent)
-    }
-    override fun getDropDownView(
-        position: Int,
-        convertView: View?,
-        @NonNull parent: ViewGroup
-    ): View {
-        return initView(position, convertView, parent)
+    val context: Context,
+    var arrayListOut: ArrayList<IndustryModel>,    var click:(item:IndustryModel, type:String)->Unit, val type:String
+) : RecyclerView.Adapter<IndustryClusterAdapter.ViewHolder>() {
+
+    class ViewHolder(val binding: CareerFilterItemRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        init {
+            // Define click listener for the ViewHolder's View.
+        }
     }
 
-    private fun initView(
-        position: Int, convertView: View?,
-        parent: ViewGroup
-    ): View {
-        // It is used to set our custom view.
-        var convertView: View? = convertView
-        if (convertView == null) {
-            convertView =
-                LayoutInflater.from(context).inflate(R.layout.spinner_text, parent, false)
-        }
-        val textViewName: TextView? = convertView?.findViewById(R.id.text1)
-        val currentItem: IndustryModel? = getItem(position)
+    // Create new views (invoked by the layout manager)
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): IndustryClusterAdapter.ViewHolder {
+        val inflater = LayoutInflater.from(viewGroup.context)
+        val binding = CareerFilterItemRowBinding.inflate(inflater, viewGroup, false)
 
-        // It is used the name to the TextView when the
-        // current item is not null.
-        if (currentItem != null) {
-            textViewName?.setText(currentItem.name)
-        }
-//        textViewName?.setOnClickListener {
-//            click(getItem(position)!!)
-//        }
-        return convertView!!
+        return ViewHolder(binding)
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    override fun onBindViewHolder(viewHolder: IndustryClusterAdapter.ViewHolder, position: Int) {
+        viewHolder.binding.name.text = arrayListOut.get(position).name
+        viewHolder.binding.name.setOnClickListener {click(arrayListOut.get(position), type)  }
+    }
+
+    override fun getItemCount(): Int {
+        return arrayListOut.size
     }
 }

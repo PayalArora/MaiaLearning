@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.SearchCareerItemBinding
 import com.maialearning.model.CareerSearchResponseItem
-import com.maialearning.util.UNIV_LOGO_URL
-import com.maialearning.util.roundOffDecimal
+import com.maialearning.util.extractYoutubeId
 import com.squareup.picasso.Picasso
-import java.net.URL
+import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class SearchCareerAdapter(
@@ -50,7 +49,9 @@ class SearchCareerAdapter(
            val item = arrayList?.get(position)
            name.text = item?.title
            name1.text = item?.description
-           text2.text = "${item?.averageSalary?.toDouble()?.roundToInt().toString()}"
+           val amount: Double? = item?.averageSalary?.toDouble()?.roundToInt()?.toDouble()
+           val formatter = DecimalFormat("#,###")
+           text2.text = "${formatter.format(amount)}"
            if (item?.isfav== false) {
                viewHolder.binding.like.setImageResource(R.drawable.like)
            } else  {
@@ -93,14 +94,5 @@ class SearchCareerAdapter(
     }
 
 
-    fun extractYoutubeId(url: String?): String? {
-        val param = url?.split("embed/")?.toTypedArray()
-        var id: String? = null
-        if (param != null&& param.size>1 ) {
 
-                id = param[1]
-
-        }
-        return id
-    }
 }

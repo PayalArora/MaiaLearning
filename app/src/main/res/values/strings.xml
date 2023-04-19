@@ -667,8 +667,13 @@
         <item>Search by Pathway</item>
         <item>Search by Category</item>
         <item>Search by U.S. Military</item>
+        <item>Search by High Demand Jobs</item>
     </string-array>
-
+    <string-array name="REGION_TYPE">
+        <item>State</item>
+        <item>Country</item>
+        <item>Metropolitan Area</item>
+    </string-array>
     <string-array name="OUT_ARRAY">
         <item>All</item>
         <item>Grow Rapidly</item>
@@ -691,6 +696,13 @@
     <string-array name="slider_values_sat">
         <item>200</item>
         <item>200</item>
+    </string-array>
+
+    <string-array name="us_military_status">
+        <item>Enlisted</item>
+        <item>Active Duty</item>
+        <item>Officer</item>
+        <item>Reserve</item>
     </string-array>
     <string-array name="static_applying_with">
         <item>UC Application</item>
@@ -767,9 +779,15 @@
     <string name="career_pathway">Career Pathways</string>
     <string name="work_activities">%1$s %2$s</string>
     <string name="change_region">Change Region Selection</string>
-    <string name="default_selection">My default region selection is\n</string>
+    <string name="default_selection">My default region selection is:\n</string>
     <string name="select_region">Select region for which you want to filter this data</string>
     <string name="related_career">Related Careers</string>
+    <string name="demographics">Demographics</string>
+    <string name="space">&#8212;</string>
+    <string name="select_cluster">Select Career Cluster</string>
+    <string name="select_status">Select Status</string>
+    <string name="select_region_type">Select Region Type</string>
+    <string name="select_region_name">Select Region Name</string>
 
 
 </resources>

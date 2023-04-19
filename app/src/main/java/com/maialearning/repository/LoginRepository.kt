@@ -447,7 +447,8 @@ interface LoginRepository {
     ): UseCaseResult<ArrayList<CareerCategoryResponseItem>>
     suspend fun getCareerPathways(
     ): UseCaseResult<ArrayList<CareerCategoryResponseItem>>
-
+    suspend fun getSessionData(
+    ): UseCaseResult<SessionDataResponse>
     suspend fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String
     ): UseCaseResult<ArrayList<CareerSearchResponseItem>>
 }
@@ -2296,6 +2297,21 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         val url = "${CAREER}careers/search/filters/pathways"
         return try {
             val result = catApi.getCareerPathways(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getSessionData(
+    ): UseCaseResult<SessionDataResponse> {
+        val url = "${ML_URL}v1/user/${SharedHelper(BaseApplication.applicationContext()).uuid}/session-data"
+        return try {
+            val result = catApi.getSessionData(url,
                 "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
             ).await()
             UseCaseResult.Success(result)

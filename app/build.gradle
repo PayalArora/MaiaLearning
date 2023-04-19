@@ -99,6 +99,7 @@ dependencies {
 
     implementation 'com.github.omadahealth:swipy:1.2.3@aar'
     implementation 'com.android.databinding:viewbinding:7.3.0'
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0'
 
 }
 apply plugin: 'com.google.gms.google-services'
