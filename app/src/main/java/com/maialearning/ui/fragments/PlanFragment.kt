@@ -99,11 +99,11 @@ class PlanFragment() : Fragment() {
 
     private fun dataset(itModel: StudentCarrerPlanResponse?) {
         mBinding.careersList.adapter = CareerAdapter(itModel?.careers)
-        mBinding.knowList.adapter = KnowledgeAttrAdapter(requireContext(), itModel?.knowledge)
-        mBinding.actionList.adapter = StudentSkillsPlanAdapter(requireContext(), itModel?.skills)
-        mBinding.abilityList.adapter = AbilityAdapter(requireContext(), itModel?.ability)
-        mBinding.toolsList.adapter = ToolsAdapter(requireContext(), itModel?.tools)
-        mBinding.techList.adapter = TechnologyAdapter(requireContext(), itModel?.technology)
+//        mBinding.knowList.adapter = KnowledgeAttrAdapter(requireContext(), itModel?.knowledge)
+//        mBinding.actionList.adapter = StudentSkillsPlanAdapter(requireContext(), itModel?.skills)
+//        mBinding.abilityList.adapter = AbilityAdapter(requireContext(), itModel?.ability)
+//        mBinding.toolsList.adapter = ToolsAdapter(requireContext(), itModel?.tools)
+//        mBinding.techList.adapter = TechnologyAdapter(requireContext(), itModel?.technology)
     }
 
     private fun bottomSheetList() {

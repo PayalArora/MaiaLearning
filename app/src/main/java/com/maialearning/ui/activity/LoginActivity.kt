@@ -2,15 +2,20 @@ package com.maialearning.ui.activity
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -22,6 +27,11 @@ import com.maialearning.R
 import com.maialearning.calbacks.OnSignInStartedListener
 import com.maialearning.databinding.ActivityLoginBinding
 import com.maialearning.factory.LoginViewModelFactory
+import com.maialearning.model.CeebResponse
+import com.maialearning.model.CeebResponseItem
+import com.maialearning.ui.adapter.CeeBAdapter
+import com.maialearning.ui.adapter.NothingSelectedSpinnerAdapter
+import com.maialearning.ui.adapter.SelectUniversityAdapter
 import com.maialearning.util.prefhandler.SharedHelper
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.LoginNewModel
@@ -34,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private var passVisible: Boolean = false
     private var googleSignInAccount: GoogleSignInAccount? = null
+    private var arrayCeeb : ArrayList<CeebResponseItem>? = null
 
     companion object {
         private const val RC_SIGN_IN = 9001
@@ -42,6 +53,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var viewModel: LoginViewModel
     private val loginModel: LoginNewModel by viewModel()
     private lateinit var dialog: Dialog
+    var ceebCode = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -128,6 +140,11 @@ class LoginActivity : AppCompatActivity() {
         binding.googleLogin.setOnClickListener {
            viewModel.signIn()
         }
+        binding.singleSignin.setOnClickListener {
+            dialog.show()
+            loginModel.ceebCode()
+
+        }
         binding.loginMicrosoft.setOnClickListener {
             // Microsoftt code refrance https://firebase.google.com/docs/auth/android/microsoft-oauth
             viewModel.signinToMicrosoft(this)
@@ -159,6 +176,10 @@ class LoginActivity : AppCompatActivity() {
             if (!it) {
                 dialog.dismiss()
             }
+        }
+        loginModel.ceebObserver.observe(this){
+            arrayCeeb = it
+            showDialog(this)
         }
     }
 
@@ -294,6 +315,82 @@ class LoginActivity : AppCompatActivity() {
             dialog.dismiss()
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
+        loginModel.samlUrlObserver.observe(this){
+
+        }
+    }
+    fun showDialog(context:Context) {
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        val width:Int =
+            (context.getResources().getDisplayMetrics().widthPixels) -50 //<-- int width=400;
+        dialog.setContentView(R.layout.single_sign_on_dialog)
+        dialog.window?.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
+        val back = ColorDrawable(Color.TRANSPARENT)
+        val inset = InsetDrawable(back, 16, -8, 16, -8)
+        dialog.window!!.setBackgroundDrawable(inset)
+
+        arrayCeeb?.let {
+
+            val adapter = CeeBAdapter(this, R.layout.spinner_region_type, it)
+
+            dialog.findViewById<AutoCompleteTextView>(R.id.ceeb_edt).setAdapter(adapter)
+
+            dialog.findViewById<AutoCompleteTextView>(R.id.ceeb_edt)  .setOnItemClickListener { parent, _, position, _ ->
+                    val city = adapter.getItem(position) as CeebResponseItem?
+                dialog.findViewById<AutoCompleteTextView>(R.id.ceeb_edt).setText(city?.title)
+               // dialog.findViewById<EditText>(R.id.email_edt).setText("")
+                ceebCode = city?.fieldCeebCodeValue?:""
+        }
+            dialog.findViewById<EditText>(R.id.email_edt).addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if ( dialog.findViewById<AutoCompleteTextView>(R.id.ceeb_edt).text.isNotEmpty())
+                   dialog.findViewById<AutoCompleteTextView>(R.id.ceeb_edt).setText("")
+                    ceebCode =""
+                }
+
+
+            })
+            dialog.findViewById<AutoCompleteTextView>(R.id.ceeb_edt).addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if (dialog.findViewById<EditText>(R.id.email_edt).text.isNotEmpty())
+                    dialog.findViewById<EditText>(R.id.email_edt).setText("")
+                }
+
+
+            })
+            dialog.findViewById<TextView>(R.id.login_btn).setOnClickListener {
+                val ceeb =  dialog.findViewById<AutoCompleteTextView>(R.id.ceeb_edt).text.toString()
+
+                var email =  dialog.findViewById<EditText>(R.id.email_edt).text.toString()
+                if(!isEmailIdValid(email)){
+                    email = ""
+                }
+                if (ceeb.isNotEmpty() || email.isNotEmpty())
+                {
+                    loginModel.samlUrl(email, ceebCode)
+                }
+            }
+        dialog.show()
     }
 
-}
+
+
+}}

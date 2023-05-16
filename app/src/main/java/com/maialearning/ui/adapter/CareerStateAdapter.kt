@@ -15,11 +15,13 @@ class CareerStateAdapter (fragmentManager: FragmentManager, lifecycle: Lifecycle
         if (position == 0) {
             return SearchCareerFragment("")
         } else if (position == 1) {
-            return SearchCareerFragment("list")
+            return CareerListFragment()
         } else if (position == 2) {
-            return PlanFragment()
+          return PlanFragment()
         } else if (position == 3) {
-            return NysCareerPlan()
+         return NysCareerPlan()
+        }else if (position == 4) {
+            return ApperentshipFragment()
         }
         return SearchCareerFragment("")
     }

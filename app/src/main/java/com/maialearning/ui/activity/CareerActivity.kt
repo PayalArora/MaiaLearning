@@ -93,7 +93,8 @@ class CareerActivity : Fragment() {
             getString(R.string.search),
             getString(R.string.list),
             getString(R.string.plan),
-            getString(R.string.nys_career)
+            getString(R.string.nys_career),
+       getString(R.string.apparentship)
         )
         for (item in tabArray) {
             binding.tabs.addTab(binding.tabs.newTab().setText(item))

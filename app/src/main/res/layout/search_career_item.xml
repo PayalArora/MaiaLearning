@@ -125,10 +125,12 @@
                 app:layout_constraintTop_toBottomOf="@id/name" />
 
             <RelativeLayout
+
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/_10dp"
                 android:layout_marginTop="@dimen/_15dp"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/name1"
                 app:layout_constraintTop_toBottomOf="@id/name1">
@@ -178,6 +180,38 @@
                             app:layout_constraintStart_toEndOf="@id/dollar"
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/posting_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/_15dp"
+                    android:layout_marginEnd="@dimen/_5dp"
+                    android:background="@drawable/white_rect_15"
+                    android:backgroundTint="@color/purple_tint"
+                    android:paddingHorizontal="@dimen/_5dp">
+
+                    <TextView
+                        android:id="@+id/postings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5dp"
+                        android:layout_marginTop="@dimen/_2dp"
+                        android:layout_marginBottom="@dimen/_2dp"
+                        android:textStyle="bold"
+
+
+                        android:gravity="center"
+                        android:padding="@dimen/_2dp"
+                        android:text="Unique Postings"
+                        android:textColor="@color/purple_1"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 </RelativeLayout>
 
 

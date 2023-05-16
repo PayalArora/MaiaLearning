@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/_10dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white_1"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="@dimen/_10dp">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:cardCornerRadius="@dimen/_18dp"
                 android:id="@+id/card"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/_18dp"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <RelativeLayout
                     android:id="@+id/topLayout"
@@ -41,6 +45,7 @@
                         android:textSize="@dimen/_16sp" />
 
                     <TextView
+                        android:id="@+id/change_region"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/txt_region"
@@ -60,33 +65,36 @@
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
+
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_curve_rectangle_white_filled"
 
                 android:layout_marginTop="@dimen/_10dp"
-                app:layout_constraintTop_toBottomOf="@+id/card"
-                android:id="@+id/image">
-                <VideoView
+                android:background="@drawable/background_curve_rectangle_white_filled"
+                app:layout_constraintTop_toBottomOf="@+id/card">
+
+                <ImageView
+                    android:id="@+id/video_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_200dp"
-                    android:scaleType="fitXY"
                     android:layout_margin="@dimen/_10dp"
-                    android:id="@+id/video_view"
+                    android:scaleType="fitXY"
                     android:src="@drawable/video_dummy"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
+                    android:id="@+id/play_btn"
                     android:layout_width="65dp"
                     android:layout_height="50dp"
-                    android:id="@+id/play_btn"
                     android:src="@drawable/play_rectangle"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,10 +102,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
                 android:padding="@dimen/_10dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_layout">
 
@@ -105,8 +113,8 @@
                     android:id="@+id/ethc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
                     android:text="@string/career_cluster"
@@ -114,6 +122,7 @@
                     android:textSize="18sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     android:id="@+id/ethcview"
                     android:layout_width="match_parent"
@@ -121,12 +130,13 @@
                     android:layout_marginTop="@dimen/_20dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/ethc" />
+
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/career_cluster_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:id="@+id/career_cluster_list"
-                    app:layout_constraintTop_toBottomOf="@id/ethcview"/>
+                    app:layout_constraintTop_toBottomOf="@id/ethcview" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -134,18 +144,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
                 android:padding="@dimen/_10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/image">
 
-                     <TextView
+                <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
                     android:text="title"
@@ -153,6 +163,7 @@
                     android:textSize="18sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     android:id="@+id/title_view"
                     android:layout_width="match_parent"
@@ -160,12 +171,13 @@
                     android:layout_marginTop="@dimen/_20dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/title" />
+
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10dp"
                     android:layout_marginStart="@dimen/_10dp"
+                    android:layout_marginTop="@dimen/_10dp"
                     android:fontFamily="@font/inter_regular"
                     android:text="title"
                     android:textColor="@color/black_1"
@@ -173,30 +185,33 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/title_view" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/activities"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
                 android:padding="@dimen/_10dp"
                 android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/demographics">
+                app:layout_constraintTop_toBottomOf="@id/age_background">
+
                 <TextView
                     android:id="@+id/act"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10dp"
                     android:layout_marginTop="@dimen/_10dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
                     android:text="Work Activities"
-                    android:layout_marginStart="@dimen/_10dp"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     android:id="@+id/actview"
                     android:layout_width="match_parent"
@@ -204,22 +219,24 @@
                     android:layout_marginTop="@dimen/_20dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/act" />
+
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/actView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/actView"
                     android:layout_marginStart="@dimen/_10dp"
-                    app:layout_constraintTop_toBottomOf="@id/actview"/>
+                    app:layout_constraintTop_toBottomOf="@id/actview" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/pathways"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                android:visibility="visible"
-                android:padding="@dimen/_10dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/career_cluster">
 
@@ -230,12 +247,13 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
+                    android:padding="@dimen/_10dp"
                     android:text="@string/career_pathway"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:padding="@dimen/_10dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     android:id="@+id/pathway_view"
                     android:layout_width="match_parent"
@@ -243,23 +261,25 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/pathway_txt" />
+
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/pathway_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:id="@+id/pathway_list"
-                    app:layout_constraintTop_toBottomOf="@id/pathway_view"/>
+                    app:layout_constraintTop_toBottomOf="@id/pathway_view" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/demographics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                android:visibility="visible"
-                android:padding="@dimen/_10dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pathways">
 
@@ -270,12 +290,13 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
+                    android:padding="@dimen/_10dp"
                     android:text="@string/demographics"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:padding="@dimen/_10dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     android:id="@+id/demographics_view"
                     android:layout_width="match_parent"
@@ -283,23 +304,524 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/demographics_txt" />
-                <androidx.recyclerview.widget.RecyclerView
+                <!--    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10dp"
+                        android:id="@+id/demographics_list"
+                        app:layout_constraintTop_toBottomOf="@id/demographics_view"/>-->
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:id="@+id/demographics_list"
-                    app:layout_constraintTop_toBottomOf="@id/demographics_view"/>
+                    android:orientation="vertical"
+                    android:paddingBottom="23dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/demographics_view">
 
+                    <LinearLayout
+                        android:id="@+id/retitring_lay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:text="Retiring soon"
+                            android:textColor="@color/black_1"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:id="@+id/retiring_txt"
+                            android:textSize="@dimen/_16sp" />
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:text="US Average"
+                            android:textColor="@color/black_1"
+                            android:id="@+id/retiring_country"
+                            android:textSize="@dimen/_16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/retiring_average_progress"
+                            style="@style/Widget.ProgressBar.VerticalBlue"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_18dp"
+                            android:layout_marginRight="@dimen/_50dp"
+                            android:progress="50" />
+
+                        <TextView
+                            android:id="@+id/retiring_state"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:textColor="@color/black_1"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:textSize="@dimen/_16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/retiring_state_progress"
+                            style="@style/Widget.ProgressBar.VerticalBlue"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_18dp"
+                            android:layout_marginRight="@dimen/_50dp"
+                            android:progress="50" />
+
+                        <TextView
+                            android:id="@+id/retiring_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_1"
+                            android:layout_marginTop="@dimen/_25dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:textSize="@dimen/_16sp" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_15dp"
+                        android:background="@color/tint" />
+                    <LinearLayout
+                        android:id="@+id/racial_lay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:text="@string/racial"
+                            android:textColor="@color/black_1"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:id="@+id/racial_txt"
+                            android:textSize="@dimen/_16sp" />
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:text="US Average"
+                            android:textColor="@color/black_1"
+                            android:id="@+id/racial_country"
+                            android:textSize="@dimen/_16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/racial_average_progress"
+                            style="@style/Widget.ProgressBar.VerticalPurple"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_18dp"
+                            android:layout_marginRight="@dimen/_50dp"
+                            android:progress="50" />
+
+                        <TextView
+                            android:id="@+id/racial_state"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:textColor="@color/black_1"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:textSize="@dimen/_16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/racial_state_progress"
+                            style="@style/Widget.ProgressBar.VerticalPurple"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_18dp"
+                            android:layout_marginRight="@dimen/_50dp"
+                            android:progress="50" />
+
+                        <TextView
+                            android:id="@+id/racial_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_1"
+                            android:layout_marginTop="@dimen/_25dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:textSize="@dimen/_16sp" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="@dimen/_15dp"
+                        android:background="@color/tint" />
+                    <LinearLayout
+                        android:id="@+id/gender_lay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter_bold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:text="@string/gender_div"
+                            android:textColor="@color/black_1"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:id="@+id/gender_txt"
+                            android:textSize="@dimen/_16sp" />
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:text="US Average"
+                            android:textColor="@color/black_1"
+                            android:id="@+id/gender_country"
+                            android:textSize="@dimen/_16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/gender_average_progress"
+                            style="@style/Widget.ProgressBar.VerticalGreen"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_18dp"
+                            android:layout_marginRight="@dimen/_50dp"
+                            android:progress="50" />
+
+                        <TextView
+                            android:id="@+id/gender_state"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:textColor="@color/black_1"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:textSize="@dimen/_16sp" />
+
+                        <ProgressBar
+                            android:id="@+id/gender_state_progress"
+                            style="@style/Widget.ProgressBar.VerticalGreen"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_10dp"
+                            android:layout_marginTop="@dimen/_18dp"
+                            android:layout_marginRight="@dimen/_50dp"
+                            android:progress="50" />
+
+                        <TextView
+                            android:id="@+id/gender_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black_1"
+                            android:layout_marginTop="@dimen/_25dp"
+                            android:fontFamily="@font/inter_semibold"
+                            android:lineSpacingExtra="@dimen/_2sp"
+                            android:textSize="@dimen/_16sp" />
+                    </LinearLayout>
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/age_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_20dp"
+            android:background="@drawable/background_curve_rectangle_white_filled"
+            android:padding="@dimen/_10dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/demographics">
+
+            <TextView
+                android:id="@+id/age_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:fontFamily="@font/inter_bold"
+                android:lineSpacingExtra="2sp"
+                android:padding="@dimen/_10dp"
+                android:text="@string/age_background"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/age_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/_10dp"
+                android:background="@color/tint"
+                app:layout_constraintTop_toBottomOf="@id/age_txt" />
+            <LinearLayout
+                android:id="@+id/radio_region"
+                android:layout_width="match_parent"
+                android:layout_marginStart="@dimen/_10dp"
+                android:layout_marginTop="@dimen/_15dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/age_view"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RadioGroup
+                    android:id="@+id/radio_regions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@+id/participant_txt"
+                    android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/rb_nation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_50dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:gravity="center"
+                    android:checked="true"
+                    android:button="@drawable/radiobutton"
+                    android:paddingHorizontal="@dimen/_5dp"
+                    android:text="@string/race_ethnicity"
+                    android:textSize="@dimen/_16sp" />
+                <RadioButton
+                    android:id="@+id/rb_region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_50dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:layout_marginStart="@dimen/_10dp"
+                    android:button="@drawable/radiobutton"
+                    android:paddingHorizontal="@dimen/_5dp"
+                    android:text="@string/gender"
+                    android:textSize="@dimen/_16sp" />
+                </RadioGroup>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginStart="@dimen/_10dp"
+                android:paddingBottom="23dp"
+                android:layout_marginTop="@dimen/_15dp"
+                app:layout_constraintTop_toBottomOf="@id/radio_region"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RadioGroup
+                    android:id="@+id/radio_participants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_below="@+id/participant_txt"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_age"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:button="@null"
+                        android:layout_weight="0.7"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:background="@drawable/radiobutton_age"
+                        android:paddingHorizontal="@dimen/_5dp"
+                        android:text="@string/age"
+                        android:textSize="@dimen/_16sp" />
+
+
+                    <RadioButton
+                        android:id="@+id/rb_race_ethnicity"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:button="@null"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:layout_weight="1.5"
+                        android:layout_marginStart="@dimen/_10dp"
+                        android:gravity="center"
+                        android:background="@drawable/radiobutton_age"
+                        android:paddingHorizontal="@dimen/_5dp"
+                        android:text="@string/race_ethnicity"
+                        android:textSize="@dimen/_16sp" />
+                    <RadioButton
+                        android:id="@+id/rb_gender"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:button="@null"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_marginStart="@dimen/_10dp"
+                        android:background="@drawable/radiobutton_age"
+                        android:paddingHorizontal="@dimen/_5dp"
+                        android:text="@string/gender"
+                        android:textSize="@dimen/_16sp" />
+                    <RadioButton
+                        android:id="@+id/rb_education"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_50dp"
+                        android:button="@null"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:layout_marginStart="@dimen/_10dp"
+                        android:background="@drawable/radiobutton_age"
+                        android:paddingHorizontal="@dimen/_5dp"
+                        android:text="@string/education_level"
+                        android:textSize="@dimen/_16sp" />
+                </RadioGroup>
+
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:id="@+id/pieChart_view"/>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/_20dp"
+                    android:background="@color/tint"
+                    />
+                <LinearLayout
+                    android:id="@+id/age_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/age"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/age"
+                        android:textStyle="bold"
+
+                        android:layout_weight="1.6"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black_org"
+                        android:textSize="16sp"
+                        />
+                    <TextView
+                        android:id="@+id/per_job"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/per_jobs"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/_10dp"
+                        android:layout_weight=".7"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black_org"
+                        android:textSize="16sp"
+                        />
+                    <TextView
+                        android:id="@+id/job"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/jobs"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/_5dp"
+                        android:layout_weight=".7"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black_org"
+                        android:textSize="16sp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/gender_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+
+
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/gender"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/age"
+                        android:textStyle="bold"
+
+                        android:layout_weight="1.3"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black_org"
+                        android:textSize="16sp"
+                        />
+                    <TextView
+                        android:id="@+id/genderper_job"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/per_jobs"
+                        android:textStyle="bold"
+
+                        android:layout_marginStart="@dimen/_30dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black_org"
+                        android:textSize="16sp"
+                        />
+                    <TextView
+                        android:id="@+id/gender_job"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/jobs"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/_5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black_org"
+                        android:textSize="16sp"
+                        />
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/age_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/age_item"
+                    android:layout_marginTop="@dimen/_5dp"
+                    app:layout_constraintTop_toBottomOf="@id/age_view" />
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/relatedCareers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20dp"
-                android:visibility="visible"
-                android:padding="@dimen/_10dp"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/background_curve_rectangle_white_filled"
+                android:padding="@dimen/_10dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/activities">
 
@@ -311,12 +833,13 @@
                     android:fontFamily="@font/inter_bold"
                     android:lineSpacingExtra="2sp"
 
+                    android:padding="@dimen/_10dp"
                     android:text="@string/related_career"
                     android:textColor="@color/black"
                     android:textSize="18sp"
-                    android:padding="@dimen/_10dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <View
                     android:id="@+id/relatedCareers_view"
                     android:layout_width="match_parent"
@@ -324,12 +847,13 @@
                     android:layout_marginTop="@dimen/_10dp"
                     android:background="@color/tint"
                     app:layout_constraintTop_toBottomOf="@id/relatedCareers_txt" />
+
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/relatedCareers_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10dp"
-                    android:id="@+id/relatedCareers_list"
-                    app:layout_constraintTop_toBottomOf="@id/relatedCareers_view"/>
+                    app:layout_constraintTop_toBottomOf="@id/relatedCareers_view" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -63,7 +63,13 @@
         <item name="android:divider">@color/divider_color</item>
         <item name="android:dividerHeight">0.5dp</item>
     </style>
+    <style name="SpinnerTheme" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@drawable/white_rect_15
+        </item>
 
+        <item name="android:divider">@color/divider_color</item>
+        <item name="android:dividerHeight">0.5dp</item>
+    </style>
     <style name="Widget">
     </style>
     <style name="Widget.ProgressBar">
@@ -86,6 +92,21 @@
     <style name="Widget.ProgressBar.VerticalBlue">
         <item name="android:indeterminateOnly">false</item>
         <item name="android:progressDrawable">@drawable/vertical_progress_blue</item>
+        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:minWidth">1dip</item>
+        <item name="android:maxWidth">12dip</item>
+    </style>
+
+    <style name="Widget.ProgressBar.VerticalPurple">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/vertical_progress_purple</item>
+        <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
+        <item name="android:minWidth">1dip</item>
+        <item name="android:maxWidth">12dip</item>
+    </style>
+    <style name="Widget.ProgressBar.VerticalGreen">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/vertical_progress_green</item>
         <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
         <item name="android:minWidth">1dip</item>
         <item name="android:maxWidth">12dip</item>

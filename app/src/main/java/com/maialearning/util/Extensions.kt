@@ -71,6 +71,7 @@ const val SEARCH_KEYWORD = "https://app-www-maia.maialearning.com/ajs-services/c
 const val US_SEARCH= "get_military_careers_data?"
 var COLLEGE_JSON = "https://api-gw-staging.maialearning.com/college-json-filter"
 var CAREER = "https://api-gw-staging.maialearning.com/"
+var STATIC_URL = "https://maia2-staging.maialearning.com/atlas-static-data/"
 
 val   CommonApp = "3"
 object URL{
@@ -146,6 +147,7 @@ val appModules = module {
 
     viewModel { PortfolioViewModel(catRepository = get()) }
     viewModel { SurveyDetailViewModel(catRepository = get()) }
+    viewModel { SummaryModel(catRepository = get()) }
 }
 val appModules1 = module{
     single {
@@ -161,7 +163,9 @@ val appModules1 = module{
 
 fun createHttpClient(): OkHttpClient {
     val client = OkHttpClient.Builder()
-    client.readTimeout(5 * 60, TimeUnit.SECONDS)
+    client.connectTimeout(3, TimeUnit.MINUTES) // connect timeout
+        .writeTimeout(5, TimeUnit.MINUTES) // write timeout
+        .readTimeout(3, TimeUnit.MINUTES);
 //    val loggingInterceptor = HttpLoggingInterceptor()
 //    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
 //    return client.addInterceptor {
@@ -557,3 +561,7 @@ fun extractYoutubeId(url: String?): String? {
     return id
 }
 private val myCalendar = Calendar.getInstance()
+fun format(s: Int):String {
+    val formatter = DecimalFormat("#,###")
+    return formatter.format(s.toDouble())
+}

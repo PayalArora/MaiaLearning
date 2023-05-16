@@ -825,6 +825,10 @@ interface AllAPi {
     @POST
     fun updateAnswer( @Url url: String,
         @Header("Authorization") Authorization: String , @Body body:UpdateSurveyAnswerReq):Deferred<JsonObject>
+   @FormUrlEncoded
+    @POST("get_saml_login_url")
+    fun getSamlLoginUrl( @Field("sso_email") email: String?,
+                         @Field("ceeb_code") code: String? ):Deferred<Any>
     @PATCH
     fun completeSurvey( @Url url: String,
                       @Header("Authorization") Authorization: String , @Body body:CompleteSurveyReq):Deferred<JsonObject>
@@ -842,11 +846,10 @@ fun getAnticipatedCosts(
 @GET
   fun getNotes( @Url url: String,
                     @Header("Authorization") Authorization: String ,  @Query("assigned_to") assigned_to:String,@Query("offset") offset:String, @Query("limit") limit:String,  @Query("sort_by") sort_by:String,@Query("order_by") order_by:String ):Deferred<NotesModel>
-    suspend fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String
-    )
+
 @GET
   fun getCareerSearch( @Url url: String,
-                    @Header("Authorization") Authorization: String ,  @Query("searchBy") searchBy:String,@Query("searchValue") searchValue:String,@Query("offset") offset:String, @Query("limit") limit:String , @Query("regionLevel") regionLevel:String?, @Query("regionCode")regionCode:String?):Deferred<ArrayList<CareerSearchResponseItem>>
+                    @Header("Authorization") Authorization: String ,  @Query("searchBy") searchBy:String,@Query("searchValue") searchValue:String?,@Query("offset") offset:String, @Query("limit") limit:String , @Query("regionLevel") regionLevel:String?, @Query("regionCode")regionCode:String?):Deferred<ArrayList<CareerSearchResponseItem>>
 
 @GET
 fun getCareerCategories(@Url url: String,
@@ -861,8 +864,19 @@ fun getCareerPathways(@Url url: String,
 fun getSessionData(@Url url: String,
                       @Header("Authorization") Authorization: String ):Deferred<SessionDataResponse>
 
-}
+@GET
+fun getCareerFilters(@Url url: String,
+                   @Header("Authorization") Authorization: String ):Deferred<CareerFilterResponse>
+@PATCH
+fun careerPref(@Url url: String,
+                   @Header("Authorization") Authorization: String ,  @Body savePrefReq: SavePrefReq ):Deferred<JsonObject>
+@GET
+fun getCareeList( @Url url: String):Deferred<JsonObject>
 
+@GET fun getCeebList( @Url url: String):Deferred<ArrayList<CeebResponseItem>>
+
+
+}
 
 //https://api-gw-staging.maialearning.com/careers/search?searchBy=category&searchValue=1&offset=0&limit=30
 

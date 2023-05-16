@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:fontFamily="@font/inter_regular"
-        android:text="@string/select_military"
+        android:text="@string/select_region_type"
         android:paddingHorizontal="@dimen/_5dp"
         style="?android:attr/spinnerItemStyle"
         android:singleLine="true"

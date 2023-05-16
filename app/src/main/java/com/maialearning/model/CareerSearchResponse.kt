@@ -25,6 +25,9 @@ data class CareerSearchResponseItem(
 
 	@field:SerializedName("onetId")
 	val onetId: String? = null,
+	@field:SerializedName("uniquePostings")
+	val uniquePostings: String? = null,
     var isfav: Boolean = false,
-	var nid: String?
+	var nid: String?,
+	var search_type:String = ""
 )  : Serializable

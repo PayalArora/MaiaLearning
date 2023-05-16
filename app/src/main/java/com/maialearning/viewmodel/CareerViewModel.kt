@@ -8,13 +8,11 @@ import com.maialearning.model.*
 import com.maialearning.network.UseCaseResult
 import com.maialearning.repository.LoginRepository
 import com.maialearning.util.Coroutines
-import com.maialearning.util.SEARCH_AFFINITY
 import com.maialearning.util.replaceCrossBracketsComas
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
 class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(), CoroutineScope {
@@ -23,10 +21,12 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     // Define default thread for Coroutine as Main and add job
     override val coroutineContext: CoroutineContext = Dispatchers.Main + job
     val careerListObserver = MutableLiveData<JsonArray>()
+    val careerObserver = MutableLiveData<JsonObject>()
     val showLoading = MutableLiveData<Boolean>()
     val showError = SingleLiveEvent<String>()
     val careerListDetailObserver = MutableLiveData<JsonObject>()
     val careerListFactsheetObserver = MutableLiveData<JsonObject>()
+    val careerListFactsheetNationalObserver = MutableLiveData<JsonObject>()
     val careerKeyboardObserver = MutableLiveData<CareerSearchCodesModel>()
     val careerClusterObserver = MutableLiveData<CareerClusterModel>()
     val careerClusterListObserver = MutableLiveData<CareerClusterListModel>()
@@ -42,11 +42,13 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
     val getVideoCodeObserver = MutableLiveData<JsonObject>()
     val getCareerCategoryObserver = MutableLiveData<ArrayList<CareerCategoryResponseItem>>()
     val getCareerPathwayObserver = MutableLiveData<ArrayList<CareerCategoryResponseItem>>()
+    val getCareerFilterObserver = MutableLiveData<CareerFilterResponse>()
     val getSessionObserver = MutableLiveData<SessionDataResponse>()
     val getCareerSearchObserver = MutableLiveData<ArrayList<CareerSearchResponseItem>>()
     val topPickObserver = MutableLiveData<JsonArray?>()
     val addFavObserver = MutableLiveData<JsonObject?>()
     val unlikeObserver = MutableLiveData<JsonObject>()
+    val careerPrefObserver = MutableLiveData<JsonObject>()
 
     fun getKeyboardSearch(id: String) {
         showLoading.value = true
@@ -167,6 +169,23 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
         }
     }
 
+    fun getCareerList() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.careerList()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+
 
     fun getCareerListDetail(id: String, url: String) {
         showLoading.value = true
@@ -193,6 +212,22 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> careerListFactsheetObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
+                        ?.replaceCrossBracketsComas()
+
+            }
+        }
+    }
+    fun getCareerFactsheetDetailNational(id: String, regionLevel: String?, regionCode: String?) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerFactsheetDetail(id, regionLevel, regionCode)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerListFactsheetNationalObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()?.replaceCrossBracketsComas()
                         ?.replaceCrossBracketsComas()
@@ -338,6 +373,21 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
+
+    fun getCareerFilters() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerFilters()
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> getCareerFilterObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
     fun getCareerSessionData() {
         showLoading.value = true
         Coroutines.mainWorker {
@@ -352,11 +402,25 @@ class CareerViewModel(private val catRepository: LoginRepository) : ViewModel(),
             }
         }
     }
-    fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String) {
+    fun careerPref(regionLevel: String, regionCode: String, regionName:String) {
         showLoading.value = true
         Coroutines.mainWorker {
             val result = withContext(Dispatchers.Main) {
-                catRepository.getCareerSearch(searchBy, searchValue, offset,limit)
+                catRepository.careerPref(regionLevel, regionCode, regionName)
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> careerPrefObserver.value = result.data
+                is UseCaseResult.Error -> showError.value = result.toString()
+
+            }
+        }
+    }
+    fun getCareerSearch(searchBy:String,searchValue:String?,offset:String,limit:String, regionLevel: String?, regionCode: String?) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.getCareerSearch(searchBy, searchValue, offset,limit, regionLevel, regionCode)
             }
             showLoading.value = false
             when (result) {

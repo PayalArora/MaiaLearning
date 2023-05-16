@@ -42,23 +42,23 @@ class UsCareerAdapter(
             viewHolder.binding.name1.text =
                 arrayList?.get(position)?.careerCluster?:""
         if(arrayList?.get(position)?.officer.equals("1")){
-            viewHolder.binding.officerI.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.tick))
+            viewHolder.binding.officerI.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.check))
         }else{
             viewHolder.binding.officerI.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.close))
 
         }
         if(arrayList?.get(position)?.enlisted.equals("1")){
-            viewHolder.binding.enlist.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.tick))
+            viewHolder.binding.enlist.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.check))
         }else{
             viewHolder.binding.enlist.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.close))
         }
         if(arrayList?.get(position)?.activeDuty.equals("1")){
-            viewHolder.binding.active.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.tick))
+            viewHolder.binding.active.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.check))
         }else{
             viewHolder.binding.active.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.close))
         }
         if(arrayList?.get(position)?.reserve.equals("1")){
-            viewHolder.binding.reser.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.tick))
+            viewHolder.binding.reser.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.check))
         }else{
             viewHolder.binding.reser.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.close))
         }

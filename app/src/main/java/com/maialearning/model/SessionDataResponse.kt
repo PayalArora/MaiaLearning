@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class SessionDataResponse(
 
 	@field:SerializedName("data")
-	val data: Data? = null
+	val data: Data? = null,
+var onet_id:String? = null
 ) {
 
 	data class CareerRegionPreference(

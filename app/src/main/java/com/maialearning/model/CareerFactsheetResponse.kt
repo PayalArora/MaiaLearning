@@ -17,13 +17,13 @@ data class CareerFactsheetResponse(
 	val relatedCareers: List<RelatedCareersItem?>? = null,
 
 	@field:SerializedName("ageBreakdown")
-	val ageBreakdown: List<AgeBreakdownItem?>? = null,
+	val ageBreakdown: ArrayList<AgeBreakdownItem>? = null,
 
 	@field:SerializedName("startMonth")
 	val startMonth: String? = null,
 
 	@field:SerializedName("raceEthnicityBreakdown")
-	val raceEthnicityBreakdown: List<RaceEthnicityBreakdownItem?>? = null,
+	val raceEthnicityBreakdown: ArrayList<RaceEthnicityBreakdownItem>? = null,
 
 	@field:SerializedName("description")
 	val description: String? = null,
@@ -62,7 +62,7 @@ data class CareerFactsheetResponse(
 	val workActivities: List<String?>? = null,
 
 	@field:SerializedName("educationBreakdown")
-	val educationBreakdown: List<EducationBreakdownItem?>? = null,
+	val educationBreakdown: ArrayList<EducationBreakdownItem>? = null,
 
 	@field:SerializedName("categories")
 	val categories: ArrayList<CategoriesItem>? = null,
@@ -71,7 +71,7 @@ data class CareerFactsheetResponse(
 	val specializedSkills: List<SpecializedSkillsItem?>? = null,
 
 	@field:SerializedName("genderBreakdown")
-	val genderBreakdown: List<GenderBreakdownItem?>? = null,
+	val genderBreakdown: ArrayList<GenderBreakdownItem>? = null,
 
 	@field:SerializedName("uniqueJobPostings")
 	val uniqueJobPostings: Int? = null,

@@ -40,13 +40,15 @@
     <color name="black_3">#7B8292</color>
     <color name="grey_4">#A9AAAE</color>
     <color name="grey_1">#1A54575F</color>
-    <color name="black">#FF000000</color>
+    <color name="black">#000000</color>
+    <color name="black_org">#000000</color>
     <color name="black_4">#BF54575F</color>
     <color name="purple_1">#633593</color>
+    <color name="purple_tint">#1A633593</color>
     <color name="purple_2">#8055AC</color>
     <color name="green_4">#225E81</color>
     <color name="green_5">#36779C</color>
-
+    <color name="white_2">#E5E5E5</color>
 <!-- Theme change   <color name="white_1">#E5E5E5</color>-->
     <color name="white_1">#EBECF8</color>
     <color name="color_acent">#19224F</color>
@@ -68,6 +70,7 @@
     <color name="dashed_color">#403743BE</color>
     <color name="purple">#633593</color>
     <color name="purple_alpha">#1A633593</color>
+    <color name="purple_alpha_3">#1A5E4496</color>
     <color name="purple_light">#c9bada</color>
     <color name="maar_light">#C1345F</color>
     <color name="banner_blue">#2B3694</color>
@@ -75,6 +78,17 @@
     <color name="banner_light_orange">#EA8B52</color>
     <color name="grey_10">#1A54575F</color>
     <color name="grey_line">#E6E6E7</color>
+    <color name="purple_3">#5E4496</color>
+    <color name="green_alpha_3">#1A36779C</color>
+    <color name="green_6">#36779C</color>
+    <color name="grey_age">#2654575F</color>
+    <color name="color_14">#B55B51</color>
+    <color name="color_19">#F89A1F</color>
+    <color name="color_25">#36779C</color>
+    <color name="color_35">#633593</color>
+    <color name="color_55">#BF3E8C</color>
+    <color name="color_65">#8055AC</color>
+    <color name="color_45">#24418E</color>
 
 
 </resources>

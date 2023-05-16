@@ -72,7 +72,7 @@ class NysCareerPlan : Fragment() {
         careerViewModel.nysCareerObserver.observe(requireActivity()) {
            progress.dismiss()
             val itModel = gson.fromJson(it, NYSCareerResponse::class.java)
-            Log.e("DATA", "" + itModel.studentFirstName)
+           // Log.e("DATA", "" + itModel.studentFirstName)
             dataset(itModel)
         }
 

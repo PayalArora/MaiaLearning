@@ -663,15 +663,22 @@
     </string-array>
 
     <string-array name="SEARCH_ARRAY">
-        <item>Search by Keyword</item>
-        <item>Search by Pathway</item>
-        <item>Search by Category</item>
-        <item>Search by U.S. Military</item>
-        <item>Search by High Demand Jobs</item>
+        <item>Keyword</item>
+        <item>Pathway</item>
+        <item>Category</item>
+        <item>U.S. Military</item>
+        <item>High Demand Jobs</item>
     </string-array>
     <string-array name="REGION_TYPE">
         <item>State</item>
-        <item>Country</item>
+        <item>County</item>
+        <item>Metropolitan Area</item>
+    </string-array>
+
+    <string-array name="REGION_TYPE_UNSET">
+        <item>US National Data</item>
+        <item>State</item>
+        <item>County</item>
         <item>Metropolitan Area</item>
     </string-array>
     <string-array name="OUT_ARRAY">
@@ -728,6 +735,10 @@
         <item>waitlisted->accepted->attend</item>
     </string-array>
 
+    <string-array name="region_type_spinne">
+        <item>Select Region</item>
+    </string-array>
+
     <string name="request_trans">Request Transcripts</string>
     <string name="transcript_ncaa">Transcript NCAA</string>
     <string name="test_scores">Test Scores | Submitted</string>
@@ -781,6 +792,7 @@
     <string name="change_region">Change Region Selection</string>
     <string name="default_selection">My default region selection is:\n</string>
     <string name="select_region">Select region for which you want to filter this data</string>
+    <string name="select_regio">Select Region</string>
     <string name="related_career">Related Careers</string>
     <string name="demographics">Demographics</string>
     <string name="space">&#8212;</string>
@@ -788,6 +800,35 @@
     <string name="select_status">Select Status</string>
     <string name="select_region_type">Select Region Type</string>
     <string name="select_region_name">Select Region Name</string>
+    <string name="search_by">Search by</string>
+    <string name="save_region">Save Reigon Prefference</string>
+    <string name="remove_reigon">Remove Reigon Prefference</string>
+    <string name="region_type">Please select any region type</string>
+    <string name="region_name">Please select any region name</string>
+    <string name="select_region_interest">Select Region of Interest</string>
+    <string name="region_type_head">Region Type</string>
+    <string name="state_city_metropolitan">State, City or Metropolitan Area</string>
+    <string name="region_name_head">Region Name</string>
+    <string name="for_eg_metropolitan">For example: San Francisco (City), Los Angeles (Metropolitan Area) or CA.</string>
+    <string name="update_my_prof">Update my profile setting to use this selection all the time.</string>
+    <string name="racial">Racial Diversity</string>
+    <string name="gender_div">Gender DIversity</string>
+    <string name="age">Age</string>
+    <string name="race_ethnicity">Race / Ethnicity</string>
+    <string name="per_jobs">% of Jobs</string>
+    <string name="jobs">Jobs</string>
+    <string name="age_background">Age Background</string>
+    <string name="education_level">Education Level</string>
+    <string name="age_label">Age Breakdown</string>
+    <string name="gender_label">Gender Breakdown</string>
+    <string name="race_label">Race / Ethnicity Breakdown</string>
+    <string name="edu_label">Education Attainment Breakdown</string>
+    <string name="apparentship">Apprenticeships</string>
+    <string name="apperentship_data"><div _ngcontent-ysa-c333="" class="career-apprenticeships"><p _ngcontent-ysa-c333=""><b _ngcontent-ysa-c333="">Apprenticeships combine a full-time job with training—and prepare workers to enter in-demand careers.</b></p><p _ngcontent-ysa-c333="">Apprenticeships provide affordable pathways to high-paying jobs and careers without the typical student debt associated with college.</p><p _ngcontent-ysa-c333="">Career seekers can find apprenticeships in industries such as information technology, finance and business, healthcare, hospitality, transportation, and manufacturing.</p><p _ngcontent-ysa-c333="">94 percent of apprentices who complete an apprenticeship retain employment, with an average annual salary of $70,000.</p><p _ngcontent-ysa-c333="">To find apprenticeship opportunities that match your interests and skills, visit the new Apprenticeship Finder on <a href="https://www.apprenticeship.gov/apprenticeship-job-finder" target="_blank">Apprenticeship.gov</a> — a one-stop source to connect career seekers, employers, and education partners with apprenticeship resources.</p></div></string>
+    <string name="sso">Single Sign-on using your school account</string>
+    <string name="sso_desc">To sign on using your school\'s sign on system you need to tell us which school you are logging in to. Please provide the CEEB code for your school below.</string>
+    <string name="typeceeb">Type CEEB Code</string>
+    <string name="typeemail">Type Your Email</string>
 
 
 </resources>

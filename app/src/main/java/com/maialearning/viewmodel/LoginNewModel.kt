@@ -3,6 +3,10 @@ package com.maialearning.viewmodel
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.maialearning.model.CeebResponse
+import com.maialearning.model.CeebResponseItem
 import com.maialearning.model.ForgetModel
 import com.maialearning.model.LoginNewModel
 import com.maialearning.network.UseCaseResult
@@ -24,6 +28,8 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
     val showLoading = MutableLiveData<Boolean>()
     val loginObserver = MutableLiveData<LoginNewModel>()
     val forgetObserver = MutableLiveData<ForgetModel>()
+    val ceebObserver = MutableLiveData<ArrayList<CeebResponseItem>>()
+    val samlUrlObserver = MutableLiveData<Any>()
     val showError = SingleLiveEvent<String>()
 
 
@@ -97,6 +103,40 @@ class LoginNewModel(private val catRepository: LoginRepository) : ViewModel(), C
             showLoading.value = false
             when (result) {
                 is UseCaseResult.Success -> forgetObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun ceebCode() {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.ceebCode(
+                )
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> ceebObserver.value = result.data
+                is UseCaseResult.Error -> showError.value =
+                    result.exception.response()?.errorBody()?.string()
+                is UseCaseResult.Exception -> showError.value = result.exception.message
+
+            }
+        }
+    }
+    fun samlUrl(email: String?, code:String?) {
+        showLoading.value = true
+        Coroutines.mainWorker {
+            val result = withContext(Dispatchers.Main) {
+                catRepository.samlUrl(email, code
+                )
+            }
+            showLoading.value = false
+            when (result) {
+                is UseCaseResult.Success -> samlUrlObserver.value = result.data
                 is UseCaseResult.Error -> showError.value =
                     result.exception.response()?.errorBody()?.string()
                 is UseCaseResult.Exception -> showError.value = result.exception.message

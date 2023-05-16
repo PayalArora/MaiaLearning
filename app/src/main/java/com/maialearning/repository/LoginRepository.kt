@@ -421,6 +421,9 @@ interface LoginRepository {
         body: UpdateSurveyAnswerReq
     ): UseCaseResult<JsonObject>
 
+    suspend fun samlUrl(email:String?, code: String?
+    ): UseCaseResult<Any>
+
     suspend fun completeSurvey(
         body: CompleteSurveyReq, id: String
     ): UseCaseResult<JsonObject>
@@ -449,8 +452,14 @@ interface LoginRepository {
     ): UseCaseResult<ArrayList<CareerCategoryResponseItem>>
     suspend fun getSessionData(
     ): UseCaseResult<SessionDataResponse>
-    suspend fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String
+
+    suspend fun getCareerFilters(
+    ): UseCaseResult<CareerFilterResponse>
+    suspend  fun careerPref(regionLevel: String, regionCode: String, regionName:String ): UseCaseResult<JsonObject>
+    suspend fun getCareerSearch(searchBy:String,searchValue:String?,offset:String,limit:String, regionLevel: String?, regionCode: String?
     ): UseCaseResult<ArrayList<CareerSearchResponseItem>>
+    suspend fun careerList(): UseCaseResult<JsonObject>
+    suspend fun ceebCode(): UseCaseResult<ArrayList<CeebResponseItem>>
 }
 
 class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
@@ -2242,6 +2251,18 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+    override suspend fun samlUrl(email:String?, code: String?): UseCaseResult<Any> {
+        return try {
+            val result = catApi.getSamlLoginUrl(
+             email,code
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
 
     override suspend fun completeSurvey(
         body: CompleteSurveyReq,
@@ -2322,12 +2343,12 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
         }
     }
 
-    override suspend fun getCareerSearch(searchBy:String,searchValue:String,offset:String,limit:String
-    ): UseCaseResult<ArrayList<CareerSearchResponseItem>> {
-        val url = "${CAREER}careers/search"
+    override suspend fun getCareerFilters(
+    ): UseCaseResult<CareerFilterResponse> {
+        val url = "${CAREER}careers/factsheet/filters"
         return try {
-            val result = catApi.getCareerSearch(url,
-                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, searchBy, searchValue,offset,limit, null, null
+            val result = catApi.getCareerFilters(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey
             ).await()
             UseCaseResult.Success(result)
         } catch (ex: HttpException) {
@@ -2336,4 +2357,62 @@ class LoginRepositoryImpl(private val catApi: AllAPi) : LoginRepository {
             UseCaseResult.Exception(ex)
         }
     }
+
+    override suspend  fun careerPref(regionLevel: String, regionCode: String, regionName:String ): UseCaseResult<JsonObject> {
+        val careerRegionPreference = SavePrefReq.CareerRegionPreference(regionName, regionLevel, regionCode)
+        val save:SavePrefReq = SavePrefReq(careerRegionPreference)
+
+        val url = "${ML_URL}v1/user-data"
+        return try {
+            val result = catApi.careerPref(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey,save
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+ override suspend  fun careerList(): UseCaseResult<JsonObject> {
+         val url = "${STATIC_URL}career-list/career-list.json"
+        return try {
+            val result = catApi.getCareeList(url
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend  fun ceebCode(): UseCaseResult<ArrayList<CeebResponseItem>>{
+         val url = "${STATIC_URL}school_ceeb_data.json"
+        return try {
+            val result = catApi.getCeebList(url
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
+    override suspend fun getCareerSearch(searchBy:String,searchValue:String?,offset:String,limit:String, regionLevel: String?, regionCode: String?
+    ): UseCaseResult<ArrayList<CareerSearchResponseItem>> {
+        val url = "${CAREER}careers/search"
+        return try {
+            val result = catApi.getCareerSearch(url,
+                "Bearer " + SharedHelper(BaseApplication.applicationContext()).authkey, searchBy, searchValue,offset,limit, regionLevel, regionCode
+            ).await()
+            UseCaseResult.Success(result)
+        } catch (ex: HttpException) {
+            UseCaseResult.Error(ex)
+        } catch (ex: Exception) {
+            UseCaseResult.Exception(ex)
+        }
+    }
+
 }

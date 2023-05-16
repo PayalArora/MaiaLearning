@@ -110,6 +110,9 @@ class DashboardActivity : AppCompatActivity() {
                 "Ok"
             ) { dialog, _ ->
                 Firebase.auth.signOut()
+                dialog.dismiss()
+                if (this:: profileFilter.isInitialized)
+                profileFilter.dialog?.dismiss()
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // To clean up all activities
                 startActivity(intent)

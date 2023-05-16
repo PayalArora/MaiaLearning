@@ -35,4 +35,8 @@
     <style name="MatchSpinnerTheme" parent="Theme.MaiaLearning">
         <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
     </style>
+
+    <style name="SpinnerTheme1" parent="Theme.MaiaLearning">
+        <item name="android:dropDownListViewStyle">@style/SpinnerTheme</item>
+    </style>
 </resources>

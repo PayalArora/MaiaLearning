@@ -2,11 +2,13 @@ package com.maialearning.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maialearning.R
 import com.maialearning.databinding.SearchCareerItemBinding
 import com.maialearning.model.CareerSearchResponseItem
+import com.maialearning.util.checkNonNull
 import com.maialearning.util.extractYoutubeId
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
@@ -79,11 +81,21 @@ class SearchCareerAdapter(
                }
                notifyDataSetChanged()
                }
-           root.setOnClickListener{
+           image.setOnClickListener{
                itemClick(item?.videoUrl,arrayList?.get(position)?.title )
            }
            name.setOnClickListener {
-               arrayList?.get(position)?.let { it1 -> openFactsheet(it1, position) }
+               item?.let { it1 -> openFactsheet(it1, position) }
+           }
+           if (item?.search_type == "demand") {
+               postingLayout.visibility = View.VISIBLE
+               if (checkNonNull(item?.uniquePostings)){
+                   if (item?.uniquePostings?.toDoubleOrNull() is Double){
+                       val posting: Double? = item?.uniquePostings?.toDouble()
+                       val formatter = DecimalFormat("#,###")
+                       postings.text = "${formatter.format(posting)} Unique Postings"
+                   }
+               }
            }
 
        }

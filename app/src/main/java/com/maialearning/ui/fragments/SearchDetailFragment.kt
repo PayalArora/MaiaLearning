@@ -1,39 +1,31 @@
 package com.maialearning.ui.fragments
 
 import android.app.Dialog
-import android.content.res.Resources
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.maialearning.R
 import com.maialearning.databinding.ActivityCareerBinding
-import com.maialearning.model.*
-import com.maialearning.ui.adapter.CareerCompareAdapter
+import com.maialearning.model.CareerFactsheetResponse
+import com.maialearning.model.CareerSearchResponseItem
+import com.maialearning.model.SessionDataResponse
 import com.maialearning.ui.adapter.CareerFactsheetStateAdapter
-import com.maialearning.ui.adapter.TraficStateAdapter
-import com.maialearning.util.CARRER_URL
 import com.maialearning.util.showLoadingDialog
 import com.maialearning.viewmodel.CareerViewModel
-import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchDetailFragment : Fragment() {
@@ -44,10 +36,18 @@ class SearchDetailFragment : Fragment() {
     var careerSearchResponseItem:CareerSearchResponseItem?= null
     var sessionDataResponse:SessionDataResponse?= null
     private lateinit var progress: Dialog
-    var itModel = CareerFactsheetResponse()
+    var itModel : CareerFactsheetResponse? = null
+    var itModelNational : CareerFactsheetResponse? = null
     var regionName = ""
     var regionLevel = "nation"
     var regionCode = "0"
+
+    val mediatorLiveData: MediatorLiveData<CareerFactsheetResponse> =  MediatorLiveData<CareerFactsheetResponse>()
+
+    val liveData1:MutableLiveData<CareerFactsheetResponse>  = MutableLiveData<CareerFactsheetResponse>();
+    val liveData2: MutableLiveData<CareerFactsheetResponse> = MutableLiveData<CareerFactsheetResponse>();
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +56,7 @@ class SearchDetailFragment : Fragment() {
         binding = ActivityCareerBinding.inflate(inflater, container, false)
         toolbarBinding = binding.toolbar
         val toolbar: Toolbar = requireActivity().findViewById<Toolbar>(R.id.toolbar)
-        toolbar.visibility = View.GONE
+        toolbar.visibility = View.VISIBLE
         progress = showLoadingDialog(requireContext())
         binding.toolbar.contentInsetStartWithNavigation = 0
         binding.toolbar.setNavigationIcon(
@@ -90,19 +90,41 @@ class SearchDetailFragment : Fragment() {
         return binding.root
     }
     private fun observers(){
+        mediatorLiveData.addSource(liveData1, {
+            mediatorLiveData.setValue(it);
+            }
+        );
+        mediatorLiveData.addSource(liveData2,
+            {
+                mediatorLiveData.setValue(it);
+            }
+        );
+        mediatorLiveData.observe(viewLifecycleOwner,{ s ->
+            initView()
+        })
         careerViewModel.getSessionObserver.observe(viewLifecycleOwner){
             progress.dismiss()
             progress.show()
             sessionDataResponse = it
+            sessionDataResponse?.onet_id = careerSearchResponseItem?.onetId
             it.data?.users?.careerRegionPreference?.regionCode?.let {it1->
                 careerViewModel.getCareerFactsheetDetail("" + careerSearchResponseItem?.onetId,it?.data?.users?.careerRegionPreference?.regionLevel,it1)
-            }?:careerViewModel.getCareerFactsheetDetail("" + careerSearchResponseItem?.onetId,"nation","0")
+            }
+            careerViewModel.getCareerFactsheetDetailNational("" + careerSearchResponseItem?.onetId,"nation","0")
         }
         careerViewModel.careerListFactsheetObserver.observe(viewLifecycleOwner) {
             progress.dismiss()
             val gson = GsonBuilder().create()
             itModel = gson.fromJson(it, CareerFactsheetResponse::class.java)
-            initView()
+            liveData1.postValue(itModel)
+          //  initView()
+        }
+        careerViewModel.careerListFactsheetNationalObserver.observe(viewLifecycleOwner) {
+            progress.dismiss()
+            val gson = GsonBuilder().create()
+            itModelNational = gson.fromJson(it, CareerFactsheetResponse::class.java)
+            liveData2.postValue(itModelNational)
+           // initView()
         }
     }
 
@@ -118,7 +140,7 @@ class SearchDetailFragment : Fragment() {
 
         }
         val fm: FragmentManager = requireActivity().supportFragmentManager
-        val adapter = CareerFactsheetStateAdapter(fm, lifecycle, tabArray.size, itModel, sessionDataResponse)
+        val adapter = CareerFactsheetStateAdapter(fm, lifecycle, tabArray.size, itModel,itModelNational, sessionDataResponse)
 
         binding.viewPager.adapter = adapter
 
